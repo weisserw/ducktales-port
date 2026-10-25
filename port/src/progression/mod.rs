@@ -1014,10 +1014,7 @@ pub fn load_presentation(
     let page = preset.camera_room & 7;
     _camera.x = (_camera.x & 0xff) | (u16::from(page) << 8);
     _actor.position.world_x = (u16::from(page) << 8) | u16::from(preset.player_x);
-    _display.base[..16].copy_from_slice(&preset.background_palette);
-    _display.active[..16].copy_from_slice(&preset.background_palette);
-    _display.base[16..].copy_from_slice(&_catalog.sprite_palette);
-    _display.active[16..].copy_from_slice(&_catalog.sprite_palette);
+    _display.load_palette(&preset.background_palette, &_catalog.sprite_palette);
     Ok(PresentationSetup {
         terrain_bank: preset.terrain_bank,
         row: preset.row,

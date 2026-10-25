@@ -364,3 +364,16 @@ requires newly designed tests and fresh execution/review; no historical credit.
 Root goal/progress and QA handoff reset to implementation complete, QA not started.
 New plan is unconstrained by old32 IDs or L scope. Two gameplay passes remain.
 No agents/tests/QA/modernization launched; changes uncommitted.
+
+## 2026-10-25: modernization target selection prompt
+
+Updated /root/romatlas/scripts/modernize-template/goal.md and its documentation
+in /root/romatlas/docs/porting.md, plus this workspace's modernize/goal.md, at
+user request. Prioritize conversion to native game state, rules and actions;
+helper extraction/deduplication alone no longer qualifies. Require before/after
+models, removed machinery, retained boundary encodings and concrete investigation
+of deeper candidates. Preserve observable fidelity, bounded scope and existing
+baseline/iteration records. Workspace-specific baseline instructions preserved.
+Checks: python3 scripts/test-port-modernize.py (6 tests passed) and toolkit
+git diff --check passed. Documentation/prompt edits only; no game execution,
+modernization pass or commits performed.

@@ -246,6 +246,43 @@ pub struct BackgroundUpload {
     pub chunk_in_record: usize,
 }
 impl BackgroundUpload {
+    fn finish_palette(&mut self, palette: [u8; 4], terminal_tag: u8) -> BackgroundEffect {
+        self.completed = true;
+        BackgroundEffect::PaletteTail {
+            base: palette,
+            active: palette,
+            terminal_tag,
+        }
+    }
+    /// Both immutable source adapters validate/read before entering this one
+    /// continuation transition. The palette endpoint is a later, separate poll.
+    fn advance_chunk(
+        &mut self,
+        bytes: Vec<u8>,
+        destination: u16,
+        bank: u8,
+        span_bytes: usize,
+        suspend_depth: u8,
+    ) -> BackgroundEffect {
+        const QUEUE_TERMINATOR: u8 = 0xff;
+        self.chunk_in_record += 1;
+        if self.chunk_in_record * BACKGROUND_CHUNK_BYTES == span_bytes {
+            self.record += 1;
+            self.chunk_in_record = 0;
+        }
+        BackgroundEffect::Chunk {
+            destination,
+            bytes,
+            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
+            commit: if suspend_depth == 0 {
+                UploadCommit::AtInterrupt
+            } else {
+                UploadCommit::Immediate
+            },
+            selected_bank: bank,
+            queue_terminator: QUEUE_TERMINATOR,
+        }
+    }
     pub fn poll(
         &mut self,
         rom: &[u8],
@@ -257,12 +294,7 @@ impl BackgroundUpload {
             return Ok(BackgroundEffect::None);
         }
         let Some(span) = list.records.get(self.record) else {
-            self.completed = true;
-            return Ok(BackgroundEffect::PaletteTail {
-                base: palette,
-                active: palette,
-                terminal_tag: list.terminator,
-            });
+            return Ok(self.finish_palette(palette, list.terminator));
         };
         let offset = self.chunk_in_record * BACKGROUND_CHUNK_BYTES;
         let start = span
@@ -274,25 +306,13 @@ impl BackgroundUpload {
             .context("background source bounds")?
             .to_vec();
         let destination = span.destination.wrapping_add(offset as u16);
-        self.chunk_in_record += 1;
-        if self.chunk_in_record * BACKGROUND_CHUNK_BYTES
-            == usize::from(span.source_pages) * SOURCE_PAGE_BYTES
-        {
-            self.record += 1;
-            self.chunk_in_record = 0;
-        }
-        Ok(BackgroundEffect::Chunk {
-            destination,
+        Ok(self.advance_chunk(
             bytes,
-            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
-            commit: if suspend_depth == 0 {
-                UploadCommit::AtInterrupt
-            } else {
-                UploadCommit::Immediate
-            },
-            selected_bank: span.bank,
-            queue_terminator: 0xff,
-        })
+            destination,
+            span.bank,
+            usize::from(span.source_pages) * SOURCE_PAGE_BYTES,
+            suspend_depth,
+        ))
     }
 }
 
@@ -515,12 +535,7 @@ impl BackgroundUpload {
             return Ok(BackgroundEffect::None);
         }
         let Some(span) = prepared.spans.get(self.record) else {
-            self.completed = true;
-            return Ok(BackgroundEffect::PaletteTail {
-                base: palette,
-                active: palette,
-                terminal_tag: prepared.terminator,
-            });
+            return Ok(self.finish_palette(palette, prepared.terminator));
         };
         ensure!(
             span.bytes.len().is_multiple_of(BACKGROUND_CHUNK_BYTES),
@@ -532,22 +547,12 @@ impl BackgroundUpload {
             .get(offset..offset + BACKGROUND_CHUNK_BYTES)
             .context("prepared background chunk")?
             .to_vec();
-        self.chunk_in_record += 1;
-        if self.chunk_in_record * BACKGROUND_CHUNK_BYTES == span.bytes.len() {
-            self.record += 1;
-            self.chunk_in_record = 0;
-        }
-        Ok(BackgroundEffect::Chunk {
-            destination: span.destination.wrapping_add(offset as u16),
+        Ok(self.advance_chunk(
             bytes,
-            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
-            commit: if suspend_depth == 0 {
-                UploadCommit::AtInterrupt
-            } else {
-                UploadCommit::Immediate
-            },
-            selected_bank: span.bank,
-            queue_terminator: 0xff,
-        })
+            span.destination.wrapping_add(offset as u16),
+            span.bank,
+            span.bytes.len(),
+            suspend_depth,
+        ))
     }
 }

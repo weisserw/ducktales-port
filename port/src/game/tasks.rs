@@ -390,12 +390,10 @@ impl Tasks {
             }
             O::TitlePalette => {
                 let palette = &services.content.raw_stage_presets[6].background_palette;
-                services.video.display.base[..16].copy_from_slice(palette);
-                services.video.display.active[..16].copy_from_slice(palette);
-                services.video.display.base[16..]
-                    .copy_from_slice(&services.content.progression.sprite_palette);
-                services.video.display.active[16..]
-                    .copy_from_slice(&services.content.progression.sprite_palette);
+                services
+                    .video
+                    .display
+                    .load_palette(palette, &services.content.progression.sprite_palette);
                 for (index, value) in selection::title_palette_edits().before_actors {
                     services.video.display.base[index] = value;
                     services.video.display.active[index] = value;

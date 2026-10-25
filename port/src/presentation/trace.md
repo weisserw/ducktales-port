@@ -110,6 +110,19 @@ No new cohesive behavior area discovered; existing B16 owns scene handler dispat
 
 ## Both queues, scripts, fills and controls
 
+Modernization iteration006 centralizes the complete LoadStagePalette copy in
+`Display::load_palette`: sixteen background plus sixteen sprite colors replace
+both shadows, without requesting an upload or consuming queued writes. Title,
+stage and special-scene callers retain their ordering and later palette edits.
+The source-backed progression regression checks every byte value with pending
+both clear/set and verifies that writes/control/suspension remain unchanged.
+
+Modernization iteration004 shares logical write construction through private
+`append_write`/`append_sequence` operations and `Stride::increment`. Source queue
+byte cursors, counts and pending gates remain at flush; script terminators and
+the value tail remain at script; fills still overwrite attributes last. Boundary
+contracts cover both strides, 14/16-bit wrap and page-FF attribute ordering.
+
 Fixed C129..C183 physical1C139..1C193. Each flush clears its own pending BEFORE
 reading. Negative destination high80..FF terminates without low/count read.
 Otherwise address high/low; count byte controls one unconditional write followed

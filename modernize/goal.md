@@ -1,13 +1,11 @@
-# Optional modernization beta — gated on completed full QA
+# Optional modernization beta
 
 Preparation installs this workflow only. It neither starts an agent nor authorizes
 a pilot, candidate investigation or gameplay/code changes. This is not a sixth
 stage of the fixed port pipeline and is not required for port completion.
-Start it only after a separate user request to modernize this port and a completed
-full whole-game QA sweep. Here, full QA means the existing agreed two-pass
-whole-game contract, with both passes complete, issues resolved and the QA record
-audit passing. A single check, partial pass, scoped milestone or synthetic tooling
-test is insufficient. Never run QA automatically to open this gate.
+Start it only after a separate user request to modernize this port. Full-game QA
+and the former two-pass QA sweep are not prerequisites for this workspace.
+Do not run full-game QA automatically before starting modernization.
 
 ## Entry and faithful baseline
 
@@ -18,16 +16,16 @@ Paths in this paragraph are workspace-relative; this directory is modernize/.
 Apply prompts/coding-standards.md (or established game standards), repository and
 platform boundaries. Original ROM/source/assets and captures remain local.
 
-From the toolkit run `python3 scripts/port_modernize.py check WORKSPACE`.
-If it reports awaiting_full_qa, stop and leave the pilot unstarted. Do not reset,
-finish, fabricate or weaken QA records to proceed. Verify that the full QA report,
-scenario/build/ROM/assets/source provenance and impact rechecks actually cover the
-current faithful implementation. The administrative audit cannot establish this.
+Review available smoke/comparison evidence and its source/build/ROM/assets
+provenance. Record missing coverage honestly; retained results do not certify the
+current implementation. Do not fabricate completed QA records to proceed.
 Run applicable implementation checks/audit only after modernization is invoked.
 Record their actual commands/results and any unavailable platform/device checks.
 
-Then run `python3 scripts/port_modernize.py baseline WORKSPACE` to freeze hashes
-of the current plan/results/report and native source/build configuration. Keep the
+From the workspace run `python3 modernize/baseline.py` to freeze native source/build
+configuration hashes and available smoke/QA record hashes. Use this workspace-local
+helper instead of the toolkit's port_modernize.py check/baseline commands, whose
+legacy full-game QA gate does not apply here. Keep the
 faithful implementation reproducible in local version control or an explicit local
 source snapshot, with ROM/asset identities and pinned dependencies. The script
 records hashes only; it does not make a source backup or certify semantic truth.
@@ -40,20 +38,60 @@ faithful baseline; they do not automatically certify a changed build.
 ## Select one bounded improvement
 
 Populate candidates.json only when this workflow is explicitly invoked after the
-gate. For each candidate record its ID, files/subsystem, current machinery, proposed
+baseline capture. For each candidate record its ID, files/subsystem, current machinery, proposed
 game-level abstraction, concrete clarity/flexibility benefit, source references,
 observable rules to preserve, callers/state owners/update ordering, test IDs and
 coverage gaps, coupling/risks and why the scope is bounded. Inspect the code before
 ranking candidates; no subsystem is presumed safe from its name alone.
 
-Prefer improvements that remove proven hardware bookkeeping or duplication and
-make rules easier to understand. A direct drawing call can replace upload machinery
-only when layering, coordinates, intentional flashing/palette/raster effects and
-relevant timing still agree. Preserve wrapping/signed arithmetic, ordering and
-historical quirks where observable behavior depends on them. Collision, movement,
-scheduling or sound drivers may be strongly coupled; defer them when the semantic
-contract is incomplete. Do not invent a generic engine or emulated RAM/CPU layer.
-Renaming numeric fields alone is not proof that the architecture improved.
+The objective is idiomatic native game code: express game rules, state and actions
+directly instead of preserving the original machine's representation and execution
+machinery. Fidelity constrains observable behavior; it does not require retaining
+register-like fields, packed display values, upload commands, source table encodings
+or continuation machinery internally. Preserve any of these only where their
+observable consequences or an external boundary require them.
+
+Prioritize bounded changes to representation, state ownership or control flow that
+remove hardware-shaped machinery from gameplay. Examples to investigate include:
+
+- Represent background-region changes directly, replacing upload-buffer construction
+  and chunk bookkeeping where they have no observable effect.
+- Store health, money and other game quantities in meaningful native types, with
+  packed digits, tile codes and other display encoding at the presentation boundary.
+- Describe scenes and actor behavior with native structures and explicit actions;
+  decode ROM table formats at the asset boundary rather than throughout gameplay.
+- Replace source-shaped continuations and implicit phase flags with explicit game
+  states and transitions while retaining observable waits and update order.
+
+These are investigation directions, not prescribed rewrites. Prefer the smallest
+coherent subsystem that can complete such a conversion, including its affected
+callers and state owner. A bounded candidate may cross files; it need not be a tiny
+patch. Do not invent a generic engine, add abstraction layers without removing old
+machinery, or introduce an emulated RAM/CPU layer.
+
+Helper extraction, deduplication, renaming, moving code and cosmetic Rust idioms are
+supporting work, not sufficient modernization targets on their own. A shared helper
+that leaves the same hardware-shaped model in every caller does not meet this goal.
+Do not rank candidates mainly by ease of proving equivalence or existing test
+coverage. Investigate promising deeper conversions and fill their contract/coverage
+gaps within a bounded effort. Coupling in collision, movement, scheduling or sound
+calls for investigation; defer a candidate when a specific unresolved dependency
+prevents a sound conversion, recording that dependency and the next useful probe.
+Do not repeatedly substitute easy helper extractions for that investigation.
+
+For each ranked candidate, explain the before/after game model, which low-level
+state or machinery disappears, what remains at asset/runtime boundaries and why,
+and how gameplay code becomes easier to understand or change. Identify the strongest
+plausible conversion considered and give concrete reasons if selecting another.
+If no substantive candidate is currently supportable, report the investigation and
+blockers as incomplete rather than counting routine cleanup as modernization.
+
+A direct drawing call can replace upload machinery only when layering, coordinates,
+intentional flashing/palette/raster effects and relevant timing still agree.
+Preserve wrapping/signed arithmetic, ordering, shared-buffer effects, intentional
+waits, audio interactions and historical quirks where observable behavior depends
+on them. Establish which details matter from evidence rather than assuming every
+hardware operation is either essential or disposable.
 
 Choose one candidate within the user's scope. Establish targeted original-fidelity
 integration tests and useful unit regressions first; independently verify any
@@ -90,10 +128,13 @@ when no sound equivalence claim is available; do not broaden the rewrite to esca
 a difficult result. Existing source uncertainty remains explicit.
 
 Update changes.json and status.json with baseline/candidate/source/build identities,
-actual edits and simplification benefit, test IDs/commands/results/evidence,
+actual edits, before/after game model, removed machinery and remaining boundary
+encodings, test IDs/commands/results/evidence,
 source-grounded contract corrections, remaining uncertainty and retained/reverted
 outcome. Update architecture/behavior links and user documentation where affected.
-Keep scope distinct from runtime performance optimization or feature development.
+Describe routine refactoring honestly as supporting cleanup; passing regressions
+alone does not demonstrate modernization. Keep scope distinct from runtime
+performance optimization or feature development.
 
 Default to one candidate, then report and stop; further iterations need requested
 scope. Do not mark the whole game modernized or invent a percentage-complete goal.

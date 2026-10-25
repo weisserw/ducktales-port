@@ -41,9 +41,14 @@ impl Room {
     pub fn block(ring_cursor: u8, room: &Self) -> u16 {
         let row = usize::from(ring_cursor & ROOM_AXIS_MASK);
         let column = usize::from((ring_cursor >> ROOM_AXIS_BITS) & ROOM_AXIS_MASK);
+        room.block_at(row, column)
+    }
+    /// Row-major room cell, independent of the streaming ring's transposed
+    /// cursor. The ninth descriptor bit is stored MSB-first in each row bitmap.
+    pub fn block_at(&self, row: usize, column: usize) -> u16 {
         let index = row * ROOM_AXIS_CELLS + column;
-        let high = u16::from(room.ninth_bits[row] & (0x80 >> column) != 0) << 8;
-        high | u16::from(room.low[index])
+        let high = u16::from(self.ninth_bits[row] & (0x80 >> column) != 0) << 8;
+        high | u16::from(self.low[index])
     }
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -551,8 +556,7 @@ pub fn read_cell(catalog: &WorldCatalog, layout: usize, bank: usize, probe: Terr
     let coordinate = usize::from(probe.block_coordinate & (ROOM_CELLS - 1) as u8);
     let row = coordinate / ROOM_AXIS_CELLS;
     let column = coordinate % ROOM_AXIS_CELLS;
-    let descriptor = usize::from(room.low[coordinate])
-        | (usize::from(room.ninth_bits[row] & (0x80 >> column) != 0) << 8);
+    let descriptor = usize::from(room.block_at(row, column));
     catalog.terrain[bank].blocks[descriptor][usize::from(probe.quadrant)]
 }
 #[derive(Clone, Debug, Eq, PartialEq)]

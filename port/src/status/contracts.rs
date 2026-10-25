@@ -45,6 +45,40 @@ fn state() -> Status {
         ui_pending: 0,
     }
 }
+#[test]
+fn numeric_producers_preserve_every_raw_code_and_their_distinct_framing() {
+    // B580 inserts counted number fragments; B81C copies counted payloads;
+    // DEA3 copies the total template. None normalizes the seven total codes.
+    let catalog = StatusCatalog {
+        messages: vec![vec![(0x206c, 10)]],
+        ..StatusCatalog::default()
+    };
+    for code in 0..=u8::MAX {
+        let mut s = state();
+        s.total = [code; 7];
+        let before = s.clone();
+        let message = catalog.write_message(0, 0, &s).unwrap();
+        let rows = StatusCatalog::expand(
+            &[StreamRow {
+                destination: 0x206c,
+                operations: vec![StreamOp::Insert(Fragment::Total)],
+            }],
+            &s,
+            &[],
+        )
+        .unwrap();
+        assert_eq!(s, before, "encoding is observational for code {code}");
+        let mut expected = vec![0x20, 0x6c, 8, 0x2c];
+        expected.extend([code; 7]);
+        expected.extend([0, 0xff]);
+        assert_eq!(message.bytes, expected);
+        assert_eq!(message.submission_value, 12);
+        assert_eq!(s.queue_ui(false).unwrap(), expected);
+        expected[2] = 0x1d;
+        assert_eq!(rows[0].bytes, expected);
+        assert!(rows[0].yield_after);
+    }
+}
 fn rom() -> Vec<u8> {
     let bytes =
         std::fs::read(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../input/game.rom"))
@@ -256,6 +290,64 @@ fn recovery_stops_at_negative_y_and_does_not_reveal_hidden_segments() {
     h.recover_one();
     assert_eq!(h.segments[4].depleted, 1);
     assert_eq!(h.segments[3].y, END_OVERLAY);
+}
+#[test]
+fn health_rules_respect_every_negative_y_sentinel_and_preserve_locked_geometry() {
+    // EB6C/8B86/E300 test the sign bit, not equality with the usual FF marker.
+    // Synthetic prefixes exercise the bounded adapter, not natural reachability.
+    for sentinel in 0x80..=u8::MAX {
+        for capacity in 0..=OVERLAY_SEGMENTS {
+            let mut h = health();
+            for segment in &mut h.segments {
+                segment.y = 0x7f;
+                segment.depleted = 0;
+            }
+            if capacity < OVERLAY_SEGMENTS {
+                h.segments[capacity].y = sentinel;
+            }
+            let mut damaged = h.clone();
+            damaged.damage(TitleRule::OrdinaryDamage);
+            let mut expected = h.clone();
+            if capacity != 0 {
+                expected.segments[capacity - 1].depleted = 1;
+            }
+            assert_eq!(damaged, expected);
+
+            h.alternating = 23;
+            for segment in &mut h.segments {
+                segment.depleted = 0x7f;
+            }
+            let mut recovered = h.clone();
+            recovered.recover_one();
+            expected = h.clone();
+            expected.alternating = 0;
+            if capacity != 0 {
+                expected.segments[0].depleted = 0;
+            }
+            assert_eq!(recovered, expected);
+
+            let mut s = state();
+            s.health = h;
+            s.total = [9, 9, 0, 0, 0, 0, 0];
+            let before = s.clone();
+            assert_eq!(s.pay(Cost::TotalOverlay, false), capacity != 0);
+            if capacity == 0 {
+                assert_eq!(s, before);
+            } else {
+                assert_eq!(s.total, [9, 6, 0, 0, 0, 0, 0]);
+                assert_eq!(s.ui_pending, 1);
+                expected = before.health;
+                expected.alternating = 0;
+                for segment in &mut expected.segments {
+                    segment.depleted = 0;
+                }
+                assert_eq!(
+                    s.health, expected,
+                    "full restoration also clears locked flags"
+                );
+            }
+        }
+    }
 }
 #[test]
 fn restore_clears_five_flags_but_preserves_geometry_and_terminator() {

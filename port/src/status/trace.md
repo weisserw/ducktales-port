@@ -88,6 +88,12 @@ rule' is false: callee clears health flags, with no title-option comparison.
 
 ## Overlay health/lives and source defaults
 
+Modernization iteration005 shares the sign-bit-terminated capacity view through
+private `Health::unlocked_segments`. Damage, one-segment recovery and paid health
+restoration use that prefix; full restore still clears all five flags, and sprite
+rendering retains its distinct FF terminator. Synthetic prefix regressions cover
+all negative sentinel bytes without claiming their natural reachability.
+
 CopyTitleOverlay D60A..D61F copies13 stageUI bytes and21 overlay bytes. The5
 four-byte health records hold Y,tile,depleted attribute,X and a terminal byte.
 Initial first3 records Y20, fourth YFF; fifth is behind the sentinel. All have
@@ -179,6 +185,12 @@ checks **pressed** A, yields until edge, and uses shared upload-request return;
 B12/B16 own invocation/input continuation.
 
 ## Stream/message formats and all consumers
+
+Modernization iteration 001 consolidates only the shared marker/raw-codes/zero
+payload in `number_payload`. B580 row framing, B81C message counts/submission
+values, and DE6C/DEA3 normalization/busy policies remain at their existing callers.
+`numeric_producers_preserve_every_raw_code_and_their_distinct_framing` checks all
+256 raw code values against these source-derived producer contracts.
 
 Bank5 B580..B61B physical17590..1762C. Update always expands stream4 (5 clearing
 rows descending20A1..2021), then player0F forces9; others use status selector.

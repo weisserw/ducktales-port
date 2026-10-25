@@ -792,10 +792,10 @@ impl Services {
         // C710 build advances it, and a repeated build must read that result.
         core.stream.room_in_row = page;
         core.actors[0].position.world_x = u16::from(page) << 8 | u16::from(preset.player_x);
-        self.video.display.base[..16].copy_from_slice(&preset.background_palette);
-        self.video.display.active[..16].copy_from_slice(&preset.background_palette);
-        self.video.display.base[16..].copy_from_slice(&self.content.progression.sprite_palette);
-        self.video.display.active[16..].copy_from_slice(&self.content.progression.sprite_palette);
+        self.video.display.load_palette(
+            &preset.background_palette,
+            &self.content.progression.sprite_palette,
+        );
         core.layout = selector;
     }
     pub fn build_column(&mut self, core: &mut Core, cursor: world::StreamCursor) {

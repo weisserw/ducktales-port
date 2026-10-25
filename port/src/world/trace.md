@@ -74,6 +74,12 @@ property planeBF00 are required in banks0..3, not only bank3's named record.
 
 ## Expansion, cache coordinates and substitutions
 
+Modernization iteration003 centralizes the low-byte/ninth-bit descriptor in
+`Room::block_at(row, column)`. Streaming retains its transposed ring adapter;
+ordinary and live raw-room probes retain their own room selection and six-bit
+coordinate masking. Exhaustive probe regressions cover every bitmap mask,
+wrapped byte coordinate and quadrant alongside the existing ring-cell contracts.
+
 `PrepareTerrainExpansion` `$CCD8`, `DecodeTerrainQuadrant` `$CCE7`,
 `StoreExpandedTerrain` `$CD7E`: visit q3,2,1,0. Quadrant staging offsets are
 0,2,8,10. Each selector's TL/TR/BL/BR populate a4x4 row-major tile block. Property

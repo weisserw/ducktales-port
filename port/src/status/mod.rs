@@ -59,6 +59,16 @@ pub struct Health {
     pub alternating: u8,
 }
 impl Health {
+    /// Health rules stop at the first negative Y, exposing only the unlocked
+    /// prefix. Rendering's FF marker and restore's all-five reset are separate.
+    fn unlocked_segments(&self) -> &[HealthSegment] {
+        let end = self
+            .segments
+            .iter()
+            .position(|segment| segment.y & 0x80 != 0)
+            .unwrap_or(OVERLAY_SEGMENTS);
+        &self.segments[..end]
+    }
     /// Marks the flag preceding the first depleted segment or negative Y.
     pub fn damage(&mut self, rule: TitleRule) {
         if rule == TitleRule::AlternatingDamage {
@@ -67,25 +77,23 @@ impl Health {
                 return;
             }
         }
-        let end = self
-            .segments
+        let unlocked = self.unlocked_segments();
+        let end = unlocked
             .iter()
-            .position(|segment| segment.y & 0x80 != 0 || segment.depleted != 0)
-            .unwrap_or(OVERLAY_SEGMENTS);
+            .position(|segment| segment.depleted != 0)
+            .unwrap_or(unlocked.len());
         if let Some(index) = end.checked_sub(1) {
             self.segments[index].depleted = 1;
         }
     }
     pub fn recover_one(&mut self) {
         self.alternating = 0;
-        for segment in &mut self.segments {
-            if segment.y & 0x80 != 0 {
-                break;
-            }
-            if segment.depleted != 0 {
-                segment.depleted = 0;
-                break;
-            }
+        if let Some(index) = self
+            .unlocked_segments()
+            .iter()
+            .position(|segment| segment.depleted != 0)
+        {
+            self.segments[index].depleted = 0;
         }
     }
     pub fn restore(&mut self) {
@@ -216,12 +224,11 @@ impl Status {
         ui_pending: &mut u8,
     ) -> bool {
         const PAYMENT: u8 = 3;
-        let end = health
-            .segments
-            .iter()
-            .position(|segment| segment.y & 0x80 != 0)
-            .unwrap_or(OVERLAY_SEGMENTS);
-        if end == 0 || health.segments[end - 1].depleted == 0 {
+        if health
+            .unlocked_segments()
+            .last()
+            .is_none_or(|segment| segment.depleted == 0)
+        {
             return false;
         }
         let mut upper = [total[0], total[1]];
@@ -502,16 +509,8 @@ impl StatusCatalog {
                         }
                         StreamOp::Insert(fragment) => match fragment {
                             Fragment::Literal(tiles) => bytes.extend_from_slice(tiles),
-                            Fragment::Reward => {
-                                bytes.push(NUMBER_MARKER);
-                                bytes.extend(status.reward);
-                                bytes.push(0);
-                            }
-                            Fragment::Total => {
-                                bytes.push(NUMBER_MARKER);
-                                bytes.extend(status.total);
-                                bytes.push(0);
-                            }
+                            Fragment::Reward => bytes.extend(number_payload(&status.reward)),
+                            Fragment::Total => bytes.extend(number_payload(&status.total)),
                             Fragment::Conditional {
                                 progression: index,
                                 mask,
@@ -590,18 +589,8 @@ impl StatusCatalog {
                 original_selector
             };
             let payload = match selector {
-                TOTAL_PAYLOAD => {
-                    let mut payload = vec![NUMBER_MARKER];
-                    payload.extend(status.total);
-                    payload.push(0);
-                    payload
-                }
-                REWARD_PAYLOAD => {
-                    let mut payload = vec![NUMBER_MARKER];
-                    payload.extend(status.reward);
-                    payload.push(0);
-                    payload
-                }
+                TOTAL_PAYLOAD => number_payload(&status.total).collect(),
+                REWARD_PAYLOAD => number_payload(&status.reward).collect(),
                 _ => self
                     .payloads
                     .get(selector)
@@ -737,14 +726,17 @@ fn blank_leading_zeroes(codes: &mut [u8]) {
         }
     }
 }
+/// Shared B580/B81C/template number encoding. Codes are already display tiles:
+/// preserve blanks and unusual bytes verbatim. Queue framing (count, destination
+/// and FF) belongs to each producer, outside the number's trailing zero.
+fn number_payload(codes: &[u8]) -> impl Iterator<Item = u8> + '_ {
+    std::iter::once(NUMBER_MARKER)
+        .chain(codes.iter().copied())
+        .chain(std::iter::once(0))
+}
 fn number_upload(address: u16, codes: &[u8]) -> Vec<u8> {
-    let mut bytes = vec![
-        (address >> 8) as u8,
-        address as u8,
-        (codes.len() + 1) as u8,
-        NUMBER_MARKER,
-    ];
-    bytes.extend_from_slice(codes);
-    bytes.extend([0, u8::MAX]);
+    let mut bytes = vec![(address >> 8) as u8, address as u8, (codes.len() + 1) as u8];
+    bytes.extend(number_payload(codes));
+    bytes.push(u8::MAX);
     bytes
 }

@@ -632,6 +632,56 @@ fn lower_fill_uses_requested_pages_and_does_not_emit_attributes() {
     );
 }
 #[test]
+fn sequential_producers_preserve_address_wrap_stride_and_attribute_overwrite_order() {
+    // C129, BAC0 and C209 all retain control-bit2 stride and 14-bit output.
+    for (stride, step) in [(Stride::Across, 1_u32), (Stride::Down, 32)] {
+        for address in [0x0100_u16, 0x3ffe, 0x3fff, 0x7fff, 0xfffe, 0xffff] {
+            let expected: Vec<_> = [7, 8, 9]
+                .into_iter()
+                .enumerate()
+                .map(|(i, value)| VideoWrite {
+                    address: ((u32::from(address) + i as u32 * step) % 16384) as u16,
+                    value,
+                })
+                .collect();
+            let mut script = Display::default();
+            script.script(
+                0,
+                &[(address >> 8) as u8, address as u8, 7, 8, 9, 0xfe, 0],
+                &[0; 8],
+                stride,
+            );
+            assert_eq!(script.writes, expected);
+            if address < 0x8000 {
+                let mut queue = Display::default();
+                queue.flush(
+                    Queue::Primary,
+                    &[(address >> 8) as u8, address as u8, 2, 7, 8, 9, 0xff],
+                    stride,
+                );
+                assert_eq!(queue.writes, expected);
+            }
+        }
+        let mut fill = Display::default();
+        fill.fill(0xff, 7, 9, stride);
+        assert_eq!(fill.writes.len(), 1024 + 64);
+        for (i, write) in fill.writes.iter().enumerate() {
+            let (start, offset, value) = if i < 1024 {
+                (0xff00, i, 7)
+            } else {
+                (0x02c0, i - 1024, 9)
+            };
+            assert_eq!(
+                *write,
+                VideoWrite {
+                    address: ((start + offset as u32 * step) % 16384) as u16,
+                    value,
+                }
+            );
+        }
+    }
+}
+#[test]
 fn fades_have_four_immediate_steps_with_four_resumed_yields_per_step() {
     for (direction, offsets) in [
         (FadeDirection::In, [0x30, 0x20, 0x10, 0]),

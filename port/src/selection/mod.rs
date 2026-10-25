@@ -2,10 +2,10 @@
 //! Progression, actors, random and display
 //! clocks are borrowed from their canonical owners; no second state store.
 use crate::{
-    actors::ActorPool,
+    actors::{ACTIVE, ActorPool},
     assets::catalog::DecodedAssets,
     identifiers::{AssetId, StageId},
-    presentation::Composition,
+    presentation::{Composition, PROJECTION_ONLY, VISIBLE},
     runtime::{PortInput, RandomState},
     status::TitleRule,
 };
@@ -385,24 +385,18 @@ pub fn land_resume(_phase: LandPhase) -> LandBatch {
     LandBatch { operations, next }
 }
 pub fn initialize_title_actors(_actors: &mut ActorPool, _catalog: &Catalog) {
-    for slot in (0..2).rev() {
-        let placement = _catalog.title_actors[slot];
-        let actor = &mut _actors[slot];
-        actor.state = 0x80;
-        actor.render = 0x80;
-        actor.animation = placement.animation;
-        actor.position.screen_y = placement.y;
-        actor.position.world_x = u16::from(placement.x);
-        actor.animation_tick = 0;
-        actor.animation_frame = 0;
-    }
+    initialize_menu_actors(_actors, &_catalog.title_actors, VISIBLE);
 }
 pub fn initialize_land_actors(_actors: &mut ActorPool, _catalog: &Catalog) {
-    for slot in (0..8).rev() {
-        let placement = _catalog.land_actors[slot];
-        let actor = &mut _actors[slot];
-        actor.state = 0x80;
-        actor.render = 0x90;
+    initialize_menu_actors(_actors, &_catalog.land_actors, VISIBLE | PROJECTION_ONLY);
+}
+/// D545/D657 place the menu's records in the first actor slots, descending.
+/// These are partial updates: integer X clears its old high byte, while fractions,
+/// handler, restart and other unlisted fields survive. This is not a spawn/reset.
+fn initialize_menu_actors(actors: &mut ActorPool, placements: &[ActorPlacement], render: u8) {
+    for (actor, placement) in actors.iter_mut().zip(placements).rev() {
+        actor.state = ACTIVE;
+        actor.render = render;
         actor.animation = placement.animation;
         actor.position.screen_y = placement.y;
         actor.position.world_x = u16::from(placement.x);

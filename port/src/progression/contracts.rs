@@ -1914,6 +1914,49 @@ fn stage_presentation_writes_original_nine_preset_owners_and_both_palette_shadow
     }
 }
 #[test]
+fn palette_pair_loading_preserves_raw_colors_and_does_not_publish() {
+    // LoadStagePalette copies both halves verbatim to both shadows, then RTS.
+    // It neither requests an upload nor consumes previously queued writes.
+    for value in 0..=u8::MAX {
+        for pending in [false, true] {
+            let mut c = catalog();
+            c.stages[0].background_palette = std::array::from_fn(|i| value.wrapping_add(i as u8));
+            c.sprite_palette = std::array::from_fn(|i| value.wrapping_sub(i as u8));
+            let write = crate::presentation::VideoWrite {
+                address: 0x2043,
+                value: 0x2c,
+            };
+            let mut display = crate::presentation::Display {
+                base: [0xaa; 32],
+                active: [0xbb; 32],
+                palette_pending: pending,
+                writes: vec![write],
+                control: 5,
+                suspended: 9,
+                ..Default::default()
+            };
+            load_presentation(
+                StageId(0),
+                &mut ActorContact::default(),
+                &mut Camera::default(),
+                &mut display,
+                &c,
+            )
+            .unwrap();
+            let expected: Vec<_> = c.stages[0]
+                .background_palette
+                .into_iter()
+                .chain(c.sprite_palette)
+                .collect();
+            assert_eq!(display.base.as_slice(), expected);
+            assert_eq!(display.active.as_slice(), expected);
+            assert_eq!(display.palette_pending, pending);
+            assert_eq!(display.writes, vec![write]);
+            assert_eq!((display.control, display.suspended), (5, 9));
+        }
+    }
+}
+#[test]
 fn presentation_missing_named_source_configuration_errors_without_partial_owner_mutation() {
     let c = catalog();
     let mut actor = ActorContact::default();

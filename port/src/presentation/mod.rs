@@ -228,6 +228,15 @@ pub enum Stride {
     Across,
     Down,
 }
+impl Stride {
+    fn increment(self) -> u16 {
+        const TILE_ROW_BYTES: u16 = 32;
+        match self {
+            Self::Across => 1,
+            Self::Down => TILE_ROW_BYTES,
+        }
+    }
+}
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct VideoWrite {
     pub address: u16,
@@ -348,6 +357,27 @@ impl Fade {
     }
 }
 impl Display {
+    /// Append one logical write and advance its call-local destination. Source
+    /// parsers keep their own byte cursors/counts; all writes share this address
+    /// wrapping rule, independent of when Video later commits the ordered list.
+    fn append_write(&mut self, address: &mut u16, value: u8, stride: Stride) {
+        const VIDEO_ADDRESS_MASK: u16 = 0x3fff;
+        self.writes.push(VideoWrite {
+            address: *address & VIDEO_ADDRESS_MASK,
+            value,
+        });
+        *address = address.wrapping_add(stride.increment());
+    }
+    fn append_sequence(
+        &mut self,
+        mut address: u16,
+        values: impl IntoIterator<Item = u8>,
+        stride: Stride,
+    ) {
+        for value in values {
+            self.append_write(&mut address, value, stride);
+        }
+    }
     pub fn disable(&mut self) {
         self.suspended = self.suspended.wrapping_add(1);
         self.mask = 0;
@@ -378,10 +408,6 @@ impl Display {
             Queue::Primary => self.primary.pending = 0,
             Queue::Secondary => self.secondary_pending = false,
         }
-        let increment = match stride {
-            Stride::Across => 1,
-            Stride::Down => 32,
-        };
         let mut cursor = 0_u8;
         loop {
             let high = encoded[usize::from(cursor)];
@@ -391,11 +417,7 @@ impl Display {
             let mut address = u16::from(high) << 8 | u16::from(encoded[usize::from(cursor) + 1]);
             let mut count = encoded[usize::from(cursor) + 2];
             loop {
-                self.writes.push(VideoWrite {
-                    address: address & 0x3fff,
-                    value: encoded[usize::from(cursor) + 3],
-                });
-                address = address.wrapping_add(increment);
+                self.append_write(&mut address, encoded[usize::from(cursor) + 3], stride);
                 cursor = cursor.wrapping_add(1);
                 count = count.wrapping_sub(1);
                 if count & 0x80 != 0 {
@@ -412,33 +434,19 @@ impl Display {
         const SCRIPT_END: u8 = 0;
         const PAYLOAD_END: u8 = 0xfe;
         const VALUE_SCRIPT: u8 = 11;
-        let increment = match stride {
-            Stride::Across => 1,
-            Stride::Down => 32,
-        };
         let mut cursor = 0;
         let mut address = 0_u16;
         while encoded[cursor] != SCRIPT_END {
             address = u16::from(encoded[cursor]) << 8 | u16::from(encoded[cursor + 1]);
             cursor += 2;
             while encoded[cursor] != PAYLOAD_END {
-                self.writes.push(VideoWrite {
-                    address: address & 0x3fff,
-                    value: encoded[cursor],
-                });
+                self.append_write(&mut address, encoded[cursor], stride);
                 cursor += 1;
-                address = address.wrapping_add(increment);
             }
             cursor += 1;
         }
         if selector == VALUE_SCRIPT {
-            for &value in status_tail {
-                self.writes.push(VideoWrite {
-                    address: address & 0x3fff,
-                    value,
-                });
-                address = address.wrapping_add(increment);
-            }
+            self.append_sequence(address, status_tail.iter().copied(), stride);
         }
     }
     pub fn fill(&mut self, page: u8, tile: u8, attribute_or_pages: u8, stride: Stride) {
@@ -447,10 +455,6 @@ impl Display {
         const PAGE_BYTES: usize = 256;
         const ATTRIBUTE_BYTES: usize = 64;
         self.control &= !1;
-        let increment = match stride {
-            Stride::Across => 1,
-            Stride::Down => 32,
-        };
         let pages = if page >= NAMETABLE_FIRST_PAGE {
             NAMETABLE_PAGES
         } else if attribute_or_pages == 0 {
@@ -459,20 +463,14 @@ impl Display {
             usize::from(attribute_or_pages)
         };
         let start = u16::from(page) << 8;
-        for offset in 0..pages * PAGE_BYTES {
-            self.writes.push(VideoWrite {
-                address: start.wrapping_add((offset as u16).wrapping_mul(increment)) & 0x3fff,
-                value: tile,
-            });
-        }
+        self.append_sequence(start, std::iter::repeat_n(tile, pages * PAGE_BYTES), stride);
         if page >= NAMETABLE_FIRST_PAGE {
             let start = (u16::from(page.wrapping_add(3)) << 8) | 0xc0;
-            for offset in 0..ATTRIBUTE_BYTES {
-                self.writes.push(VideoWrite {
-                    address: start.wrapping_add(offset as u16 * increment) & 0x3fff,
-                    value: attribute_or_pages,
-                });
-            }
+            self.append_sequence(
+                start,
+                std::iter::repeat_n(attribute_or_pages, ATTRIBUTE_BYTES),
+                stride,
+            );
         }
     }
     pub fn scene_palette(
@@ -494,6 +492,19 @@ impl Display {
         if sprite_end & 0x80 != 0 {
             self.base[PALETTE_COLORS - 4..].copy_from_slice(&options[option]);
         }
+        self.active = self.base;
+    }
+    /// LoadStagePalette replaces both background/sprite halves in both shadows.
+    /// Loading does not publish colors or change the pending upload request;
+    /// callers retain their title edits, fades and interrupt/scene boundaries.
+    pub fn load_palette(
+        &mut self,
+        background: &[u8; PALETTE_COLORS / 2],
+        sprites: &[u8; PALETTE_COLORS / 2],
+    ) {
+        const PALETTE_HALF: usize = PALETTE_COLORS / 2;
+        self.base[..PALETTE_HALF].copy_from_slice(background);
+        self.base[PALETTE_HALF..].copy_from_slice(sprites);
         self.active = self.base;
     }
     pub fn commit_palette(&mut self) {

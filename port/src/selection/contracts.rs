@@ -490,6 +490,7 @@ fn land_status_yield_precedes_fade_in_and_overlay_gate_clear_follows_fade() {
 fn land_actor_initialization_copies_all_eight_records_and_preserves_unwritten_fields() {
     let mut a = pool();
     for actor in &mut a {
+        actor.position.world_x = u16::MAX;
         actor.handler = 0x37;
         actor.local_state = 0x48;
         actor.position.x_fraction = 0x59;
@@ -1018,6 +1019,7 @@ fn repeated_idle_title_frames_have_no_demo_timeout_or_implicit_land_request() {
 fn title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fields() {
     let mut a = pool();
     for actor in &mut a {
+        actor.position.world_x = u16::MAX;
         actor.position.x_fraction = 0x34;
         actor.position.y_fraction = 0x45;
         actor.local_state = 0x56;
@@ -1026,7 +1028,9 @@ fn title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fie
     }
     let before = a;
     initialize_title_actors(&mut a, &catalog());
-    for actor in a.iter().take(2) {
+    for (actor, placement) in a.iter().zip(catalog().title_actors) {
+        // D545 writes low X and explicitly clears high X, even on reused slots.
+        assert_eq!(actor.position.world_x, u16::from(placement.x));
         assert_eq!(
             (
                 actor.position.x_fraction,

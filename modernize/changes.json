@@ -1,1 +1,1493 @@
-{"version": 1, "changes": []}
+{
+  "version": 1,
+  "changes": [
+    {
+      "iteration": "001",
+      "candidate": "status-number-payload",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "final_source_sha256": "329c24f15beddc7771d4fb280225079b37590cbc384e4718a16b6cc12879c514",
+      "builds": {
+        "faithful-port": "77ac50aa6a2bbb7bde113395da7f365d94773430b6f624fa057d41243ec73910",
+        "modernized-port": "e5a95713406a4264ea4807fe439cd4c0aa85cc99633c59ee08385537d6377877"
+      },
+      "checkpoint": "checks/modernize/iteration-001/checkpoint.json",
+      "implementation": [
+        "port/src/status/mod.rs: one private number_payload iterator replaces five copies of number encoding; net 15 fewer implementation lines"
+      ],
+      "tests": [
+        "port/src/status/contracts.rs:numeric_producers_preserve_every_raw_code_and_their_distinct_framing (authored and passed before implementation)",
+        "modernize/number-scenario.py: persistent fresh-reset title/selection/Amazon route with bounded semantic setup; five state/frame comparisons"
+      ],
+      "documentation": [
+        "architecture.md",
+        "port/src/status/trace.md"
+      ],
+      "benefit": "One game-specific encoding rule; queue framing, raw code semantics, normalization and update ordering stay in their existing owners.",
+      "source_contract_corrections": [],
+      "validation": [
+        {
+          "id": "baseline-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/baseline-build.log",
+          "sha256": "d7dae192715495fa89ccbe279af3efb9792c1dae1768228e369035e68a1df673"
+        },
+        {
+          "id": "pre-implementation-contracts",
+          "command": "cargo +1.90.0 test --locked --manifest-path port/Cargo.toml status::contracts",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/baseline-status.log",
+          "sha256": "31e6a73999f4fc4234590256fd61517772c68a7174d9941550f0c27a2d7b9d7c"
+        },
+        {
+          "id": "native-tests",
+          "command": "cargo +1.90.0 test --locked --manifest-path port/Cargo.toml",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/tests.log",
+          "sha256": "f442d2ead03e1047fecf191c0b5cb1c76e2950da82725b5f3597580cff9a1f1a"
+        },
+        {
+          "id": "native-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/build.log",
+          "sha256": "fd83fe23186ecdc625458388491c00fbf8996199e5b2767a0f76b2286b67b8fc"
+        },
+        {
+          "id": "desktop-lint",
+          "command": "cargo +1.90.0 clippy --locked --manifest-path port/Cargo.toml --all-targets --features desktop -- -D warnings",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/clippy-desktop.log",
+          "sha256": "090bb65ff7db6456a346f0865775cfea71740cb1c0d1c97fcbd215d5e417513b"
+        },
+        {
+          "id": "desktop-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml --features desktop",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/build-desktop.log",
+          "sha256": "4e11dde82a1cdaa6fa586130b71559c4d3274581d1e99f2a5b8e055d2b819ca2"
+        },
+        {
+          "id": "web-lint",
+          "command": "cargo +1.90.0 clippy --locked --manifest-path port/Cargo.toml --lib --features web --target wasm32-unknown-unknown -- -D warnings",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/clippy-web.log",
+          "sha256": "aeece18eb35c9872cd537cbdd3d7e6041cbcf1775144dfd14ebe6a5632566bf2"
+        },
+        {
+          "id": "web-release-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml --lib --features web --target wasm32-unknown-unknown --release",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/build-web.log",
+          "sha256": "c080f9c8919534dd944a193c06b433f9eb5dcdd298cce5637c85b2496dfc6375"
+        },
+        {
+          "id": "format",
+          "command": "cargo +1.90.0 fmt --manifest-path port/Cargo.toml --check",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/fmt.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "baseline-fresh-integration",
+          "command": "python3 modernize/number-scenario.py --binary checks/modernize/iteration-001/faithful-port --evidence checks/modernize/iteration-001/baseline-runtime",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/baseline-runtime/result.json"
+        },
+        {
+          "id": "modernized-fresh-integration",
+          "command": "python3 modernize/number-scenario.py --binary checks/modernize/iteration-001/modernized-port --evidence checks/modernize/iteration-001/modernized-runtime --compare checks/modernize/iteration-001/baseline-runtime/result.json",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/modernized-runtime/result.json"
+        },
+        {
+          "id": "reference-and-ledger-audit",
+          "command": "python3: port.workspace(Path.cwd()); port.validate_ledger(work, meta)",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-001/audit.json"
+        }
+      ],
+      "evidence": "checks/modernize/iteration-001/results.json",
+      "remaining_uncertainty": [
+        "Existing uncertainties.json unchanged",
+        "No full-game QA or physical desktop/browser/device runs",
+        "Historical original sanity is limited representative evidence; no new original run",
+        "Synthetic raw-code coverage does not establish natural reachability of unusual codes",
+        "No new audio listening/sample comparison"
+      ],
+      "preserved": "Pre-existing modernize/goal.md and baseline.py preparation changes, reference, ledger identities, QA records and toolkit source preserved. No commits or publication."
+    },
+    {
+      "iteration": "002",
+      "candidate": "menu-actor-placement",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "329c24f15beddc7771d4fb280225079b37590cbc384e4718a16b6cc12879c514",
+      "final_source_sha256": "1bb9ddeda169e7c98a3128c780df8a1f19cdb1e25da2238d4746fc16883304ae",
+      "builds": {
+        "starting-port": "e5a95713406a4264ea4807fe439cd4c0aa85cc99633c59ee08385537d6377877",
+        "modernized-port": "bbed89dd62f65d8ed35cb0a14eec6d32df6aabf285073ff1aa29473237166265"
+      },
+      "checkpoint": "checks/modernize/iteration-002/checkpoint.json",
+      "implementation": [
+        "port/src/selection/mod.rs: initialize_menu_actors applies existing ActorPlacement records to canonical ActorPool, preserving descending partial updates; two screen-specific wrappers retain placement arrays and render flags"
+      ],
+      "benefit": "One definition of menu actor placement replaces two duplicate loops; existing semantic flag constants replace raw masks at these call sites. Six fewer implementation lines, with explicit preservation contract.",
+      "tests": [
+        "Strengthened existing title/land actor preservation contracts to start with FFFF world X and verify source high-byte clear; 45 selection contracts passed before implementation",
+        "1422 native tests passed afterward",
+        "Fresh starting and changed builds each executed retained title/land/Amazon integration recipe; all five state/frame observations identical to prior faithful baseline"
+      ],
+      "source_contract_corrections": [],
+      "source_grounding": [
+        "PrepareTitleActors_Continue_D545",
+        "CreateLandSelectActors_Continue_D657"
+      ],
+      "documentation": [
+        "architecture.md",
+        "port/src/selection/trace.md"
+      ],
+      "validation": [
+        {
+          "id": "pre-edit-selection",
+          "command": "cargo +1.90.0 test --locked --manifest-path port/Cargo.toml selection::contracts",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/starting-selection.log",
+          "sha256": "cf880336a6ad27214bad86258e4334a4eb10a3a37bd0e4cbb92d000ad7a82e57"
+        },
+        {
+          "id": "native-tests",
+          "command": "cargo +1.90.0 test --locked --manifest-path port/Cargo.toml",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/tests.log",
+          "sha256": "b0d5c97e03d7a8c00f79198a6621bc4b32831acd3e539406a725540fd33cef86"
+        },
+        {
+          "id": "native-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/build.log",
+          "sha256": "12e2d19add063ddf9919bf35bc6e6c9bd234a6d9b35abec76268a325b32f03ce"
+        },
+        {
+          "id": "format",
+          "command": "cargo +1.90.0 fmt --manifest-path port/Cargo.toml --check",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/fmt.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "desktop-lint",
+          "command": "cargo +1.90.0 clippy --locked --manifest-path port/Cargo.toml --all-targets --features desktop -- -D warnings",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/clippy-desktop.log",
+          "sha256": "699987b46a8d98ebdb30358842d5f329d02bbb356be6c2be9c85e13b9117112f"
+        },
+        {
+          "id": "desktop-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml --features desktop",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/build-desktop.log",
+          "sha256": "3d837e148d655e4b93e161b08b012e5752680ee1b46d3b47b83c4431916fe68e"
+        },
+        {
+          "id": "web-lint",
+          "command": "cargo +1.90.0 clippy --locked --manifest-path port/Cargo.toml --lib --features web --target wasm32-unknown-unknown -- -D warnings",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/clippy-web.log",
+          "sha256": "9e7052848be287707ab204fb598fa186e56b0dbe15d67800e9b37f5fa8e99fe7"
+        },
+        {
+          "id": "web-build",
+          "command": "cargo +1.90.0 build --locked --manifest-path port/Cargo.toml --lib --features web --target wasm32-unknown-unknown --release",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/build-web.log",
+          "sha256": "5eac157dae38625f7bf2c5742c82555dd18487066c11255e782bcc288b65038a"
+        },
+        {
+          "id": "starting-fresh-integration",
+          "command": "python3 modernize/number-scenario.py --binary checks/modernize/iteration-002/starting-port --evidence checks/modernize/iteration-002/starting-runtime --compare checks/modernize/iteration-001/baseline-runtime/result.json",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/starting-runtime/result.json",
+          "sha256": "3af1f1b317f9e57b867cfa95da6e2716a19cdfa15f881499f2fe9440c44833ff"
+        },
+        {
+          "id": "modernized-fresh-integration",
+          "command": "python3 modernize/number-scenario.py --binary checks/modernize/iteration-002/modernized-port --evidence checks/modernize/iteration-002/modernized-runtime --compare checks/modernize/iteration-002/starting-runtime/result.json",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/modernized-runtime/result.json",
+          "sha256": "fd044ea39d846cccfa52a665d6eec0a4dafa08f6cd4b576e304830ff6358ec32"
+        },
+        {
+          "id": "reference-and-ledger-audit",
+          "command": "python3: port.workspace(Path.cwd()); port.validate_ledger(work, meta)",
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-002/audit.json"
+        }
+      ],
+      "evidence": "checks/modernize/iteration-002/results.json",
+      "remaining_uncertainty": [
+        "Existing uncertainties.json unchanged",
+        "No whole-game QA, physical desktop/browser/device run or fresh original emulator run",
+        "No new audio listening or sample comparison",
+        "Tests observe final state; reverse write order retained explicitly in code"
+      ],
+      "preserved": "Original baseline, iteration001 records, QA records, reference and ledger identities retained; toolkit unchanged; no commit or publication."
+    },
+    {
+      "test_summary": {
+        "passed": 1423,
+        "failed": 0,
+        "ignored": 0
+      },
+      "version": 1,
+      "iteration": "003",
+      "candidate": "room-block-decoding",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "1bb9ddeda169e7c98a3128c780df8a1f19cdb1e25da2238d4746fc16883304ae",
+      "final_source": null,
+      "checkpoint": "checks/modernize/iteration-003/checkpoint.json",
+      "builds": {
+        "starting-port": "bbed89dd62f65d8ed35cb0a14eec6d32df6aabf285073ff1aa29473237166265",
+        "modernized-port": "445785bfe7109c3790ba47385e8be722fa582be0374621b686cfb3f80b987a9e"
+      },
+      "wasm_sha256": "9401e4066eba2d8159c59482bf17fd1de9c821a5bf93dc74662ce6d943bbe676",
+      "implementation": "One room descriptor decoder replaces three copies of bitmap/low-byte arithmetic, separating authored room data from source cursor encodings.",
+      "source_contract_corrections": [],
+      "changed_source_files": [
+        "port/src/game/contact.rs",
+        "port/src/world/contracts.rs",
+        "port/src/world/mod.rs",
+        "port/src/world/trace.md"
+      ],
+      "validation": [
+        {
+          "id": "starting-build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/starting-build.log",
+          "sha256": "081c9b411249163e2f4a8ec4049db95d468fe03caf0caff8b6fa6fdb32f69d10"
+        },
+        {
+          "id": "starting-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "world::contracts"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/starting-contracts.log",
+          "sha256": "3916fb0cd17e9ab3f0024d119fd958ef4bb5b477be791be5760ad585263f83dd"
+        },
+        {
+          "id": "starting-runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-003/starting-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-003/starting-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-001/baseline-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/starting-runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "format",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "fmt",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--check"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/format.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "tests",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/tests.log",
+          "sha256": "7ccc510715823dce3f3995b2c559c812f087cd71f4e9978ff853cc96919b3e87"
+        },
+        {
+          "id": "build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/build.log",
+          "sha256": "8cefdacf4d5a4c6ea2b709a72724a0dcb1b1561696c4b9205f185faf9f34ea49"
+        },
+        {
+          "id": "runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-003/modernized-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-003/modernized-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-003/starting-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "clippy-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--all-targets",
+            "--features",
+            "desktop",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/clippy-desktop.log",
+          "sha256": "45db0f72998b9392ea475b2e4ac49dfece233f8a5b4ab3cc3a75c3d31379b4d3"
+        },
+        {
+          "id": "build-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--features",
+            "desktop"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/build-desktop.log",
+          "sha256": "b5431a3b6b9e99584c7b97a8c5c18422fb9fe1f799ea3c0a34fba33872ef820b"
+        },
+        {
+          "id": "clippy-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/clippy-web.log",
+          "sha256": "1998f1df9938349f097dbe70f668c37e08083accd5b376249d02d086edc649f0"
+        },
+        {
+          "id": "build-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-003/build-web.log",
+          "sha256": "5fd45c833bd2dc1313eef9826f100bc4491c9e9aecc52698ffdadbbf9ba4f0e1"
+        }
+      ],
+      "audit": "checks/modernize/iteration-003/audit.json",
+      "presentation_review": "checks/modernize/iteration-003/presentation-review.json",
+      "remaining_uncertainty": [
+        "No full-game QA or physical desktop/browser/device runtime",
+        "No new original emulator run: source-backed existing decoder contracts and retained title/Amazon original sanity used",
+        "Synthetic coordinate exhaustiveness does not imply natural reachability of malformed selectors"
+      ],
+      "final_source_sha256": "ade96c84e33c5c45186b6a2f54fcd68e8c01890748e2aaf935b04265678519f8",
+      "evidence": "checks/modernize/iteration-003/results.json"
+    },
+    {
+      "test_summary": {
+        "passed": 1424,
+        "failed": 0,
+        "ignored": 0
+      },
+      "version": 1,
+      "iteration": "004",
+      "candidate": "display-write-sequences",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "ade96c84e33c5c45186b6a2f54fcd68e8c01890748e2aaf935b04265678519f8",
+      "final_source": null,
+      "checkpoint": "checks/modernize/iteration-004/checkpoint.json",
+      "builds": {
+        "starting-port": "445785bfe7109c3790ba47385e8be722fa582be0374621b686cfb3f80b987a9e",
+        "modernized-port": "2ea4db8e9aadf90b0860fcd71d9e911c898633058c15f4470aac4ad9dc3300f8"
+      },
+      "wasm_sha256": "aae9814245d472ff68478edcc4faff04d53a8ecfacf719f27321fe6c1df7d6ba",
+      "implementation": "Display consumers describe tile sequences without reimplementing hardware address masking/stride progression, and fill repetition reuses the same write primitive.",
+      "source_contract_corrections": [],
+      "changed_source_files": [
+        "port/src/presentation/contracts.rs",
+        "port/src/presentation/mod.rs",
+        "port/src/presentation/trace.md"
+      ],
+      "validation": [
+        {
+          "id": "starting-build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/starting-build.log",
+          "sha256": "d619daf16aee56bec0e1dec3013fc5b53fbb5fa5d856f7ca621c57de5c7b0108"
+        },
+        {
+          "id": "starting-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "presentation::contracts"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/starting-contracts.log",
+          "sha256": "03bb7d9e2286ca269487072f8f27feeee32b68deea42d02f17e0f0ca6fa9d1e2"
+        },
+        {
+          "id": "starting-runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-004/starting-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-004/starting-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-001/baseline-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/starting-runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "format",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "fmt",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--check"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/format.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "tests",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/tests.log",
+          "sha256": "b91c07a8dd18b7ffc71536cf3729a9aaf33c06ad0d91c9714b65c8aa3d8ec35c"
+        },
+        {
+          "id": "build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/build.log",
+          "sha256": "8e95700d819310c965669eb51e8bfe1fc915185f1d0b176e2d2c86acd6ba48bf"
+        },
+        {
+          "id": "runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-004/modernized-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-004/modernized-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-004/starting-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "clippy-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--all-targets",
+            "--features",
+            "desktop",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/clippy-desktop.log",
+          "sha256": "5e0e054aaa98b4ba06da234677a1b725706237af3f38e917f4eb9e7231c325cd"
+        },
+        {
+          "id": "build-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--features",
+            "desktop"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/build-desktop.log",
+          "sha256": "c57bc547c8ba8e49fc26de60d2d09b45182aa00a525e78f1b128a2070fc84978"
+        },
+        {
+          "id": "clippy-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/clippy-web.log",
+          "sha256": "413dd07d755a29d206b4c96dc40c6ea0057029db7f122d842459abf9693e19ca"
+        },
+        {
+          "id": "build-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-004/build-web.log",
+          "sha256": "bfdb92a794dc4729fd5ff58beb98568534bf52a497b799b015665c8177c32432"
+        }
+      ],
+      "audit": "checks/modernize/iteration-004/audit.json",
+      "presentation_review": "checks/modernize/iteration-004/presentation-review.json",
+      "remaining_uncertainty": [
+        "No full-game QA or physical platform runtimes",
+        "No new original emulator run; source contracts plus retained original title/Amazon sanity used",
+        "No new audio listening/sample comparison"
+      ],
+      "final_source_sha256": "80d3fc8eb5b47baec5ee99a3b716ae6a3fb65ce9dac3b4da65a8c9ba358783fc",
+      "evidence": "checks/modernize/iteration-004/results.json"
+    },
+    {
+      "test_summary": {
+        "passed": 1425,
+        "failed": 0,
+        "ignored": 0
+      },
+      "version": 1,
+      "iteration": "005",
+      "candidate": "unlocked-health-segments",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "80d3fc8eb5b47baec5ee99a3b716ae6a3fb65ce9dac3b4da65a8c9ba358783fc",
+      "final_source": null,
+      "checkpoint": "checks/modernize/iteration-005/checkpoint.json",
+      "builds": {
+        "starting-port": "2ea4db8e9aadf90b0860fcd71d9e911c898633058c15f4470aac4ad9dc3300f8",
+        "modernized-port": "990a8e45e9ba1f4ba9f762071e266cd826de20f80f73a70545c3967b7ece3f77"
+      },
+      "wasm_sha256": "f81788196ae6919afaeed66e86b04370d7d756272f4481566f0e94125fbdf169",
+      "implementation": "Game rules operate on unlocked health segments instead of duplicating sign-bit sentinel traversal; full restore and visual geometry retain their distinct contracts.",
+      "source_contract_corrections": [],
+      "changed_source_files": [
+        "port/src/status/contracts.rs",
+        "port/src/status/mod.rs",
+        "port/src/status/trace.md"
+      ],
+      "validation": [
+        {
+          "id": "starting-build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/starting-build.log",
+          "sha256": "d22098de84a0139bc30f10c4f2d68253fc8fb39b6c4370445f50cb46c9f9d23d"
+        },
+        {
+          "id": "starting-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "status::contracts"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/starting-contracts.log",
+          "sha256": "a9395ea78365c44dc9c3f1aa6cdb977c03ed6ca868f68d28ba9a751695bcd12f"
+        },
+        {
+          "id": "starting-runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-005/starting-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-005/starting-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-001/baseline-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/starting-runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "format",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "fmt",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--check"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/format.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "tests",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/tests.log",
+          "sha256": "aa432f43947f5d72631c673fdbbea008f5a9b8be6cf0fe873692d11f133f10f4"
+        },
+        {
+          "id": "build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/build.log",
+          "sha256": "0db60dcfc0350ee7c3e205c0c2a9875518b234d19ea55f4e766f05eda0939b5b"
+        },
+        {
+          "id": "runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-005/modernized-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-005/modernized-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-005/starting-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "clippy-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--all-targets",
+            "--features",
+            "desktop",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/clippy-desktop.log",
+          "sha256": "8248ee8cb0b78a78e382ae56747754fca6a63854c0161f5580530f637b6080d3"
+        },
+        {
+          "id": "build-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--features",
+            "desktop"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/build-desktop.log",
+          "sha256": "686a4e839c72cf67132bac160281e4a54e720923cb3b4bc92b1286237d96573f"
+        },
+        {
+          "id": "clippy-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/clippy-web.log",
+          "sha256": "a790fdbe94a12f1d1af5d4a279199ed2b65a959c28a0b80d8626f3a851eec279"
+        },
+        {
+          "id": "build-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-005/build-web.log",
+          "sha256": "04c03bb20cda01890afb5d37bc74a67c4139fac40b224bfff02aebca0acb7235"
+        },
+        {
+          "id": "pre-edit-expanded-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "status::contracts"
+          ],
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-005/pre-edit-expanded-contracts.log",
+          "sha256": "9e1b6c880730e0abaa5fee86bf3eb4c39a1b76f337bd7e1d42c03eaea5f90ff4"
+        }
+      ],
+      "audit": "checks/modernize/iteration-005/audit.json",
+      "presentation_review": "checks/modernize/iteration-005/presentation-review.json",
+      "remaining_uncertainty": [
+        "No full-game QA or physical platform runtimes",
+        "No fresh original emulator or audio listening/sample comparison",
+        "Natural route exercises damage; focused source contracts cover recovery/payment/extension and synthetic sentinels"
+      ],
+      "final_source_sha256": "1d1dc03c31cbd0c372e5d2de34c9c42c5149ca8d9b575af692fd5b7445f9e441",
+      "evidence": "checks/modernize/iteration-005/results.json"
+    },
+    {
+      "test_summary": {
+        "passed": 1426,
+        "failed": 0,
+        "ignored": 0
+      },
+      "version": 1,
+      "iteration": "006",
+      "candidate": "palette-pair-loading",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "1d1dc03c31cbd0c372e5d2de34c9c42c5149ca8d9b575af692fd5b7445f9e441",
+      "final_source": null,
+      "checkpoint": "checks/modernize/iteration-006/checkpoint.json",
+      "builds": {
+        "starting-port": "990a8e45e9ba1f4ba9f762071e266cd826de20f80f73a70545c3967b7ece3f77",
+        "modernized-port": "e4692ce5b0ad0f6e92eda1052888973fec9314464f848e3d9de30e019101efc5"
+      },
+      "wasm_sha256": "361d72c4a4f486a48cc950a7c9edb5b32635314e8819f5dc9e32eab43e47696b",
+      "implementation": "One typed operation defines the paired palette update; game setup paths select their palette data instead of indexing shadow halves repeatedly.",
+      "source_contract_corrections": [],
+      "changed_source_files": [
+        "port/src/game/simulation.rs",
+        "port/src/game/task_scenes.rs",
+        "port/src/game/tasks.rs",
+        "port/src/presentation/mod.rs",
+        "port/src/presentation/trace.md",
+        "port/src/progression/contracts.rs",
+        "port/src/progression/mod.rs"
+      ],
+      "validation": [
+        {
+          "id": "starting-build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/starting-build.log",
+          "sha256": "cfae9da0ef20293aa31ec437967111a877500760d015bf7a8bf69dec6d948d88"
+        },
+        {
+          "id": "starting-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "progression::contracts"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/starting-contracts.log",
+          "sha256": "dd9047c44a2b189c2f4619d2238887245bef66baa2d70577e688cc4016fa6abe"
+        },
+        {
+          "id": "starting-runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-006/starting-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-006/starting-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-001/baseline-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/starting-runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "format",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "fmt",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--check"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/format.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "tests",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/tests.log",
+          "sha256": "51614398a2496b61dd6ce8819b400780d427c12cdf1c3c8cf494675bb00be04d"
+        },
+        {
+          "id": "build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/build.log",
+          "sha256": "44aaf892a7822e75b585e2cf8c17b546399f2c79a2e3036b54ddb1dce720aff6"
+        },
+        {
+          "id": "runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-006/modernized-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-006/modernized-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-006/starting-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "clippy-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--all-targets",
+            "--features",
+            "desktop",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/clippy-desktop.log",
+          "sha256": "4454f5789e2152376ccdbf3d7f5c6664d7ea54b3a4e3851a4365ed9e49335170"
+        },
+        {
+          "id": "build-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--features",
+            "desktop"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/build-desktop.log",
+          "sha256": "d734e7cc222ecde9a271895e777810ce070250ee4ffe4255e95e838426a9a1e4"
+        },
+        {
+          "id": "clippy-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/clippy-web.log",
+          "sha256": "1fde8ba177b40b7ec789d3cbdbe45c25913a74bc305624785c470631cf94ac5f"
+        },
+        {
+          "id": "build-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-006/build-web-resume.log",
+          "sha256": "1ff8bbcb4151dc887e69b78a29bc241d5062cba4757aa5f4639926ae712a8181"
+        },
+        {
+          "id": "pre-edit-expanded-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "progression::contracts"
+          ],
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-006/pre-edit-expanded-contracts.log",
+          "sha256": "8095d45177469994e4b2decf50c1d51b252771f562a0f4cbefd03f12f3f64dfd"
+        }
+      ],
+      "audit": "checks/modernize/iteration-006/audit.json",
+      "presentation_review": "checks/modernize/iteration-006/presentation-review.json",
+      "remaining_uncertainty": [
+        "No full-game QA or physical platform runtimes",
+        "No fresh original emulator or new audio listening/sample comparison",
+        "Natural route covers title/selection/Amazon; focused contracts cover special-scene palette paths"
+      ],
+      "final_source_sha256": "a3ca02ea9cccfef098b43b263acf4e39868fd9a13e3b1fb37228ab49a15d8ffa",
+      "evidence": "checks/modernize/iteration-006/results.json"
+    },
+    {
+      "test_summary": {
+        "passed": 1428,
+        "failed": 0,
+        "ignored": 0
+      },
+      "version": 1,
+      "iteration": "007",
+      "candidate": "background-chunk-continuation",
+      "outcome": "retained",
+      "baseline": "modernize/baseline.json",
+      "baseline_source_sha256": "84ee147630d1713633e0ec9b9e81d93e259d45206bc6e2421b8912d2c57ee911",
+      "starting_source_sha256": "a3ca02ea9cccfef098b43b263acf4e39868fd9a13e3b1fb37228ab49a15d8ffa",
+      "final_source": null,
+      "checkpoint": "checks/modernize/iteration-007/checkpoint.json",
+      "builds": {
+        "starting-port": "e4692ce5b0ad0f6e92eda1052888973fec9314464f848e3d9de30e019101efc5",
+        "modernized-port": "59bff99421ff1d42c3fbf413f12f04d504e428404460739b03ab899ced420c2b"
+      },
+      "wasm_sha256": "60b7072833acbeff100e9cf1b7c47d308815cc18f5a8f1215dcb994aa9b1d44d",
+      "implementation": "A single source-derived transition implements chunk count, record advance, destination and commit policy across original and authored prepared backgrounds.",
+      "source_contract_corrections": [],
+      "changed_source_files": [
+        "port/src/assets/contracts.rs",
+        "port/src/assets/formats.rs",
+        "port/src/assets/trace.md"
+      ],
+      "validation": [
+        {
+          "id": "starting-build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/starting-build.log",
+          "sha256": "c1ce637120363aecc7324797a863e21efb42a2603232560ae90052a9e37c7977"
+        },
+        {
+          "id": "starting-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "assets::contracts"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/starting-contracts.log",
+          "sha256": "4ddd2fc686580609a8f6d9948f57b05b87a43972a78ee94285e51135f327406d"
+        },
+        {
+          "id": "starting-runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-007/starting-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-007/starting-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-001/baseline-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/starting-runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "format",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "fmt",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--check"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/format.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "tests",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/tests.log",
+          "sha256": "dd6c314462bbc3065a4c2f6756334ff4ed7b35cdf5da855d6aaf6c7a233943ef"
+        },
+        {
+          "id": "build",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/build.log",
+          "sha256": "0cc1476aba37f462a7e6472d07024162d9f77050ef4ccefcd8a11e72fd521517"
+        },
+        {
+          "id": "runtime",
+          "command": [
+            "python3",
+            "modernize/number-scenario.py",
+            "--binary",
+            "/root/ducktales/checks/modernize/iteration-007/modernized-port",
+            "--evidence",
+            "/root/ducktales/checks/modernize/iteration-007/modernized-runtime",
+            "--compare",
+            "/root/ducktales/checks/modernize/iteration-007/starting-runtime/result.json"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/runtime.log",
+          "sha256": "95588dd7ac645056e45116c378887b9b9485e7012f138ceb7f706d278bd2db19"
+        },
+        {
+          "id": "clippy-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--all-targets",
+            "--features",
+            "desktop",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/clippy-desktop.log",
+          "sha256": "0bce4f8598ac2b2e012a714b511ed716dcb228178fb5e352580732b186b14a27"
+        },
+        {
+          "id": "build-desktop",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--features",
+            "desktop"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/build-desktop.log",
+          "sha256": "c3b0f97b0518dc4a9f78a54372e521080740a8989512b093c9dfe1bfa0749b06"
+        },
+        {
+          "id": "clippy-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "clippy",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/clippy-web.log",
+          "sha256": "75e9dc5dd6b73847ed560fa0cd73fa13327d1af21e2c6082aea85fd2dd0ad681"
+        },
+        {
+          "id": "build-web",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "build",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "--lib",
+            "--features",
+            "web",
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release"
+          ],
+          "exit_code": 0,
+          "status": "passed",
+          "evidence": "checks/modernize/iteration-007/build-web.log",
+          "sha256": "b637c54a80a80686c23b8d58e312f539e504ab9144c656b0475510d3ca9d8da3"
+        },
+        {
+          "id": "pre-edit-expanded-contracts",
+          "command": [
+            "cargo",
+            "+1.90.0",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "port/Cargo.toml",
+            "assets::contracts"
+          ],
+          "status": "passed",
+          "exit_code": 0,
+          "evidence": "checks/modernize/iteration-007/pre-edit-expanded-contracts.log",
+          "sha256": "e288fbeebd060891900560ecd2c8c625fbf991e84026cbaa20e81b1bbf37ac64"
+        }
+      ],
+      "audit": "checks/modernize/iteration-007/audit.json",
+      "presentation_review": "checks/modernize/iteration-007/presentation-review.json",
+      "remaining_uncertainty": [
+        "No full-game QA or physical platform runtime",
+        "No fresh original emulator or new audio listening/sample comparison",
+        "Original lists and synthetic invalid payloads cover adapters; arbitrary invalid direct continuation edits are outside game API"
+      ],
+      "final_source_sha256": "655caa986851ce1af3d3f735a68cb84011df9ba2e806f88f99d70e1477b12cb5",
+      "evidence": "checks/modernize/iteration-007/results.json"
+    }
+  ],
+  "batches": [
+    {
+      "request": "five more passes; exit early only on no suitable candidate",
+      "iterations": [
+        "003",
+        "004",
+        "005",
+        "006",
+        "007"
+      ],
+      "status": "complete",
+      "outcome": "all_retained",
+      "audit": "checks/modernize/five-more-passes-audit.json",
+      "final_tests": {
+        "passed": 1428,
+        "failed": 0,
+        "ignored": 0
+      },
+      "final_source_sha256": "655caa986851ce1af3d3f735a68cb84011df9ba2e806f88f99d70e1477b12cb5"
+    }
+  ]
+}

@@ -778,6 +778,77 @@ fn all_original_background_uploads_emit_exactly_every_source_byte_and_final_pale
     }
 }
 
+#[test]
+fn prepared_backgrounds_preserve_every_original_poll_effect_and_cursor() {
+    let bytes = rom();
+    for selector in 0..ORIGINAL_BACKGROUND_LISTS {
+        let list = original_background_list(&bytes, selector).unwrap();
+        let prepared = PreparedBackground {
+            spans: list
+                .records
+                .iter()
+                .map(|span| PreparedBackgroundSpan {
+                    bank: span.bank,
+                    destination: span.destination,
+                    bytes: bytes[span.source_offset
+                        ..span.source_offset + usize::from(span.source_pages) * SOURCE_PAGE_BYTES]
+                        .to_vec(),
+                })
+                .collect(),
+            terminator: list.terminator,
+        };
+        for depth in [0, 1, 0x80, 0xff] {
+            let mut original = BackgroundUpload::default();
+            let mut decoded = BackgroundUpload::default();
+            let bound = list
+                .records
+                .iter()
+                .map(|span| usize::from(span.source_pages) * 4)
+                .sum::<usize>()
+                + 1;
+            for _ in 0..bound {
+                let expected = original.poll(&bytes, &list, [7, 8, 9, 10], depth).unwrap();
+                let actual = decoded
+                    .poll_prepared(&prepared, [7, 8, 9, 10], depth)
+                    .unwrap();
+                assert_eq!(
+                    actual, expected,
+                    "selector {selector}, suspend depth {depth}"
+                );
+                assert_eq!(
+                    decoded, original,
+                    "same chunk/record advance and terminal boundary"
+                );
+            }
+            assert!(original.completed);
+            assert_eq!(
+                decoded.poll_prepared(&prepared, [0; 4], depth).unwrap(),
+                BackgroundEffect::None
+            );
+        }
+    }
+}
+#[test]
+fn prepared_background_validation_errors_preserve_continuation_before_advancing() {
+    for (length, chunk) in [(63, 0), (65, 0), (0, 0), (64, 1), (256, 4)] {
+        let prepared = PreparedBackground {
+            spans: vec![PreparedBackgroundSpan {
+                bank: 3,
+                destination: 0xfff0,
+                bytes: vec![7; length],
+            }],
+            terminator: 0x81,
+        };
+        let mut upload = BackgroundUpload {
+            chunk_in_record: chunk,
+            ..Default::default()
+        };
+        let before = upload.clone();
+        assert!(upload.poll_prepared(&prepared, [1, 2, 3, 4], 0).is_err());
+        assert_eq!(upload, before, "length {length}, chunk {chunk}");
+    }
+}
+
 fn id(name: &str) -> AssetId {
     AssetId(name.to_owned())
 }

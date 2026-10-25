@@ -1,1 +1,319 @@
-{"version": 1, "candidates": []}
+{
+  "version": 1,
+  "candidates": [
+    {
+      "id": "status-number-payload",
+      "rank": 1,
+      "files": [
+        "port/src/status/mod.rs"
+      ],
+      "subsystem": "B14 status display encoding",
+      "current_machinery": "Five copies assemble marker + raw display codes + trailing zero in row fragments, message payloads and direct uploads.",
+      "proposed_abstraction": "One private number_payload iterator describing the encoded display value independently of queue framing.",
+      "benefit": "Single encoding rule shared by all three producer paths; eliminates repeated marker/terminator handling without new state or engine.",
+      "source_references": [
+        "port/src/status/trace.md:Queues and displayed-value transfer",
+        "port/src/status/trace.md:Stream/message formats and all consumers",
+        "reference/source/game.asm:B81C",
+        "reference/source/game.asm:DE6C..DEB8"
+      ],
+      "preserve": [
+        "Exact raw codes including blanks and nondecimal bytes",
+        "Payload count is length minus one",
+        "Row FF terminator remains outside numeric zero terminator",
+        "Message submission byte wraps as before",
+        "Busy checks, dirty clearing and owner waits unchanged"
+      ],
+      "owners_ordering": "Status owns display codes; Tasks prepares Video primary; runtime interrupt commits. Pure encoding helper owns no state.",
+      "tests": [
+        "status::contracts",
+        "game::tasks::tests"
+      ],
+      "coverage_gaps": [
+        "No complete game QA or physical device checks",
+        "Exhaustive byte test covers encoding rather than natural reachability of malformed codes"
+      ],
+      "risks": "Incorrect framing or normalization would alter presentation; leave normalization and queue scheduling at existing callers.",
+      "bounded_reason": "Private pure helper and five local call sites; no timing/state-ownership changes.",
+      "outcome": "retained"
+    },
+    {
+      "id": "menu-actor-placement",
+      "iteration": "002",
+      "rank": 1,
+      "files": [
+        "port/src/selection/mod.rs"
+      ],
+      "subsystem": "B12 title/land actor placement",
+      "current_machinery": "Two nearly identical descending actor-slot loops apply decoded ActorPlacement records.",
+      "proposed_abstraction": "One private initialize_menu_actors helper applies a menu placement slice and the screen-specific render flags.",
+      "benefit": "One definition of menu actor initialization; scene-specific records and rendering remain explicit.",
+      "source_references": [
+        "reference/source/game.asm:PrepareTitleActors_Continue_D545",
+        "reference/source/game.asm:CreateLandSelectActors_Continue_D657",
+        "port/src/selection/trace.md"
+      ],
+      "preserve": [
+        "Descending slot order",
+        "Title state/render80, land state80/render90",
+        "Only animation, integer X/Y, tick/frame, state/render written",
+        "High world X cleared; fractions, handler, restart and locals preserved",
+        "Other actor slots unchanged",
+        "Calls occur at existing ordered owner boundaries"
+      ],
+      "owners_ordering": "Menu applies decoded Catalog placement records to canonical ActorPool at InitializeTitleActors/InitializeLandActors; no new state or deferred work.",
+      "tests": [
+        "selection::contracts::land_actor_initialization_copies_all_eight_records_and_preserves_unwritten_fields",
+        "selection::contracts::title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fields",
+        "selection::contracts",
+        "modernize/number-scenario.py (existing title/land/Amazon route)"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical platform runs",
+        "Final state tests cannot independently observe intermediate descending stores; private helper retains rev() explicitly"
+      ],
+      "risks": "Accidental whole-actor reset, changed render mask or widened slot range; contract tests cover all three.",
+      "bounded_reason": "Two producer loops in one module; existing ActorPlacement and ActorPool remain canonical.",
+      "outcome": "retained"
+    },
+    {
+      "id": "room-block-decoding",
+      "files": [
+        "port/src/world/mod.rs",
+        "port/src/game/contact.rs"
+      ],
+      "subsystem": "B04 decoded room descriptors",
+      "current_machinery": "Streaming, WorldCatalog probes and live raw-room probes each reconstruct the same low byte/ninth-bit descriptor.",
+      "proposed_abstraction": "Room::block_at(row,column) owns descriptor decoding; existing ring and probe coordinate adapters remain explicit.",
+      "benefit": "One room descriptor decoder replaces three copies of bitmap/low-byte arithmetic, separating authored room data from source cursor encodings.",
+      "source_references": [
+        "port/src/world/trace.md:ResolveTerrainBlockPointer CDB4",
+        "reference/source/game.asm:ResolveTerrainBlockPointer",
+        "port/src/world/contracts.rs:ninth_bit_and_coordinate_transpose_cover_all_cells_and_both_descriptor_halves",
+        "port/src/world/contracts.rs:descriptor_probe_uses_room_row_stride_ninth_bit_and_requested_quadrant"
+      ],
+      "preserve": [
+        "ring cursor transpose",
+        "probe low-six-bit masking",
+        "row MSB-first ninth-bit mask",
+        "raw selector byte room arithmetic and FF fallback",
+        "quadrant/bank indexing and update order"
+      ],
+      "owners_ordering": "Immutable Room owns bytes; callers still select layout/raw room/bank and quadrant synchronously. No changed state or timing ownership.",
+      "test_filter": "world::contracts",
+      "tests": [
+        "world::contracts",
+        "full native contracts including game collision/raw-selector/extension integration",
+        "modernize/number-scenario.py"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical desktop/browser/device runtime",
+        "No new original emulator run: source-backed existing decoder contracts and retained title/Amazon original sanity used",
+        "Synthetic coordinate exhaustiveness does not imply natural reachability of malformed selectors"
+      ],
+      "risks": "Row/column transpose or masked probe coordinate drift; exhaustive coordinate contracts and composed movement tests retained.",
+      "bounded_reason": "Only duplicated immutable descriptor decoding; collision policy, room choice and terrain expansion unchanged.",
+      "allowed_source_files": [
+        "port/src/world/mod.rs",
+        "port/src/world/contracts.rs",
+        "port/src/world/trace.md",
+        "port/src/game/contact.rs"
+      ],
+      "iteration": "003",
+      "rank": 1,
+      "outcome": "retained"
+    },
+    {
+      "id": "display-write-sequences",
+      "files": [
+        "port/src/presentation/mod.rs"
+      ],
+      "subsystem": "B03 ordered display writes",
+      "current_machinery": "Queue flushes, scripts, value tails and fills repeat address masking, stride selection and sequential address bookkeeping.",
+      "proposed_abstraction": "Private append_write and append_sequence operations own ordered 14-bit video writes; Stride owns its increment. Source parsers retain their terminators and byte cursors.",
+      "benefit": "Display consumers describe tile sequences without reimplementing hardware address masking/stride progression, and fill repetition reuses the same write primitive.",
+      "source_references": [
+        "port/src/presentation/trace.md:Both queues, scripts, fills and controls",
+        "reference/source/game.asm:FillPpuArea",
+        "port/src/presentation/contracts.rs:queue_negative_count_still_copies_first_byte_and_down_stride_is_retained",
+        "port/src/presentation/contracts.rs:zero_lower_fill_page_count_wraps_to_twohundredfiftysix_pages"
+      ],
+      "preserve": [
+        "14-bit visible addresses, wrapping16-bit cursors",
+        "Across1/Down32 strides",
+        "Count-plus-one and negative-count first write",
+        "Queue byte cursor wrap",
+        "FE payload versus zero script terminator",
+        "value script11 tail",
+        "fill page0 and attribute overwrite ordering"
+      ],
+      "owners_ordering": "Display retains one ordered writes Vec. Parsing and pending gates remain at current methods; Video commits the same writes in order.",
+      "test_filter": "presentation::contracts",
+      "tests": [
+        "presentation::contracts",
+        "all native contracts",
+        "modernize/number-scenario.py"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical platform runtimes",
+        "No new original emulator run; source contracts plus retained original title/Amazon sanity used",
+        "No new audio listening/sample comparison"
+      ],
+      "risks": "Wrap, stride or write ordering drift; explicit boundary regression plus existing zero-page/queue cursor/count/script contracts retained.",
+      "bounded_reason": "Only write construction; no new retained state, queue decoding, raster/commit timing or layering policy.",
+      "allowed_source_files": [
+        "port/src/presentation/mod.rs",
+        "port/src/presentation/contracts.rs",
+        "port/src/presentation/trace.md"
+      ],
+      "iteration": "004",
+      "rank": 1,
+      "outcome": "retained"
+    },
+    {
+      "id": "unlocked-health-segments",
+      "files": [
+        "port/src/status/mod.rs"
+      ],
+      "subsystem": "B14 health overlay rules",
+      "current_machinery": "Damage, recovery and payment each scan source Y sentinels to find the unlocked health prefix.",
+      "proposed_abstraction": "A private Health::unlocked_segments slice expresses the health capacity used by game rules.",
+      "benefit": "Game rules operate on unlocked health segments instead of duplicating sign-bit sentinel traversal; full restore and visual geometry retain their distinct contracts.",
+      "source_references": [
+        "port/src/status/trace.md:Overlay health/lives and source defaults",
+        "reference/source/game.asm:EB5A..EB81 damage",
+        "reference/source/game.asm:8B82 recover",
+        "port/src/status/contracts.rs:total_overlay_payment_requires_preceding_damage_flag"
+      ],
+      "preserve": [
+        "All negative Y bytes end capacity",
+        "Damage stops at first depleted flag or capacity",
+        "Recovery clears only first depleted unlocked flag",
+        "Payment examines last unlocked segment",
+        "Restore clears all five flags including locked slots",
+        "Alternation reset/wrap and transactional payment"
+      ],
+      "owners_ordering": "Health remains canonical. Status payment borrows that owner and other disjoint fields; changes remain immediate before later contacts.",
+      "test_filter": "status::contracts",
+      "tests": [
+        "status::contracts",
+        "all native contracts including player payment and object recovery integration",
+        "modernize/number-scenario.py"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical platform runtimes",
+        "No fresh original emulator or audio listening/sample comparison",
+        "Natural route exercises damage; focused source contracts cover recovery/payment/extension and synthetic sentinels"
+      ],
+      "risks": "Confusing sign-bit health sentinel with render FF sentinel, changing hidden-field restoration or last-segment payment gate; retain separate rendering and restore paths.",
+      "bounded_reason": "Private read-only health view and three local consumers; no health counter or changed scheduling/state owner.",
+      "allowed_source_files": [
+        "port/src/status/mod.rs",
+        "port/src/status/contracts.rs",
+        "port/src/status/trace.md"
+      ],
+      "iteration": "005",
+      "rank": 1,
+      "outcome": "retained"
+    },
+    {
+      "id": "palette-pair-loading",
+      "files": [
+        "port/src/presentation/mod.rs",
+        "port/src/progression/mod.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/tasks.rs",
+        "port/src/game/task_scenes.rs"
+      ],
+      "subsystem": "B03/B13/B16 complete palette pair loading",
+      "current_machinery": "Four stage/title/special-scene setup paths repeat four copies to load16 background and16 sprite colors into both base/active shadows.",
+      "proposed_abstraction": "Display::load_palette(background,sprites) expresses complete palette replacement without publication.",
+      "benefit": "One typed operation defines the paired palette update; game setup paths select their palette data instead of indexing shadow halves repeatedly.",
+      "source_references": [
+        "port/src/progression/trace.md:stage palette loader",
+        "port/src/selection/trace.md:PrepareTitleActors D534",
+        "port/src/presentation/trace.md:palette ownership",
+        "port/src/scenes/trace.md"
+      ],
+      "preserve": [
+        "Both shadows receive all32 colors",
+        "No masking or normalization",
+        "Pending flag unchanged",
+        "Title-specific edits stay after load at existing boundaries",
+        "Scene/fade mutations and partial palette updates remain separate"
+      ],
+      "owners_ordering": "Display retains canonical base/active arrays. Existing callers invoke load at identical synchronous points with no callback/owner wait introduced.",
+      "test_filter": "progression::contracts",
+      "tests": [
+        "progression::contracts",
+        "all native contracts including title/special-scene/scene/fade composition",
+        "modernize/number-scenario.py"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical platform runtimes",
+        "No fresh original emulator or new audio listening/sample comparison",
+        "Natural route covers title/selection/Amazon; focused contracts cover special-scene palette paths"
+      ],
+      "risks": "Accidental eager publication or loss of title overrides; no pending/commit operation inside new helper.",
+      "bounded_reason": "Only complete palette copying is shared; data choice, partial edits, fades and raster publication retain their existing owners.",
+      "allowed_source_files": [
+        "port/src/presentation/mod.rs",
+        "port/src/presentation/trace.md",
+        "port/src/progression/mod.rs",
+        "port/src/progression/contracts.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/tasks.rs",
+        "port/src/game/task_scenes.rs"
+      ],
+      "iteration": "006",
+      "rank": 1,
+      "outcome": "retained"
+    },
+    {
+      "id": "background-chunk-continuation",
+      "files": [
+        "port/src/assets/formats.rs"
+      ],
+      "subsystem": "B02 raw/prepared background upload continuation",
+      "current_machinery": "ROM-backed and prepared-source poll methods duplicate chunk advancement, effect construction and terminal-palette handling.",
+      "proposed_abstraction": "One private chunk-completion operation and terminal-palette operation are shared after each adapter validates and reads its own bytes.",
+      "benefit": "A single source-derived transition implements chunk count, record advance, destination and commit policy across original and authored prepared backgrounds.",
+      "source_references": [
+        "port/src/assets/trace.md:background uploads",
+        "port/src/assets/contracts.rs:background_one_page_requires_four_chunks_then_separate_terminal_poll",
+        "port/src/assets/contracts.rs:all_original_background_uploads_emit_exactly_every_source_byte_and_final_palette"
+      ],
+      "preserve": [
+        "64-byte chunks",
+        "Separate terminal-palette poll",
+        "None after completion",
+        "Record advance/reset only on exact span exhaustion",
+        "Immediate commit for any nonzero suspension depth",
+        "Checked source read and alignment failures before state advance",
+        "Selected bank, wrapping destination and FF queue terminator"
+      ],
+      "owners_ordering": "BackgroundUpload remains one continuation; raw/prepared adapters still validate/read their own immutable source first, then transition synchronously. No new pending queue or changed owner waits.",
+      "test_filter": "assets::contracts",
+      "tests": [
+        "assets::contracts",
+        "all native contracts including prepared background lifecycle, raw-selector and authored payload integration",
+        "modernize/number-scenario.py"
+      ],
+      "coverage_gaps": [
+        "No full-game QA or physical platform runtime",
+        "No fresh original emulator or new audio listening/sample comparison",
+        "Original lists and synthetic invalid payloads cover adapters; arbitrary invalid direct continuation edits are outside game API"
+      ],
+      "risks": "Early palette publication, advance-on-error, or raw/prepared span length differences; compare every original list's poll effects/state and retain malformed-source regressions.",
+      "bounded_reason": "Two adapters and one existing continuation; all source reads, frontend logic and scheduler/commit policy remain unchanged.",
+      "allowed_source_files": [
+        "port/src/assets/formats.rs",
+        "port/src/assets/contracts.rs",
+        "port/src/assets/trace.md"
+      ],
+      "iteration": "007",
+      "rank": 1,
+      "outcome": "retained"
+    }
+  ]
+}

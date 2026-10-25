@@ -104,6 +104,13 @@ fade/composition boundaries, never render/audio callback clocks.
 
 ## Land initialization and original catalog identity
 
+Modernization iteration 002 shares the D545/D657 placement loop in the private
+`initialize_menu_actors` helper. Screen-specific placement arrays and render flags
+remain at the two existing call sites. The helper writes only the source-listed
+fields, in descending slot order; it does not reset whole actors. Existing title
+and land preservation contracts now also seed nonzero high X bytes to verify
+the explicit source high-X clear on reused actor slots.
+
 InitializeLandSelect D630: FadeOut first. Then mode0; disable; hide; clear nonplayer
 actors BEFORE installing temporary stage5 (preservation therefore sees old stage/
 room). Push StageIndex, set5, CHR list5, LoadStagePresentation and

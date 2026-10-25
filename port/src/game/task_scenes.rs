@@ -205,12 +205,10 @@ impl Tasks {
                     let palette = &services.content.raw_stage_presets
                         [usize::from(offset) / PALETTE_BYTES]
                         .background_palette;
-                    services.video.display.base[..PALETTE_BYTES].copy_from_slice(palette);
-                    services.video.display.active[..PALETTE_BYTES].copy_from_slice(palette);
-                    services.video.display.base[PALETTE_BYTES..]
-                        .copy_from_slice(&services.content.progression.sprite_palette);
-                    services.video.display.active[PALETTE_BYTES..]
-                        .copy_from_slice(&services.content.progression.sprite_palette);
+                    services
+                        .video
+                        .display
+                        .load_palette(palette, &services.content.progression.sprite_palette);
                     OwnerStep::Complete(())
                 }
                 scenes::SpecialWork::StageAudio(command) => {

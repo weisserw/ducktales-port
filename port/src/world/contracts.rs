@@ -799,6 +799,46 @@ fn descriptor_probe_uses_room_row_stride_ninth_bit_and_requested_quadrant() {
     }
 }
 #[test]
+fn descriptor_probes_preserve_every_bitmap_mask_and_wrapped_coordinate() {
+    // CDB4 uses MSB-first bitmap columns; CDE6 probes mask packed coordinates
+    // to six bits. Distinct quadrant codes expose both descriptor halves.
+    let mut catalog = WorldCatalog {
+        rooms: vec![Room {
+            low: std::array::from_fn(|index| index as u8),
+            ninth_bits: [0; 8],
+        }],
+        layouts: vec![layout()],
+        terrain: vec![terrain()],
+    };
+    for (index, block) in catalog.terrain[0].blocks.iter_mut().enumerate() {
+        *block = [index as u8, (index >> 8) as u8, !(index as u8), 0x55];
+    }
+    for mask in 0..=u8::MAX {
+        catalog.rooms[0].ninth_bits.fill(mask);
+        for coordinate in 0..=u8::MAX {
+            let cell = coordinate % 64;
+            let high = u8::from(mask & [128, 64, 32, 16, 8, 4, 2, 1][usize::from(cell % 8)] != 0);
+            for (quadrant, expected) in [cell, high, !cell, 0x55].into_iter().enumerate() {
+                assert_eq!(
+                    read_cell(
+                        &catalog,
+                        0,
+                        0,
+                        TerrainProbe {
+                            room_row: 0,
+                            world_page: 0,
+                            block_coordinate: coordinate,
+                            quadrant: quadrant as u8,
+                        }
+                    ),
+                    expected,
+                    "mask {mask}, coordinate {coordinate}, quadrant {quadrant}"
+                );
+            }
+        }
+    }
+}
+#[test]
 fn inactive_or_centered_camera_does_not_stream_and_preserves_player() {
     for (active, x) in [(false, 0x190), (true, 0x180)] {
         let before = camera(0x100, 1);

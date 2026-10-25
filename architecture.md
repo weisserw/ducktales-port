@@ -31,6 +31,12 @@ defaults live in config.rs. No CPU, processor flags, stack or RAM emulator exist
 
 ## Source owners and immediate effects
 
+Title and land-selection screens apply their decoded `ActorPlacement` records
+through one private menu initializer. Each screen supplies its rendering flags;
+descending slot order and partial field updates remain source-defined. See
+[selection/trace.md](port/src/selection/trace.md) and
+[modernize/changes.json](modernize/changes.json) for the contract and evidence.
+
 Runtime, assets, presentation, world, collision, player, actor lifecycle/families,
 selection, progression, status, dialogue, scenes, finale and audio retain adjacent
 source traces/contracts. Actor dispatch visits live slots ascending; allocation
@@ -49,6 +55,16 @@ AfterSpawn, bypassing actors/countdown while retaining its real tail effects.
 
 ## Display and audio aliases
 
+Status number producers share one private `number_payload` encoder for the marker,
+raw display codes and trailing zero. Stream rows, messages and direct uploads
+retain their own framing, normalization and publication order. The bounded
+modernization evidence is indexed in [modernize/changes.json](modernize/changes.json);
+the original source contract remains in [status/trace.md](port/src/status/trace.md).
+
+Health rules borrow the unlocked segment prefix from the canonical Health owner.
+The private view centralizes negative-Y capacity traversal while full restoration
+and sprite rendering retain their separate source contracts.
+
 Video owns logical CHR, nametables, palette, committed OAM/raster and prepared
 uploads. Render is read-only. Primary owns64 prefix bytes; writes past0440 borrow
 secondary's192-byte prefix, then the one128-byte world attribute cache. Secondary
@@ -56,6 +72,14 @@ composites and NMI/audio read those same owners. Byte-Y queue progression is
 separate from absolute field offsets; attribute cache stores and final-only FF
 terminators preserve source ordering under aliases. Dialogue temporarily moves
 one canonical panel, restoring it before every serviceable owner/host boundary.
+
+Display queues, scripts and fills share private ordered-write operations for
+address masking and stride advancement. Their parsers, publication boundaries
+and queue cursor arithmetic remain separate; see [presentation/trace.md](port/src/presentation/trace.md).
+
+Complete stage/title/special-scene palettes use `Display::load_palette` to update
+both shadows. The typed background/sprite pair does not publish colors; partial
+palette effects, title edits and fades remain at their existing source boundaries.
 
 Terrain expansion updates the canonical16-byte staging owner; ordinary bottom
 rows retain the eight unwritten bytes, externally visible to audio. Source audio
@@ -68,11 +92,21 @@ prepares register writes, and Game duplicates mono output to stereo once.
 
 ## Immutable resources and extensions
 
+`Room::block_at` decodes a room descriptor once for streaming and collision
+consumers. Callers retain the distinction between transposed ring cursors,
+row-major probes and source raw-room selection; see
+[world/trace.md](port/src/world/trace.md) and [modernize/changes.json](modernize/changes.json).
+
 Content loads validated original catalogs once from the matching ROM with named
 local recipe replacements. Full transient original image is used only at startup
 for instruction-as-data consumers, then dropped. Rules use decoded immutable
 catalogs, source selector domains and native typed data. Unnamed data is retained
 through established consumers, not assumed junk from appearance.
+
+ROM-backed and prepared background sources share one post-read chunk transition
+and terminal palette operation. Validation stays in each source adapter; the
+existing continuation and commit boundaries remain unchanged. See
+[assets/trace.md](port/src/assets/trace.md) for the per-poll source contract.
 
 Authored registry levels have distinct named identity, predecessor and original
 rule profile. Graph validation rejects forks/cycles/missing parents at startup.

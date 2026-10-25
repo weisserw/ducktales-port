@@ -118,6 +118,13 @@ The exact four bytes are local source-derived expectations in the tests.
 
 ## Background continuation, every state branch
 
+Modernization iteration007 shares the post-read chunk transition and terminal
+palette effect between ROM-backed and prepared-background adapters. Each adapter
+still validates and reads its own source before advancing the one continuation.
+Every original list is compared per poll (effect and cursor) at suspension depths
+0/1/80/FF against the independently source-contracted ROM adapter. Malformed or
+exhausted prepared spans are checked to leave the continuation unchanged on error.
+
 A new list increments state0->1, sets descriptor pointer, clears descriptor cursor,
 source low and destination low. State AND02 false: increment1->2, parse record and
 advance descriptor cursor by3, clear source cursor. Negative tag writes the actual

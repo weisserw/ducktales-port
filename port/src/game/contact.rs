@@ -72,8 +72,7 @@ pub fn descriptor(content: &Content, layout: u8, bank: u8, probe: world::Terrain
     let coordinate = usize::from(probe.block_coordinate & 63);
     let row = coordinate / 8;
     let column = coordinate % 8;
-    let block = usize::from(room.low[coordinate])
-        | usize::from(room.ninth_bits[row] & (0x80 >> column) != 0) << 8;
+    let block = usize::from(room.block_at(row, column));
     content.world.terrain[usize::from(bank)].blocks[block][usize::from(probe.quadrant)]
 }
 /// Semantic integration result consumed at the original player's return boundary.
