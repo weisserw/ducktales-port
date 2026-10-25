@@ -13,6 +13,9 @@ use crate::{
 };
 use anyhow::{Context as _, Result, ensure};
 
+mod program;
+pub use program::{MessageProgram, TextInstruction};
+
 pub const MESSAGE_COUNT: usize = 18;
 pub const TEXT_ROWS: usize = 3;
 pub const ROW_GLYPHS: usize = 17;
@@ -25,6 +28,7 @@ pub const FINAL_GLYPH: u8 = 0x2e;
 pub const POINTERS_PHYSICAL: usize = 0x13898;
 pub const STRINGS_PHYSICAL: usize = 0x138bc;
 pub const STRINGS_END_PHYSICAL: usize = 0x13c59;
+const TEXT_CPU_START: usize = 0xb8ac;
 pub const LINES_PHYSICAL: usize = 0x1ef69;
 pub const CLEAR_PANEL_PHYSICAL: usize = 0xa900;
 pub const RESTORE_PANEL_PHYSICAL: usize = 0x42e0;
@@ -68,7 +72,7 @@ pub enum OutcomeMessage {
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Catalog {
-    pub messages: Vec<Vec<u8>>,
+    pub messages: Vec<MessageProgram>,
     pub destinations: [u16; TEXT_ROWS],
     pub row_end_offsets: [u8; TEXT_ROWS],
     pub row_queue_offsets: [u8; TEXT_ROWS],
@@ -94,7 +98,7 @@ impl Catalog {
             restore_panel: data(RESTORE_PANEL_PHYSICAL, PANEL_TEMPLATE_BYTES)?.to_vec(),
         })
     }
-    pub fn decode_messages(pointers: &[u8], strings: &[u8]) -> Result<Vec<Vec<u8>>> {
+    pub fn decode_messages(pointers: &[u8], strings: &[u8]) -> Result<Vec<MessageProgram>> {
         ensure!(
             pointers.len() == MESSAGE_COUNT * 2,
             "dialogue pointer plane extent"
@@ -104,16 +108,12 @@ impl Catalog {
             let pointer =
                 usize::from(pointers[i]) | (usize::from(pointers[MESSAGE_COUNT + i]) << 8);
             let offset = pointer
-                .checked_sub(0xb8ac)
+                .checked_sub(TEXT_CPU_START)
                 .context("dialogue pointer before strings")?;
             let tail = strings
                 .get(offset..)
                 .context("dialogue pointer outside strings")?;
-            let end = tail
-                .iter()
-                .position(|&byte| byte == MESSAGE_END)
-                .context("unterminated dialogue message")?;
-            messages.push(tail[..=end].to_vec());
+            messages.push(MessageProgram::from_source(tail)?);
         }
         Ok(messages)
     }
@@ -185,64 +185,66 @@ pub fn render_text(
             _panel.encoded[start] = (_catalog.destinations[line] >> 8) as u8;
             _panel.encoded[start + 1] = _catalog.destinations[line] as u8;
         }
-        let glyph = *message
-            .get(usize::from(*_cursor))
+        let instruction = message
+            .instruction(*_cursor)
             .context("dialogue cursor bounds")?;
         let at = start + 3 + usize::from(_dialogue.row_glyphs);
         ensure!(at + 1 < _panel.encoded.len(), "dialogue row payload bounds");
-        if glyph == MESSAGE_END {
-            _panel.encoded[at] = FINAL_GLYPH;
-            _panel.encoded[at + 1] = ROW_END;
-            _panel.encoded[start + 2] = _dialogue.row_glyphs;
-            _panel.pending = ROW_END;
-            *_cursor = 0;
-            return Ok(TextStep {
-                boundary: TextBoundary::MessageComplete,
-                sound: None,
-                wait_ticks: 0,
-            });
-        }
-        let mut finish_row = glyph == ROW_END;
-        if !finish_row {
-            _panel.encoded[at] = glyph;
-            _dialogue.row_glyphs = _dialogue.row_glyphs.wrapping_add(1);
-            *_cursor = _cursor.wrapping_add(1);
-            if glyph == BLANK {
-                continue;
-            }
-            finish_row = _dialogue.row_glyphs == ROW_GLYPHS as u8;
-            if !finish_row {
+        match instruction {
+            TextInstruction::Finish => {
+                _panel.encoded[at] = FINAL_GLYPH;
                 _panel.encoded[at + 1] = ROW_END;
-                _panel.encoded[start + 2] = _dialogue.row_glyphs.wrapping_sub(1);
+                _panel.encoded[start + 2] = _dialogue.row_glyphs;
                 _panel.pending = ROW_END;
+                *_cursor = 0;
                 return Ok(TextStep {
-                    boundary: TextBoundary::GlyphWait,
-                    sound: Some(GLYPH_SOUND),
-                    wait_ticks: GLYPH_WAIT,
-                });
-            }
-        } else {
-            *_cursor = _cursor.wrapping_add(1);
-        }
-        if finish_row {
-            while _dialogue.row_glyphs < ROW_GLYPHS as u8 {
-                let at = start + 3 + usize::from(_dialogue.row_glyphs);
-                _panel.encoded[at] = BLANK;
-                _dialogue.row_glyphs += 1;
-            }
-            _panel.encoded[usize::from(_catalog.row_end_offsets[line])] = ROW_END;
-            _panel.encoded[start + 2] = _dialogue.row_glyphs.wrapping_sub(1);
-            _panel.pending = ROW_END;
-            if line == 2 {
-                return Ok(TextStep {
-                    boundary: TextBoundary::PageComplete,
+                    boundary: TextBoundary::MessageComplete,
                     sound: None,
                     wait_ticks: 0,
                 });
             }
-            _dialogue.line += 1;
-            _dialogue.row_glyphs = 0;
+            TextInstruction::Blank => {
+                _panel.encoded[at] = BLANK;
+                _dialogue.row_glyphs = _dialogue.row_glyphs.wrapping_add(1);
+                *_cursor = _cursor.wrapping_add(1);
+                continue;
+            }
+            TextInstruction::Glyph(tile) => {
+                _panel.encoded[at] = tile;
+                _dialogue.row_glyphs = _dialogue.row_glyphs.wrapping_add(1);
+                *_cursor = _cursor.wrapping_add(1);
+                if _dialogue.row_glyphs != ROW_GLYPHS as u8 {
+                    _panel.encoded[at + 1] = ROW_END;
+                    _panel.encoded[start + 2] = _dialogue.row_glyphs.wrapping_sub(1);
+                    _panel.pending = ROW_END;
+                    return Ok(TextStep {
+                        boundary: TextBoundary::GlyphWait,
+                        sound: Some(GLYPH_SOUND),
+                        wait_ticks: GLYPH_WAIT,
+                    });
+                }
+            }
+            TextInstruction::NextRow => *_cursor = _cursor.wrapping_add(1),
         }
+        // Only an explicit row break or the seventeenth paced glyph reaches
+        // row completion. Blank and Finish deliberately bypass this path.
+        while _dialogue.row_glyphs < ROW_GLYPHS as u8 {
+            let at = start + 3 + usize::from(_dialogue.row_glyphs);
+            _panel.encoded[at] = BLANK;
+            _dialogue.row_glyphs += 1;
+        }
+        _panel.encoded[usize::from(_catalog.row_end_offsets[line])] = ROW_END;
+        _panel.encoded[start + 2] = _dialogue.row_glyphs.wrapping_sub(1);
+        _panel.pending = ROW_END;
+        if line == TEXT_ROWS - 1 {
+            return Ok(TextStep {
+                boundary: TextBoundary::PageComplete,
+                sound: None,
+                wait_ticks: 0,
+            });
+        }
+        _dialogue.line += 1;
+        _dialogue.row_glyphs = 0;
     }
 }
 pub fn scroll_rows(_dialogue: &mut Dialogue, _panel: &mut Panel) {
@@ -522,8 +524,14 @@ fn apply_outcome_with_panel(
                 return;
             }
             let actor = &mut _context.actors[slot];
-            actor.handler = PAID_HANDLER;
-            actor.state &= 0xe0;
+            {
+                let actor_value = PAID_HANDLER;
+                actor.set_handler(actor_value);
+            };
+            {
+                let actor_value = actor.state_code() & (0xe0);
+                actor.set_state_code(actor_value);
+            };
             actor.position.world_x = (actor.position.world_x & 0xff00) | u16::from(PAID_POSITION);
             actor.position.screen_y = PAID_POSITION;
             actor.profile |= 0x80;
@@ -550,15 +558,24 @@ fn apply_outcome_with_panel(
         }
         6 => {
             let actor = &mut _context.actors[slot];
-            actor.state = 0xa0;
-            actor.handler = REVEAL_HANDLER;
+            {
+                let actor_value = 0xa0;
+                actor.set_state_code(actor_value);
+            };
+            {
+                let actor_value = REVEAL_HANDLER;
+                actor.set_handler(actor_value);
+            };
             actor.animation = REVEAL_ANIMATION;
             actor.position.screen_y = REVEAL_Y;
             actor.position.world_x = (actor.position.world_x & 0xff00) | u16::from(REVEAL_X);
-            actor.animation_frame = 0;
-            actor.animation_tick = 0;
+            actor.playback.reset_frame();
+            actor.playback.restart_clock();
             actor.hit_marker = 0;
-            actor.local_state = REVEAL_PHASE;
+            {
+                let actor_value = REVEAL_PHASE;
+                actor.set_local_state_code(actor_value);
+            };
             for cell in REVEAL_CACHE_CELLS {
                 _context.cache.collision[cell] = 0;
             }
@@ -613,7 +630,7 @@ pub fn update_actor(
             if !_systems.contact(_context.actors, _context.player, slot) {
                 return;
             }
-            let selector = _context.actors[slot].local_state;
+            let selector = _context.actors[slot].local_state_code();
             if selector == 0 && _context.progression.seen_messages[0] & 8 == 0 {
                 return;
             }
@@ -627,7 +644,7 @@ pub fn update_actor(
         }
         Family::DialogueContact => {
             if matches!(_context.player.action, Action::Damage | Action::Death)
-                || _context.actors[slot].state & 15 != 0
+                || _context.actors[slot].state_code() & 15 != 0
             {
                 return;
             }
@@ -641,32 +658,44 @@ pub fn update_actor(
                 return;
             }
             _context.player.action = Action::Dialogue;
-            _context.actors[slot].state = _context.actors[slot].state.wrapping_add(1);
-            let message = _context.actors[slot].local_state;
+            {
+                let actor_value = _context.actors[slot].state_code().wrapping_add(1);
+                _context.actors[slot].set_state_code(actor_value);
+            };
+            let message = _context.actors[slot].local_state_code();
             _context.dialogue.message = message;
             _context.dialogue.actor_slot = slot;
             if message == OutcomeMessage::EscortPrerequisite as u8 {
                 _context.progression.escort_prerequisite =
                     _context.progression.escort_prerequisite.wrapping_add(1);
-                _context.actors[slot].state = 0;
+                {
+                    let actor_value = 0;
+                    _context.actors[slot].set_state_code(actor_value);
+                };
                 suppress(_context, slot);
             }
             _context.progression.seen_messages[usize::from(message >> 3)] |= 1u8 << (message & 7);
         }
         Family::HitActivated => {
-            if _context.actors[slot].state & 15 == 0 {
+            if _context.actors[slot].state_code() & 15 == 0 {
                 if _context.actors[slot].hit_marker == 0 {
-                    _context.actors[slot].animation_tick = 0;
+                    _context.actors[slot].playback.restart_clock();
                     return;
                 }
                 _context.progression.hit_dialogue_count =
                     _context.progression.hit_dialogue_count.wrapping_add(1);
                 _context.actors[slot].vertical_velocity = 0;
-                _context.actors[slot].local_counter = 0;
+                {
+                    let actor_value = 0;
+                    _context.actors[slot].set_local_counter_code(actor_value);
+                };
                 _context.actors[slot].profile = 0x80;
-                _context.actors[slot].state = _context.actors[slot].state.wrapping_add(1);
+                {
+                    let actor_value = _context.actors[slot].state_code().wrapping_add(1);
+                    _context.actors[slot].set_state_code(actor_value);
+                };
             }
-            if _context.actors[slot].state & 2 == 0 {
+            if _context.actors[slot].state_code() & 2 == 0 {
                 if _systems.motion(
                     _context.actors,
                     _context.player,
@@ -680,10 +709,13 @@ pub fn update_actor(
                 {
                     _context.actors[slot].horizontal_magnitude = HIT_LAUNCH_SPEED;
                     _context.actors[slot].vertical_velocity = HIT_LAUNCH_VELOCITY;
-                    _context.actors[slot].state = _context.actors[slot].state.wrapping_add(1);
+                    {
+                        let actor_value = _context.actors[slot].state_code().wrapping_add(1);
+                        _context.actors[slot].set_state_code(actor_value);
+                    };
                 }
             } else {
-                if _context.actors[slot].local_counter == 0 {
+                if _context.actors[slot].local_counter_code() == 0 {
                     _systems.motion(
                         _context.actors,
                         _context.player,
@@ -694,8 +726,11 @@ pub fn update_actor(
                         1,
                     );
                     if _context.actors[slot].vertical_velocity < 0 {
-                        _context.actors[slot].local_counter =
-                            _context.actors[slot].local_counter.wrapping_add(1);
+                        {
+                            let actor_value =
+                                _context.actors[slot].local_counter_code().wrapping_add(1);
+                            _context.actors[slot].set_local_counter_code(actor_value);
+                        };
                         _context.actors[slot].vertical_velocity = 0;
                     }
                 } else if _systems.motion(
@@ -709,10 +744,13 @@ pub fn update_actor(
                 ) & 1
                     != 0
                 {
-                    _context.actors[slot].handler = 0;
+                    {
+                        let actor_value = 0;
+                        _context.actors[slot].set_handler(actor_value);
+                    };
                     _context.player.action = Action::Dialogue;
                     _context.progression.seen_messages[0] |= 0x40;
-                    _context.dialogue.message = _context.actors[slot].local_state;
+                    _context.dialogue.message = _context.actors[slot].local_state_code();
                     _context.dialogue.actor_slot = slot;
                     suppress(_context, slot);
                 }
@@ -726,10 +764,10 @@ pub fn update_actor(
                     1,
                 );
             }
-            _context.actors[slot].animation_tick = 0;
+            _context.actors[slot].playback.restart_clock();
         }
         Family::Escort => {
-            if _context.actors[slot].state & 15 == 0 {
+            if _context.actors[slot].state_code() & 15 == 0 {
                 if _systems.distance(_context.actors, slot) >= ESCORT_DISTANCE
                     || _context.progression.escort_prerequisite == 0
                 {
@@ -739,40 +777,64 @@ pub fn update_actor(
                 suppress(_context, slot);
                 _context.player.action = Action::Hold;
                 _context.actors[slot].position.world_x = _context.camera.x;
-                _context.actors[slot].state &= !0x10;
-                _context.actors[slot].state = _context.actors[slot].state.wrapping_add(1);
+                {
+                    let actor_value = _context.actors[slot].state_code() & (!0x10);
+                    _context.actors[slot].set_state_code(actor_value);
+                };
+                {
+                    let actor_value = _context.actors[slot].state_code().wrapping_add(1);
+                    _context.actors[slot].set_state_code(actor_value);
+                };
                 _context.actors[slot].horizontal_magnitude = ESCORT_SPEED;
                 _context.actors[slot].profile = 0;
                 return;
             }
-            if _context.actors[slot].state & 2 == 0 {
+            if _context.actors[slot].state_code() & 2 == 0 {
                 _systems.integrate(_context.actors, slot, true);
                 _context.actors[slot].render |= 0x40;
                 if _systems.distance(_context.actors, slot) >= ESCORT_DISTANCE {
                     return;
                 }
-                _context.actors[slot].state = _context.actors[slot].state.wrapping_add(1);
-                _context.actors[slot].local_state = ESCORT_PAUSE;
+                {
+                    let actor_value = _context.actors[slot].state_code().wrapping_add(1);
+                    _context.actors[slot].set_state_code(actor_value);
+                };
+                {
+                    let actor_value = ESCORT_PAUSE;
+                    _context.actors[slot].set_local_state_code(actor_value);
+                };
                 if let Some(child) = _systems.allocate(_context.actors) {
                     let parent = _context.actors[slot];
                     let actor = &mut _context.actors[child];
                     actor.animation = COMPANION_ANIMATION;
                     actor.position.screen_y = parent.position.screen_y;
                     actor.position.world_x = parent.position.world_x;
-                    actor.animation_frame = 0;
-                    actor.animation_tick = 0;
-                    actor.state = 0xa0;
+                    actor.playback.reset_frame();
+                    actor.playback.restart_clock();
+                    {
+                        let actor_value = 0xa0;
+                        actor.set_state_code(actor_value);
+                    };
                     actor.render = 0xa0;
-                    actor.handler = COMPANION_HANDLER;
+                    {
+                        let actor_value = COMPANION_HANDLER;
+                        actor.set_handler(actor_value);
+                    };
                 }
                 return;
             }
-            if _context.actors[slot].local_state != 0 {
-                _context.actors[slot].local_state -= 1;
+            if _context.actors[slot].local_state_code() != 0 {
+                {
+                    let actor_value = _context.actors[slot].local_state_code() - (1);
+                    _context.actors[slot].set_local_state_code(actor_value);
+                };
                 return;
             }
             if _context.actors[slot].render & 0x80 == 0 {
-                _context.actors[slot].state = 0;
+                {
+                    let actor_value = 0;
+                    _context.actors[slot].set_state_code(actor_value);
+                };
                 return;
             }
             if _systems.motion(
@@ -791,13 +853,16 @@ pub fn update_actor(
             }
         }
         Family::RightwardTransition => {
-            if _context.actors[slot].state & 15 == 0 {
+            if _context.actors[slot].state_code() & 15 == 0 {
                 _context.actors[slot].horizontal_magnitude = TRANSITION_SPEED;
             }
             _systems.integrate(_context.actors, slot, true);
             let x = _context.actors[slot].position.world_x;
             if x >> 8 == u16::from(TRANSITION_END_PAGE) && x as u8 >= TRANSITION_END_X {
-                _context.actors[slot].state = 0;
+                {
+                    let actor_value = 0;
+                    _context.actors[slot].set_state_code(actor_value);
+                };
                 _context.player.action = Action::Standing;
                 leaf(_systems, Work::ChangedBurst(6), _context);
                 leaf(_systems, Work::RestoreActorBank, _context);

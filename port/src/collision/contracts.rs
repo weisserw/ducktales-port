@@ -29,12 +29,12 @@ fn geometry() -> Geometry {
 }
 fn actor() -> ActorContact {
     ActorContact {
+        control: crate::actors::ActorControl::from_codes(ACTIVE, 0, 0, 0),
         position: Position {
             world_x: TEST_X,
             screen_y: TEST_Y,
             ..Default::default()
         },
-        state: ACTIVE,
         render: VISIBLE,
         profile: PROFILE_ENABLED,
         spawn_identity: Some(7),
@@ -717,9 +717,15 @@ fn horizontal_solid_scan_requires_source_visible_and_candidate_active_visible_ha
         all[2] = actor();
         all[2].render = source_render;
         all[15] = actor();
-        all[15].state = state;
+        {
+            let actor_value = state;
+            all[15].set_state_code(actor_value);
+        };
         all[15].render = render;
-        all[15].handler = handler;
+        {
+            let actor_value = handler;
+            all[15].set_handler(actor_value);
+        };
         assert_eq!(
             solid_overlap(2, &all, &geometry(), ContactAxis::Horizontal).is_some(),
             hit
@@ -731,7 +737,10 @@ fn solid_scans_exclude_self_and_player_and_choose_highest_qualifying_slot() {
     for axis in [ContactAxis::Horizontal, ContactAxis::Vertical] {
         let mut all = actors();
         all[2] = actor();
-        all[2].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[2].set_handler(actor_value);
+        };
         all[0] = all[2];
         assert_eq!(solid_overlap(2, &all, &geometry(), axis), None);
         all[1] = all[2];
@@ -760,7 +769,10 @@ fn horizontal_solid_overlap_has_strict_height_and_inclusive_width_with_zero_pene
         let mut all = actors();
         all[2] = actor();
         all[15] = actor();
-        all[15].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[15].set_handler(actor_value);
+        };
         all[15].position.world_x += u16::from(dx);
         all[15].position.screen_y += dy;
         assert_eq!(
@@ -780,7 +792,10 @@ fn vertical_solid_overlap_has_strict_width_and_inclusive_height_with_zero_penetr
         let mut all = actors();
         all[2] = actor();
         all[15] = actor();
-        all[15].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[15].set_handler(actor_value);
+        };
         all[15].position.world_x += u16::from(dx);
         all[15].position.screen_y += dy;
         assert_eq!(
@@ -801,7 +816,10 @@ fn solid_overlap_uses_target_profile_not_source_and_does_not_require_profile_ena
     all[2].profile = 1;
     all[15] = actor();
     all[15].profile = 0;
-    all[15].handler = SOLID_HANDLER;
+    {
+        let actor_value = SOLID_HANDLER;
+        all[15].set_handler(actor_value);
+    };
     all[15].position.world_x += 5;
     assert_eq!(
         solid_overlap(2, &all, &g, ContactAxis::Horizontal),
@@ -817,7 +835,10 @@ fn world_x_contact_selects_absolute_low_byte_using_full_unsigned_borrow_without_
     let mut all = actors();
     all[2] = actor();
     all[15] = actor();
-    all[15].handler = SOLID_HANDLER;
+    {
+        let actor_value = SOLID_HANDLER;
+        all[15].set_handler(actor_value);
+    };
     all[2].position.world_x = 0x0200;
     all[15].position.world_x = 0x0101;
     assert_eq!(
@@ -844,7 +865,10 @@ fn player_horizontal_scan_uses_render_profile_enable_but_not_state_or_vertical_s
     let mut all = actors();
     all[0] = actor();
     all[15] = actor();
-    all[15].state = 0;
+    {
+        let actor_value = 0;
+        all[15].set_state_code(actor_value);
+    };
     all[15].render |= SKIP_VERTICAL_PLAYER_SCAN;
     let r = scan_player(
         ContactAxis::Horizontal,
@@ -883,7 +907,10 @@ fn player_horizontal_protection_keeps_only_handlers_eight_and_fifteen_hex() {
         let mut all = actors();
         all[0] = actor();
         all[15] = actor();
-        all[15].handler = handler;
+        {
+            let actor_value = handler;
+            all[15].set_handler(actor_value);
+        };
         let mut p = PlayerContact {
             protection: 1,
             ..Default::default()
@@ -966,7 +993,10 @@ fn player_vertical_scan_skips_render_bit_one_and_disabled_profiles_but_ignores_s
         all[15] = actor();
         all[15].render = render;
         all[15].profile = profile;
-        all[15].state = state;
+        {
+            let actor_value = state;
+            all[15].set_state_code(actor_value);
+        };
         assert_eq!(
             scan_player(
                 ContactAxis::Vertical,
@@ -1097,7 +1127,10 @@ fn generic_player_predicate_has_strict_y_inclusive_x_and_does_not_require_enable
         (0, TEST_HEIGHT - 1, true),
     ] {
         let mut a = actor();
-        a.state = 0;
+        {
+            let actor_value = 0;
+            a.set_state_code(actor_value);
+        };
         a.profile = 0;
         let mut pos = a.position;
         pos.world_x += u16::from(dx);
@@ -1212,7 +1245,12 @@ fn wrappers_release_full_horizontal_escape_immediately_with_matching_special_spa
         assert!(r.removed);
         assert!(r.probe.is_none());
         assert_eq!(
-            (all[2].state, all[2].render, all[2].spawn_identity, special),
+            (
+                all[2].state_code(),
+                all[2].render,
+                all[2].spawn_identity,
+                special
+            ),
             (0, 0, None, expected_latch)
         );
         assert_eq!(
@@ -1231,7 +1269,10 @@ fn horizontal_wrappers_apply_terrain_snap_then_facing_and_actor_penetration() {
         all[2] = actor();
         all[2].render |= FACE_POSITIVE;
         all[15] = actor();
-        all[15].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[15].set_handler(actor_value);
+        };
         // Start160, nibble0: +X snap stays160, actor penetration10 ->156.
         // -X snap becomes170, target170 gives penetration10 ->17A.
         if movement == Movement::NegativeX {
@@ -1261,9 +1302,15 @@ fn horizontal_wrapper_exemptions_are_directional_for_handler_twentyfour_hex() {
     ] {
         let mut all = actors();
         all[2] = actor();
-        all[2].handler = handler;
+        {
+            let actor_value = handler;
+            all[2].set_handler(actor_value);
+        };
         all[15] = actor();
-        all[15].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[15].set_handler(actor_value);
+        };
         let r = move_case(&mut all, movement, 0, 0, &mut 0);
         assert_eq!(r.phases.contains(&MovementPhase::SolidActors), scanned);
         assert_eq!(r.contact.is_some(), scanned);
@@ -1274,7 +1321,10 @@ fn player_horizontal_wrapper_skips_actor_scan_but_still_sets_facing_and_terrain_
     let mut all = actors();
     all[0] = actor();
     all[15] = actor();
-    all[15].handler = SOLID_HANDLER;
+    {
+        let actor_value = SOLID_HANDLER;
+        all[15].set_handler(actor_value);
+    };
     let r = move_with_collision(
         0,
         &mut all,
@@ -1379,10 +1429,16 @@ fn falling_actor_landing_subtracts_penetration_and_zero_profile_or_handler_nine_
         let mut all = actors();
         all[2] = actor();
         all[2].profile = profile;
-        all[2].handler = handler;
+        {
+            let actor_value = handler;
+            all[2].set_handler(actor_value);
+        };
         all[2].vertical_velocity = -0x0100;
         all[15] = actor();
-        all[15].handler = SOLID_HANDLER;
+        {
+            let actor_value = SOLID_HANDLER;
+            all[15].set_handler(actor_value);
+        };
         all[15].position.screen_y = TEST_Y + 1;
         let r = move_case(&mut all, Movement::Fall, 0, 0, &mut 0);
         assert_eq!(r.contact.is_some(), land);
@@ -1418,7 +1474,7 @@ fn rising_integrates_before_gravity_ignores_unsigned_boundary_and_sets_downward_
         (all[2].position.screen_y, all[2].vertical_velocity),
         (0, -0x0100)
     ); // FF snap +1 wraps0
-    assert_eq!(all[2].state, ACTIVE);
+    assert_eq!(all[2].state_code(), ACTIVE);
 }
 #[test]
 fn rising_actor_contact_adds_penetration_plus_one_and_sets_ff00_not_zero_velocity() {
@@ -1426,7 +1482,10 @@ fn rising_actor_contact_adds_penetration_plus_one_and_sets_ff00_not_zero_velocit
     all[2] = actor();
     all[2].vertical_velocity = 0x0100;
     all[15] = actor();
-    all[15].handler = SOLID_HANDLER;
+    {
+        let actor_value = SOLID_HANDLER;
+        all[15].set_handler(actor_value);
+    };
     all[15].position.screen_y = TEST_Y - 1;
     let r = move_case(&mut all, Movement::Rise, 0, 0x40, &mut 0);
     assert_eq!(
@@ -1465,8 +1524,14 @@ fn ordinary_transition_clear_preserves_slots_zero_one_and_clears_only_activity_r
  {
     let mut all = [actor(); ACTOR_SLOTS];
     for a in &mut all {
-        a.local_state = 9;
-        a.local_counter = 2;
+        {
+            let actor_value = 9;
+            a.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 2;
+            a.set_local_counter_code(actor_value);
+        };
         a.hit_marker = 7;
     }
     let old = all;
@@ -1475,11 +1540,15 @@ fn ordinary_transition_clear_preserves_slots_zero_one_and_clears_only_activity_r
     assert_eq!(all[1], old[1]);
     for actor in all.iter().skip(2) {
         assert_eq!(
-            (actor.state, actor.render, actor.spawn_identity),
+            (actor.state_code(), actor.render, actor.spawn_identity),
             (0, 0, None)
         );
         assert_eq!(
-            (actor.local_state, actor.local_counter, actor.hit_marker),
+            (
+                actor.local_state_code(),
+                actor.local_counter_code(),
+                actor.hit_marker
+            ),
             (9, 2, 7)
         );
     }
@@ -1493,13 +1562,16 @@ fn stage_one_first_two_rows_preserve_every_actor_and_mark_only_fourteen_fifteen(
         assert_eq!(&all[..14], &old[..14]);
         for slot in [14, 15] {
             let mut expected = old[slot];
-            expected.state |= PRESERVED_ACTOR_MARK;
+            {
+                let actor_value = expected.state_code() | (PRESERVED_ACTOR_MARK);
+                expected.set_state_code(actor_value);
+            };
             assert_eq!(all[slot], expected);
         }
     }
     let mut all = [actor(); ACTOR_SLOTS];
     clear_transition_actors(&mut all, 1, 2);
-    assert_eq!(all[15].state, 0);
+    assert_eq!(all[15].state_code(), 0);
 }
 #[test]
 fn preserved_actor_timer_uses_literal_sixty_and_extra_sixteen_borrow_correction() {
@@ -1514,14 +1586,23 @@ fn preserved_actor_timer_uses_literal_sixty_and_extra_sixteen_borrow_correction(
         let mut all = actors();
         all[14] = actor();
         all[15] = actor();
-        all[15].local_state = low;
-        all[15].local_counter = high;
+        {
+            let actor_value = low;
+            all[15].set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = high;
+            all[15].set_local_counter_code(actor_value);
+        };
         clear_transition_actors(&mut all, 1, 0);
         assert_eq!(
-            (all[15].local_state, all[15].local_counter),
+            (all[15].local_state_code(), all[15].local_counter_code()),
             (expected_low, expected_high)
         );
-        assert_eq!((all[14].local_state, all[14].local_counter), (0, 0));
+        assert_eq!(
+            (all[14].local_state_code(), all[14].local_counter_code()),
+            (0, 0)
+        );
     }
 }
 #[test]
@@ -1529,7 +1610,10 @@ fn particle_batch_allocates_highest_inactive_slots_in_reverse_parameter_order_an
  {
     let mut all = [actor(); ACTOR_SLOTS];
     for slot in [15, 12, 7, 1] {
-        all[slot].state = 0x7f;
+        {
+            let actor_value = 0x7f;
+            all[slot].set_state_code(actor_value);
+        };
         all[slot].position.x_fraction = 9;
         all[slot].position.y_fraction = 11;
         all[slot].vertical_velocity = 0x1234;
@@ -1550,15 +1634,19 @@ fn particle_batch_allocates_highest_inactive_slots_in_reverse_parameter_order_an
     ] {
         let a = all[slot];
         assert_eq!(
-            (a.position.world_x, a.position.screen_y, a.animation_tick),
+            (
+                a.position.world_x,
+                a.position.screen_y,
+                a.playback.tick_code()
+            ),
             (0x0300 | x, y, tick)
         );
         assert_eq!(
             (
-                a.state,
+                a.state_code(),
                 a.render,
                 a.animation,
-                a.animation_frame,
+                a.playback.frame_code(),
                 a.profile,
                 a.handler
             ),
@@ -1586,7 +1674,10 @@ fn particle_batch_allocates_highest_inactive_slots_in_reverse_parameter_order_an
 #[test]
 fn particles_carry_screen_y_overflow_into_x_but_never_carry_x_into_player_page() {
     let mut all = [actor(); ACTOR_SLOTS];
-    all[15].state = 0;
+    {
+        let actor_value = 0;
+        all[15].set_state_code(actor_value);
+    };
     let mut g = geometry();
     g.particle_y[3] = 16;
     g.particle_x[3] = 16;
@@ -1601,9 +1692,15 @@ fn particles_carry_screen_y_overflow_into_x_but_never_carry_x_into_player_page()
 fn particle_allocation_excludes_player_stops_at_first_full_pool_and_always_queues_sound() {
     for free in [0, 1, 3] {
         let mut all = [actor(); ACTOR_SLOTS];
-        all[0].state = 0;
+        {
+            let actor_value = 0;
+            all[0].set_state_code(actor_value);
+        };
         for actor in all.iter_mut().take(free + 1).skip(1) {
-            actor.state = 0;
+            {
+                let actor_value = 0;
+                actor.set_state_code(actor_value);
+            };
         }
         let old_player = all[0];
         let r = terrain_particles(&mut all, &geometry(), TEST_Y, 0x60, 1);
@@ -1680,7 +1777,7 @@ fn falling_positive_encoded_velocity_is_removed_on_no_borrow_even_without_physic
     let r = move_case(&mut all, Movement::Fall, 0, 0, &mut 0);
     assert!(r.removed);
     assert_eq!(all[2].position.screen_y, TEST_Y - 1);
-    assert_eq!(all[2].state, 0);
+    assert_eq!(all[2].state_code(), 0);
 }
 #[test]
 fn rising_no_contact_keeps_wrapped_y_instead_of_using_falling_lifetime_policy() {
@@ -1692,7 +1789,7 @@ fn rising_no_contact_keeps_wrapped_y_instead_of_using_falling_lifetime_policy() 
     let r = move_case(&mut all, Movement::Rise, 0, 0, &mut 0);
     assert!(!r.removed);
     assert_eq!(all[2].position.screen_y, 0xff);
-    assert_eq!(all[2].state, ACTIVE);
+    assert_eq!(all[2].state_code(), ACTIVE);
 }
 #[test]
 fn collision_recipe_rejects_truncation_before_any_required_table_or_preset_word() {
@@ -1720,7 +1817,10 @@ fn external_positive_wrapper_returns_actual_repeat_count_after_ordinary_or_speci
     for (class, expected) in [(1, 0), (3, SPECIAL_RESPONSE_SELECTOR)] {
         let mut all = actors();
         all[2] = actor();
-        all[2].handler = POSITIVE_ONLY_EXEMPT_HANDLER;
+        {
+            let actor_value = POSITIVE_ONLY_EXEMPT_HANDLER;
+            all[2].set_handler(actor_value);
+        };
         let result = move_with_collision(
             2,
             &mut all,

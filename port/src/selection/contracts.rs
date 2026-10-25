@@ -220,13 +220,13 @@ fn title_suspended_setup_orders_clear_script_chr_palette_actors_and_enable() {
     for (slot, p) in catalog().title_actors.iter().enumerate() {
         assert_eq!(
             (
-                a[slot].state,
+                a[slot].state_code(),
                 a[slot].render,
                 a[slot].animation,
                 a[slot].position.screen_y,
                 a[slot].position.world_x,
-                a[slot].animation_tick,
-                a[slot].animation_frame
+                a[slot].playback.tick_code(),
+                a[slot].playback.frame_code()
             ),
             (0x80, 0x80, p.animation, p.y, u16::from(p.x), 0, 0)
         );
@@ -365,8 +365,14 @@ fn animated(
     words: [u8; 4],
 ) -> (ActorPool, RandomState, Composition, Vec<Operation>) {
     let mut a = pool();
-    a[0].animation_frame = frame;
-    a[0].animation_tick = tick;
+    {
+        let animation_value = frame;
+        a[0].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = tick;
+        a[0].playback.set_tick_code(animation_value);
+    };
     let mut r = RandomState { words };
     let mut c = Composition {
         clock,
@@ -379,8 +385,8 @@ fn animated(
 fn title_animation_all_nonzero_frames_bypass_tick_and_random_gates() {
     for frame in 1..=u8::MAX {
         let (a, r, c, e) = animated(frame, 1, TITLE_RANDOM_PERIOD, [0x88, 0x11, 0x22, 0x33]);
-        assert_eq!(a[0].animation_frame, frame);
-        assert_eq!(a[0].animation_tick, 1);
+        assert_eq!(a[0].playback.frame_code(), frame);
+        assert_eq!(a[0].playback.tick_code(), 1);
         assert_eq!(r.words, [0x88, 0x11, 0x22, 0x33]);
         assert_eq!(c.clock, TITLE_RANDOM_PERIOD);
         assert_eq!(
@@ -396,8 +402,8 @@ fn title_animation_requires_exact_tick_one_not_nonzero_or_masked_tick() {
             continue;
         }
         let (a, r, c, _) = animated(0, tick, TITLE_RANDOM_PERIOD, [0x88, 0x11, 0x22, 0x33]);
-        assert_eq!(a[0].animation_tick, tick);
-        assert_eq!(a[0].animation_frame, 0);
+        assert_eq!(a[0].playback.tick_code(), tick);
+        assert_eq!(a[0].playback.frame_code(), 0);
         assert_eq!(r.words, [0x88, 0x11, 0x22, 0x33]);
         assert_eq!(c.clock, TITLE_RANDOM_PERIOD);
     }
@@ -409,8 +415,8 @@ fn title_tick_resets_at_frame_zero_tick_one_even_when_clock_misses_random_period
             continue;
         }
         let (a, r, c, _) = animated(0, 1, clock, [0x88, 0x11, 0x22, 0x33]);
-        assert_eq!(a[0].animation_tick, 0);
-        assert_eq!(a[0].animation_frame, 0);
+        assert_eq!(a[0].playback.tick_code(), 0);
+        assert_eq!(a[0].playback.frame_code(), 0);
         assert_eq!(r.words, [0x88, 0x11, 0x22, 0x33]);
         assert_eq!(c.clock, clock);
     }
@@ -424,8 +430,8 @@ fn title_random_adds_compare_equality_carry_wraps_and_selects_low_bit_before_com
         ([0xff, 0xff, 0x22, 0x33], 0xff, 1),
     ] {
         let (a, r, c, e) = animated(0, 1, TITLE_RANDOM_PERIOD, words);
-        assert_eq!(a[0].animation_tick, 0);
-        assert_eq!(a[0].animation_frame, frame);
+        assert_eq!(a[0].playback.tick_code(), 0);
+        assert_eq!(a[0].playback.frame_code(), frame);
         assert_eq!(r.words, [result, words[1], words[2], words[3]]);
         assert_eq!(c.clock, 0);
         assert_eq!(
@@ -491,34 +497,43 @@ fn land_actor_initialization_copies_all_eight_records_and_preserves_unwritten_fi
     let mut a = pool();
     for actor in &mut a {
         actor.position.world_x = u16::MAX;
-        actor.handler = 0x37;
-        actor.local_state = 0x48;
+        {
+            let actor_value = 0x37;
+            actor.set_handler(actor_value);
+        };
+        {
+            let actor_value = 0x48;
+            actor.set_local_state_code(actor_value);
+        };
         actor.position.x_fraction = 0x59;
         actor.position.y_fraction = 0x6a;
-        actor.animation_restart = 0x7b;
+        {
+            let animation_value = 0x7b;
+            actor.playback.set_restart_code(animation_value);
+        };
     }
     let before = a;
     initialize_land_actors(&mut a, &catalog());
     for (slot, p) in catalog().land_actors.iter().enumerate() {
         assert_eq!(
             (
-                a[slot].state,
+                a[slot].state_code(),
                 a[slot].render,
                 a[slot].animation,
                 a[slot].position.screen_y,
                 a[slot].position.world_x,
-                a[slot].animation_frame,
-                a[slot].animation_tick
+                a[slot].playback.frame_code(),
+                a[slot].playback.tick_code()
             ),
             (0x80, 0x90, p.animation, p.y, u16::from(p.x), 0, 0)
         );
         assert_eq!(
             (
                 a[slot].handler,
-                a[slot].local_state,
+                a[slot].local_state_code(),
                 a[slot].position.x_fraction,
                 a[slot].position.y_fraction,
-                a[slot].animation_restart
+                a[slot].playback.restart_code()
             ),
             (0x37, 0x48, 0x59, 0x6a, 0x7b)
         );
@@ -659,8 +674,14 @@ fn positioning_all_five_lands_preserves_animation_clocks_but_sets_exact_four_act
     for (index, land) in LANDS.into_iter().enumerate() {
         let mut a = pool();
         for actor in &mut a {
-            actor.animation_tick = 0x23;
-            actor.animation_frame = 0x34;
+            {
+                let animation_value = 0x23;
+                actor.playback.set_tick_code(animation_value);
+            };
+            {
+                let animation_value = 0x34;
+                actor.playback.set_frame_code(animation_value);
+            };
             actor.render = 0x56;
             actor.position.world_x = 0x8900;
         }
@@ -668,8 +689,8 @@ fn positioning_all_five_lands_preserves_animation_clocks_but_sets_exact_four_act
         assert_eq!(a[0].position.screen_y, catalog().cursor_y[index]);
         for slot in [2, 4] {
             assert_eq!(a[slot].animation, LAND_NAME_ANIMATION_BASE + index as u8);
-            assert_eq!(a[slot].animation_tick, 0x23);
-            assert_eq!(a[slot].animation_frame, 0x34);
+            assert_eq!(a[slot].playback.tick_code(), 0x23);
+            assert_eq!(a[slot].playback.frame_code(), 0x34);
         }
         assert_eq!(a[3].position.screen_y, catalog().name_y[index]);
         assert_eq!(
@@ -677,7 +698,7 @@ fn positioning_all_five_lands_preserves_animation_clocks_but_sets_exact_four_act
             0x8900 | u16::from(catalog().name_x[index])
         );
         for slot in [0, 2, 3, 4] {
-            assert_eq!(a[slot].state, 0x80);
+            assert_eq!(a[slot].state_code(), 0x80);
         }
         assert_eq!(a[3].render, 0x90);
         for slot in [0, 2, 4] {
@@ -693,10 +714,22 @@ fn land_up_and_down_wrap_all_five_source_entries_and_reset_name_clocks() {
         for (edge, target) in [(Buttons::UP, up[index]), (Buttons::DOWN, down[index])] {
             let mut selected = land;
             let mut a = pool();
-            a[2].animation_tick = 3;
-            a[2].animation_frame = 4;
-            a[4].animation_tick = 5;
-            a[4].animation_frame = 6;
+            {
+                let animation_value = 3;
+                a[2].playback.set_tick_code(animation_value);
+            };
+            {
+                let animation_value = 4;
+                a[2].playback.set_frame_code(animation_value);
+            };
+            {
+                let animation_value = 5;
+                a[4].playback.set_tick_code(animation_value);
+            };
+            {
+                let animation_value = 6;
+                a[4].playback.set_frame_code(animation_value);
+            };
             let out = land_input(
                 &mut selected,
                 &mut a,
@@ -718,8 +751,8 @@ fn land_up_and_down_wrap_all_five_source_entries_and_reset_name_clocks() {
                 }
             );
             for slot in [2, 4] {
-                assert_eq!(a[slot].animation_frame, 0);
-                assert_eq!(a[slot].animation_tick, 0);
+                assert_eq!(a[slot].playback.frame_code(), 0);
+                assert_eq!(a[slot].playback.tick_code(), 0);
                 assert_eq!(a[slot].animation, LAND_NAME_ANIMATION_BASE + target as u8);
             }
             assert_eq!(a[0].position.screen_y, catalog().cursor_y[target]);
@@ -1022,9 +1055,18 @@ fn title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fie
         actor.position.world_x = u16::MAX;
         actor.position.x_fraction = 0x34;
         actor.position.y_fraction = 0x45;
-        actor.local_state = 0x56;
-        actor.handler = 0x67;
-        actor.animation_restart = 0x78;
+        {
+            let actor_value = 0x56;
+            actor.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0x67;
+            actor.set_handler(actor_value);
+        };
+        {
+            let animation_value = 0x78;
+            actor.playback.set_restart_code(animation_value);
+        };
     }
     let before = a;
     initialize_title_actors(&mut a, &catalog());
@@ -1035,9 +1077,9 @@ fn title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fie
             (
                 actor.position.x_fraction,
                 actor.position.y_fraction,
-                actor.local_state,
+                actor.local_state_code(),
                 actor.handler,
-                actor.animation_restart
+                actor.playback.restart_code()
             ),
             (0x34, 0x45, 0x56, 0x67, 0x78)
         );
@@ -1049,20 +1091,20 @@ fn title_actor_initialization_preserves_unwritten_fraction_handler_and_local_fie
 fn completion_message_owner_returns_exact_pending_cursor_before_acknowledgement() {
     let catalog = crate::status::StatusCatalog::decode_original(&rom()).unwrap();
     let status = crate::status::Status {
-        reward: [crate::status::BLANK; 6],
-        total: [crate::status::BLANK; 7],
+        reward: [crate::status::BLANK; 6].into(),
+        total: [crate::status::BLANK; 7].into(),
         lives: 0,
-        health: crate::status::Health {
-            segments: [crate::status::HealthSegment {
+        health: crate::status::Health::from_overlay(
+            [crate::status::HealthSegment {
                 y: 0,
                 tile: 0,
                 depleted: 0,
                 x: 0,
             }; crate::status::OVERLAY_SEGMENTS],
-            end: 0xff,
-            alternating: 0,
-        },
-        countdown: [0; 3],
+            0xff,
+            0,
+        ),
+        countdown: [0; 3].into(),
         divider: 0,
         dirty: 0,
         ui_pending: 0,

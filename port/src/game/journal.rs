@@ -131,8 +131,8 @@ pub(super) fn actor_changes(
         if old == new {
             continue;
         }
-        let was_active = old.state & actors::ACTIVE != 0;
-        let active = new.state & actors::ACTIVE != 0;
+        let was_active = old.state_code() & actors::ACTIVE != 0;
+        let active = new.state_code() & actors::ACTIVE != 0;
         let kind = if !was_active && active {
             "ActorSpawned"
         } else if was_active && !active {

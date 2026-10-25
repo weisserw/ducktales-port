@@ -104,7 +104,7 @@ impl Fixture {
     fn new(handler: u8) -> Self {
         let mut actors = [ActorContact::default(); ACTOR_SLOTS];
         actors[SUBJECT] = ActorContact {
-            state: ACTIVE,
+            control: crate::actors::ActorControl::from_codes(ACTIVE, 0, 0, 0),
             render: VISIBLE,
             handler,
             animation: 0x1a,
@@ -124,20 +124,20 @@ impl Fixture {
                 words: [2, 4, 6, 8],
             },
             status: Status {
-                reward: [BLANK; 6],
-                total: [BLANK; 7],
+                reward: [BLANK; 6].into(),
+                total: [BLANK; 7].into(),
                 lives: 1,
-                health: Health {
-                    segments: [HealthSegment {
+                health: Health::from_overlay(
+                    [HealthSegment {
                         y: 0,
                         tile: 0,
                         depleted: 0,
                         x: 0,
                     }; 5],
-                    end: 0x80,
-                    alternating: 0,
-                },
-                countdown: [0; 3],
+                    0x80,
+                    0,
+                ),
+                countdown: [0; 3].into(),
                 divider: 0,
                 dirty: 0,
                 ui_pending: 0,
@@ -237,13 +237,22 @@ impl Fixture {
     }
     fn swing(&mut self) {
         self.actors[0].animation = crate::player::SWING_ANIMATION;
-        self.actors[0].animation_frame = SWING_FRAME;
+        {
+            let animation_value = SWING_FRAME;
+            self.actors[0].playback.set_frame_code(animation_value);
+        };
         self.world.contact = true;
     }
     fn revealed(&mut self) {
         self.a().animation = REACTION_ANIMATION;
-        self.a().animation_frame = 1;
-        self.a().animation_tick = REVEAL_TICK;
+        {
+            let animation_value = 1;
+            self.a().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = REVEAL_TICK;
+            self.a().playback.set_tick_code(animation_value);
+        };
     }
 }
 
@@ -254,7 +263,10 @@ fn terrain_offscreen_culls_except_two_persistent_animations() {
         f.a().render = 0;
         f.a().animation = animation;
         f.run();
-        assert_eq!(f.actor().state, if animation == 0x1a { 0 } else { ACTIVE });
+        assert_eq!(
+            f.actor().state_code(),
+            if animation == 0x1a { 0 } else { ACTIVE }
+        );
     }
 }
 
@@ -264,8 +276,14 @@ fn swing_requires_animation_tick_frame_and_contact() {
         let mut f = Fixture::new(TERRAIN_HANDLER);
         f.swing();
         match gate {
-            0 => f.actors[0].animation_tick = 1,
-            1 => f.actors[0].animation_frame = 2,
+            0 => {
+                let animation_value = 1;
+                f.actors[0].playback.set_tick_code(animation_value);
+            }
+            1 => {
+                let animation_value = 2;
+                f.actors[0].playback.set_frame_code(animation_value);
+            }
             2 => f.actors[0].animation = 0,
             _ => f.world.contact = false,
         };
@@ -279,12 +297,15 @@ fn swing_requires_animation_tick_frame_and_contact() {
 fn swing_claims_frame_before_immediate_terrain_mutation() {
     let mut f = Fixture::new(TERRAIN_HANDLER);
     f.swing();
-    f.a().state |= TERRAIN_REPRESENTATION;
+    {
+        let actor_value = f.a().state_code() | (TERRAIN_REPRESENTATION);
+        f.a().set_state_code(actor_value);
+    };
     f.player.pose_direction = 2;
     f.run();
     assert_eq!(f.changed, 2);
     assert_eq!(f.actor().handler, MOVING_HANDLER);
-    assert_eq!(f.actor().state, ACTIVE);
+    assert_eq!(f.actor().state_code(), ACTIVE);
     assert_eq!(f.actor().direction, 2);
     assert_eq!(f.actor().vertical_velocity, 0x0321);
     assert_eq!(f.world.calls.last(), Some(&Work::ReplaceTerrain(SUBJECT)));
@@ -318,11 +339,14 @@ fn hit_terrain_gate_defers_when_frame_claimed_and_clears_flag_after_mutation() {
     for changed in [0, 1] {
         let mut f = Fixture::new(TERRAIN_HANDLER);
         f.a().hit_marker = 1;
-        f.a().state |= TERRAIN_REPRESENTATION;
+        {
+            let actor_value = f.a().state_code() | (TERRAIN_REPRESENTATION);
+            f.a().set_state_code(actor_value);
+        };
         f.changed = changed;
         f.run();
         assert_eq!(
-            f.actor().state & TERRAIN_REPRESENTATION,
+            f.actor().state_code() & TERRAIN_REPRESENTATION,
             if changed == 0 {
                 0
             } else {
@@ -372,10 +396,13 @@ fn ordinary_hit_terminal_effect_preserves_high_render_bits() {
 fn launch_shared_entry_bypasses_frame_claim_and_replacement() {
     let mut f = Fixture::new(TERRAIN_HANDLER);
     f.changed = 9;
-    f.a().state = 0xf0;
+    {
+        let actor_value = 0xf0;
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = 0x1c;
     f.invoke(5);
-    assert_eq!(f.actor().state, 0xf2);
+    assert_eq!(f.actor().state_code(), 0xf2);
     assert_eq!(f.actor().handler, MOVING_HANDLER);
     assert_eq!(f.changed, 9);
     assert!(f.world.calls.is_empty());
@@ -385,7 +412,10 @@ fn launch_shared_entry_bypasses_frame_claim_and_replacement() {
 fn motion_arc_aliases_all_five_presets_and_rise_then_horizontal() {
     for phase in [0, 3, 4, 5, 7] {
         let mut f = Fixture::new(MOVING_HANDLER);
-        f.a().state = ACTIVE | phase;
+        {
+            let actor_value = ACTIVE | phase;
+            f.a().set_state_code(actor_value);
+        };
         f.run();
         assert_eq!(
             f.world.calls,
@@ -436,7 +466,10 @@ fn arc_actor_contact_enters_removal_at_animation_store_without_sound() {
 #[test]
 fn fall_then_slide_clear_floor_latches_and_skips_horizontal() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actor().motion_flags, 1);
     assert_eq!(
@@ -451,7 +484,10 @@ fn fall_then_slide_clear_floor_latches_and_skips_horizontal() {
 #[test]
 fn fall_then_slide_floor_with_existing_latch_enters_special_reward() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().motion_flags = 1;
     f.world.facts.push_back(CONTACT);
     f.run();
@@ -462,14 +498,26 @@ fn fall_then_slide_floor_with_existing_latch_enters_special_reward() {
 #[test]
 fn transfer_contact_activates_target_immediately_and_removes_source() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 2;
-    f.actors[CHILD].handler = TERRAIN_HANDLER;
+    {
+        let actor_value = f.a().state_code() | (2);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = TERRAIN_HANDLER;
+        f.actors[CHILD].set_handler(actor_value);
+    };
     f.actors[CHILD].animation = SPECIAL_TERRAIN_ANIMATION;
-    f.actors[CHILD].state = ACTIVE | TERRAIN_REPRESENTATION;
+    {
+        let actor_value = ACTIVE | TERRAIN_REPRESENTATION;
+        f.actors[CHILD].set_state_code(actor_value);
+    };
     f.world.target = Some(CHILD);
     f.run();
     assert_eq!(f.actors[CHILD].handler, MOVING_HANDLER);
-    assert_eq!(f.actors[CHILD].state, ACTIVE | TERRAIN_REPRESENTATION | 1);
+    assert_eq!(
+        f.actors[CHILD].state_code(),
+        ACTIVE | TERRAIN_REPRESENTATION | 1
+    );
     assert_eq!(f.actor().handler, 0);
 }
 
@@ -477,7 +525,10 @@ fn transfer_contact_activates_target_immediately_and_removes_source() {
 fn transfer_floor_or_wall_removes_before_actor_scan() {
     for facts in [[CONTACT, 0], [0, CONTACT]] {
         let mut f = Fixture::new(MOVING_HANDLER);
-        f.a().state |= 2;
+        {
+            let actor_value = f.a().state_code() | (2);
+            f.a().set_state_code(actor_value);
+        };
         f.world.facts = facts.into();
         f.run();
         assert_eq!(f.actor().handler, 0);
@@ -488,7 +539,10 @@ fn transfer_floor_or_wall_removes_before_actor_scan() {
 #[test]
 fn slide_pose_sets_twenty_hex_before_fall_and_reacts_to_latched_floor() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 6;
+    {
+        let actor_value = f.a().state_code() | (6);
+        f.a().set_state_code(actor_value);
+    };
     f.a().motion_flags = 1;
     f.world.facts.push_back(CONTACT);
     f.run();
@@ -499,22 +553,34 @@ fn slide_pose_sets_twenty_hex_before_fall_and_reacts_to_latched_floor() {
 #[test]
 fn touch_pose_contact_sets_animation_and_mutates_target_in_same_call() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 8;
+    {
+        let actor_value = f.a().state_code() | (8);
+        f.a().set_state_code(actor_value);
+    };
     f.world.facts.push_back(CONTACT);
     f.world.target = Some(CHILD);
-    f.actors[CHILD].handler = TERRAIN_HANDLER;
-    f.actors[CHILD].state = ACTIVE | TERRAIN_REPRESENTATION;
+    {
+        let actor_value = TERRAIN_HANDLER;
+        f.actors[CHILD].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | TERRAIN_REPRESENTATION;
+        f.actors[CHILD].set_state_code(actor_value);
+    };
     f.changed = 0;
     f.run();
     assert_eq!(f.actor().animation, IGNORED_HIT_ANIMATION);
-    assert_eq!(f.actors[CHILD].state & TERRAIN_REPRESENTATION, 0);
+    assert_eq!(f.actors[CHILD].state_code() & TERRAIN_REPRESENTATION, 0);
     assert_eq!(f.changed, 1);
 }
 
 #[test]
 fn touch_pose_floor_restores_handler_eight_only_without_contact_target() {
     let mut f = Fixture::new(MOVING_HANDLER);
-    f.a().state |= 8;
+    {
+        let actor_value = f.a().state_code() | (8);
+        f.a().set_state_code(actor_value);
+    };
     f.a().motion_flags = 1;
     f.world.facts.push_back(CONTACT);
     f.run();
@@ -533,7 +599,7 @@ fn proximity_fall_strict_four_or_thirty_two_threshold() {
         f.a().animation = animation;
         f.actors[0].position.world_x = ACTOR_X - distance;
         f.run();
-        assert_eq!(f.actor().state & 1, u8::from(active));
+        assert_eq!(f.actor().state_code() & 1, u8::from(active));
     }
 }
 
@@ -542,7 +608,7 @@ fn proximity_offscreen_culls_without_player_or_terrain_calls() {
     let mut f = Fixture::new(FALLING_HANDLER);
     f.a().render = 0;
     f.run();
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert!(f.world.calls.is_empty());
 }
 
@@ -551,7 +617,10 @@ fn proximity_special_animation_skips_replacement_but_ordinary_changes_profile_ab
     for animation in [0x20, 0x87] {
         let mut f = Fixture::new(FALLING_HANDLER);
         f.a().animation = animation;
-        f.a().state |= TERRAIN_REPRESENTATION;
+        {
+            let actor_value = f.a().state_code() | (TERRAIN_REPRESENTATION);
+            f.a().set_state_code(actor_value);
+        };
         f.actors[0].position.screen_y = ACTOR_Y + 1;
         f.run();
         assert_eq!(f.changed, if animation == 0x87 { 0 } else { 1 });
@@ -562,7 +631,10 @@ fn proximity_special_animation_skips_replacement_but_ordinary_changes_profile_ab
 #[test]
 fn proximity_player_contact_removes_before_fall() {
     let mut f = Fixture::new(FALLING_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.world.contact = true;
     f.run();
     assert_eq!(f.actor().handler, 0);
@@ -575,7 +647,7 @@ fn reaction_offscreen_clears_state_render_only_and_no_random() {
     f.a().render = 0x40;
     let old = *f.actor();
     let e = f.invoke(1);
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert_eq!(f.actor().render, 0);
     assert_eq!(f.actor().handler, old.handler);
     assert_eq!(f.random.words, [2, 4, 6, 8]);
@@ -597,12 +669,15 @@ fn reaction_queue_comparison_not_enqueue_success_supplies_rng_increment() {
 #[test]
 fn reaction_initializes_same_call_arc_and_facing_equality_is_positive() {
     let mut f = Fixture::new(TERRAIN_HANDLER);
-    f.a().state = 0xff;
+    {
+        let actor_value = 0xff;
+        f.a().set_state_code(actor_value);
+    };
     f.invoke(1);
-    assert_eq!(f.actor().state, 0xf1);
+    assert_eq!(f.actor().state_code(), 0xf1);
     assert_eq!(f.actor().direction, 1);
     assert_eq!(f.actor().horizontal_magnitude, 0x80);
-    assert_eq!(f.actor().animation_tick, 0x80);
+    assert_eq!(f.actor().playback.tick_code(), 0x80);
     assert_eq!(f.actor().profile, 0);
     assert_eq!(f.world.calls[0], Work::Integrate(Integration::FallingY));
 }
@@ -621,7 +696,7 @@ fn launched_apex_ignores_initial_y_boundary_and_resets_velocity() {
     f.world.exits.push_back(true);
     f.world.post_velocity = Some(-1);
     f.run();
-    assert_ne!(f.actor().state, 0);
+    assert_ne!(f.actor().state_code(), 0);
     assert_eq!(f.actor().motion_flags, 1);
     assert_eq!(f.actor().vertical_velocity, 0);
 }
@@ -629,11 +704,14 @@ fn launched_apex_ignores_initial_y_boundary_and_resets_velocity() {
 #[test]
 fn launched_falling_y_boundary_culls_before_horizontal() {
     let mut f = Fixture::new(LAUNCHED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().motion_flags = 1;
     f.world.exits = [false, true].into();
     f.run();
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert_eq!(
         f.world.calls,
         vec![
@@ -652,11 +730,14 @@ fn launched_horizontal_boundary_polarity_differs_by_direction() {
         (2, true, false),
     ] {
         let mut f = Fixture::new(LAUNCHED_HANDLER);
-        f.a().state |= 1;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
         f.a().direction = direction;
         f.world.exits = [false, false, result].into();
         f.run();
-        assert_eq!(f.actor().state == 0, removed);
+        assert_eq!(f.actor().state_code() == 0, removed);
     }
 }
 
@@ -675,7 +756,10 @@ fn secondary_zero_mapping_and_full_pool_still_advance_random() {
         f.random.words = [2, 2, 6, 8];
         if full {
             for a in &mut f.actors[1..] {
-                a.state = ACTIVE;
+                {
+                    let actor_value = ACTIVE;
+                    a.set_state_code(actor_value);
+                };
             }
             f.catalog.secondary[TERRAIN_HANDLER as usize] = 0x23;
         }
@@ -705,7 +789,7 @@ fn secondary_success_preserves_source_and_copies_integer_position_only() {
         ),
         (0xab, 0xcd)
     );
-    assert_eq!(f.actors[CHILD].state, 0xa1);
+    assert_eq!(f.actors[CHILD].state_code(), 0xa1);
     assert_eq!(f.actors[CHILD].handler, RECOVERY_HANDLER);
 }
 
@@ -725,7 +809,7 @@ fn recovering_offscreen_twenty_nine_unsuppresses_only_own_bit() {
                 0xff
             }
         );
-        assert_eq!(f.actor().state, 0);
+        assert_eq!(f.actor().state_code(), 0);
     }
 }
 
@@ -734,9 +818,18 @@ fn recovery_reveal_requires_nonzero_frame_exact_tick_five() {
     for (frame, tick, reveal) in [(0, 5, false), (1, 4, false), (1, 5, true), (2, 6, false)] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
         f.a().animation = REACTION_ANIMATION;
-        f.a().animation_frame = frame;
-        f.a().animation_tick = tick;
-        f.a().local_state = 0x25;
+        {
+            let animation_value = frame;
+            f.a().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.a().playback.set_tick_code(animation_value);
+        };
+        {
+            let actor_value = 0x25;
+            f.a().set_local_state_code(actor_value);
+        };
         f.run();
         assert_eq!(
             f.actor().animation,
@@ -749,11 +842,14 @@ fn recovery_reveal_requires_nonzero_frame_exact_tick_five() {
 fn recovery_reveal_applies_option_remap_before_arc_same_call() {
     let mut f = Fixture::new(RECOVERY_HANDLER);
     f.revealed();
-    f.a().local_state = 0x25;
+    {
+        let actor_value = 0x25;
+        f.a().set_local_state_code(actor_value);
+    };
     f.rule = TitleRule::AlternateRewards;
     f.run();
     assert_eq!(f.actor().animation, 0x28);
-    assert_eq!(f.actor().animation_tick, 0);
+    assert_eq!(f.actor().playback.tick_code(), 0);
     assert_eq!(f.world.calls[0], Work::Integrate(Integration::FallingY));
 }
 
@@ -764,7 +860,7 @@ fn recovery_rising_returns_before_player_collection() {
     f.a().vertical_velocity = 0x0100;
     f.world.contact = true;
     f.run();
-    assert_eq!(f.actor().state, ACTIVE);
+    assert_eq!(f.actor().state_code(), ACTIVE);
     assert!(!f.world.calls.contains(&Work::PlayerContact));
 }
 
@@ -775,19 +871,25 @@ fn recovery_apex_falls_same_call_landing_starts_ff_countdown() {
     f.world.post_velocity = Some(-1);
     f.world.facts.push_back(CONTACT);
     f.run();
-    assert_eq!(f.actor().state, ACTIVE | 2);
-    assert_eq!(f.actor().local_state, EXPIRING_COUNTDOWN);
+    assert_eq!(f.actor().state_code(), ACTIVE | 2);
+    assert_eq!(f.actor().local_state_code(), EXPIRING_COUNTDOWN);
 }
 
 #[test]
 fn recovery_countdown_only_below_twenty_nine_or_sixty_one() {
     for (animation, decrements) in [(0x28, true), (0x29, false), (0x61, true), (0x6f, false)] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
-        f.a().state |= 2;
+        {
+            let actor_value = f.a().state_code() | (2);
+            f.a().set_state_code(actor_value);
+        };
         f.a().animation = animation;
-        f.a().local_state = 3;
+        {
+            let actor_value = 3;
+            f.a().set_local_state_code(actor_value);
+        };
         f.run();
-        assert_eq!(f.actor().local_state, if decrements { 2 } else { 3 });
+        assert_eq!(f.actor().local_state_code(), if decrements { 2 } else { 3 });
     }
 }
 
@@ -795,16 +897,22 @@ fn recovery_countdown_only_below_twenty_nine_or_sixty_one() {
 fn recovery_blinks_at_old_seventy_eight_and_expires_before_contact() {
     for count in [BLINK_COUNTDOWN, 0] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
-        f.a().state |= 2;
+        {
+            let actor_value = f.a().state_code() | (2);
+            f.a().set_state_code(actor_value);
+        };
         f.a().animation = 0x23;
-        f.a().local_state = count;
+        {
+            let actor_value = count;
+            f.a().set_local_state_code(actor_value);
+        };
         f.run();
         if count == 0 {
-            assert_eq!(f.actor().state, 0);
+            assert_eq!(f.actor().state_code(), 0);
             assert!(!f.world.calls.contains(&Work::PlayerContact));
         } else {
             assert_eq!(f.actor().render & 2, 2);
-            assert_eq!(f.actor().local_state, 0x77);
+            assert_eq!(f.actor().local_state_code(), 0x77);
         }
     }
 }
@@ -813,13 +921,16 @@ fn recovery_blinks_at_old_seventy_eight_and_expires_before_contact() {
 fn recovery_damage_player_ignores_contact_death_removes_without_reward() {
     for action in [Action::Damage, Action::Death] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
-        f.a().state |= 2;
+        {
+            let actor_value = f.a().state_code() | (2);
+            f.a().set_state_code(actor_value);
+        };
         f.a().animation = 0x29;
         f.player.action = action;
         f.world.contact = true;
         let e = f.run();
         assert_eq!(
-            f.actor().state,
+            f.actor().state_code(),
             if action == Action::Death {
                 0
             } else {
@@ -838,7 +949,7 @@ fn contact_recovery_requires_no_protection_and_actual_overlap() {
         f.player.protection = protection;
         f.world.contact = contact;
         f.run();
-        assert_eq!(f.actor().state, ACTIVE);
+        assert_eq!(f.actor().state_code(), ACTIVE);
         assert_eq!(f.bits[8], 0);
     }
 }
@@ -848,24 +959,39 @@ fn contact_recovery_initial_delay_decrements_in_same_call() {
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
     f.world.contact = true;
     f.run();
-    assert_eq!(f.actor().state, ACTIVE | 1);
-    assert_eq!(f.actor().local_counter, CONTACT_DELAY - 1);
+    assert_eq!(f.actor().state_code(), ACTIVE | 1);
+    assert_eq!(f.actor().local_counter_code(), CONTACT_DELAY - 1);
     assert_eq!(f.bits[8], 4);
 }
 
 #[test]
 fn contact_delay_expiry_clears_terrain_saves_animation_without_restarting_clocks() {
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
-    f.a().state |= TERRAIN_REPRESENTATION | 1;
-    f.a().local_counter = 1;
-    f.a().animation_tick = 9;
-    f.a().animation_frame = 3;
+    {
+        let actor_value = f.a().state_code() | (TERRAIN_REPRESENTATION | 1);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.a().set_local_counter_code(actor_value);
+    };
+    {
+        let animation_value = 9;
+        f.a().playback.set_tick_code(animation_value);
+    };
+    {
+        let animation_value = 3;
+        f.a().playback.set_frame_code(animation_value);
+    };
     f.run();
-    assert_eq!(f.actor().state, ACTIVE | 2);
-    assert_eq!(f.actor().local_state, 0x1a);
+    assert_eq!(f.actor().state_code(), ACTIVE | 2);
+    assert_eq!(f.actor().local_state_code(), 0x1a);
     assert_eq!(f.actor().animation, REACTION_ANIMATION);
     assert_eq!(
-        (f.actor().animation_tick, f.actor().animation_frame),
+        (
+            f.actor().playback.tick_code(),
+            f.actor().playback.frame_code()
+        ),
         (9, 3)
     );
 }
@@ -873,41 +999,59 @@ fn contact_delay_expiry_clears_terrain_saves_animation_without_restarting_clocks
 #[test]
 fn contact_zero_delay_wraps_and_does_not_reveal() {
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
-    f.a().state |= 1;
-    f.a().local_counter = 0;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.a().set_local_counter_code(actor_value);
+    };
     f.run();
-    assert_eq!(f.actor().local_counter, 0xff);
-    assert_eq!(f.actor().state, ACTIVE | 1);
+    assert_eq!(f.actor().local_counter_code(), 0xff);
+    assert_eq!(f.actor().state_code(), ACTIVE | 1);
 }
 
 #[test]
 fn contact_restore_ordinary_resets_exact_recovery_fields() {
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
-    f.a().state |= 2;
+    {
+        let actor_value = f.a().state_code() | (2);
+        f.a().set_state_code(actor_value);
+    };
     f.revealed();
-    f.a().local_state = 0x26;
+    {
+        let actor_value = 0x26;
+        f.a().set_local_state_code(actor_value);
+    };
     f.rule = TitleRule::AlternateRewards;
     f.run();
     assert_eq!(f.actor().animation, 0x24);
     assert_eq!(
-        (f.actor().handler, f.actor().state, f.actor().profile),
+        (f.actor().handler, f.actor().state_code(), f.actor().profile),
         (RECOVERY_HANDLER, 0xa1, 0)
     );
-    assert_eq!(f.actor().local_state, 0);
+    assert_eq!(f.actor().local_state_code(), 0);
 }
 
 #[test]
 fn contact_restore_special_late_stage_four_prepares_palette_pair() {
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
-    f.a().state |= 2;
+    {
+        let actor_value = f.a().state_code() | (2);
+        f.a().set_state_code(actor_value);
+    };
     f.revealed();
-    f.a().local_state = SPECIAL_TERRAIN_ANIMATION;
+    {
+        let actor_value = SPECIAL_TERRAIN_ANIMATION;
+        f.a().set_local_state_code(actor_value);
+    };
     f.stage = 4;
     f.late = true;
     let e = f.run();
     assert_eq!(f.actor().handler, TERRAIN_HANDLER);
     assert_eq!(f.actor().profile, 0x80);
-    assert_eq!(f.actor().local_state, 10);
+    assert_eq!(f.actor().local_state_code(), 10);
     assert_eq!(e.palette, Some([0x0f, 0x29]));
 }
 
@@ -924,7 +1068,7 @@ fn transform_offscreen_culls_before_profile_write() {
     f.a().render = 0;
     f.a().profile = 0x55;
     f.run();
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert_eq!(f.actor().profile, 0x55);
 }
 
@@ -932,7 +1076,10 @@ fn transform_offscreen_culls_before_profile_write() {
 fn transform_swing_requires_tick_zero_and_contact_but_stage_gate_still_runs() {
     let mut f = Fixture::new(TRANSFORM_HANDLER);
     f.swing();
-    f.actors[0].animation_tick = 1;
+    {
+        let animation_value = 1;
+        f.actors[0].playback.set_tick_code(animation_value);
+    };
     f.run();
     assert_eq!(f.actor().handler, TRANSFORM_HANDLER);
     assert_eq!(f.actor().profile, 0x81);
@@ -942,11 +1089,14 @@ fn transform_swing_requires_tick_zero_and_contact_but_stage_gate_still_runs() {
 fn transform_nonzero_mapping_increments_existing_handler_not_table_value() {
     let mut f = Fixture::new(TRANSFORM_HANDLER);
     f.swing();
-    f.a().state = 0xff;
+    {
+        let actor_value = 0xff;
+        f.a().set_state_code(actor_value);
+    };
     f.a().hit_marker = 1;
     f.run();
     assert_eq!(f.actor().handler, REVEAL_HANDLER);
-    assert_eq!(f.actor().state, 0xe0);
+    assert_eq!(f.actor().state_code(), 0xe0);
     assert_eq!(f.actor().position.screen_y, ACTOR_Y - 0x18);
     assert_eq!(f.actor().animation, REACTION_ANIMATION);
     assert_eq!(f.actor().hit_marker, 0);
@@ -960,7 +1110,7 @@ fn transform_zero_handler_enters_reward_launch_with_fixed_saved_twenty_eight() {
     f.catalog.transform_handler[0] = 0;
     f.run();
     assert_eq!(f.actor().handler, RECOVERY_HANDLER);
-    assert_eq!(f.actor().local_state, 0x28);
+    assert_eq!(f.actor().local_state_code(), 0x28);
     assert_eq!(f.actor().vertical_velocity, 0x0400);
     assert_eq!(f.actor().animation, REACTION_ANIMATION);
 }
@@ -970,7 +1120,10 @@ fn transform_index_six_enters_sliding_directly() {
     let mut f = Fixture::new(TRANSFORM_HANDLER);
     f.swing();
     f.stage = 1;
-    f.a().local_state = 2;
+    {
+        let actor_value = 2;
+        f.a().set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
         (f.actor().handler, f.actor().profile, f.actor().animation),
@@ -988,12 +1141,22 @@ fn stage_one_local_two_clears_low_state_without_swing_and_uses_absolute_y() {
     ] {
         let mut f = Fixture::new(TRANSFORM_HANDLER);
         f.stage = 1;
-        f.a().local_state = 2;
-        f.a().state = 0xff;
+        {
+            let actor_value = 2;
+            f.a().set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0xff;
+            f.a().set_state_code(actor_value);
+        };
         f.actors[0].position.screen_y = player_y;
         f.run();
         assert_eq!(
-            (f.actor().state, f.actor().animation, f.actor().profile),
+            (
+                f.actor().state_code(),
+                f.actor().animation,
+                f.actor().profile
+            ),
             (0xe0, 0x5b, profile)
         );
     }
@@ -1003,8 +1166,14 @@ fn stage_one_local_two_clears_low_state_without_swing_and_uses_absolute_y() {
 fn reveal_frame_tick_gates_precede_table_updates() {
     for (frame, tick) in [(0, 5), (1, 4), (2, 6)] {
         let mut f = Fixture::new(REVEAL_HANDLER);
-        f.a().animation_frame = frame;
-        f.a().animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.a().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.a().playback.set_tick_code(animation_value);
+        };
         let old = *f.actor();
         f.run();
         assert_eq!(*f.actor(), old);
@@ -1016,7 +1185,10 @@ fn reveal_index_seven_y_add_includes_compare_carry() {
     let mut f = Fixture::new(REVEAL_HANDLER);
     f.revealed();
     f.stage = 1;
-    f.a().local_state = 3;
+    {
+        let actor_value = 3;
+        f.a().set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actor().position.screen_y, ACTOR_Y + 0x18);
     assert_eq!(
@@ -1031,7 +1203,10 @@ fn reveal_index_four_requests_sound_thirty_only() {
         let mut f = Fixture::new(REVEAL_HANDLER);
         f.revealed();
         f.stage = 1;
-        f.a().local_state = local;
+        {
+            let actor_value = local;
+            f.a().set_local_state_code(actor_value);
+        };
         let e = f.run();
         assert_eq!(e.sounds, if local == 0 { vec![0x30] } else { vec![] });
     }
@@ -1043,7 +1218,7 @@ fn sliding_initializes_and_applies_first_nudge_same_call() {
     f.tick = 0;
     f.run();
     assert_eq!(f.actor().horizontal_magnitude, 0x0200);
-    assert_eq!(f.actor().local_state, 1);
+    assert_eq!(f.actor().local_state_code(), 1);
     assert_eq!(f.actor().position.world_x, ACTOR_X + 1);
     assert!(f.world.calls.is_empty());
 }
@@ -1057,20 +1232,32 @@ fn sliding_nudges_four_phase_signed_words_on_quarter_clock_only() {
         (0, 3, ACTOR_X + 1),
     ] {
         let mut f = Fixture::new(SLIDING_HANDLER);
-        f.a().state |= 1;
-        f.a().local_state = local;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
+        {
+            let actor_value = local;
+            f.a().set_local_state_code(actor_value);
+        };
         f.tick = tick;
         f.run();
         assert_eq!(f.actor().position.world_x, x);
-        assert_eq!(f.actor().local_state, local + u8::from(tick == 0));
+        assert_eq!(f.actor().local_state_code(), local + u8::from(tick == 0));
     }
 }
 
 #[test]
 fn sliding_floor_friction_wraps_below_step_without_clamp() {
     let mut f = Fixture::new(SLIDING_HANDLER);
-    f.a().state |= 1;
-    f.a().local_state = 8;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 8;
+        f.a().set_local_state_code(actor_value);
+    };
     f.a().horizontal_magnitude = 8;
     f.world.facts = [CONTACT, 0].into();
     f.run();
@@ -1081,8 +1268,14 @@ fn sliding_floor_friction_wraps_below_step_without_clamp() {
 fn sliding_friction_only_when_floor_and_nonzero() {
     for (bits, speed, expected) in [(0, 0x200, 0x200), (CONTACT, 0, 0), (CONTACT, 0x200, 0x1f0)] {
         let mut f = Fixture::new(SLIDING_HANDLER);
-        f.a().state |= 1;
-        f.a().local_state = 8;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
+        {
+            let actor_value = 8;
+            f.a().set_local_state_code(actor_value);
+        };
         f.a().horizontal_magnitude = speed;
         f.world.facts = [bits, 0].into();
         f.run();
@@ -1094,8 +1287,14 @@ fn sliding_friction_only_when_floor_and_nonzero() {
 fn sliding_player_overlap_runs_after_both_horizontal_paths() {
     for (direction, called) in [(1, true), (2, true)] {
         let mut f = Fixture::new(SLIDING_HANDLER);
-        f.a().state |= 1;
-        f.a().local_state = 8;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
+        {
+            let actor_value = 8;
+            f.a().set_local_state_code(actor_value);
+        };
         f.a().direction = direction;
         f.a().horizontal_magnitude = 0x100;
         f.run();
@@ -1112,8 +1311,14 @@ fn sliding_ground_and_wall_or_stopped_restores_terrain_handler() {
         (CONTACT, 0, 0x100, false),
     ] {
         let mut f = Fixture::new(SLIDING_HANDLER);
-        f.a().state |= 1;
-        f.a().local_state = 8;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
+        {
+            let actor_value = 8;
+            f.a().set_local_state_code(actor_value);
+        };
         f.a().direction = 2;
         f.a().horizontal_magnitude = speed;
         f.world.facts = [floor, wall].into();
@@ -1126,13 +1331,16 @@ fn sliding_ground_and_wall_or_stopped_restores_terrain_handler() {
 fn released_swing_does_not_require_player_tick_zero_and_raises_wrapped_y() {
     let mut f = Fixture::new(RELEASED_HANDLER);
     f.swing();
-    f.actors[0].animation_tick = 9;
+    {
+        let animation_value = 9;
+        f.actors[0].playback.set_tick_code(animation_value);
+    };
     f.a().position.screen_y = 8;
     f.run();
     assert_eq!(f.actor().position.screen_y, 0xf0);
     assert_eq!(f.actor().animation, REACTION_ANIMATION);
     assert_eq!(f.actor().profile, 0);
-    assert_eq!(f.actor().state, ACTIVE | 1);
+    assert_eq!(f.actor().state_code(), ACTIVE | 1);
 }
 
 #[test]
@@ -1152,7 +1360,10 @@ fn released_untouched_profile_uses_unsigned_difference_not_absolute() {
 #[test]
 fn released_reveal_option_remap_sets_speed_and_returns_before_fall() {
     let mut f = Fixture::new(RELEASED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.revealed();
     f.rule = TitleRule::AlternateRewards;
     f.run();
@@ -1165,34 +1376,46 @@ fn released_reveal_option_remap_sets_speed_and_returns_before_fall() {
 fn released_no_floor_increments_latch_floor_zero_does_not() {
     for floor in [0, CONTACT] {
         let mut f = Fixture::new(RELEASED_HANDLER);
-        f.a().state |= 1;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
         f.a().animation = 0x25;
         f.run_with_floor(floor);
-        assert_eq!(f.actor().local_state, u8::from(floor == 0));
+        assert_eq!(f.actor().local_state_code(), u8::from(floor == 0));
     }
 }
 
 #[test]
 fn released_floor_after_air_latch_enters_recovery_without_handler_rewrite() {
     let mut f = Fixture::new(RELEASED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = 0x25;
-    f.a().local_state = 1;
+    {
+        let actor_value = 1;
+        f.a().set_local_state_code(actor_value);
+    };
     f.world.facts.push_back(CONTACT);
     f.run();
-    assert_eq!(f.actor().state, 0xa2);
-    assert_eq!(f.actor().local_state, 0xff);
+    assert_eq!(f.actor().state_code(), 0xa2);
+    assert_eq!(f.actor().local_state_code(), 0xff);
     assert_eq!(f.actor().handler, RELEASED_HANDLER);
 }
 
 #[test]
 fn released_collection_precedes_floor_latch_and_horizontal() {
     let mut f = Fixture::new(RELEASED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = 0x28;
     f.world.contact = true;
     let e = f.run();
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert_eq!(e.reward_animation, Some(0x28));
     assert_eq!(
         f.world.calls,
@@ -1218,7 +1441,10 @@ fn dispenser_allocates_highest_free_child_and_four_sequence_values() {
     let mut f = Fixture::new(DISPENSER_HANDLER);
     f.a().animation = 0x48;
     for sequence in 0..DISPENSE_COUNT {
-        f.a().local_counter = 0;
+        {
+            let actor_value = 0;
+            f.a().set_local_counter_code(actor_value);
+        };
         let e = f.run();
         let child = CHILD - sequence;
         assert_eq!(e.spawned, vec![child]);
@@ -1232,23 +1458,26 @@ fn dispenser_allocates_highest_free_child_and_four_sequence_values() {
         );
         assert_eq!(f.actors[child].position.screen_y, ACTOR_Y - 0x10);
         assert_eq!(f.actors[child].vertical_velocity, 0x02d4);
-        assert_eq!(f.actors[child].state, 0xa0);
+        assert_eq!(f.actors[child].state_code(), 0xa0);
         assert_eq!(f.actors[child].render, 0xa0);
         assert_eq!(f.actors[child].handler, DISPENSED_HANDLER);
         assert_eq!(e.sounds, vec![SOUND_DISPENSE]);
     }
-    assert_eq!(f.actor().local_counter, 0xff);
+    assert_eq!(f.actor().local_counter_code(), 0xff);
 }
 
 #[test]
 fn dispenser_full_pool_does_not_advance_sequence_sound_or_animation() {
     let mut f = Fixture::new(DISPENSER_HANDLER);
     for a in &mut f.actors[1..] {
-        a.state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            a.set_state_code(actor_value);
+        };
     }
     let old = *f.actor();
     let e = f.run();
-    assert_eq!(f.actor().local_state, 0);
+    assert_eq!(f.actor().local_state_code(), 0);
     assert_eq!(f.actor().animation, old.animation);
     assert!(e.sounds.is_empty());
     assert!(e.spawned.is_empty());
@@ -1257,24 +1486,39 @@ fn dispenser_full_pool_does_not_advance_sequence_sound_or_animation() {
 #[test]
 fn dispenser_countdown_one_reaches_zero_but_allocates_next_call() {
     let mut f = Fixture::new(DISPENSER_HANDLER);
-    f.a().state |= 1;
-    f.a().local_counter = 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.a().set_local_counter_code(actor_value);
+    };
     assert!(f.run().spawned.is_empty());
-    assert_eq!(f.actor().local_counter, 0);
+    assert_eq!(f.actor().local_counter_code(), 0);
     assert_eq!(f.run().spawned, vec![CHILD]);
 }
 
 #[test]
 fn dispenser_negative_countdown_still_restores_animation_at_tick_seven() {
     let mut f = Fixture::new(DISPENSER_HANDLER);
-    f.a().state |= 1;
-    f.a().local_counter = 0xff;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0xff;
+        f.a().set_local_counter_code(actor_value);
+    };
     f.a().animation = 0x49;
-    f.a().animation_tick = 7;
+    {
+        let animation_value = 7;
+        f.a().playback.set_tick_code(animation_value);
+    };
     f.run();
     assert_eq!(f.actor().animation, 0x48);
-    assert_eq!(f.actor().local_counter, 0xff);
-    assert_eq!(f.actor().animation_tick, 0);
+    assert_eq!(f.actor().local_counter_code(), 0xff);
+    assert_eq!(f.actor().playback.tick_code(), 0);
 }
 
 #[test]
@@ -1284,7 +1528,7 @@ fn dispensed_apex_resets_vertical_then_brakes_same_frame() {
     f.a().horizontal_magnitude = 0x100;
     f.world.post_velocity = Some(-1);
     f.run();
-    assert_eq!(f.actor().state, ACTIVE | 1);
+    assert_eq!(f.actor().state_code(), ACTIVE | 1);
     assert_eq!(f.actor().horizontal_magnitude, 0xc0);
     assert_eq!(f.actor().vertical_velocity, 0);
 }
@@ -1292,7 +1536,10 @@ fn dispensed_apex_resets_vertical_then_brakes_same_frame() {
 #[test]
 fn dispensed_negative_three_integer_skips_gravity_even_nonzero_fraction() {
     let mut f = Fixture::new(DISPENSED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().vertical_velocity = -0x280;
     f.run();
     assert!(
@@ -1306,7 +1553,10 @@ fn dispensed_negative_three_integer_skips_gravity_even_nonzero_fraction() {
 fn dispensed_brake_zeroes_direction_only_exact_zero_and_wraps_underflow() {
     for (speed, expected, direction) in [(0x40, 0, 0), (0x20, 0xffe0, 1)] {
         let mut f = Fixture::new(DISPENSED_HANDLER);
-        f.a().state |= 1;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
         f.a().direction = 1;
         f.a().horizontal_magnitude = speed;
         f.run();
@@ -1318,25 +1568,33 @@ fn dispensed_brake_zeroes_direction_only_exact_zero_and_wraps_underflow() {
 #[test]
 fn dispensed_contact_reward_precedes_f0_cull_and_retains_render() {
     let mut f = Fixture::new(DISPENSED_HANDLER);
-    f.a().state |= 1;
+    {
+        let actor_value = f.a().state_code() | (1);
+        f.a().set_state_code(actor_value);
+    };
     f.a().position.screen_y = 0xf0;
     f.a().render = 0xa0;
     f.world.contact = true;
-    f.status.health.segments[0].depleted = 1;
+    f.status
+        .health
+        .edit_overlay(|segments| segments[0].depleted = 1);
     f.run();
-    assert_eq!(f.actor().state, 0);
+    assert_eq!(f.actor().state_code(), 0);
     assert_eq!(f.actor().render, 0xa0);
-    assert_eq!(f.status.health.segments[0].depleted, 0);
+    assert_eq!(f.status.health.overlay_segments()[0].depleted, 0);
 }
 
 #[test]
 fn dispensed_y_cutoff_exact_f0_clears_state_and_render() {
     for y in [0xef, 0xf0] {
         let mut f = Fixture::new(DISPENSED_HANDLER);
-        f.a().state |= 1;
+        {
+            let actor_value = f.a().state_code() | (1);
+            f.a().set_state_code(actor_value);
+        };
         f.a().position.screen_y = y;
         f.run();
-        assert_eq!(f.actor().state == 0, y == 0xf0);
+        assert_eq!(f.actor().state_code() == 0, y == 0xf0);
         assert_eq!(f.actor().render == 0, y == 0xf0);
     }
 }
@@ -1349,7 +1607,7 @@ fn collection_removes_actor_before_all_reward_dispatch_classes() {
         let mut f = Fixture::new(RECOVERY_HANDLER);
         f.a().animation = animation;
         f.invoke(2);
-        assert_eq!(f.actor().state, 0);
+        assert_eq!(f.actor().state_code(), 0);
     }
 }
 
@@ -1376,12 +1634,12 @@ fn seven_ordinary_reward_classes_request_source_sound() {
 fn reward_twenty_three_adds_two_at_digit_three_and_twenty_eight_adds_one_at_two() {
     for (animation, digit, amount) in [(0x23, 3, 2), (0x28, 2, 1), (0x61, 2, 5)] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
-        f.status.reward = [0; 6];
+        f.status.reward = [0; 6].into();
         f.a().animation = animation;
         f.invoke(2);
-        assert_eq!(f.status.reward[digit], amount);
+        assert_eq!(f.status.reward.display_codes()[digit], amount);
         assert_eq!(f.status.dirty, 1);
-        assert_eq!(f.status.total, [BLANK; 7]);
+        assert_eq!(f.status.total.display_codes(), [BLANK; 7]);
     }
 }
 
@@ -1390,24 +1648,36 @@ fn reward_health_recovery_clears_alternation_and_one_depleted_segment() {
     let mut f = Fixture::new(RECOVERY_HANDLER);
     f.a().animation = 0x24;
     f.status.health.alternating = 1;
-    f.status.health.segments[0].depleted = 1;
-    f.status.health.segments[1].depleted = 1;
+    f.status
+        .health
+        .edit_overlay(|segments| segments[0].depleted = 1);
+    f.status
+        .health
+        .edit_overlay(|segments| segments[1].depleted = 1);
     f.invoke(2);
     assert_eq!(f.status.health.alternating, 0);
-    assert_eq!(f.status.health.segments[0].depleted, 0);
-    assert_eq!(f.status.health.segments[1].depleted, 1);
+    assert_eq!(f.status.health.overlay_segments()[0].depleted, 0);
+    assert_eq!(f.status.health.overlay_segments()[1].depleted, 1);
 }
 
 #[test]
 fn reward_full_health_clears_all_flags() {
     let mut f = Fixture::new(RECOVERY_HANDLER);
     f.a().animation = 0x25;
-    for segment in &mut f.status.health.segments {
-        segment.depleted = 1;
-    }
+    f.status.health.edit_overlay(|segments| {
+        for segment in segments {
+            segment.depleted = 1;
+        }
+    });
     f.status.health.alternating = 1;
     f.invoke(2);
-    assert!(f.status.health.segments.iter().all(|s| s.depleted == 0));
+    assert!(
+        f.status
+            .health
+            .overlay_segments()
+            .iter()
+            .all(|s| s.depleted == 0)
+    );
 }
 
 #[test]
@@ -1458,8 +1728,8 @@ fn extension_sets_stage_one_flag_even_when_both_extra_slots_unavailable() {
     f.stage = 1;
     f.invoke(2);
     assert!(f.extension);
-    assert_eq!(f.status.health.segments[3].y, 0);
-    assert_eq!(f.status.health.segments[4].y, 0);
+    assert_eq!(f.status.health.overlay_segments()[3].y, 0);
+    assert_eq!(f.status.health.overlay_segments()[4].y, 0);
 }
 
 #[test]
@@ -1467,15 +1737,27 @@ fn extension_uses_first_negative_extra_slot_then_restores_health() {
     for first_available in [true, false] {
         let mut f = Fixture::new(RECOVERY_HANDLER);
         f.a().animation = 0x2b;
-        f.status.health.segments[3].y = if first_available { 0x80 } else { 0x20 };
-        f.status.health.segments[4].y = 0x80;
-        for segment in &mut f.status.health.segments {
-            segment.depleted = 1;
-        }
+        f.status
+            .health
+            .edit_overlay(|segments| segments[3].y = if first_available { 0x80 } else { 0x20 });
+        f.status
+            .health
+            .edit_overlay(|segments| segments[4].y = 0x80);
+        f.status.health.edit_overlay(|segments| {
+            for segment in segments {
+                segment.depleted = 1;
+            }
+        });
         f.invoke(2);
         let index = if first_available { 3 } else { 4 };
-        assert_eq!(f.status.health.segments[index].y, 0x20);
-        assert!(f.status.health.segments.iter().all(|s| s.depleted == 0));
+        assert_eq!(f.status.health.overlay_segments()[index].y, 0x20);
+        assert!(
+            f.status
+                .health
+                .overlay_segments()
+                .iter()
+                .all(|s| s.depleted == 0)
+        );
     }
 }
 
@@ -1484,12 +1766,12 @@ fn treasure_stage_bits_reward_and_transition_split_at_seventy_four() {
     for animation in 0x6f..=0x76 {
         let mut f = Fixture::new(RECOVERY_HANDLER);
         f.a().animation = animation;
-        f.status.reward = [0; 6];
+        f.status.reward = [0; 6].into();
         f.stage_bits = 0x80;
         f.latch = 9;
         let e = f.invoke(2);
         assert_eq!(f.stage_bits, 0x80 | (1 << (animation - 0x6f)));
-        assert_eq!(f.status.reward[0], 1);
+        assert_eq!(f.status.reward.display_codes()[0], 1);
         assert_eq!(f.latch, 0);
         assert_eq!(
             f.player.action,
@@ -1521,13 +1803,19 @@ fn specialized_stage_reward_fallback_and_nonzero_override_preserve_a0_flags() {
         let mut f = Fixture::new(TERRAIN_HANDLER);
         f.a().hit_marker = 1;
         f.a().animation = STAGE_REWARD_ANIMATION;
-        f.a().local_state = 1;
-        f.a().state = 0xff;
+        {
+            let actor_value = 1;
+            f.a().set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0xff;
+            f.a().set_state_code(actor_value);
+        };
         f.stage = 2;
         f.catalog.stage_rewards[7] = mapped;
         f.run();
-        assert_eq!(f.actor().local_state, expected);
-        assert_eq!(f.actor().state, 0xa0);
+        assert_eq!(f.actor().local_state_code(), expected);
+        assert_eq!(f.actor().state_code(), 0xa0);
         assert_eq!(f.actor().vertical_velocity, 0x0400);
     }
 }
@@ -1612,7 +1900,10 @@ fn catalog_truncated_source_rejects_missing_tail_consumers() {
 #[test]
 fn pushing_entry_869d_nonzero_changed_blocks_before_replacement_and_launch() {
     let mut f = Fixture::new(TERRAIN_HANDLER);
-    f.a().state |= TERRAIN_REPRESENTATION;
+    {
+        let actor_value = f.a().state_code() | (TERRAIN_REPRESENTATION);
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = STAGE_REWARD_ANIMATION;
     f.changed = 1;
     let old = f.actors;
@@ -1627,7 +1918,7 @@ fn pushing_entry_869d_bypasses_player_swing_frame_gate_and_launches_same_call() 
     let mut f = Fixture::new(TERRAIN_HANDLER);
     f.player.pose_direction = 2;
     f.actors[0].animation = 0;
-    f.actors[0].animation_frame = 0;
+    f.actors[0].playback.reset_frame();
     f.a().animation = 0x1a;
     f.a().motion_flags = 0xff;
     f.invoke(6);
@@ -1644,7 +1935,10 @@ fn pushing_entry_869d_bypasses_player_swing_frame_gate_and_launches_same_call() 
 #[test]
 fn pushing_entry_869d_clears_representation_and_commits_replacement_before_launch() {
     let mut f = Fixture::new(TERRAIN_HANDLER);
-    f.a().state = ACTIVE | TERRAIN_REPRESENTATION;
+    {
+        let actor_value = ACTIVE | TERRAIN_REPRESENTATION;
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = 0x1b;
     f.invoke(6);
     assert_eq!(f.world.calls, vec![Work::ReplaceTerrain(SUBJECT)]);
@@ -1652,9 +1946,9 @@ fn pushing_entry_869d_clears_representation_and_commits_replacement_before_launc
     // entry's own INC. It deliberately proves entry updates happen before call.
     assert_eq!(f.changed, 2);
     assert_eq!(f.world.changed_at_replace, vec![1]);
-    assert_eq!(f.actor().state & TERRAIN_REPRESENTATION, 0);
+    assert_eq!(f.actor().state_code() & TERRAIN_REPRESENTATION, 0);
     assert_eq!(f.actor().handler, MOVING_HANDLER);
-    assert_eq!(f.actor().state & 0x0f, 1);
+    assert_eq!(f.actor().state_code() & 0x0f, 1);
 }
 
 #[test]
@@ -1667,7 +1961,7 @@ fn pushing_entry_869d_reward_animation_reads_extended_tuple_and_keeps_unmasked_p
     f.invoke(6);
     assert_eq!(f.changed, 1);
     assert_eq!(f.actor().handler, MOVING_HANDLER);
-    assert_eq!(f.actor().state, ACTIVE | REWARD_LAUNCH_INDEX as u8);
+    assert_eq!(f.actor().state_code(), ACTIVE | REWARD_LAUNCH_INDEX as u8);
     assert_eq!(
         (f.actor().vertical_velocity, f.actor().horizontal_magnitude),
         (-0x0d5f, 0xb520)
@@ -1699,32 +1993,47 @@ fn catalog_pushing_reward_launch_consumes_bounded_adjacent_instruction_data() {
 fn contact_recovery_nonreaction_pose_enters_special_without_ordinary_reset() {
     // 8C9B BNE8CE1 bypasses8CAF: only the special entry's fields change.
     let mut f = Fixture::new(CONTACT_RECOVERY_HANDLER);
-    f.a().state = 0xa2;
+    {
+        let actor_value = 0xa2;
+        f.a().set_state_code(actor_value);
+    };
     f.a().animation = 0x24;
-    f.a().animation_frame = 7;
-    f.a().animation_tick = 9;
+    {
+        let animation_value = 7;
+        f.a().playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 9;
+        f.a().playback.set_tick_code(animation_value);
+    };
     f.a().vertical_velocity = 0x1234;
-    f.a().local_state = 4;
-    f.a().local_counter = 5;
+    {
+        let actor_value = 4;
+        f.a().set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 5;
+        f.a().set_local_counter_code(actor_value);
+    };
     f.a().motion_flags = 8;
     f.run();
     assert_eq!(
         (f.actor().handler, f.actor().profile),
         (TERRAIN_HANDLER, 0x80)
     );
-    assert_eq!((f.actor().state, f.actor().animation), (0xa2, 0x24));
+    assert_eq!((f.actor().state_code(), f.actor().animation), (0xa2, 0x24));
     assert_eq!(
         (
-            f.actor().animation_frame,
-            f.actor().animation_tick,
+            f.actor().playback.frame_code(),
+            f.actor().playback.tick_code(),
             f.actor().vertical_velocity
         ),
         (7, 9, 0x1234)
     );
     assert_eq!(
         (
-            f.actor().local_state,
-            f.actor().local_counter,
+            f.actor().local_state_code(),
+            f.actor().local_counter_code(),
             f.actor().motion_flags
         ),
         (0, 0, 0)

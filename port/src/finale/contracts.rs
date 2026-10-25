@@ -15,20 +15,20 @@ const RETAINED: u8 = 0x59;
 const OTHER_X: u16 = 0x03f8;
 fn status() -> Status {
     Status {
-        reward: [BLANK; 6],
-        total: [BLANK; 7],
+        reward: [BLANK; 6].into(),
+        total: [BLANK; 7].into(),
         lives: 3,
-        health: Health {
-            segments: [HealthSegment {
+        health: Health::from_overlay(
+            [HealthSegment {
                 y: 0,
                 tile: 0,
                 depleted: 0,
                 x: 0,
             }; 5],
-            end: 0xff,
-            alternating: 0,
-        },
-        countdown: [2, 0, 0],
+            0xff,
+            0,
+        ),
+        countdown: [2, 0, 0].into(),
         divider: RETAINED,
         dirty: 0,
         ui_pending: 0,
@@ -73,10 +73,10 @@ impl Fixture {
     fn new(handler: u8) -> Self {
         let mut pool = [ActorContact::default(); 16];
         pool[SUBJECT] = ActorContact {
+            playback: crate::presentation::AnimationPlayback::from_codes(RETAINED, 0, 0),
+            control: crate::actors::ActorControl::from_codes(READY, 0, 0, 0),
             handler,
-            state: READY,
             animation: FINAL_ANIMATION,
-            animation_tick: RETAINED,
             position: Position {
                 world_x: OTHER_X,
                 screen_y: OPENING_Y,
@@ -126,19 +126,34 @@ impl Fixture {
     }
     fn boss() -> Self {
         let mut f = Self::new(FINAL_HANDLER);
-        f.pool[SUBJECT].local_state = 2;
+        {
+            let actor_value = 2;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
         f
     }
     fn climber() -> Self {
         let mut f = Self::new(CLIMBER_HANDLER);
-        f.pool[SUBJECT].local_state = 0x80;
-        f.pool[SUBJECT].local_counter = 2;
-        f.pool[LEADER_SLOT].local_counter = 2;
+        {
+            let actor_value = 0x80;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 2;
+            f.pool[SUBJECT].set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = 2;
+            f.pool[LEADER_SLOT].set_local_counter_code(actor_value);
+        };
         f
     }
     fn goal() -> Self {
         let mut f = Self::new(GOAL_HANDLER);
-        f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED;
+        {
+            let actor_value = ACTIVE | WORLD_POSITIONED;
+            f.pool[SUBJECT].set_state_code(actor_value);
+        };
         f
     }
 }
@@ -159,16 +174,19 @@ fn catalog_rejects_truncation_before_last_facing_mask() {
 #[test]
 fn opening_sets_terrain_y_and_decrements_initial_delay_immediately() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED | PROJECTION_ONLY;
+    {
+        let actor_value = ACTIVE | WORLD_POSITIONED | PROJECTION_ONLY;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
     f.pool[SUBJECT].position.screen_y = RETAINED;
     f.run();
     let a = f.pool[SUBJECT];
     assert_eq!(
         (
             a.position.screen_y,
-            a.local_state,
-            a.state,
-            a.animation_tick
+            a.local_state_code(),
+            a.state_code(),
+            a.playback.tick_code()
         ),
         (OPENING_Y, INITIAL_DELAY - 1, HIDDEN, 0)
     );
@@ -181,31 +199,37 @@ fn opening_wait_preserves_position_and_does_not_advance_rng() {
     f.random.words = [1, 2, 3, 4];
     let before = f.pool[SUBJECT];
     f.run();
-    assert_eq!(f.pool[SUBJECT].local_state, 1);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 1);
     assert_eq!(f.pool[SUBJECT].position, before.position);
     assert_eq!(f.random.words, [1, 2, 3, 4]);
-    assert_eq!(f.pool[SUBJECT].animation_tick, 0);
+    assert_eq!(f.pool[SUBJECT].playback.tick_code(), 0);
 }
 #[test]
 fn teleport_uses_all_sixteen_choices_including_wraparound_sum() {
     for index in 0..TELEPORT_POSITIONS {
         let mut f = Fixture::boss();
-        f.pool[SUBJECT].local_state = 1;
+        {
+            let actor_value = 1;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
         f.random.words = [index as u8, 0, RETAINED, RETAINED];
         f.run();
         assert_eq!(
             f.pool[SUBJECT].position.world_x,
             0x0300 | u16::from(f.catalog.positions[index])
         );
-        assert_eq!(f.pool[SUBJECT].local_counter, TELEPORT_FLASH);
-        assert_eq!(f.pool[SUBJECT].state, READY);
+        assert_eq!(f.pool[SUBJECT].local_counter_code(), TELEPORT_FLASH);
+        assert_eq!(f.pool[SUBJECT].state_code(), READY);
         assert_eq!(f.random.words, [index as u8, 0, RETAINED, RETAINED]);
     }
 }
 #[test]
 fn teleport_adc_includes_caller_increment_and_wraps_byte() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.increment = true;
     f.random.words = [0xff, 1, 3, 4];
     f.run();
@@ -215,10 +239,16 @@ fn teleport_adc_includes_caller_increment_and_wraps_byte() {
 #[test]
 fn teleport_does_not_count_flash_on_same_call() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_state, f.pool[SUBJECT].local_counter),
+        (
+            f.pool[SUBJECT].local_state_code(),
+            f.pool[SUBJECT].local_counter_code()
+        ),
         (0, TELEPORT_FLASH)
     );
     assert_eq!(f.pool[SUBJECT].profile, 0);
@@ -232,7 +262,10 @@ fn facing_compares_full_world_x_including_equality_and_page() {
         (0x0200, 2, 0),
     ] {
         let mut f = Fixture::boss();
-        f.pool[SUBJECT].local_state = 1;
+        {
+            let actor_value = 1;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
         f.pool[0].position.world_x = player_x;
         f.pool[SUBJECT].render = 0xbf;
         f.run();
@@ -245,7 +278,10 @@ fn facing_compares_full_world_x_including_equality_and_page() {
 #[test]
 fn marked_surviving_hit_overwrites_inherited_rng_increment() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.pool[SUBJECT].hit_marker = 1;
     f.pool[SUBJECT].boss_protection = 2;
     f.increment = true;
@@ -264,7 +300,7 @@ fn first_hit_consumes_shared_hp_and_continues_final_handler() {
         f.pool[SUBJECT].boss_protection,
         crate::actors::bosses::HIT_FLASH
     );
-    assert_eq!(f.pool[SUBJECT].local_state, 1);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 1);
     assert_eq!(f.pool[SUBJECT].handler, FINAL_HANDLER);
 }
 #[test]
@@ -278,7 +314,10 @@ fn absent_hit_marker_does_not_decay_boss_hit_protection() {
 fn final_hit_reuses_b11_without_treasure_and_returns_before_opening() {
     let mut f = Fixture::boss();
     for a in &mut f.pool {
-        a.state = READY;
+        {
+            let actor_value = READY;
+            a.set_state_code(actor_value);
+        };
     }
     f.pool[SUBJECT].hit_marker = 1;
     f.progression.boss_hit_points = 1;
@@ -289,10 +328,10 @@ fn final_hit_reuses_b11_without_treasure_and_returns_before_opening() {
         (
             a.handler,
             a.animation,
-            a.animation_tick,
-            a.animation_frame,
+            a.playback.tick_code(),
+            a.playback.frame_code(),
             a.profile,
-            a.state
+            a.state_code()
         ),
         (
             DEFEATED_HANDLER,
@@ -303,7 +342,7 @@ fn final_hit_reuses_b11_without_treasure_and_returns_before_opening() {
             ACTIVE | WORLD_POSITIONED
         )
     );
-    assert_eq!(a.local_state, before[SUBJECT].local_state);
+    assert_eq!(a.local_state_code(), before[SUBJECT].local_state_code());
     assert_eq!(f.progression.boss_hit_points, 0);
     for (slot, previous) in before.iter().enumerate() {
         if slot != SUBJECT {
@@ -324,24 +363,38 @@ fn shared_hp_zero_wrap_is_survivor_not_another_defeat() {
 #[test]
 fn flash_wait_does_not_spawn_attack_until_counter_becomes_zero() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
-    f.pool[SUBJECT].local_counter = 2;
-    f.pool[ATTACK_SLOT].handler = RETAINED;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        f.pool[SUBJECT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = RETAINED;
+        f.pool[ATTACK_SLOT].set_handler(actor_value);
+    };
     f.run();
-    assert_eq!(f.pool[SUBJECT].local_counter, 1);
+    assert_eq!(f.pool[SUBJECT].local_counter_code(), 1);
     assert_eq!(f.pool[ATTACK_SLOT].handler, RETAINED);
 }
 #[test]
 fn attack_overwrites_slot_fourteen_and_only_source_written_fields() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
-    f.pool[SUBJECT].local_counter = 1;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.pool[SUBJECT].direction = 1;
     f.pool[SUBJECT].render = 0xff;
     f.pool[ATTACK_SLOT] = ActorContact {
+        control: crate::actors::ActorControl::from_codes(0, RETAINED, RETAINED, RETAINED),
         handler: RETAINED,
-        local_state: RETAINED,
-        local_counter: RETAINED,
         local_aux2: RETAINED,
         boss_protection: RETAINED,
         spawn_identity: Some(RETAINED),
@@ -359,11 +412,11 @@ fn attack_overwrites_slot_fourteen_and_only_source_written_fields() {
             a.animation,
             a.handler,
             a.profile,
-            a.state,
+            a.state_code(),
             a.render,
             a.hit_marker,
-            a.animation_tick,
-            a.animation_frame
+            a.playback.tick_code(),
+            a.playback.frame_code()
         ),
         (
             ATTACK_ANIMATION,
@@ -382,8 +435,8 @@ fn attack_overwrites_slot_fourteen_and_only_source_written_fields() {
     );
     assert_eq!(
         (
-            a.local_state,
-            a.local_counter,
+            a.local_state_code(),
+            a.local_counter_code(),
             a.local_aux2,
             a.boss_protection,
             a.position.x_fraction,
@@ -402,7 +455,7 @@ fn attack_overwrites_slot_fourteen_and_only_source_written_fields() {
     );
     let b = f.pool[SUBJECT];
     assert_eq!(
-        (b.render, b.profile, b.animation_frame, b.local_aux2),
+        (b.render, b.profile, b.playback.frame_code(), b.local_aux2),
         (0xf0, EXPOSED_PROFILE, 1, ATTACK_DURATION)
     );
 }
@@ -410,8 +463,14 @@ fn attack_overwrites_slot_fourteen_and_only_source_written_fields() {
 fn attack_offset_wraps_low_byte_without_incrementing_page() {
     for (direction, start, expected) in [(2, 0xf8, 0x0308), (1, 8, 0x03f8)] {
         let mut f = Fixture::boss();
-        f.pool[SUBJECT].local_state = 0;
-        f.pool[SUBJECT].local_counter = 1;
+        {
+            let actor_value = 0;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 1;
+            f.pool[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.pool[SUBJECT].direction = direction;
         f.pool[SUBJECT].position.world_x = 0x0300 | start;
         f.run();
@@ -421,14 +480,20 @@ fn attack_offset_wraps_low_byte_without_incrementing_page() {
 #[test]
 fn exposed_timer_above_sixty_preserves_frame_and_flash() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.pool[SUBJECT].local_aux2 = 61;
-    f.pool[SUBJECT].animation_frame = 1;
+    {
+        let animation_value = 1;
+        f.pool[SUBJECT].playback.set_frame_code(animation_value);
+    };
     f.run();
     assert_eq!(
         (
             f.pool[SUBJECT].local_aux2,
-            f.pool[SUBJECT].animation_frame,
+            f.pool[SUBJECT].playback.frame_code(),
             f.pool[SUBJECT].render
         ),
         (60, 1, 0)
@@ -437,15 +502,21 @@ fn exposed_timer_above_sixty_preserves_frame_and_flash() {
 #[test]
 fn exposed_sixty_restores_flash_and_opening_frame_before_decrement() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.pool[SUBJECT].local_aux2 = 60;
-    f.pool[SUBJECT].animation_frame = 1;
+    {
+        let animation_value = 1;
+        f.pool[SUBJECT].playback.set_frame_code(animation_value);
+    };
     f.pool[SUBJECT].profile = EXPOSED_PROFILE;
     f.run();
     assert_eq!(
         (
             f.pool[SUBJECT].local_aux2,
-            f.pool[SUBJECT].animation_frame,
+            f.pool[SUBJECT].playback.frame_code(),
             f.pool[SUBJECT].render,
             f.pool[SUBJECT].profile
         ),
@@ -455,23 +526,37 @@ fn exposed_sixty_restores_flash_and_opening_frame_before_decrement() {
 #[test]
 fn attack_expiry_hides_boss_disables_collision_and_starts_sixty_delay() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.pool[SUBJECT].local_aux2 = 1;
     f.pool[SUBJECT].profile = EXPOSED_PROFILE;
     f.run();
     let a = f.pool[SUBJECT];
     assert_eq!(
-        (a.local_aux2, a.local_state, a.profile, a.state),
+        (
+            a.local_aux2,
+            a.local_state_code(),
+            a.profile,
+            a.state_code()
+        ),
         (0, TELEPORT_FLASH, 0, HIDDEN)
     );
 }
 #[test]
 fn zero_exposure_timer_wraps_without_resetting_cycle() {
     let mut f = Fixture::boss();
-    f.pool[SUBJECT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_aux2, f.pool[SUBJECT].local_state),
+        (
+            f.pool[SUBJECT].local_aux2,
+            f.pool[SUBJECT].local_state_code()
+        ),
         (0xff, 0)
     );
 }
@@ -479,12 +564,24 @@ fn zero_exposure_timer_wraps_without_resetting_cycle() {
 fn defeat_wait_requires_nonzero_frame_and_exact_tick_five() {
     for (frame, tick) in [(0, 5), (1, 4), (1, 6), (0xff, 0x85)] {
         let mut f = Fixture::new(DEFEATED_HANDLER);
-        f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED;
-        f.pool[SUBJECT].animation_frame = frame;
-        f.pool[SUBJECT].animation_tick = tick;
+        {
+            let actor_value = ACTIVE | WORLD_POSITIONED;
+            f.pool[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let animation_value = frame;
+            f.pool[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.pool[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.run();
         assert_eq!(
-            (f.pool[SUBJECT].state, f.pool[SUBJECT].local_state),
+            (
+                f.pool[SUBJECT].state_code(),
+                f.pool[SUBJECT].local_state_code()
+            ),
             (ACTIVE | WORLD_POSITIONED, 0)
         );
     }
@@ -492,26 +589,41 @@ fn defeat_wait_requires_nonzero_frame_and_exact_tick_five() {
 #[test]
 fn defeat_initializes_b4_and_decrements_on_same_tick() {
     let mut f = Fixture::new(DEFEATED_HANDLER);
-    f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED;
-    f.pool[SUBJECT].animation_frame = 2;
-    f.pool[SUBJECT].animation_tick = DEFEAT_FRAME_TICK;
+    {
+        let actor_value = ACTIVE | WORLD_POSITIONED;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let animation_value = 2;
+        f.pool[SUBJECT].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = DEFEAT_FRAME_TICK;
+        f.pool[SUBJECT].playback.set_tick_code(animation_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].state, f.pool[SUBJECT].local_state),
+        (
+            f.pool[SUBJECT].state_code(),
+            f.pool[SUBJECT].local_state_code()
+        ),
         (0xb1, DEFEAT_PAUSE - 1)
     );
 }
 #[test]
 fn defeat_last_nonzero_tick_only_decrements_then_next_call_enters_dialogue() {
     let mut f = Fixture::new(DEFEATED_HANDLER);
-    f.pool[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.run();
-    assert_eq!(f.pool[SUBJECT].local_state, 0);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 0);
     assert_eq!(f.player.action, Action::Standing);
     f.run();
     assert_eq!(
         (
-            f.pool[SUBJECT].state,
+            f.pool[SUBJECT].state_code(),
             f.player.action,
             f.dialogue.message,
             f.progression.race_intro
@@ -538,16 +650,19 @@ fn defeat_race_latch_increment_wraps_and_preserves_ending_latch() {
 #[test]
 fn climber_initializes_from_screen_y_then_moves_in_same_call() {
     let mut f = Fixture::climber();
-    f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED;
+    {
+        let actor_value = ACTIVE | WORLD_POSITIONED;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
     f.pool[SUBJECT].position.screen_y = 0x80;
     f.pool[SUBJECT].local_aux2 = RETAINED;
     f.run();
     assert_eq!(
         (
-            f.pool[SUBJECT].local_state,
-            f.pool[SUBJECT].local_counter,
+            f.pool[SUBJECT].local_state_code(),
+            f.pool[SUBJECT].local_counter_code(),
             f.pool[SUBJECT].local_aux2,
-            f.pool[SUBJECT].state,
+            f.pool[SUBJECT].state_code(),
             f.pool[SUBJECT].position.screen_y
         ),
         (0x7f, 2, 0, READY, 0x7f)
@@ -556,31 +671,52 @@ fn climber_initializes_from_screen_y_then_moves_in_same_call() {
 #[test]
 fn climber_borrow_skips_sixteen_codes_and_decrements_row() {
     let mut f = Fixture::climber();
-    f.pool[SUBJECT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_state, f.pool[SUBJECT].local_counter),
+        (
+            f.pool[SUBJECT].local_state_code(),
+            f.pool[SUBJECT].local_counter_code()
+        ),
         (0xef, 1)
     );
 }
 #[test]
 fn climber_nonborrow_preserves_row_including_low_one() {
     let mut f = Fixture::climber();
-    f.pool[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_state, f.pool[SUBJECT].local_counter),
+        (
+            f.pool[SUBJECT].local_state_code(),
+            f.pool[SUBJECT].local_counter_code()
+        ),
         (0, 2)
     );
 }
 #[test]
 fn climber_row_underflows_when_above_top_without_leader_hold() {
     let mut f = Fixture::climber();
-    f.pool[SUBJECT].local_state = 0;
-    f.pool[SUBJECT].local_counter = 0;
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.pool[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_state, f.pool[SUBJECT].local_counter),
+        (
+            f.pool[SUBJECT].local_state_code(),
+            f.pool[SUBJECT].local_counter_code()
+        ),
         (0xef, 0xff)
     );
 }
@@ -588,12 +724,21 @@ fn climber_row_underflows_when_above_top_without_leader_hold() {
 fn leader_below_ninety_latches_exact_nonzero_y_and_freezes_all_climbers() {
     for y in [1, 0x8f] {
         let mut f = Fixture::climber();
-        f.pool[LEADER_SLOT].local_counter = 0;
-        f.pool[LEADER_SLOT].local_state = y;
+        {
+            let actor_value = 0;
+            f.pool[LEADER_SLOT].set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = y;
+            f.pool[LEADER_SLOT].set_local_state_code(actor_value);
+        };
         f.run();
         assert_eq!(f.pool[LEADER_SLOT].local_aux2, y);
         assert_eq!(
-            (f.pool[SUBJECT].local_state, f.pool[SUBJECT].local_counter),
+            (
+                f.pool[SUBJECT].local_state_code(),
+                f.pool[SUBJECT].local_counter_code()
+            ),
             (0x80, 2)
         );
     }
@@ -601,31 +746,49 @@ fn leader_below_ninety_latches_exact_nonzero_y_and_freezes_all_climbers() {
 #[test]
 fn leader_at_ninety_does_not_latch_and_climber_still_moves() {
     let mut f = Fixture::climber();
-    f.pool[LEADER_SLOT].local_counter = 0;
-    f.pool[LEADER_SLOT].local_state = LEADER_FINISH_Y;
+    {
+        let actor_value = 0;
+        f.pool[LEADER_SLOT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = LEADER_FINISH_Y;
+        f.pool[LEADER_SLOT].set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.pool[LEADER_SLOT].local_aux2, 0);
-    assert_eq!(f.pool[SUBJECT].local_state, 0x7f);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 0x7f);
 }
 #[test]
 fn leader_zero_writes_zero_marker_and_does_not_take_nonzero_freeze_branch() {
     let mut f = Fixture::climber();
-    f.pool[LEADER_SLOT].local_counter = 0;
-    f.pool[LEADER_SLOT].local_state = 0;
+    {
+        let actor_value = 0;
+        f.pool[LEADER_SLOT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.pool[LEADER_SLOT].set_local_state_code(actor_value);
+    };
     f.pool[LEADER_SLOT].local_aux2 = RETAINED;
     f.run();
     assert_eq!(f.pool[LEADER_SLOT].local_aux2, 0);
-    assert_eq!(f.pool[SUBJECT].local_state, 0x7f);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 0x7f);
 }
 #[test]
 fn leader_nonzero_row_ignores_low_threshold_and_preserves_previous_marker() {
     let mut f = Fixture::climber();
-    f.pool[LEADER_SLOT].local_counter = 1;
-    f.pool[LEADER_SLOT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.pool[LEADER_SLOT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.pool[LEADER_SLOT].set_local_state_code(actor_value);
+    };
     f.pool[LEADER_SLOT].local_aux2 = RETAINED;
     f.run();
     assert_eq!(f.pool[LEADER_SLOT].local_aux2, RETAINED);
-    assert_eq!(f.pool[SUBJECT].local_state, 0x7f);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 0x7f);
 }
 #[test]
 fn offrow_climber_hides_without_overwriting_stale_screen_y() {
@@ -634,17 +797,26 @@ fn offrow_climber_hides_without_overwriting_stale_screen_y() {
     let y = f.pool[SUBJECT].position.screen_y;
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].state, f.pool[SUBJECT].position.screen_y),
+        (
+            f.pool[SUBJECT].state_code(),
+            f.pool[SUBJECT].position.screen_y
+        ),
         (HIDDEN, y)
     );
 }
 #[test]
 fn onrow_climber_clears_only_hidden_bit_and_projects_encoded_y() {
     let mut f = Fixture::climber();
-    f.pool[SUBJECT].state = HIDDEN;
+    {
+        let actor_value = HIDDEN;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].state, f.pool[SUBJECT].position.screen_y),
+        (
+            f.pool[SUBJECT].state_code(),
+            f.pool[SUBJECT].position.screen_y
+        ),
         (READY, 0x7f)
     );
 }
@@ -674,7 +846,11 @@ fn leader_boundary_wins_arbitration_before_player_overlap() {
     f.contact.overlap = true;
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].state, f.player.action, f.dialogue.message),
+        (
+            f.pool[SUBJECT].state_code(),
+            f.player.action,
+            f.dialogue.message
+        ),
         (
             0,
             Action::Dialogue,
@@ -701,7 +877,11 @@ fn dead_player_still_removes_losing_goal_but_does_not_open_dialogue() {
     f.pool[SUBJECT].position.world_x = 0x03af;
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].state, f.player.action, f.dialogue.message),
+        (
+            f.pool[SUBJECT].state_code(),
+            f.player.action,
+            f.dialogue.message
+        ),
         (0, Action::Death, 0)
     );
     assert!(f.contact.calls.is_empty());
@@ -712,7 +892,7 @@ fn overlap_with_dead_player_does_not_start_ending_or_sound() {
     f.player.action = Action::Death;
     f.contact.overlap = true;
     let effects = f.run();
-    assert_eq!(f.pool[SUBJECT].state, ACTIVE | WORLD_POSITIONED);
+    assert_eq!(f.pool[SUBJECT].state_code(), ACTIVE | WORLD_POSITIONED);
     assert_eq!(f.status.divider, RETAINED);
     assert_eq!(effects, ActorEffects::default());
 }
@@ -724,7 +904,7 @@ fn goal_rereads_player_action_after_overlap_owner_returns() {
     let e = f.run();
     assert_eq!(f.player.action, Action::Death);
     assert!(e.audio.is_empty());
-    assert_eq!(f.pool[SUBJECT].state, ACTIVE | WORLD_POSITIONED);
+    assert_eq!(f.pool[SUBJECT].state_code(), ACTIVE | WORLD_POSITIONED);
 }
 #[test]
 fn player_win_queues_stop_then_goal_sound_and_counts_delay_immediately() {
@@ -740,8 +920,8 @@ fn player_win_queues_stop_then_goal_sound_and_counts_delay_immediately() {
     );
     assert_eq!(
         (
-            f.pool[SUBJECT].state,
-            f.pool[SUBJECT].local_state,
+            f.pool[SUBJECT].state_code(),
+            f.pool[SUBJECT].local_state_code(),
             f.player.action,
             f.status.divider
         ),
@@ -751,13 +931,19 @@ fn player_win_queues_stop_then_goal_sound_and_counts_delay_immediately() {
 #[test]
 fn win_delay_ignores_later_leader_loss_marker_and_death_state() {
     let mut f = Fixture::goal();
-    f.pool[SUBJECT].state = READY;
-    f.pool[SUBJECT].local_state = 2;
+    {
+        let actor_value = READY;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        f.pool[SUBJECT].set_local_state_code(actor_value);
+    };
     f.pool[LEADER_SLOT].local_aux2 = 1;
     f.player.action = Action::Death;
     f.run();
-    assert_eq!(f.pool[SUBJECT].local_state, 1);
-    assert_eq!(f.pool[SUBJECT].state, READY);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 1);
+    assert_eq!(f.pool[SUBJECT].state_code(), READY);
     assert!(f.contact.calls.is_empty());
     assert_eq!(f.status.divider, 0);
 }
@@ -765,14 +951,20 @@ fn win_delay_ignores_later_leader_loss_marker_and_death_state() {
 fn last_win_delay_increments_ending_latch_with_byte_wrap() {
     for (old, next) in [(0, 1), (0xff, 0)] {
         let mut f = Fixture::goal();
-        f.pool[SUBJECT].state = READY;
-        f.pool[SUBJECT].local_state = 1;
+        {
+            let actor_value = READY;
+            f.pool[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 1;
+            f.pool[SUBJECT].set_local_state_code(actor_value);
+        };
         f.progression.ending_latch = old;
         f.run();
         assert_eq!(
             (
                 f.progression.ending_latch,
-                f.pool[SUBJECT].local_state,
+                f.pool[SUBJECT].local_state_code(),
                 f.status.divider
             ),
             (next, 0, 0)
@@ -782,10 +974,16 @@ fn last_win_delay_increments_ending_latch_with_byte_wrap() {
 #[test]
 fn zero_win_delay_wraps_to_ff_without_triggering_ending() {
     let mut f = Fixture::goal();
-    f.pool[SUBJECT].state = READY;
+    {
+        let actor_value = READY;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
-        (f.pool[SUBJECT].local_state, f.progression.ending_latch),
+        (
+            f.pool[SUBJECT].local_state_code(),
+            f.progression.ending_latch
+        ),
         (0xff, 0)
     );
 }
@@ -1035,7 +1233,10 @@ impl EndingFixture {
     fn continued() -> Self {
         let mut f = Self::new();
         f.p.ending_latch = 0x81;
-        f.pool[0].handler = crate::scenes::SceneHandler::Settled as u8;
+        {
+            let actor_value = crate::scenes::SceneHandler::Settled as u8;
+            f.pool[0].set_handler(actor_value);
+        };
         f
     }
     fn split(cursor: u8, y: u8) -> Self {
@@ -1081,7 +1282,7 @@ fn ending_entry_wait_precedes_audio_and_layout_requests() {
 fn ending_choice_waits_for_layout_return_and_reads_fresh_total_after_transfer() {
     let mut f = EndingFixture::before_choice();
     f.p.progress_bits = 0x7f;
-    f.status.total[0] = 1;
+    f.status.total.edit_display_codes(|codes| codes[0] = 1);
     assert_eq!(f.resume(OwnerResult::Running), EndingWork::Suspended);
     assert_eq!(f.call(), EndingWork::Build(Scene::OpeningThird));
     assert_eq!((f.ending.variation, f.scene_cursor), (2, 2));
@@ -1092,7 +1293,7 @@ fn all_completion_low_seven_bits_plus_nonblank_first_total_select_third() {
         for first in [0, 1, 9, 0x25] {
             let mut f = EndingFixture::before_choice();
             f.p.progress_bits = progress;
-            f.status.total[0] = first;
+            f.status.total.edit_display_codes(|codes| codes[0] = first);
             assert_eq!(f.call(), EndingWork::Build(Scene::OpeningThird));
             assert_eq!(f.ending.variation, 2);
         }
@@ -1103,7 +1304,7 @@ fn incomplete_progress_ignores_first_total_and_uses_last_blank_for_second() {
     for progress in [0, 0x1f, 0x3f, 0x7e, 0xfe] {
         let mut f = EndingFixture::before_choice();
         f.p.progress_bits = progress;
-        f.status.total[0] = 9;
+        f.status.total.edit_display_codes(|codes| codes[0] = 9);
         assert_eq!(f.call(), EndingWork::Build(Scene::OpeningSecond));
         assert_eq!(f.ending.variation, 1);
     }
@@ -1117,7 +1318,7 @@ fn complete_progress_but_first_blank_falls_back_to_last_total_code() {
     ] {
         let mut f = EndingFixture::before_choice();
         f.p.progress_bits = 0xff;
-        f.status.total[6] = last;
+        f.status.total.edit_display_codes(|codes| codes[6] = last);
         assert_eq!(f.call(), EndingWork::Build(scene));
         assert_eq!(f.ending.variation, variation);
     }
@@ -1125,15 +1326,15 @@ fn complete_progress_but_first_blank_falls_back_to_last_total_code() {
 #[test]
 fn nonblank_last_total_selects_first_even_when_numerically_zero() {
     let mut f = EndingFixture::before_choice();
-    f.status.total = [0; 7];
+    f.status.total = [0; 7].into();
     assert_eq!(f.call(), EndingWork::Build(Scene::OpeningFirst));
     assert_eq!(f.ending.variation, 0);
 }
 #[test]
 fn middle_total_and_reward_codes_do_not_choose_ending() {
     let mut f = EndingFixture::before_choice();
-    f.status.reward = [9; 6];
-    f.status.total = [BLANK, 9, 9, 9, 9, 9, BLANK];
+    f.status.reward = [9; 6].into();
+    f.status.total = [BLANK, 9, 9, 9, 9, 9, BLANK].into();
     assert_eq!(f.call(), EndingWork::Build(Scene::OpeningSecond));
 }
 #[test]
@@ -1158,23 +1359,35 @@ fn scene_build_increments_all_selectors_and_wraps_only_six() {
 #[test]
 fn negative_latch_continuation_does_not_repeat_transfer_or_initial_wait() {
     let mut f = EndingFixture::continued();
-    f.pool[0].handler = crate::scenes::SceneHandler::Bounce as u8;
+    {
+        let actor_value = crate::scenes::SceneHandler::Bounce as u8;
+        f.pool[0].set_handler(actor_value);
+    };
     assert_eq!(f.call(), EndingWork::UpdateSceneActors);
     assert_eq!(f.call(), EndingWork::Complete);
 }
 #[test]
 fn scene_update_returns_to_composition_without_rechecking_settled_in_same_call() {
     let mut f = EndingFixture::continued();
-    f.pool[0].handler = 0;
+    {
+        let actor_value = 0;
+        f.pool[0].set_handler(actor_value);
+    };
     assert_eq!(f.call(), EndingWork::UpdateSceneActors);
-    f.pool[0].handler = 5;
+    {
+        let actor_value = 5;
+        f.pool[0].set_handler(actor_value);
+    };
     assert_eq!(f.call(), EndingWork::Complete);
     assert_eq!(f.call(), EndingWork::Wait(ENDING_PAUSE_TICKS));
 }
 #[test]
 fn scene_update_suspension_prevents_composition_and_pause_tail() {
     let mut f = EndingFixture::continued();
-    f.pool[0].handler = 0;
+    {
+        let actor_value = 0;
+        f.pool[0].set_handler(actor_value);
+    };
     f.call();
     assert_eq!(f.resume(OwnerResult::Running), EndingWork::Suspended);
     assert_eq!(f.ending.pauses_left, 0);
@@ -1183,7 +1396,10 @@ fn scene_update_suspension_prevents_composition_and_pause_tail() {
 fn settled_scene_handler_requires_exact_five() {
     for handler in [0, 1, 2, 3, 4, 6, 0xff] {
         let mut f = EndingFixture::continued();
-        f.pool[0].handler = handler;
+        {
+            let actor_value = handler;
+            f.pool[0].set_handler(actor_value);
+        };
         assert_eq!(f.call(), EndingWork::UpdateSceneActors);
     }
 }
@@ -1449,8 +1665,13 @@ fn leader_initial_position_runs_two_f0_rows_then_freezes_at_eightyf_without_bool
     const STEPS_TO_MARK: usize = 514;
     let mut f = Fixture::climber();
     f.pool[LEADER_SLOT] = ActorContact {
+        control: crate::actors::ActorControl::from_codes(
+            ACTIVE | WORLD_POSITIONED,
+            0,
+            0,
+            CLIMBER_HANDLER,
+        ),
         handler: CLIMBER_HANDLER,
-        state: ACTIVE | WORLD_POSITIONED,
         position: Position {
             screen_y: 0xb0,
             ..Default::default()
@@ -1462,8 +1683,8 @@ fn leader_initial_position_runs_two_f0_rows_then_freezes_at_eightyf_without_bool
     }
     assert_eq!(
         (
-            f.pool[LEADER_SLOT].local_state,
-            f.pool[LEADER_SLOT].local_counter,
+            f.pool[LEADER_SLOT].local_state_code(),
+            f.pool[LEADER_SLOT].local_counter_code(),
             f.pool[LEADER_SLOT].local_aux2
         ),
         (0x8f, 0, 0)
@@ -1471,8 +1692,8 @@ fn leader_initial_position_runs_two_f0_rows_then_freezes_at_eightyf_without_bool
     f.run_at(LEADER_SLOT);
     assert_eq!(
         (
-            f.pool[LEADER_SLOT].local_state,
-            f.pool[LEADER_SLOT].local_counter,
+            f.pool[LEADER_SLOT].local_state_code(),
+            f.pool[LEADER_SLOT].local_counter_code(),
             f.pool[LEADER_SLOT].local_aux2
         ),
         (0x8f, 0, 0x8f)
@@ -1482,25 +1703,26 @@ fn leader_initial_position_runs_two_f0_rows_then_freezes_at_eightyf_without_bool
 fn live_ascending_rivals_read_leader_before_its_move_then_latch_next_call() {
     let mut f = Fixture::climber();
     f.pool[LEADER_SLOT] = ActorContact {
+        control: crate::actors::ActorControl::from_codes(
+            READY,
+            LEADER_FINISH_Y,
+            0,
+            CLIMBER_HANDLER,
+        ),
         handler: CLIMBER_HANDLER,
-        state: READY,
-        local_state: LEADER_FINISH_Y,
-        local_counter: 0,
         ..Default::default()
     };
     f.pool[ATTACK_SLOT] = ActorContact {
+        control: crate::actors::ActorControl::from_codes(READY, 0x60, 0, CLIMBER_HANDLER),
         handler: CLIMBER_HANDLER,
-        state: READY,
-        local_state: 0x60,
-        local_counter: 0,
         ..Default::default()
     };
     f.run_at(ATTACK_SLOT);
     f.run_at(LEADER_SLOT);
     assert_eq!(
         (
-            f.pool[ATTACK_SLOT].local_state,
-            f.pool[LEADER_SLOT].local_state,
+            f.pool[ATTACK_SLOT].local_state_code(),
+            f.pool[LEADER_SLOT].local_state_code(),
             f.pool[LEADER_SLOT].local_aux2
         ),
         (0x5f, 0x8f, 0)
@@ -1508,7 +1730,7 @@ fn live_ascending_rivals_read_leader_before_its_move_then_latch_next_call() {
     f.run_at(ATTACK_SLOT);
     assert_eq!(
         (
-            f.pool[ATTACK_SLOT].local_state,
+            f.pool[ATTACK_SLOT].local_state_code(),
             f.pool[LEADER_SLOT].local_aux2
         ),
         (0x5f, 0x8f)
@@ -1517,14 +1739,23 @@ fn live_ascending_rivals_read_leader_before_its_move_then_latch_next_call() {
 #[test]
 fn whole_b4_defeat_pause_requires_following_zero_entry_to_start_intro() {
     let mut f = Fixture::new(DEFEATED_HANDLER);
-    f.pool[SUBJECT].state = ACTIVE | WORLD_POSITIONED;
-    f.pool[SUBJECT].animation_frame = 1;
-    f.pool[SUBJECT].animation_tick = DEFEAT_FRAME_TICK;
+    {
+        let actor_value = ACTIVE | WORLD_POSITIONED;
+        f.pool[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let animation_value = 1;
+        f.pool[SUBJECT].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = DEFEAT_FRAME_TICK;
+        f.pool[SUBJECT].playback.set_tick_code(animation_value);
+    };
     for _ in 0..DEFEAT_PAUSE {
         f.run();
         assert_eq!(f.progression.race_intro, 0);
     }
-    assert_eq!(f.pool[SUBJECT].local_state, 0);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 0);
     f.run();
     assert_eq!(f.progression.race_intro, 1);
     assert_eq!(f.player.action, Action::Dialogue);
@@ -1538,7 +1769,7 @@ fn whole_f0_win_delay_includes_contact_call_and_never_requeues_sounds() {
         assert!(f.run().audio.is_empty());
         assert_eq!(f.progression.ending_latch, 0);
     }
-    assert_eq!(f.pool[SUBJECT].local_state, 1);
+    assert_eq!(f.pool[SUBJECT].local_state_code(), 1);
     assert!(f.run().audio.is_empty());
     assert_eq!(f.progression.ending_latch, 1);
     assert_eq!(f.contact.calls, [SUBJECT]);
@@ -1564,9 +1795,15 @@ fn terminal_ignores_external_actor_and_progress_changes_and_preserves_shared_dis
     f.ending.phase = EndingPhase::Terminal;
     f.display_mode = RETAINED;
     for action in [Action::Standing, Action::Death, Action::Dialogue] {
-        f.pool[0].handler = 0;
+        {
+            let actor_value = 0;
+            f.pool[0].set_handler(actor_value);
+        };
         f.p.progress_bits = 0;
-        f.pool[0].local_state = action as u8;
+        {
+            let actor_value = action as u8;
+            f.pool[0].set_local_state_code(actor_value);
+        };
         assert_eq!(f.call(), EndingWork::Yield);
         assert_eq!(f.display_mode, RETAINED);
         assert_eq!(f.ending.phase, EndingPhase::Terminal);

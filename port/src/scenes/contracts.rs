@@ -24,13 +24,10 @@ fn pool() -> ActorPool {
 }
 fn actor() -> ActorContact {
     ActorContact {
-        state: ACTIVE,
+        playback: crate::presentation::AnimationPlayback::from_codes(SENTINEL_TICK, 5, 0),
+        control: crate::actors::ActorControl::from_codes(ACTIVE, 9, 8, 0),
         render: ACTIVE,
         animation: 0x55,
-        animation_tick: SENTINEL_TICK,
-        animation_frame: 5,
-        local_state: 9,
-        local_counter: 8,
         position: Position {
             world_x: 0x01a0,
             screen_y: 0x90,
@@ -44,20 +41,20 @@ fn actor() -> ActorContact {
 }
 fn status() -> Status {
     Status {
-        reward: [0x24; 6],
-        total: [0x24; 7],
+        reward: [0x24; 6].into(),
+        total: [0x24; 7].into(),
         lives: 3,
-        health: Health {
-            segments: [HealthSegment {
+        health: Health::from_overlay(
+            [HealthSegment {
                 y: 0,
                 tile: 0,
                 depleted: 0,
                 x: 0,
             }; 5],
-            end: 0,
-            alternating: 0,
-        },
-        countdown: [1, 2, 3],
+            0,
+            0,
+        ),
+        countdown: [1, 2, 3].into(),
         divider: 41,
         dirty: 0,
         ui_pending: 0,
@@ -210,7 +207,10 @@ fn initializer_skip_preserves_entire_slot_and_terminal_only_overwrites_slot_zero
     let before = a;
     initialize_actors(&mut a, &c.actors[3]);
     let mut zero = before[0];
-    zero.handler = SceneHandler::Settle as u8;
+    {
+        let actor_value = SceneHandler::Settle as u8;
+        zero.set_handler(actor_value);
+    };
     assert_eq!(a[0], zero);
     assert_eq!(a[1].animation, 0x81);
     assert_eq!(a[2..], before[2..]);
@@ -225,11 +225,17 @@ fn initializer_writes_only_authored_fields_and_keeps_fractional_motion_identity_
     e.animation = 0x80;
     e.position.world_x = 0xb0;
     e.position.screen_y = 0xb3;
-    e.state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        e.set_state_code(actor_value);
+    };
     e.render = RENDER_SCENE;
-    e.animation_tick = 0;
-    e.animation_frame = 0;
-    e.handler = 0;
+    e.playback.restart_clock();
+    e.playback.reset_frame();
+    {
+        let actor_value = 0;
+        e.set_handler(actor_value);
+    };
     assert_eq!(a[0], e);
 }
 #[test]
@@ -241,7 +247,7 @@ fn flip_uses_absolute_list_byte_offset_nineteen_hex_and_not_slot_nineteen() {
     for (index, actor) in a[..7].iter().enumerate() {
         assert_eq!(actor.render, if index == 2 { 0xd0 } else { RENDER_SCENE });
     }
-    assert_eq!(a[7].state, 0);
+    assert_eq!(a[7].state_code(), 0);
 }
 #[test]
 fn packed_scene_skip_advances_three_bytes_without_reading_coordinates_as_animations() {
@@ -313,12 +319,18 @@ fn both_special_lists_initialize_even_slots_and_preserve_every_unwritten_field()
             e.animation = r.animation;
             e.position.world_x = r.x;
             e.position.screen_y = r.y;
-            e.handler = r.handler;
+            {
+                let actor_value = r.handler;
+                e.set_handler(actor_value);
+            };
             e.profile = r.profile;
-            e.state = WORLD_STATE;
+            {
+                let actor_value = WORLD_STATE;
+                e.set_state_code(actor_value);
+            };
             e.render = WORLD_STATE;
-            e.animation_tick = 0;
-            e.animation_frame = 0;
+            e.playback.restart_clock();
+            e.playback.reset_frame();
             assert_eq!(a[i * 2], e);
         }
         for i in [1, 3, 4, 5, 15] {
@@ -330,52 +342,82 @@ fn both_special_lists_initialize_even_slots_and_preserve_every_unwritten_field()
 fn bounce_initialization_integrates_before_gravity_in_same_call() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = SceneHandler::Bounce as u8;
-    a[0].state = ACTIVE;
+    {
+        let actor_value = SceneHandler::Bounce as u8;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
     let mut m = Boundary::default();
     assert_eq!(update(&mut a, &mut m), HandlerStep::Complete);
     assert_eq!(m.calls, vec![Integration::SubtractY, Integration::Gravity]);
     assert_eq!(m.observations[0].vertical_velocity, BOUNCE_SPEED);
-    assert_eq!(a[0].local_state, BOUNCE_COUNT);
-    assert_eq!(a[0].state, ACTIVE | 1);
+    assert_eq!(a[0].local_state_code(), BOUNCE_COUNT);
+    assert_eq!(a[0].state_code(), ACTIVE | 1);
 }
 #[test]
 fn bounce_negative_postgravity_velocity_clamps_and_counts_apex() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 0;
-    a[0].state = ACTIVE | 1;
-    a[0].local_state = 2;
+    {
+        let actor_value = 0;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        a[0].set_local_state_code(actor_value);
+    };
     let mut m = Boundary {
         facts: VecDeque::from([(None, None, false), (None, Some(-1), false)]),
         ..Default::default()
     };
     update(&mut a, &mut m);
     assert_eq!(a[0].vertical_velocity, 0);
-    assert_eq!(a[0].state, ACTIVE | 2);
-    assert_eq!(a[0].local_state, 1);
+    assert_eq!(a[0].state_code(), ACTIVE | 2);
+    assert_eq!(a[0].local_state_code(), 1);
 }
 #[test]
 fn bounce_zero_postgravity_velocity_does_not_count_apex() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 0;
-    a[0].state = ACTIVE | 1;
+    {
+        let actor_value = 0;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
     let mut m = Boundary {
         facts: VecDeque::from([(None, None, false), (None, Some(0), false)]),
         ..Default::default()
     };
     update(&mut a, &mut m);
-    assert_eq!(a[0].state, ACTIVE | 1);
-    assert_eq!(a[0].local_state, 9);
+    assert_eq!(a[0].state_code(), ACTIVE | 1);
+    assert_eq!(a[0].local_state_code(), 9);
 }
 #[test]
 fn last_apex_enters_move_handler_frozen_tick_without_resetting_frame() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 0;
-    a[0].state = ACTIVE | 1;
-    a[0].local_state = 1;
+    {
+        let actor_value = 0;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        a[0].set_local_state_code(actor_value);
+    };
     let mut m = Boundary {
         facts: VecDeque::from([(None, None, false), (None, Some(-1), false)]),
         ..Default::default()
@@ -384,10 +426,10 @@ fn last_apex_enters_move_handler_frozen_tick_without_resetting_frame() {
     assert_eq!(
         (
             a[0].handler,
-            a[0].state,
-            a[0].animation_tick,
-            a[0].local_state,
-            a[0].animation_frame
+            a[0].state_code(),
+            a[0].playback.tick_code(),
+            a[0].local_state_code(),
+            a[0].playback.frame_code()
         ),
         (SceneHandler::MoveToMark as u8, ACTIVE, FROZEN_TICK, 0, 5)
     );
@@ -401,8 +443,14 @@ fn bounce_descent_applies_gravity_before_y_and_reloads_at_inclusive_floor() {
     ] {
         let mut a = pool();
         a[0] = actor();
-        a[0].handler = 0;
-        a[0].state = ACTIVE | 2;
+        {
+            let actor_value = 0;
+            a[0].set_handler(actor_value);
+        };
+        {
+            let actor_value = ACTIVE | 2;
+            a[0].set_state_code(actor_value);
+        };
         let p = Position {
             screen_y: y,
             ..a[0].position
@@ -413,7 +461,10 @@ fn bounce_descent_applies_gravity_before_y_and_reloads_at_inclusive_floor() {
         };
         update(&mut a, &mut m);
         assert_eq!(m.calls, vec![Integration::Gravity, Integration::SubtractY]);
-        assert_eq!(a[0].state, if reset { ACTIVE | 1 } else { ACTIVE | 2 });
+        assert_eq!(
+            a[0].state_code(),
+            if reset { ACTIVE | 1 } else { ACTIVE | 2 }
+        );
         if reset {
             assert_eq!(a[0].vertical_velocity, BOUNCE_SPEED);
         }
@@ -423,38 +474,63 @@ fn bounce_descent_applies_gravity_before_y_and_reloads_at_inclusive_floor() {
 fn walk_initialization_at_mark_moves_without_decrementing_zero_counter() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = SceneHandler::WalkIn as u8;
-    a[0].state = ACTIVE;
+    {
+        let actor_value = SceneHandler::WalkIn as u8;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
     a[0].position.world_x = u16::from(WALK_MARK_X);
     let mut m = Boundary::default();
     update(&mut a, &mut m);
     assert_eq!(m.calls, vec![Integration::SubtractX]);
     assert_eq!(a[0].horizontal_magnitude, ONE_PIXEL_SPEED);
-    assert_eq!(a[0].local_state, 0);
+    assert_eq!(a[0].local_state_code(), 0);
 }
 #[test]
 fn walk_low_byte_below_mark_wraps_zero_count_even_on_nonzero_world_page() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 1;
-    a[0].state = ACTIVE;
+    {
+        let actor_value = 1;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
     a[0].position.world_x = 0x018f;
     let mut m = Boundary::default();
     update(&mut a, &mut m);
     assert!(m.calls.is_empty());
-    assert_eq!(a[0].local_state, 0xff);
+    assert_eq!(a[0].local_state_code(), 0xff);
 }
 #[test]
 fn walk_last_count_selects_move_and_preserves_animation_frame() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 1;
-    a[0].state = ACTIVE | 1;
+    {
+        let actor_value = 1;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
     a[0].position.world_x = 0x8f;
-    a[0].local_state = 1;
+    {
+        let actor_value = 1;
+        a[0].set_local_state_code(actor_value);
+    };
     update(&mut a, &mut Boundary::default());
     assert_eq!(
-        (a[0].handler, a[0].animation_tick, a[0].animation_frame),
+        (
+            a[0].handler,
+            a[0].playback.tick_code(),
+            a[0].playback.frame_code()
+        ),
         (3, FROZEN_TICK, 5)
     );
 }
@@ -462,11 +538,17 @@ fn walk_last_count_selects_move_and_preserves_animation_frame() {
 fn delay_initialization_returns_without_decrementing_new_zero_count() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 2;
-    a[0].state = ACTIVE;
+    {
+        let actor_value = 2;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
     update(&mut a, &mut Boundary::default());
     assert_eq!(
-        (a[0].state, a[0].local_state, a[0].handler),
+        (a[0].state_code(), a[0].local_state_code(), a[0].handler),
         (ACTIVE | 1, 0, 2)
     );
 }
@@ -475,26 +557,44 @@ fn delay_zero_wraps_and_one_expires_without_motion() {
     for (count, next, handler) in [(0, 0xff, 2), (2, 1, 2), (1, 0, 3)] {
         let mut a = pool();
         a[0] = actor();
-        a[0].handler = 2;
-        a[0].state = ACTIVE | 1;
-        a[0].local_state = count;
+        {
+            let actor_value = 2;
+            a[0].set_handler(actor_value);
+        };
+        {
+            let actor_value = ACTIVE | 1;
+            a[0].set_state_code(actor_value);
+        };
+        {
+            let actor_value = count;
+            a[0].set_local_state_code(actor_value);
+        };
         let mut m = Boundary::default();
         update(&mut a, &mut m);
         assert!(m.calls.is_empty());
-        assert_eq!((a[0].local_state, a[0].handler), (next, handler));
+        assert_eq!((a[0].local_state_code(), a[0].handler), (next, handler));
     }
 }
 #[test]
 fn move_initial_zero_delay_wraps_and_defers_speed_initialization() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 3;
-    a[0].state = ACTIVE;
-    a[0].local_state = 0;
+    {
+        let actor_value = 3;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[0].set_local_state_code(actor_value);
+    };
     let before = a[0];
     let mut m = Boundary::default();
     update(&mut a, &mut m);
-    assert_eq!(a[0].local_state, 0xff);
+    assert_eq!(a[0].local_state_code(), 0xff);
     assert_eq!(a[0].horizontal_magnitude, before.horizontal_magnitude);
     assert_eq!(a[0].vertical_velocity, before.vertical_velocity);
     assert!(m.calls.is_empty());
@@ -503,9 +603,18 @@ fn move_initial_zero_delay_wraps_and_defers_speed_initialization() {
 fn move_delay_expiry_sets_three_pixel_speeds_then_moves_x_same_call() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 3;
-    a[0].state = ACTIVE;
-    a[0].local_state = 1;
+    {
+        let actor_value = 3;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        a[0].set_local_state_code(actor_value);
+    };
     a[0].position.world_x = u16::from(MOVE_MARK_X);
     let mut m = Boundary::default();
     update(&mut a, &mut m);
@@ -521,8 +630,14 @@ fn move_x_threshold_is_low_byte_and_exclusive_before_vertical_motion() {
     ] {
         let mut a = pool();
         a[0] = actor();
-        a[0].handler = 3;
-        a[0].state = ACTIVE | 1;
+        {
+            let actor_value = 3;
+            a[0].set_handler(actor_value);
+        };
+        {
+            let actor_value = ACTIVE | 1;
+            a[0].set_state_code(actor_value);
+        };
         a[0].position.world_x = x;
         a[0].position.screen_y = y;
         let mut m = Boundary::default();
@@ -534,25 +649,43 @@ fn move_x_threshold_is_low_byte_and_exclusive_before_vertical_motion() {
 fn move_below_both_marks_enters_palette_countdown_in_same_invocation() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 3;
-    a[0].state = ACTIVE | 1;
+    {
+        let actor_value = 3;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
     a[0].position.world_x = 0x47;
     a[0].position.screen_y = 0x77;
-    a[0].local_state = 2;
+    {
+        let actor_value = 2;
+        a[0].set_local_state_code(actor_value);
+    };
     let mut m = Boundary::default();
     assert_eq!(update(&mut a, &mut m), HandlerStep::Complete);
-    assert_eq!(a[0].local_state, 1);
+    assert_eq!(a[0].local_state_code(), 1);
     assert!(m.calls.is_empty());
 }
 #[test]
 fn palette_countdown_expiry_requests_scene_three_rebuild_before_palette_or_control_commit() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 3;
-    a[0].state = ACTIVE | 1;
+    {
+        let actor_value = 3;
+        a[0].set_handler(actor_value);
+    };
+    {
+        let actor_value = ACTIVE | 1;
+        a[0].set_state_code(actor_value);
+    };
     a[0].position.world_x = 0x47;
     a[0].position.screen_y = 0x77;
-    a[0].local_state = 1;
+    {
+        let actor_value = 1;
+        a[0].set_local_state_code(actor_value);
+    };
     let mut d = Display {
         control: 0x90,
         ..Default::default()
@@ -578,13 +711,22 @@ fn actual_scene_handlers_four_and_five_settle_without_countdown_palette_or_motio
     for h in [4, 5] {
         let mut a = pool();
         a[0] = actor();
-        a[0].handler = h;
-        a[0].local_state = 1;
+        {
+            let actor_value = h;
+            a[0].set_handler(actor_value);
+        };
+        {
+            let actor_value = 1;
+            a[0].set_local_state_code(actor_value);
+        };
         let old = a[0];
         let mut m = Boundary::default();
         update(&mut a, &mut m);
         let mut e = old;
-        e.handler = 5;
+        {
+            let actor_value = 5;
+            e.set_handler(actor_value);
+        };
         assert_eq!(a[0], e);
         assert!(m.calls.is_empty());
     }
@@ -629,11 +771,14 @@ fn linked_initializes_and_freezes_player_and_divider_before_leftward_move() {
     let mut a = pool();
     a[0] = actor();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE;
+    {
+        let actor_value = WORLD_STATE;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     let mut f = DepartureFixture::default();
     f.linked(&mut a, &mut Boundary::default());
-    assert_eq!((a[0].animation_tick, f.status.divider), (0, 0));
-    assert_eq!(a[SUBJECT].state, WORLD_STATE | 1);
+    assert_eq!((a[0].playback.tick_code(), f.status.divider), (0, 0));
+    assert_eq!(a[SUBJECT].state_code(), WORLD_STATE | 1);
     assert_eq!(a[SUBJECT].horizontal_magnitude, ONE_PIXEL_SPEED);
     assert_eq!(a[SUBJECT].vertical_velocity, 0);
     assert_eq!(a[SUBJECT].position.world_x, 0x019f);
@@ -644,7 +789,10 @@ fn linked_fractional_borrow_changes_integer_but_never_stores_fraction() {
     let mut a = pool();
     a[0] = actor();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 1;
+    {
+        let actor_value = WORLD_STATE | 1;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     a[SUBJECT].position.world_x = 0x0200;
     a[SUBJECT].position.x_fraction = 0x20;
     a[SUBJECT].horizontal_magnitude = 0x0080;
@@ -660,7 +808,10 @@ fn linked_ordinary_digit_gate_compares_postmove_low_byte_ignoring_page() {
     for (x, signal) in [(0x0111, 0), (0x0110, 1), (0x0100, 0)] {
         let mut a = pool();
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 1;
+        {
+            let actor_value = WORLD_STATE | 1;
+            a[SUBJECT].set_state_code(actor_value);
+        };
         a[SUBJECT].position.world_x = x;
         a[SUBJECT].position.x_fraction = 0;
         a[SUBJECT].horizontal_magnitude = ONE_PIXEL_SPEED;
@@ -673,7 +824,10 @@ fn linked_ordinary_digit_gate_compares_postmove_low_byte_ignoring_page() {
 fn linked_completion_signal_wraps_instead_of_saturating() {
     let mut a = pool();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 1;
+    {
+        let actor_value = WORLD_STATE | 1;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     a[SUBJECT].position.world_x = 0x10;
     a[SUBJECT].horizontal_magnitude = ONE_PIXEL_SPEED;
     let mut f = DepartureFixture::default();
@@ -691,11 +845,14 @@ fn linked_exact_third_reward_code_seven_brakes_below_b0_only() {
     ] {
         let mut a = pool();
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 1;
+        {
+            let actor_value = WORLD_STATE | 1;
+            a[SUBJECT].set_state_code(actor_value);
+        };
         a[SUBJECT].position.world_x = x;
         a[SUBJECT].horizontal_magnitude = ONE_PIXEL_SPEED;
         let mut f = DepartureFixture::default();
-        f.status.reward[2] = digit;
+        f.status.reward.edit_display_codes(|codes| codes[2] = digit);
         f.linked(&mut a, &mut Boundary::default());
         assert_eq!(a[SUBJECT].horizontal_magnitude, speed);
     }
@@ -704,36 +861,49 @@ fn linked_exact_third_reward_code_seven_brakes_below_b0_only() {
 fn linked_final_brake_enters_vertical_phase_but_does_not_integrate_y_yet() {
     let mut a = pool();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 1;
+    {
+        let actor_value = WORLD_STATE | 1;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     a[SUBJECT].position.world_x = 0x80;
     a[SUBJECT].horizontal_magnitude = BRAKE_STEP;
     let mut f = DepartureFixture::default();
-    f.status.reward[2] = REWARD_CODE_GATE;
+    f.status
+        .reward
+        .edit_display_codes(|codes| codes[2] = REWARD_CODE_GATE);
     let mut m = Boundary::default();
     f.linked(&mut a, &mut m);
     assert_eq!(a[SUBJECT].horizontal_magnitude, 0);
-    assert_eq!(a[SUBJECT].state, WORLD_STATE | 2);
+    assert_eq!(a[SUBJECT].state_code(), WORLD_STATE | 2);
     assert!(m.calls.is_empty());
 }
 #[test]
 fn linked_brake_underflow_is_source_wrapping_and_not_native_clamp() {
     let mut a = pool();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 1;
+    {
+        let actor_value = WORLD_STATE | 1;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     a[SUBJECT].position.world_x = 0x80;
     a[SUBJECT].horizontal_magnitude = 3;
     let mut f = DepartureFixture::default();
-    f.status.reward[2] = REWARD_CODE_GATE;
+    f.status
+        .reward
+        .edit_display_codes(|codes| codes[2] = REWARD_CODE_GATE);
     f.linked(&mut a, &mut Boundary::default());
     assert_eq!(a[SUBJECT].horizontal_magnitude, 0xffff);
-    assert_eq!(a[SUBJECT].state, WORLD_STATE | 1);
+    assert_eq!(a[SUBJECT].state_code(), WORLD_STATE | 1);
 }
 #[test]
 fn linked_vertical_copies_postintegration_y_and_uses_integrator_carry_not_gravity() {
     for carry in [false, true] {
         let mut a = pool();
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 2;
+        {
+            let actor_value = WORLD_STATE | 2;
+            a[SUBJECT].set_state_code(actor_value);
+        };
         let y = Position {
             screen_y: 0x04,
             ..a[SUBJECT].position
@@ -766,13 +936,16 @@ fn spawner_initialization_decrements_sixty_to_fifty_nine_and_returns_without_mot
     let mut a = pool();
     a[0].render = ACTIVE;
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE;
+    {
+        let actor_value = WORLD_STATE;
+        a[SUBJECT].set_state_code(actor_value);
+    };
     let mut f = DepartureFixture::default();
     let mut m = Boundary::default();
     assert_eq!(f.spawner(&mut a, &mut m), DepartureResult::Complete);
-    assert_eq!(a[SUBJECT].state, WORLD_STATE | 1);
-    assert_eq!(a[SUBJECT].local_state, SPAWNER_DELAY - 1);
-    assert_eq!(a[SUBJECT].local_counter, 0);
+    assert_eq!(a[SUBJECT].state_code(), WORLD_STATE | 1);
+    assert_eq!(a[SUBJECT].local_state_code(), SPAWNER_DELAY - 1);
+    assert_eq!(a[SUBJECT].local_counter_code(), 0);
     assert_eq!(a[SUBJECT].horizontal_magnitude, ONE_PIXEL_SPEED);
     assert_eq!(a[SUBJECT].vertical_velocity, SPAWNER_DOWN_SPEED);
     assert!(m.calls.is_empty());
@@ -782,11 +955,17 @@ fn spawner_last_delay_tick_returns_without_downward_motion() {
     let mut a = pool();
     a[0].render = ACTIVE;
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 1;
-    a[SUBJECT].local_state = 1;
+    {
+        let actor_value = WORLD_STATE | 1;
+        a[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        a[SUBJECT].set_local_state_code(actor_value);
+    };
     let mut m = Boundary::default();
     DepartureFixture::default().spawner(&mut a, &mut m);
-    assert_eq!(a[SUBJECT].local_state, 0);
+    assert_eq!(a[SUBJECT].local_state_code(), 0);
     assert!(m.calls.is_empty());
 }
 #[test]
@@ -795,8 +974,14 @@ fn spawner_downward_mark_is_inclusive_and_sets_departure_signal_without_travel()
         let mut a = pool();
         a[0].render = ACTIVE;
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 1;
-        a[SUBJECT].local_state = 0;
+        {
+            let actor_value = WORLD_STATE | 1;
+            a[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            a[SUBJECT].set_local_state_code(actor_value);
+        };
         let p = Position {
             screen_y: y,
             ..a[SUBJECT].position
@@ -808,16 +993,25 @@ fn spawner_downward_mark_is_inclusive_and_sets_departure_signal_without_travel()
         let mut f = DepartureFixture::default();
         f.spawner(&mut a, &mut m);
         assert_eq!(m.calls, vec![Integration::AddY]);
-        assert_eq!(a[SUBJECT].state, WORLD_STATE | phase);
+        assert_eq!(a[SUBJECT].state_code(), WORLD_STATE | phase);
         assert_eq!(f.signal, signal);
     }
 }
 #[test]
 fn reward_allocator_chooses_highest_free_slot_and_never_uses_slot_eight() {
     let mut a = [actor(); 16];
-    a[14].state = 0x7f;
-    a[12].state = 0;
-    a[8].state = 0;
+    {
+        let actor_value = 0x7f;
+        a[14].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[12].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[8].set_state_code(actor_value);
+    };
     let mut r = RandomState::default();
     assert_eq!(
         spawn_reward(
@@ -829,13 +1023,16 @@ fn reward_allocator_chooses_highest_free_slot_and_never_uses_slot_eight() {
         ),
         Some(14)
     );
-    assert_eq!(a[12].state, 0);
-    assert_eq!(a[8].state, 0);
+    assert_eq!(a[12].state_code(), 0);
+    assert_eq!(a[8].state_code(), 0);
 }
 #[test]
 fn reward_allocator_all_seven_full_leaves_random_cooldown_and_slot_eight_unchanged() {
     let mut a = [actor(); 16];
-    a[8].state = 0;
+    {
+        let actor_value = 0;
+        a[8].set_state_code(actor_value);
+    };
     let old = a;
     let mut r = RandomState {
         words: [0x70, 0x90, 3, 4],
@@ -857,7 +1054,10 @@ fn reward_allocator_all_seven_full_leaves_random_cooldown_and_slot_eight_unchang
 #[test]
 fn reward_allocator_accepts_slot_nine_when_ten_through_fifteen_are_active() {
     let mut a = [actor(); 16];
-    a[REWARD_FIRST_SLOT].state = 1;
+    {
+        let actor_value = 1;
+        a[REWARD_FIRST_SLOT].set_state_code(actor_value);
+    };
     assert_eq!(
         spawn_reward(
             &mut a,
@@ -872,16 +1072,25 @@ fn reward_allocator_accepts_slot_nine_when_ten_through_fifteen_are_active() {
 #[test]
 fn reward_child_overwrites_only_source_written_fields_and_keeps_fractional_position() {
     let mut a = [actor(); 16];
-    a[15].state = 0;
+    {
+        let actor_value = 0;
+        a[15].set_state_code(actor_value);
+    };
     a[SUBJECT].position.world_x = 0x3456;
     a[SUBJECT].position.screen_y = 0x78;
     let mut e = a[15];
-    e.state = WORLD_STATE;
+    {
+        let actor_value = WORLD_STATE;
+        e.set_state_code(actor_value);
+    };
     e.render = WORLD_STATE;
     e.animation = REWARD_ANIMATION;
-    e.handler = REWARD_HANDLER;
-    e.animation_tick = 0;
-    e.animation_frame = 0;
+    {
+        let actor_value = REWARD_HANDLER;
+        e.set_handler(actor_value);
+    };
+    e.playback.restart_clock();
+    e.playback.reset_frame();
     e.profile = 0;
     e.position.world_x = 0x3456;
     e.position.screen_y = 0x78;
@@ -905,27 +1114,39 @@ fn reward_random_adc_preserves_other_words_and_wraps_before_eight_choice_lookup(
         (3, 3, RandomIncrement::Zero, 6, 120),
     ] {
         let mut a = [actor(); 16];
-        a[15].state = 0;
+        {
+            let actor_value = 0;
+            a[15].set_state_code(actor_value);
+        };
         let mut r = RandomState {
             words: [left, right, 0x55, 0xaa],
         };
         spawn_reward(&mut a, SUBJECT, &mut r, inc, &catalog().reward_delays);
         assert_eq!(r.words, [left, sum, 0x55, 0xaa]);
-        assert_eq!(a[SUBJECT].local_counter, delay);
+        assert_eq!(a[SUBJECT].local_counter_code(), delay);
     }
 }
 #[test]
 fn full_pool_travel_wraps_failed_zero_cooldown_then_moves_without_rng_update() {
     let mut a = [actor(); 16];
     a[0].render = ACTIVE;
-    a[SUBJECT].state = WORLD_STATE | 2;
-    a[SUBJECT].local_state = 0;
-    a[SUBJECT].local_counter = 0;
+    {
+        let actor_value = WORLD_STATE | 2;
+        a[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_counter_code(actor_value);
+    };
     let mut f = DepartureFixture::default();
     f.random.words = [1, 2, 3, 4];
     let mut m = Boundary::default();
     f.spawner(&mut a, &mut m);
-    assert_eq!(a[SUBJECT].local_counter, 0xff);
+    assert_eq!(a[SUBJECT].local_counter_code(), 0xff);
     assert_eq!(f.random.words, [1, 2, 3, 4]);
     assert_eq!(m.calls, vec![Integration::SubtractX]);
 }
@@ -933,15 +1154,27 @@ fn full_pool_travel_wraps_failed_zero_cooldown_then_moves_without_rng_update() {
 fn successful_natural_phase_two_reward_uses_compare_equality_increment_one_then_decrements_delay() {
     let mut a = [actor(); 16];
     a[0].render = ACTIVE;
-    a[15].state = 0;
-    a[SUBJECT].state = WORLD_STATE | 2;
-    a[SUBJECT].local_state = 0;
-    a[SUBJECT].local_counter = 0;
+    {
+        let actor_value = 0;
+        a[15].set_state_code(actor_value);
+    };
+    {
+        let actor_value = WORLD_STATE | 2;
+        a[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_counter_code(actor_value);
+    };
     let mut f = DepartureFixture::default();
     f.random.words = [1, 1, 0x55, 0xaa];
     f.spawner(&mut a, &mut Boundary::default());
     assert_eq!(f.random.words, [1, 3, 0x55, 0xaa]);
-    assert_eq!(a[SUBJECT].local_counter, 59);
+    assert_eq!(a[SUBJECT].local_counter_code(), 59);
     assert_eq!(a[15].handler, REWARD_HANDLER);
 }
 #[test]
@@ -949,14 +1182,23 @@ fn spawner_nonzero_cooldown_skips_allocation_but_decrements_before_horizontal_mo
     let mut a = pool();
     a[0].render = ACTIVE;
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 2;
-    a[SUBJECT].local_state = 0;
-    a[SUBJECT].local_counter = 1;
+    {
+        let actor_value = WORLD_STATE | 2;
+        a[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        a[SUBJECT].set_local_counter_code(actor_value);
+    };
     let mut m = Boundary::default();
     DepartureFixture::default().spawner(&mut a, &mut m);
-    assert_eq!(a[SUBJECT].local_counter, 0);
-    assert_eq!(a[15].state, 0);
-    assert_eq!(m.observations[0].local_counter, 0);
+    assert_eq!(a[SUBJECT].local_counter_code(), 0);
+    assert_eq!(a[15].state_code(), 0);
+    assert_eq!(m.observations[0].local_counter_code(), 0);
 }
 #[test]
 fn spawner_exit_threshold_requires_page_zero_and_postmovement_x_below_seventy() {
@@ -964,9 +1206,18 @@ fn spawner_exit_threshold_requires_page_zero_and_postmovement_x_below_seventy() 
         let mut a = pool();
         a[0].render = ACTIVE;
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 2;
-        a[SUBJECT].local_state = 0;
-        a[SUBJECT].local_counter = 2;
+        {
+            let actor_value = WORLD_STATE | 2;
+            a[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            a[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 2;
+            a[SUBJECT].set_local_counter_code(actor_value);
+        };
         let p = Position {
             world_x: x,
             ..a[SUBJECT].position
@@ -977,7 +1228,7 @@ fn spawner_exit_threshold_requires_page_zero_and_postmovement_x_below_seventy() 
         };
         DepartureFixture::default().spawner(&mut a, &mut m);
         assert_eq!(
-            a[SUBJECT].state,
+            a[SUBJECT].state_code(),
             if exit {
                 WORLD_STATE | 3
             } else {
@@ -985,7 +1236,7 @@ fn spawner_exit_threshold_requires_page_zero_and_postmovement_x_below_seventy() 
             }
         );
         assert_eq!(
-            a[SPAWNER_EXIT_SLOT].state,
+            a[SPAWNER_EXIT_SLOT].state_code(),
             if exit { WORLD_STATE } else { 0 }
         );
     }
@@ -996,19 +1247,34 @@ fn spawner_exit_actor_overwrites_active_slot_three_and_preserves_unwritten_motio
     a[0].render = ACTIVE;
     a[3] = actor();
     a[SUBJECT] = actor();
-    a[SUBJECT].state = WORLD_STATE | 2;
-    a[SUBJECT].local_state = 0;
-    a[SUBJECT].local_counter = 2;
+    {
+        let actor_value = WORLD_STATE | 2;
+        a[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        a[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        a[SUBJECT].set_local_counter_code(actor_value);
+    };
     let mut e = a[3];
-    e.state = WORLD_STATE;
+    {
+        let actor_value = WORLD_STATE;
+        e.set_state_code(actor_value);
+    };
     e.render = WORLD_STATE;
     e.animation = 0x5a;
     e.position.world_x = 0x30;
     e.position.screen_y = 0x80;
-    e.handler = 0x38;
+    {
+        let actor_value = 0x38;
+        e.set_handler(actor_value);
+    };
     e.profile = 0;
-    e.animation_tick = 0;
-    e.animation_frame = 0;
+    e.playback.restart_clock();
+    e.playback.reset_frame();
     let p = Position {
         world_x: 0x6f,
         ..a[SUBJECT].position
@@ -1026,8 +1292,14 @@ fn spawner_upward_exit_clears_only_state_below_ten_after_moving() {
         let mut a = pool();
         a[0].render = ACTIVE;
         a[SUBJECT] = actor();
-        a[SUBJECT].state = WORLD_STATE | 3;
-        a[SUBJECT].local_state = 0;
+        {
+            let actor_value = WORLD_STATE | 3;
+            a[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            a[SUBJECT].set_local_state_code(actor_value);
+        };
         let p = Position {
             screen_y: y,
             ..a[SUBJECT].position
@@ -1038,7 +1310,10 @@ fn spawner_upward_exit_clears_only_state_below_ten_after_moving() {
         };
         DepartureFixture::default().spawner(&mut a, &mut m);
         assert_eq!(m.calls, vec![Integration::SubtractY]);
-        assert_eq!(a[SUBJECT].state, if active { WORLD_STATE | 3 } else { 0 });
+        assert_eq!(
+            a[SUBJECT].state_code(),
+            if active { WORLD_STATE | 3 } else { 0 }
+        );
         assert_eq!(a[SUBJECT].render, ACTIVE);
         assert_eq!(a[SUBJECT].animation, 0x55);
     }
@@ -1067,7 +1342,7 @@ fn completion_entry_initializes_slot_eight_only_and_moves_odd_animation_left() {
     );
     let first = m.observations[0];
     assert_eq!(
-        (first.state, first.render, first.animation),
+        (first.state_code(), first.render, first.animation),
         (WORLD_STATE, WORLD_STATE, COMPLETION_FIRST)
     );
     assert_eq!(first.position.world_x, COMPLETION_START_X);
@@ -1112,7 +1387,10 @@ fn completion_await_composition_yields_before_testing_new_visibility() {
 fn completion_hidden_pose_restarts_next_animation_without_waiting_on_state_active_bit() {
     let mut a = pool();
     a[COMPLETION_SLOT] = actor();
-    a[COMPLETION_SLOT].state = WORLD_STATE;
+    {
+        let actor_value = WORLD_STATE;
+        a[COMPLETION_SLOT].set_state_code(actor_value);
+    };
     a[COMPLETION_SLOT].render = 0;
     a[COMPLETION_SLOT].animation = COMPLETION_FIRST;
     let mut c = Completion {
@@ -1136,9 +1414,9 @@ fn completion_hidden_pose_restarts_next_animation_without_waiting_on_state_activ
             Integration::AddX
         ]
     );
-    assert_eq!(m.observations[0].animation_tick, 0);
-    assert_eq!(m.observations[0].animation_frame, 0);
-    assert_eq!(m.observations[0].local_counter, 0);
+    assert_eq!(m.observations[0].playback.tick_code(), 0);
+    assert_eq!(m.observations[0].playback.frame_code(), 0);
+    assert_eq!(m.observations[0].local_counter_code(), 0);
 }
 #[test]
 fn completion_visible_animation_continues_without_reinitializing_pose() {
@@ -1146,7 +1424,10 @@ fn completion_visible_animation_continues_without_reinitializing_pose() {
     a[COMPLETION_SLOT] = actor();
     a[COMPLETION_SLOT].animation = 0x70;
     a[COMPLETION_SLOT].render = ACTIVE;
-    a[COMPLETION_SLOT].local_counter = 1;
+    {
+        let actor_value = 1;
+        a[COMPLETION_SLOT].set_local_counter_code(actor_value);
+    };
     let mut c = Completion {
         phase: CompletionPhase::AwaitYield,
         flashes_left: FLASH_CYCLES,
@@ -1175,7 +1456,10 @@ fn completion_apex_clamps_velocity_before_next_descending_iteration() {
     let mut a = pool();
     a[COMPLETION_SLOT] = actor();
     a[COMPLETION_SLOT].animation = 0x71;
-    a[COMPLETION_SLOT].local_counter = 0;
+    {
+        let actor_value = 0;
+        a[COMPLETION_SLOT].set_local_counter_code(actor_value);
+    };
     let mut c = Completion {
         phase: CompletionPhase::Moving,
         flashes_left: FLASH_CYCLES,
@@ -1191,7 +1475,7 @@ fn completion_apex_clamps_velocity_before_next_descending_iteration() {
         &mut COMPLETION_GRAVITY.clone(),
         &mut m,
     );
-    assert_eq!(a[COMPLETION_SLOT].local_counter, 1);
+    assert_eq!(a[COMPLETION_SLOT].local_counter_code(), 1);
     assert_eq!(a[COMPLETION_SLOT].vertical_velocity, 0);
     assert_eq!(
         m.calls,
@@ -1230,7 +1514,7 @@ fn completion_fifth_pose_enters_first_flash_without_clearing_render_or_scene_sig
         CompletionStep::Wait(FLASH_TICKS)
     );
     assert_eq!(a[COMPLETION_SLOT].animation, COMPLETION_LAST + 1);
-    assert_eq!(a[COMPLETION_SLOT].state, 0);
+    assert_eq!(a[COMPLETION_SLOT].state_code(), 0);
     assert_eq!(a[COMPLETION_SLOT].render, 0);
     assert_eq!(d.active[16], FLASH_COLOR);
     assert!(d.palette_pending);
@@ -1860,7 +2144,10 @@ fn content_waiting_for_composition_preserves_script_cursor_and_does_not_upload_c
 fn palette_rebuild_resume_composes_before_setting_palette_nametable_and_settled_handler() {
     let mut a = pool();
     a[0] = actor();
-    a[0].handler = 3;
+    {
+        let actor_value = 3;
+        a[0].set_handler(actor_value);
+    };
     let mut d = Display {
         control: 0x90,
         ..Default::default()
@@ -1905,34 +2192,27 @@ fn all_runtime_frame_aliases_and_every_original_animation_consumer_remain_explic
         vec![(0x0a, vec![0]), (0x8c, vec![0]), (0x8d, vec![1])]
     );
 }
-fn synthetic_changed_upload() -> crate::world::TerrainUpload {
-    use crate::presentation::VideoWrite;
-    crate::world::TerrainUpload {
-        writes: vec![
-            VideoWrite {
-                address: 0x2146,
-                value: 11,
+fn synthetic_changed_upload() -> crate::world::TerrainUpdate {
+    use crate::world::{PaletteRun, TerrainUpdate, TileOrigin, TilePage, TileRegion};
+    TerrainUpdate {
+        region: TileRegion::new(
+            TileOrigin {
+                page: TilePage::First,
+                column: 6,
+                row: 10,
             },
-            VideoWrite {
-                address: 0x2147,
-                value: 12,
-            },
-            VideoWrite {
-                address: 0x2166,
-                value: 13,
-            },
-            VideoWrite {
-                address: 0x2167,
-                value: 14,
-            },
-            VideoWrite {
-                address: 0x23d1,
-                value: 0x3f,
-            },
-        ],
+            2,
+            vec![11, 12, 13, 14],
+        ),
+        palette: Some(PaletteRun {
+            page: TilePage::First,
+            first_cell: 17,
+            values: vec![0x3f],
+        }),
         commit: crate::assets::formats::UploadCommit::AtInterrupt,
     }
 }
+
 #[test]
 fn source_reset_zeroes_all_four_runtime_aliases_before_any_secondary_writer() {
     let q = crate::presentation::PreparedSecondary::source_zeroed();
@@ -2021,7 +2301,7 @@ fn hidden_player_spawner_applies_common_life_loss_immediately_without_waiting_fo
     assert_eq!(f.progression.reload_request, 0x8e);
     assert_eq!(f.player.action, Action::Standing);
     assert_eq!(f.player.queued, None);
-    assert_eq!(a[0].state, 0);
+    assert_eq!(a[0].state_code(), 0);
     assert_eq!(a[0].render, 0x7f);
     assert_eq!(a[SUBJECT], source);
     assert_eq!(f.status.health.alternating, 0);
@@ -2057,4 +2337,120 @@ fn composed_secondary_overflow_updates_the_canonical_world_attribute_cache() {
     assert_eq!(q.encoded.len(), crate::presentation::SECONDARY_PREFIX_BYTES);
     cache.attributes[64] = 0x79;
     assert_eq!(q.shared_bytes(&cache.attributes)[256], 0x79);
+}
+
+#[test]
+fn scene_delay_preserves_every_initialized_progress_code_and_exact_move_entry_reset() {
+    // B48F..B4B4: any nonzero progress is initialized. Expiry writes exactly80,
+    // handler3, count0 and frozen tick, retaining frame and the other local byte.
+    for progress in 0..16u8 {
+        for remaining in [0u8, 1, 2, 0xff] {
+            let mut actors = pool();
+            actors[0] = actor();
+            actors[0].set_handler(SceneHandler::Delay as u8);
+            actors[0].set_state_code(0xb0 | progress);
+            actors[0].set_local_state_code(remaining);
+            let mut motion = Boundary::default();
+            update(&mut actors, &mut motion);
+            assert!(motion.calls.is_empty());
+            let expected = if progress == 0 {
+                (0xb1, 0, SceneHandler::Delay as u8)
+            } else if remaining == 1 {
+                (0x80, 0, SceneHandler::MoveToMark as u8)
+            } else {
+                (
+                    0xb0 | progress,
+                    remaining.wrapping_sub(1),
+                    SceneHandler::Delay as u8,
+                )
+            };
+            assert_eq!(
+                (
+                    actors[0].state_code(),
+                    actors[0].local_state_code(),
+                    actors[0].handler
+                ),
+                expected
+            );
+            assert_eq!(actors[0].playback.frame_code(), 5);
+            assert_eq!(actors[0].local_counter_code(), 8);
+        }
+    }
+}
+
+#[test]
+fn native_scene_control_preserves_all_state_codes_and_partial_handler_changes() {
+    for handler in 0..=5u8 {
+        for code in 0..=u8::MAX {
+            for count in [0, 1, 0xff] {
+                let mut a = actor();
+                a.set_handler(handler);
+                a.set_state_code(code);
+                a.set_local_state_code(count);
+                a.enter_scene();
+                assert_eq!(a.control.codes(), (code, count, 8));
+                assert_eq!(a.scene_mut().handler_code(), handler);
+                a.set_state_code(code.wrapping_add(0x15));
+                assert_eq!(a.control.codes(), (code.wrapping_add(0x15), count, 8));
+                a.set_handler(0x19);
+                a.select_behavior();
+                assert_eq!(a.control.codes(), (code.wrapping_add(0x15), count, 8));
+                a.set_handler(handler);
+                a.enter_scene();
+                assert_eq!(a.control.codes(), (code.wrapping_add(0x15), count, 8));
+            }
+        }
+    }
+}
+
+#[test]
+fn native_bounce_compatibility_progress_retains_source_motion_order() {
+    // B42B uses bit1 to select the gravity/Y ordering. Noncanonical source
+    // progress remains lossless even though native play uses Rising/Falling.
+    for progress in 0..16u8 {
+        let mut a = pool();
+        a[0] = actor();
+        a[0].set_handler(SceneHandler::Bounce as u8);
+        a[0].set_state_code(0xb0 | progress);
+        a[0].set_local_state_code(2);
+        a[0].position.screen_y = BOUNCE_FLOOR;
+        let descending = progress & 2 != 0;
+        let mut m = Boundary {
+            facts: VecDeque::from(if descending {
+                [(None, Some(-1), false), (None, None, false)]
+            } else {
+                [(None, None, false), (None, Some(-1), false)]
+            }),
+            ..Default::default()
+        };
+        update(&mut a, &mut m);
+        assert_eq!(
+            m.calls,
+            if descending {
+                vec![Integration::Gravity, Integration::SubtractY]
+            } else {
+                vec![Integration::SubtractY, Integration::Gravity]
+            }
+        );
+        assert_eq!(
+            a[0].state_code(),
+            if descending {
+                (0xb0 | progress) - 1
+            } else if progress == 0 {
+                0xb2
+            } else {
+                (0xb0 | progress) + 1
+            }
+        );
+        assert_eq!(
+            a[0].local_state_code(),
+            if descending {
+                2
+            } else if progress == 0 {
+                BOUNCE_COUNT - 1
+            } else {
+                1
+            }
+        );
+    }
 }

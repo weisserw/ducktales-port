@@ -269,3 +269,34 @@ Stage4 canonical borrow refinement: Systems.motion receives Context.cache at
 call time, as the owner context already borrows that WorldCache. This avoids a
 second cache or a retained alias in the native adapter. All102 current contracts
 pass unchanged expectations; B15-before-cache-borrow preserves prior signatures.
+
+## Modernization016: decoded native message programs
+
+Catalog owns immutable MessageProgram instructions: Glyph(tile), Blank, NextRow,
+and Finish. Original split pointers and AE/FF/24 are decoded once at import;
+there is no retained raw message twin or runtime control-byte interpretation.
+Tile identities remain assets. Native operations retain one-to-one source cursor
+positions because Progression.dialogue_cursor is shared with input/overlay/call
+boundaries; no second cursor or cached rendered rows are introduced.
+
+Independent source reread EEAE..EF58 confirms: blanks consume a position but
+bypass both sound/wait and row-limit comparison; visible glyph17 finishes its
+row before pacing; NextRow consumes a position then pads; Finish appends tile2E
+without pacing and resets cursor0. Renderer still writes the single B03 prepared
+panel and publishes at the same owner boundaries. Outcome/scroll/input/scheduler
+logic is unchanged. Shared encoded panel storage remains a presentation/audio
+alias boundary, not the message program representation.
+
+Two pre-conversion source-backed regressions exercise the seventeenth blank and
+all253 noncontrol tile IDs including high values. Native program tests distinguish
+instructions and exclude adjacent data after the first terminator. Source
+metadata assertions project codes only in cfg(test); all behavioral expectations
+and original18 sound/scroll counts remain unchanged.
+
+modernize/dialogue-probe.{rs,py} runs all18 original messages through the actual
+renderer, prepared panel commit and shared tile sampler. Starting evidence records
+807 events and42 complete page images. The probe uses common original CHR list0
+and a fixed review palette; it is an explicit direct-owner fixture, not a natural
+game route, full scheduler or original-emulator run. Full native continuation and
+Game integration contracts separately retain nested waits, acknowledgment and
+canonical-panel sharing coverage.

@@ -116,17 +116,17 @@ pub struct Tasks {
     pub submission_value: u8,
 }
 impl Tasks {
-    pub fn observe(&self) -> serde_json::Value {
+    pub fn observe(&self, services: &Services) -> serde_json::Value {
         use serde_json::json;
         json!({"wait":self.delay.as_ref().map(|delay|json!({"owner":format!("{:?}",delay.owner),"remaining":delay.remaining})),
             "fade":self.fade.as_ref().map(|fade|json!({"direction":format!("{:?}",fade.direction),"subtraction":fade.subtraction,"waits_remaining":fade.waits_remaining,"complete":fade.complete})),
-            "transfer":self.transfer.as_ref().map(|transfer|json!({"source":transfer.source,"started":transfer.started,"waiting":self.transfer_wait})),
+            "transfer":self.transfer.as_ref().map(|transfer|json!({"source":transfer.source.display_codes(),"started":transfer.started,"waiting":self.transfer_wait})),
             "conversion":self.conversion.as_ref().map(|conversion|json!({"phase":format!("{:?}",conversion.phase),"wait_ticks":conversion.wait_ticks})),
             "status_rows":self.status_rows.as_ref().map(|rows|json!({"remaining":rows.rows.len(),"waiting":rows.waiting})),
             "lifecycle":self.initial.as_ref().map(|call|json!({"kind":format!("{:?}",call.kind),"phase":format!("{:?}",call.phase),"pending":call.operations.front().map(|operation|format!("{operation:?}"))})),
             "horizontal":self.horizontal.as_ref().map(|call|json!({"direction":call.direction,"phase":format!("{:?}",call.phase)})),
             "vertical":self.vertical.as_ref().map(|call|call.observe()),
-            "background":self.background.as_ref().map(|(upload,_)|json!({"complete":upload.completed,"record":upload.record,"chunk":upload.chunk_in_record})),
+            "background":self.background.as_ref().map(|(upload,selection)|{ let (record, chunk) = upload.position(&services.content.backgrounds[selection.list]); json!({"complete":upload.completed(),"record":record,"chunk":chunk}) }),
             "ending":{"phase":format!("{:?}",self.ending.phase),"variation":self.ending.variation,"pauses_left":self.ending.pauses_left,"split_delay":self.ending.split_delay,"pending":self.ending_pending.map(|work|format!("{work:?}"))},
             "scene_content_active":self.scene_content.is_some(),"special_room_active":self.special.is_some(),"busy_interrupt_only":self.busy_interrupt_only})
     }
@@ -280,7 +280,7 @@ impl Tasks {
             services.commands.submit_stage(command);
         }
         if outcome.freeze_player_animation {
-            core.actors[0].animation_tick = 0;
+            core.actors[0].playback.restart_clock();
         }
         if outcome.completion_increment {
             core.progression.scene_signal = core.progression.scene_signal.wrapping_add(1);
@@ -462,7 +462,10 @@ impl Tasks {
                 select_bank(services, 5);
                 services.compose(core);
             }
-            O::ClearActorOne => core.actors[1].state = 0,
+            O::ClearActorOne => {
+                let actor_value = 0;
+                core.actors[1].set_state_code(actor_value);
+            }
         }
         OwnerStep::Complete(())
     }
@@ -690,7 +693,7 @@ impl Tasks {
             let mut state = if self
                 .background
                 .as_ref()
-                .is_some_and(|(upload, _)| upload.completed)
+                .is_some_and(|(upload, _)| upload.completed())
             {
                 0x80
             } else {
@@ -758,7 +761,7 @@ impl Tasks {
             let wait = self.composed_wait.as_mut().unwrap();
             let (remaining, done) = progression::composed_wait_step(
                 wait.remaining,
-                &mut core.actors[0].animation_tick,
+                &mut core.actors[0].playback,
                 kind == progression::Lifecycle::Reload,
             );
             wait.remaining = remaining;
@@ -872,7 +875,7 @@ impl Tasks {
                 }
                 O::CopyStageUi => {
                     let mut bytes = services.content.stage_ui_template.clone();
-                    bytes[4..11].copy_from_slice(&core.status.total);
+                    bytes[4..11].copy_from_slice(&core.status.total.display_codes());
                     services
                         .video
                         .prepare_primary(&bytes, 0xff, &mut core.cache.attributes);
@@ -912,14 +915,16 @@ impl Tasks {
                 }
                 O::CopyStatusAndTimer => {
                     services.video.timer_layout = super::video::TimerLayout::Countdown;
-                    core.status
-                        .reward
-                        .copy_from_slice(&services.content.status_template[4..10]);
+                    core.status.reward =
+                        <[u8; 6]>::try_from(&services.content.status_template[4..10])
+                            .expect("reward template width")
+                            .into();
                     core.status.countdown = [
                         services.content.timer_overlay[17],
                         services.content.timer_overlay[21],
                         services.content.timer_overlay[25],
-                    ];
+                    ]
+                    .into();
                     OwnerStep::Complete(())
                 }
                 O::RestoreHealth => {
@@ -930,14 +935,17 @@ impl Tasks {
                     let pair = services.content.raw_stage_presets
                         [usize::from(core.progression.stage.0)]
                     .countdown_pair;
-                    core.status.countdown[..2].copy_from_slice(&pair);
+                    core.status.countdown.replace_upper_codes(pair);
                     core.status.divider = status::COUNTDOWN_PERIOD;
                     OwnerStep::Complete(())
                 }
                 O::InitializeOverlaySentinel => {
                     services.video.overlay_gate = 0xff;
                     let actor = &mut core.actors[1];
-                    actor.state = 0xff;
+                    {
+                        let actor_value = 0xff;
+                        actor.set_state_code(actor_value);
+                    };
                     actor.render = 0xff;
                     actor.spawn_identity = None;
                     actor.position.screen_y = 0;
@@ -1042,8 +1050,8 @@ impl Tasks {
                     }
                     if background.reset_animation {
                         core.actors[0].animation = 0;
-                        core.actors[0].animation_frame = 0;
-                        core.actors[0].animation_tick = 0;
+                        core.actors[0].playback.reset_frame();
+                        core.actors[0].playback.restart_clock();
                     }
                     if background.restore_health {
                         core.status.health.restore();
@@ -1076,7 +1084,7 @@ impl Tasks {
                         let pair = services.content.raw_stage_presets
                             [usize::from(core.progression.stage.0)]
                         .countdown_pair;
-                        core.status.countdown = [pair[0], pair[1], 0];
+                        core.status.countdown = [pair[0], pair[1], 0].into();
                         core.status.divider = status::COUNTDOWN_PERIOD;
                         services.commands.submit_stage(core.progression.stage.0);
                     }
@@ -1105,7 +1113,7 @@ impl Tasks {
                 O::CopyGameOverOverlay => {
                     services.video.timer_layout = super::video::TimerLayout::GameOver;
                     let overlay = &services.content.progression.game_over_overlay;
-                    core.status.countdown = [overlay[17], overlay[21], overlay[25]];
+                    core.status.countdown = [overlay[17], overlay[21], overlay[25]].into();
                     OwnerStep::Complete(())
                 }
                 O::Reset => {
@@ -1193,7 +1201,13 @@ fn screen_script(core: &mut Core, services: &mut Services, selector: usize) {
         let mut address = writes
             .last()
             .map_or(0, |write| write.address.wrapping_add(1));
-        for value in core.status.total.into_iter().chain(std::iter::once(0)) {
+        for value in core
+            .status
+            .total
+            .display_codes()
+            .into_iter()
+            .chain(std::iter::once(0))
+        {
             services.video.write_direct(address, value);
             address = address.wrapping_add(1);
         }
@@ -1300,9 +1314,12 @@ mod tests {
         let mut services = services();
         let mut core = Core::reset();
         let mut tasks = Tasks::default();
-        core.status.reward.fill(status::BLANK);
-        core.status.countdown = [0, 1, 9];
-        core.actors[0].animation_tick = 9;
+        core.status.reward = [status::BLANK; 6].into();
+        core.status.countdown = [0, 1, 9].into();
+        {
+            let animation_value = 9;
+            core.actors[0].playback.set_tick_code(animation_value);
+        };
         services.video.composition.clock = 1;
         services.commands.slots[1] = 0x11;
         assert!(matches!(
@@ -1331,9 +1348,9 @@ mod tests {
         );
         assert_eq!(
             (
-                core.status.countdown,
-                core.status.reward[3],
-                core.actors[0].animation_tick
+                core.status.countdown.display_codes(),
+                core.status.reward.display_codes()[3],
+                core.actors[0].playback.tick_code()
             ),
             ([0, 0, 0], 1, 0)
         );

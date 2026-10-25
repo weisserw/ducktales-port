@@ -471,7 +471,7 @@ pub fn solid_overlap(
     (1..ACTOR_SLOTS).rev().find_map(|slot| {
         let target = &actors[slot];
         if slot == source_slot
-            || target.state & ACTIVE == 0
+            || target.state_code() & ACTIVE == 0
             || target.render & VISIBLE == 0
             || target.handler != SOLID_HANDLER
         {
@@ -699,7 +699,10 @@ pub fn move_with_collision(
     if remove {
         let actor = &mut actors[slot];
         actor.render = 0;
-        actor.state = 0;
+        {
+            let actor_value = 0;
+            actor.set_state_code(actor_value);
+        };
         actor.spawn_identity = None;
         if *special_spawn == ACTIVE | slot as u8 {
             *special_spawn = SPECIAL_SPAWN_RETRY;
@@ -802,20 +805,32 @@ pub fn clear_transition_actors(actors: &mut [ActorContact; ACTOR_SLOTS], stage: 
     const TIMER_BORROW_CORRECTION: u8 = 16;
     if stage == PRESERVED_STAGE && row < PRESERVED_ROWS {
         for actor in &mut actors[ACTOR_SLOTS - 2..] {
-            actor.state |= PRESERVED_ACTOR_MARK;
-            if actor.local_counter != 0 {
-                let (low, borrow) = actor.local_state.overflowing_sub(TIMER_STEP);
-                actor.local_state = if borrow {
-                    low.wrapping_sub(TIMER_BORROW_CORRECTION)
-                } else {
-                    low
+            {
+                let actor_value = actor.state_code() | (PRESERVED_ACTOR_MARK);
+                actor.set_state_code(actor_value);
+            };
+            if actor.local_counter_code() != 0 {
+                let (low, borrow) = actor.local_state_code().overflowing_sub(TIMER_STEP);
+                {
+                    let actor_value = if borrow {
+                        low.wrapping_sub(TIMER_BORROW_CORRECTION)
+                    } else {
+                        low
+                    };
+                    actor.set_local_state_code(actor_value);
                 };
-                actor.local_counter = actor.local_counter.wrapping_sub(u8::from(borrow));
+                {
+                    let actor_value = actor.local_counter_code().wrapping_sub(u8::from(borrow));
+                    actor.set_local_counter_code(actor_value);
+                };
             }
         }
     } else {
         for actor in &mut actors[2..] {
-            actor.state = 0;
+            {
+                let actor_value = 0;
+                actor.set_state_code(actor_value);
+            };
             actor.render = 0;
             actor.spawn_identity = None;
         }
@@ -837,7 +852,7 @@ pub fn terrain_particles(
     for index in (0..4).rev() {
         let Some(slot) = (1..ACTOR_SLOTS)
             .rev()
-            .find(|&slot| actors[slot].state & ACTIVE == 0)
+            .find(|&slot| actors[slot].state_code() & ACTIVE == 0)
         else {
             break;
         };
@@ -848,13 +863,22 @@ pub fn terrain_particles(
             .wrapping_add(geometry.particle_x[index])
             .wrapping_add(u8::from(y_carry));
         actor.position.world_x = u16::from(player_page) << 8 | u16::from(x);
-        actor.state = TERRAIN_PARTICLE_STATE;
+        {
+            let actor_value = TERRAIN_PARTICLE_STATE;
+            actor.set_state_code(actor_value);
+        };
         actor.render = TERRAIN_PARTICLE_RENDER;
         actor.animation = TERRAIN_PARTICLE_ANIMATION;
-        actor.animation_frame = 0;
-        actor.animation_tick = geometry.particle_ticks[index];
+        actor.playback.reset_frame();
+        {
+            let animation_value = geometry.particle_ticks[index];
+            actor.playback.set_tick_code(animation_value);
+        };
         actor.profile = 0;
-        actor.handler = 0;
+        {
+            let actor_value = 0;
+            actor.set_handler(actor_value);
+        };
         slots.push(slot);
     }
     ParticleBatch {

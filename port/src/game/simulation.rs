@@ -36,20 +36,20 @@ impl Core {
             camera: world::Camera::default(),
             cache: world::WorldCache::default(),
             status: status::Status {
-                reward: [0; 6],
-                total: [0; 7],
+                reward: [0; 6].into(),
+                total: [0; 7].into(),
                 lives: 0,
-                health: status::Health {
-                    segments: [status::HealthSegment {
+                health: status::Health::from_overlay(
+                    [status::HealthSegment {
                         y: 0,
                         tile: 0,
                         depleted: 0,
                         x: 0,
                     }; status::OVERLAY_SEGMENTS],
-                    end: 0,
-                    alternating: 0,
-                },
-                countdown: [0; 3],
+                    0,
+                    0,
+                ),
+                countdown: [0; 3].into(),
                 divider: 0,
                 dirty: 0,
                 ui_pending: 0,
@@ -214,28 +214,27 @@ impl Services {
         self.events.record("InterruptCommitted", serde_json::json!({"interrupt_tick":self.runtime.interrupt_tick,"audio_frame":self.audio.frames,"display_suspended":self.video.display.suspended,"oam_guard":self.video.oam_guard,"primary_pending":self.video.display.primary.pending,"secondary_pending":self.video.display.secondary_pending,"palette_pending":self.video.display.palette_pending}));
     }
     pub fn copy_base_overlays(&mut self, core: &mut Core) {
-        core.status
-            .total
-            .copy_from_slice(&self.content.stage_ui_template[4..11]);
-        for (segment, bytes) in core
-            .status
-            .health
-            .segments
-            .iter_mut()
-            .zip(self.content.health_template.chunks_exact(4))
-        {
-            *segment = status::HealthSegment {
+        core.status.total = <[u8; 7]>::try_from(&self.content.stage_ui_template[4..11])
+            .expect("total template width")
+            .into();
+        let segments = std::array::from_fn(|index| {
+            let bytes = &self.content.health_template[index * 4..index * 4 + 4];
+            status::HealthSegment {
                 y: bytes[0],
                 tile: bytes[1],
                 depleted: bytes[2],
                 x: bytes[3],
-            };
-        }
-        core.status.health.end = *self
-            .content
-            .health_template
-            .last()
-            .expect("health terminator");
+            }
+        });
+        core.status.health = status::Health::from_overlay(
+            segments,
+            *self
+                .content
+                .health_template
+                .last()
+                .expect("health terminator"),
+            core.status.health.alternating,
+        );
     }
     pub fn compose(&mut self, core: &mut Core) {
         compose_owners(
@@ -266,7 +265,7 @@ pub fn compose_owners(
     attributes: &[u8; world::CACHE_CELLS],
 ) {
     let mut health = Vec::new();
-    for segment in status.health.segments {
+    for segment in status.health.overlay_segments() {
         if segment.y == u8::MAX {
             break;
         }
@@ -279,7 +278,7 @@ pub fn compose_owners(
         super::video::TimerLayout::Countdown => content.timer_overlay.clone(),
         super::video::TimerLayout::GameOver => content.progression.game_over_overlay.clone(),
     };
-    for (index, digit) in status.countdown.into_iter().enumerate() {
+    for (index, digit) in status.countdown.display_codes().into_iter().enumerate() {
         timer[17 + index * 4] = digit;
     }
     let order = video.composition.begin(
@@ -297,7 +296,7 @@ pub fn compose_owners(
         let actor = &mut actors[slot];
         // Apply eligibility directly to canonical actors before borrowing
         // each visual view. No second visual actor array is retained.
-        if actor.state & actors::ACTIVE == 0 {
+        if actor.state_code() & actors::ACTIVE == 0 {
             actor.render = 0;
             actor.spawn_identity = None;
             continue;
@@ -306,15 +305,13 @@ pub fn compose_owners(
             continue;
         }
         let mut visual = presentation::ActorVisual {
-            state: actor.state,
+            state: actor.state_code(),
             render: actor.render,
             world_x: actor.position.world_x,
             screen_x: actor.screen_x,
             screen_y: actor.position.screen_y,
             animation: actor.animation,
-            tick: actor.animation_tick,
-            frame: actor.animation_frame,
-            restart: actor.animation_restart,
+            playback: actor.playback,
             spawn_identity: actor.spawn_identity,
         };
         if slot == 0 {
@@ -350,11 +347,13 @@ pub fn compose_owners(
                 }
             }
         }
-        actor.state = visual.state;
+        {
+            let actor_value = visual.state;
+            actor.set_state_code(actor_value);
+        };
         actor.render = visual.render;
         actor.screen_x = visual.screen_x;
-        actor.animation_tick = visual.tick;
-        actor.animation_frame = visual.frame;
+        actor.playback = visual.playback;
         actor.spawn_identity = visual.spawn_identity;
     }
 }
@@ -752,11 +751,17 @@ mod tests {
         let raw = Assets::load(&rom, &overrides).unwrap();
         let mut services = Services::new(Content::load(&rom, &raw, &overrides).unwrap());
         let mut core = Core::reset();
-        core.actors[1].state = actors::ACTIVE | presentation::WORLD_POSITIONED;
+        {
+            let actor_value = actors::ACTIVE | presentation::WORLD_POSITIONED;
+            core.actors[1].set_state_code(actor_value);
+        };
         core.actors[1].render = presentation::VISIBLE;
         core.actors[1].position.world_x = 0x0250;
         core.actors[1].spawn_identity = Some(7);
-        core.actors[2].state = actors::ACTIVE;
+        {
+            let actor_value = actors::ACTIVE;
+            core.actors[2].set_state_code(actor_value);
+        };
         core.actors[2].render = presentation::VISIBLE | presentation::DESTROY_AT_END;
         std::sync::Arc::get_mut(&mut services.content)
             .unwrap()
@@ -769,13 +774,13 @@ mod tests {
         services.compose(&mut core);
         assert_eq!(
             (
-                core.actors[1].state,
+                core.actors[1].state_code(),
                 core.actors[1].render,
                 core.actors[1].spawn_identity
             ),
             (0, 0, None)
         );
-        assert_eq!(core.actors[2].state, 0);
+        assert_eq!(core.actors[2].state_code(), 0);
     }
 }
 
@@ -858,108 +863,18 @@ impl Services {
         if let Some((index, value)) = result.collision {
             core.cache.collision[index] = value;
         }
-        if let Some(upload) = result.upload {
-            const TILE_RECORD_BYTES: usize = 7;
-            const TILE_PAYLOAD: usize = 3;
-            const ATTRIBUTE_RECORD_BYTES: u8 = 4;
-            const NAMETABLE_BASE: u16 = 0x2000;
-            const NAMETABLE_BYTES: u16 = 0x400;
-            const FOUR_TILE_ROWS: u16 = 128;
-            const NAMETABLE_ROW: u16 = 32;
-            let base = NAMETABLE_BASE
-                + u16::from(cursor.room_in_row & 1) * NAMETABLE_BYTES
-                + u16::from(cursor.ring & 7) * FOUR_TILE_ROWS
-                + u16::from(cursor.ring >> 3) * 4;
-            // Header operands retain byte Y but add each absolute field offset
-            // without wrapping. Payload Y is recomputed with byte addition for
-            // each quadrant. These differ when a large camera batch crossesFF.
-            for row in 0..4 {
-                let at = usize::from(queue_offset) + row * TILE_RECORD_BYTES;
-                let address = base + row as u16 * NAMETABLE_ROW;
-                for (field, value) in [(0, (address >> 8) as u8), (1, address as u8), (2, 3)] {
-                    self.video
-                        .write_primary_byte(at + field, value, &mut core.cache.attributes);
-                }
-            }
-            for quadrant in (0..4).rev() {
-                let source = (quadrant / 2) * 8 + (quadrant % 2) * 2;
-                let row_offset = (quadrant / 2) * 2 * TILE_RECORD_BYTES + (quadrant % 2) * 2;
-                let at = usize::from(queue_offset.wrapping_add(row_offset as u8));
-                for (field, source) in [
-                    (TILE_PAYLOAD, source),
-                    (TILE_PAYLOAD + 1, source + 1),
-                    (TILE_PAYLOAD + TILE_RECORD_BYTES, source + 4),
-                    (TILE_PAYLOAD + TILE_RECORD_BYTES + 1, source + 5),
-                ] {
-                    self.video.write_primary_byte(
-                        at + field,
-                        self.video.terrain_staging[source],
-                        &mut core.cache.attributes,
-                    );
-                }
-            }
-            let top_edge =
-                core.progression.stage.0 < 5 && cursor.room_in_row & 1 == 0 && cursor.ring & 7 == 1;
-            if top_edge {
-                for index in 0..2 * TILE_RECORD_BYTES {
-                    let at = usize::from(queue_offset.wrapping_add(index as u8));
-                    let value = self
-                        .video
-                        .primary_byte(at + 2 * TILE_RECORD_BYTES, &core.cache.attributes);
-                    self.video
-                        .write_primary_byte(at, value, &mut core.cache.attributes);
-                }
-            }
-            let tile_bytes = if top_edge || cursor.ring & 7 == 7 {
-                2 * TILE_RECORD_BYTES
-            } else {
-                4 * TILE_RECORD_BYTES
-            };
-            let attribute_at = queue_offset.wrapping_add(tile_bytes as u8);
-            let coordinate = (cursor.ring & 7) * 8 + (cursor.ring >> 3);
-            let high = 0x23
-                | self
-                    .video
-                    .staging_queue_byte(9 + usize::from(attribute_at), &core.cache.attributes);
-            let palette = result
-                .attribute
-                .expect("visible column has an attribute byte")
-                .1;
-            for (field, value) in [high, 0xc0 | coordinate, 0, palette]
-                .into_iter()
-                .enumerate()
-            {
-                self.video.write_primary_byte(
-                    usize::from(attribute_at) + field,
-                    value,
+        if let Some(update) = result.update {
+            return Some(
+                self.video.prepare_column(
+                    &update,
+                    result
+                        .attribute
+                        .expect("visible column attribute cache write"),
+                    queue_offset,
+                    terminate,
                     &mut core.cache.attributes,
-                );
-            }
-            let (attribute_index, attribute_value) =
-                result.attribute.expect("column attribute cache write");
-            core.cache.attributes[attribute_index] = attribute_value;
-            // Source C94D terminates only after C92x's canonical cache store;
-            // that final absolute +4 can itself alias attribute cell0.
-            if terminate {
-                self.video.write_primary_byte(
-                    usize::from(attribute_at) + usize::from(ATTRIBUTE_RECORD_BYTES),
-                    u8::MAX,
-                    &mut core.cache.attributes,
-                );
-            }
-            if terminate && upload.commit == crate::assets::formats::UploadCommit::AtInterrupt {
-                self.video.display.primary.pending = u8::MAX;
-            }
-            if terminate && upload.commit == crate::assets::formats::UploadCommit::Immediate {
-                let shared = self.video.primary_bytes(&core.cache.attributes);
-                self.video.display.flush(
-                    presentation::Queue::Primary,
-                    &shared,
-                    presentation::Stride::Across,
-                );
-                self.video.commit_writes();
-            }
-            return Some(attribute_at.wrapping_add(ATTRIBUTE_RECORD_BYTES));
+                ),
+            );
         }
         None
     }
@@ -989,31 +904,6 @@ impl Services {
             self.build_column(core, cursor);
         }
     }
-}
-/// Each source row uses a destination and last-index byte, then contiguous
-/// tiles. This encoder is transient; Video owns all surviving queue bytes.
-pub(super) fn encode_upload(writes: &[presentation::VideoWrite]) -> Vec<u8> {
-    let mut bytes = Vec::new();
-    let mut cursor = 0;
-    while cursor < writes.len() {
-        let start = cursor;
-        let address = writes[start].address;
-        cursor += 1;
-        while cursor < writes.len()
-            && cursor - start < 128
-            && writes[cursor].address == address.wrapping_add((cursor - start) as u16)
-        {
-            cursor += 1;
-        }
-        bytes.extend([
-            (address >> 8) as u8,
-            address as u8,
-            (cursor - start - 1) as u8,
-        ]);
-        bytes.extend(writes[start..cursor].iter().map(|write| write.value));
-    }
-    bytes.push(0xff);
-    bytes
 }
 
 impl Services {
@@ -1269,22 +1159,8 @@ impl Services {
             if let Some(next) = self.build_column_record(core, core.stream, queue_offset, last) {
                 queue_offset = next;
             } else if last && queue_offset != 0 {
-                self.video.write_primary_byte(
-                    usize::from(queue_offset),
-                    u8::MAX,
-                    &mut core.cache.attributes,
-                );
-                if self.video.display.suspended == 0 {
-                    self.video.display.primary.pending = u8::MAX;
-                } else {
-                    let bytes = self.video.primary_bytes(&core.cache.attributes);
-                    self.video.display.flush(
-                        presentation::Queue::Primary,
-                        &bytes,
-                        presentation::Stride::Across,
-                    );
-                    self.video.commit_writes();
-                }
+                self.video
+                    .finish_terrain_batch(queue_offset, &mut core.cache.attributes);
             }
         }
     }

@@ -26,18 +26,34 @@ with subtract/add ten, never packed-BCD operations. Every arithmetic entry here
 initializes carry; arithmetic loops retain carry only across instructions proven
 to preserve it. Native code must express decimal/display semantics, no CPU model.
 
-## Native state and exact widths
+## Native money and exact source boundaries
 
-Source reward StatusDigitCodes0324..0329 is **six display codes**, upper4 used
-for ordinary increments/transfer, upper3 for theft, upper2 for paid dialogue.
-Total0334..033A is **seven display codes**, upper5 used for transfer, upper2 for
-SELECT overlay cost. Lower two digits are normally zeros, but must not simply
-be deleted: normalization, ending gates and script11 read their actual codes.
-BLANK24 is not binary zero storage. Add zero to24 retains24; add positive to24
-removes24; subtraction maps24 to0 while preserving incoming borrow. A normalized
-numeric observation alone cannot reconstruct this state. Status owns these
-codes and dirty/UI requests; B03 owns prepared/committed canonical video state.
-`TransferSession` owns a working six-code source copy across cooperative waits.
+Iteration011 replaces ordinary reward, total and transfer-source code arrays with
+native quantities (`RewardMoney`/`TotalMoney`). An explicit blank-layout mask
+preserves display distinctions that source payment, transfer and ending gates
+observe. Original nondecimal data has a separate lossless compatibility case;
+it is not assigned an invented numeric meaning. Template import and immutable
+render/debug exports are the only ordinary display-code boundaries.
+
+Reward producers name Pickup/LargePickup/ExtraPickup/Treasure/Timer credits with
+native denominations200/1000/5000/100000/100. Ordinary credit, costs, theft and
+transfer use native arithmetic. Paid dialogue costs30000 and health restore
+costs300000; preserving lower digits is equivalent to the source upper-pair
+funding check on decimal amounts. Source normalization still determines the
+explicit `RewardPayment` result consumed by subsequent RNG. Transfer owns a
+separate working quantity, batches at most ten100-unit transfers, and preserves
+its original waits/sounds. Saturation preserves the original lower two codes.
+
+Source reward0324..0329 has six display positions, total0334..033A seven. Their
+lower positions, blanks and unusual codes remain observable through ending gates,
+script11, queue normalization and payment returns. The isolated compatibility
+adapter retains the original byte-wrap/carry/borrow/blank quirks for nondecimal
+input; native numeric paths do not invoke those routines. Source-contract fixture
+writes reimport display codes and assertions project the same old expected codes.
+A test-only denomination-index adapter retains old source probes without exposing
+that interface to gameplay. All20000 ordinary prefix/blank-format credit cases,
+paid blank layouts, raw-code roundtrips and existing source branch/integration
+contracts exercise the conversion. No expected values were changed.
 
 ## Rewards, theft and paid operations
 
@@ -88,11 +104,22 @@ rule' is false: callee clears health flags, with no title-option comparison.
 
 ## Overlay health/lives and source defaults
 
-Modernization iteration005 shares the sign-bit-terminated capacity view through
-private `Health::unlocked_segments`. Damage, one-segment recovery and paid health
-restoration use that prefix; full restore still clears all five flags, and sprite
-rendering retains its distinct FF terminator. Synthetic prefix regressions cover
-all negative sentinel bytes without claiming their natural reachability.
+Iteration010 replaces sprite-shaped canonical health with native per-segment
+availability and Filled/Depleted state. `capacity()` is the available prefix,
+and `exhausted()` preserves the first-flag death gate. Damage, recovery and paid
+restoration no longer read coordinates, tile codes or sentinels. Appearance is
+owned separately and imported/projected only at template/render/debug boundaries.
+Nonzero depletion attribute codes remain lossless in the boundary state. Sparse
+flags and locked-state restoration are preserved rather than compressed into a
+single count. Extension explicitly reveals the chosen bonus slot and updates the
+presentation terminator; its capacity change uses native availability.
+
+Existing fixture assertions now use immutable overlay projections. Fixture writes
+use a test-only reimport adapter so no mutable sprite layout is exposed to game
+rules. No expected values were changed. Source contracts cover every capacity and
+depletion pattern, all negative sentinels, raw attribute/geometry roundtrips,
+player death, object recovery/extension and transactional payment. The historical
+iteration005 prefix-helper change is superseded by this representation conversion.
 
 CopyTitleOverlay D60A..D61F copies13 stageUI bytes and21 overlay bytes. The5
 four-byte health records hold Y,tile,depleted attribute,X and a terminal byte.
@@ -125,6 +152,30 @@ bytes and options0/1 unchanged. Tests cover all byte inputs without inventing
 option descriptions. Title/B12 maps source option selectors to the semantic rule.
 
 ## Countdown and timer conversion
+
+Modernization iteration009 replaces canonical display digits with `Countdown`:
+ordinary time is a bounded seconds quantity and expiration is an explicit state.
+Ordinary ticking subtracts one second, conversion consumes ten-second groups,
+and only rendering/observation encodes the three digits. Initial template, stage
+pair and game-over writes are explicit display-code imports. Upper-pair entry
+replacement retains the prior units; reload replaces all three codes as before.
+Divider cadence, caller gates, sound submission and cooperative waits remain
+with their existing owners. Existing assertions now inspect `display_codes()`;
+none of their expected outputs changed. All1000 decimal values are source-backed
+for decrement/warning/delayed expiration and conversion, with a composed warning/
+player-death regression and the existing exact audio/finish-wait integration.
+
+Nonnumeric original overlays and raw source selectors retain an isolated
+DisplayCodes compatibility state; they are not coerced into a seconds quantity.
+Boundary round trips and arithmetic are compared against the faithful algorithm.
+Source inspection identified an existing limitation: shared `subtract_codes`
+normalizes24 (BLANK) to zero, while E2B5/EF8D directly subtract raw codes. For
+example synthetic[00,00,24] ticks to999 in the faithful build but raw source SBC
+would give[00,00,23]. This iteration preserves the faithful result rather than
+mixing a source-fidelity repair into the representation change. Natural reachability
+of this input at a timer gate is unestablished; raw-code compatibility tests are
+not original-fidelity certification. A separate follow-up should trace actual
+raw preset/overlay gate reachability before deciding whether a repair is needed.
 
 E28C..E2FD physical1E29C..1E30E: states10/0D return before any timer/warning.
 Hundreds tile1E forces state0D and clears late route, preserving divider. Otherwise

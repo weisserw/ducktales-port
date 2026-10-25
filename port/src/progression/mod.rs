@@ -919,12 +919,15 @@ pub fn lifecycle(_kind: Lifecycle, _phase: Phase, _request: u8, _special_room: u
 pub fn initialize_player(_player: &mut Player, _actors: &mut ActorPool, _camera: &mut Camera) {
     _camera.x &= 0xff00;
     let actor = &mut _actors[0];
-    actor.state = 0xa0;
+    {
+        let actor_value = 0xa0;
+        actor.set_state_code(actor_value);
+    };
     actor.render = 0xa0;
     actor.position.screen_y = 0x40;
     actor.animation = 0;
-    actor.animation_frame = 0;
-    actor.animation_tick = 0;
+    actor.playback.reset_frame();
+    actor.playback.restart_clock();
     actor.position.x_fraction = 0;
     _player.jump_velocity = 0x4bb;
     actor.horizontal_magnitude = 0x180;
@@ -942,11 +945,11 @@ pub fn finish_reload(
 }
 pub fn composed_wait_step(
     _remaining: u16,
-    _player_animation_tick: &mut u8,
+    _playback: &mut crate::presentation::AnimationPlayback,
     _freeze_tick: bool,
 ) -> (u16, bool) {
     if _freeze_tick {
-        *_player_animation_tick = 0;
+        _playback.restart_clock();
     }
     let count = if _remaining == 0 { 256 } else { _remaining };
     let next = count - 1;
@@ -1060,7 +1063,10 @@ pub fn finish_horizontal(
 
 /// Executed before the final composed wait, not again after its return.
 pub fn activate_reload_player(_actors: &mut ActorPool) {
-    _actors[0].state = 0xa0;
+    {
+        let actor_value = 0xa0;
+        _actors[0].set_state_code(actor_value);
+    };
 }
 
 // These leaf operations cannot yield in source; resumable owners use explicit states above.

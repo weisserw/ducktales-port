@@ -1,20 +1,20 @@
 {
   "version": 1,
   "workflow": "modernization-beta",
-  "status": "iteration_complete",
+  "status": "batch_complete",
   "pilot_started": true,
   "active_candidate": null,
   "baseline": "modernize/baseline.json",
   "qa_prerequisite": "none; full-game two-pass QA is not required",
-  "checkpoint": "checks/modernize/iteration-007/checkpoint.json",
-  "starting_commit": "59fb86a5f9f60be0d25c957d698767c60519e702",
-  "last_candidate": "background-chunk-continuation",
-  "outcome": "retained",
-  "iterations_completed": 7,
-  "final_source_sha256": "655caa986851ce1af3d3f735a68cb84011df9ba2e806f88f99d70e1477b12cb5",
-  "results": "checks/modernize/iteration-007/results.json",
-  "remaining_scope": "Further iterations require a new user request; no whole-game modernization or QA completion claim.",
-  "authorized_batch": "Five additional passes, iterations003..007; stop early only on no suitable candidate",
+  "checkpoint": "checks/modernize/iteration-018/checkpoint.json",
+  "starting_commit": "2cd75c2c5a396f541a89a796479465a56b0364ec",
+  "last_candidate": "decoded-audio-sequence-programs",
+  "outcome": "all_retained",
+  "iterations_completed": 18,
+  "final_source_sha256": "db1d88f1bb361aacc576394a51bf823942e30499d61665950249b9f7c3877b2f",
+  "results": "checks/modernize/iteration-018/results.json",
+  "remaining_scope": "All nine requested bounded candidates implemented and verified; further modernization requires new requested scope.",
+  "authorized_batch": "Implement all nine remaining candidates; tests after every candidate",
   "last_batch": {
     "requested_passes": 5,
     "completed_passes": 5,
@@ -28,5 +28,6 @@
     "early_exit": false,
     "outcome": "all_retained",
     "audit": "checks/modernize/five-more-passes-audit.json"
-  }
+  },
+  "completion_audit": "checks/modernize/nine-candidate-completion-audit.json"
 }

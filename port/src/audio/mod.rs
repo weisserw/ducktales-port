@@ -1,5 +1,8 @@
 //! Source-owned command ring, music/effect interpretation and register schedules.
 //! All stage3 behavior entries are deliberately pending; see trace.md.
+mod program;
+mod source_boundary;
+use program::{DurationClass, Note, PrimaryAction, SecondaryAction};
 use romatlas_port::nes::apu::Apu;
 pub const QUEUE_SLOTS: usize = 8;
 pub const EMPTY_COMMAND: u8 = 0x88;
@@ -157,11 +160,32 @@ pub struct Fragment {
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Catalog {
     pub headers: Vec<Header>,
-    pub fragments: Vec<Fragment>,
+    fragments: Vec<Fragment>,
+    programs: program::Programs,
     pub duration: [u8; 8],
     pub alternate_duration: [u8; 8],
 }
 impl Catalog {
+    /// Synthetic/file asset construction compiles both stream roles once.
+    pub fn from_fragments(fragments: Vec<Fragment>) -> Self {
+        let programs = program::Programs::compile(&fragments);
+        Self {
+            fragments,
+            programs,
+            ..Self::default()
+        }
+    }
+    pub fn add_fragment(&mut self, fragment: Fragment) {
+        self.fragments.push(fragment);
+        self.programs = program::Programs::compile(&self.fragments);
+    }
+    /// File-authored assets may override a source data/stream location. This is
+    /// an import operation, so both compiled roles are rebuilt before playback.
+    pub fn prepend_fragment(&mut self, fragment: Fragment) {
+        self.fragments.insert(0, fragment);
+        self.programs = program::Programs::compile(&self.fragments);
+    }
+
     /// Only independently bounded audio records enter this catalog. The mixed
     /// source record remains immutable and its trailing bitmap data stays outside
     /// the audio consumer domain.
@@ -191,15 +215,12 @@ impl Catalog {
     }
     pub fn from_rom(rom: &[u8]) -> anyhow::Result<Self> {
         anyhow::ensure!(rom.len() >= 0xe903, "truncated audio source");
-        let mut catalog = Self {
-            fragments: vec![Fragment {
-                origin: 0x896b,
-                bytes: rom[0xc97b..0xe903].to_vec(),
-            }],
-            duration: rom[0xc97b..0xc983].try_into()?,
-            alternate_duration: rom[0xc983..0xc98b].try_into()?,
-            ..Self::default()
-        };
+        let mut catalog = Self::from_fragments(vec![Fragment {
+            origin: 0x896b,
+            bytes: rom[0xc97b..0xe903].to_vec(),
+        }]);
+        catalog.duration = rom[0xc97b..0xc983].try_into()?;
+        catalog.alternate_duration = rom[0xc983..0xc98b].try_into()?;
         for index in 0..HEADER_COUNT {
             let at = HEADER_WORDS_PHYSICAL + index * 2;
             let pointer = u16::from_le_bytes([rom[at], rom[at + 1]]);
@@ -238,14 +259,7 @@ impl Catalog {
         SECONDARY_HANDLERS
     }
     pub fn read(&self, address: u16) -> anyhow::Result<u8> {
-        self.fragments
-            .iter()
-            .find_map(|fragment| {
-                address
-                    .checked_sub(fragment.origin)
-                    .and_then(|offset| fragment.bytes.get(usize::from(offset)))
-                    .copied()
-            })
+        program::source_byte(&self.fragments, address)
             .ok_or_else(|| anyhow::anyhow!("audio data address {address:04X} outside catalog"))
     }
 }
@@ -670,25 +684,6 @@ impl Driver {
         }
         writes
     }
-    fn read_primary(&mut self, catalog: &Catalog, voice: Voice) -> u8 {
-        let primary = &mut self.channels[voice.index()].primary;
-        let value = catalog
-            .read(primary.cursor)
-            .expect("validated primary stream");
-        self.reset_selector = SeedSelector {
-            selector: primary.cursor as u8,
-            producer: SeedProducer::PrimaryCursor,
-        };
-        primary.cursor = primary.cursor.wrapping_add(1);
-        value
-    }
-    fn read_secondary(&mut self, catalog: &Catalog) -> u8 {
-        let value = catalog
-            .read(self.secondary_cursor)
-            .expect("validated secondary stream");
-        self.secondary_cursor = self.secondary_cursor.wrapping_add(1);
-        value
-    }
     fn select_seed(&mut self, selector: u8, producer: SeedProducer) {
         self.reset_selector = SeedSelector { selector, producer };
     }
@@ -774,54 +769,50 @@ impl Driver {
         writes: &mut Vec<RegisterWrite>,
     ) {
         loop {
-            let command = self.read_primary(catalog, voice);
-            match command & 0xf0 {
-                0x20 => {
+            let instruction = self.primary_instruction(catalog, voice);
+            if let Some(seed) = instruction.dispatch_seed {
+                self.select_seed(seed, SeedProducer::InlineTarget);
+            }
+            match instruction.action {
+                PrimaryAction::Deferred(count) => {
                     self.primary_decode(catalog, voice, external, writes);
                     let primary = &mut self.channels[voice.index()].primary;
-                    primary.note_control = (primary.note_control & 31) | ((command & 7) << 5);
-                    self.select_seed((command & 7) << 5, SeedProducer::DeferredNote);
+                    primary.note_control = (primary.note_control & 31) | (count << 5);
+                    self.select_seed(count << 5, SeedProducer::DeferredNote);
                     return;
                 }
-                0x30 => {
+                PrimaryAction::Continue => {
                     self.channels[voice.index()].primary.repeat_control |= 0x80;
-                    continue;
                 }
-                0 => {}
-                _ => {
-                    self.primary_note(catalog, voice, command, false, external, writes);
+                PrimaryAction::Note(note) => {
+                    self.primary_note(catalog, voice, note, external, writes);
                     return;
                 }
-            }
-            self.select_seed(
-                PRIMARY_HANDLERS[usize::from(command)] as u8,
-                SeedProducer::InlineTarget,
-            );
-            match command {
-                0 => {
-                    let value = self.read_primary(catalog, voice);
+                PrimaryAction::Scale(value) => {
+                    let value = self.primary_operand(voice, value);
                     self.channels[voice.index()].primary.scale = value;
                 }
-                1 => {
-                    let value = self.read_primary(catalog, voice);
-                    self.channels[voice.index()].primary.pitch_step = value as i8;
+                PrimaryAction::PitchStep(value) => {
+                    let value = self.primary_operand(voice, value);
+                    self.channels[voice.index()].primary.pitch_step = value;
                 }
-                2 | 3 => {
-                    let value = self.read_primary(catalog, voice);
+                PrimaryAction::ControlHigh(value) | PrimaryAction::ControlLow(value) => {
+                    let high = matches!(instruction.action, PrimaryAction::ControlHigh(_));
+                    let value = self.primary_operand(voice, value);
                     let control = &mut self.channels[voice.index()].primary.control;
-                    *control = if command == 2 {
+                    *control = if high {
                         (*control & 0x3f) | value
                     } else if voice == Voice::Triangle {
                         value
                     } else {
                         (*control & 0xc0) | value
                     };
-                    if command == 2 || voice != Voice::Triangle {
+                    if high || voice != Voice::Triangle {
                         self.select_seed(value, SeedProducer::ControlParameter);
                     }
                 }
-                4 => {
-                    let count = self.read_primary(catalog, voice);
+                PrimaryAction::Repeat { count, target } => {
+                    let count = self.primary_operand(voice, count);
                     let repeat = self.channels[voice.index()].primary.repeat_control & 0x7f;
                     if count != 0 && count == repeat {
                         let primary = &mut self.channels[voice.index()].primary;
@@ -833,26 +824,23 @@ impl Driver {
                             primary.repeat_control =
                                 (primary.repeat_control & 0x80) | repeat.wrapping_add(1);
                         }
-                        let low = self.read_primary(catalog, voice);
-                        let high = self.read_primary(catalog, voice);
-                        self.channels[voice.index()].primary.cursor =
-                            u16::from_le_bytes([low, high]);
+                        let destination = self.primary_target(voice, target);
+                        self.channels[voice.index()].primary.cursor = destination;
                     }
                 }
-                5 => {
-                    let value = self.read_primary(catalog, voice);
-                    self.channels[voice.index()].primary.period_table =
-                        0x897b_u16.wrapping_add(u16::from(value.wrapping_mul(2)));
+                PrimaryAction::PeriodTable(location) => {
+                    let location = self.primary_operand(voice, location);
+                    self.channels[voice.index()].primary.period_table = location;
                     self.select_seed(0x7b, SeedProducer::PeriodTable);
                 }
-                6 => {
-                    let note = self.read_primary(catalog, voice);
-                    self.primary_note(catalog, voice, note, true, external, writes);
+                PrimaryAction::AlternateNote(note) => {
+                    let note = self.primary_operand(voice, note);
+                    self.primary_note(catalog, voice, note, external, writes);
                     return;
                 }
-                7 => {
-                    let interval = self.read_primary(catalog, voice);
-                    let packed = self.read_primary(catalog, voice);
+                PrimaryAction::Envelope { interval, packed } => {
+                    let interval = self.primary_operand(voice, interval);
+                    let packed = self.primary_operand(voice, packed);
                     self.channels[voice.index()].primary.envelope.interval = interval;
                     self.channels[voice.index()].primary.envelope.step_level = packed;
                     self.select_seed(interval, SeedProducer::EnvelopeInterval);
@@ -860,8 +848,8 @@ impl Driver {
                         self.initialize_envelope(voice);
                     }
                 }
-                8 => {
-                    let value = self.read_primary(catalog, voice);
+                PrimaryAction::Preset(value) => {
+                    let value = self.primary_operand(voice, value);
                     let primary = &mut self.channels[voice.index()].primary;
                     primary.note_control = (primary.note_control & 0xe0) | value;
                     self.select_seed(value, SeedProducer::PresetIndex);
@@ -869,7 +857,7 @@ impl Driver {
                         self.load_preset(catalog, voice, value);
                     }
                 }
-                9 => {
+                PrimaryAction::Stop => {
                     self.channels[voice.index()].primary.cursor = 0;
                     self.priority &= 0xf0;
                     if self.secondary_mask & 1 == 0 {
@@ -877,7 +865,9 @@ impl Driver {
                     }
                     return;
                 }
-                _ => unreachable!("validated primary opcode"),
+                PrimaryAction::Invalid(value) => {
+                    panic!("unsupported primary instruction {value:02X}")
+                }
             }
         }
     }
@@ -885,16 +875,13 @@ impl Driver {
         &mut self,
         catalog: &Catalog,
         voice: Voice,
-        note: u8,
-        alternate: bool,
+        note: Note,
         external: &mut impl FnMut(u16) -> u8,
         writes: &mut Vec<RegisterWrite>,
     ) {
-        let class = usize::from((note >> 5) & 7);
-        let duration = if alternate {
-            catalog.alternate_duration[class]
-        } else {
-            catalog.duration[class]
+        let duration = match note.duration {
+            DurationClass::Standard(class) => catalog.duration[usize::from(class)],
+            DurationClass::Alternate(class) => catalog.alternate_duration[usize::from(class)],
         };
         let primary = &mut self.channels[voice.index()].primary;
         let scale = if primary.scale == 0 {
@@ -912,7 +899,7 @@ impl Driver {
             }
             return;
         }
-        let key = note & 31;
+        let key = note.key;
         primary.period = if key == 0 {
             0
         } else if voice == Voice::Noise {
@@ -961,49 +948,48 @@ impl Driver {
             return writes;
         }
         loop {
-            let command = self.read_secondary(catalog);
-            if command & 0x80 != 0 {
-                if command & 15 == 15 {
-                    self.read_secondary(catalog);
+            let instruction = self.secondary_instruction(catalog);
+            if let Some(seed) = instruction.dispatch_seed {
+                self.select_seed(seed, SeedProducer::InlineTarget);
+            }
+            match instruction.action {
+                SecondaryAction::KeepPeriod(parameter) => {
+                    self.secondary_operand(parameter);
                     self.reset_selected(voice, Reset::KeepPeriod, external);
-                } else {
-                    let low = self.read_secondary(catalog);
-                    self.channels[voice.index()].secondary.period =
-                        u16::from_le_bytes([low, command & 7]);
+                    return writes;
+                }
+                SecondaryAction::Period(period) => {
+                    let period = self.secondary_operand(period);
+                    self.channels[voice.index()].secondary.period = period;
                     self.select_seed(19, SeedProducer::SecondaryControl);
                     self.reset_selected(voice, Reset::InvalidatePeriod, external);
                     Self::silence(voice, &mut writes);
+                    return writes;
                 }
-                return writes;
-            }
-            self.select_seed(
-                SECONDARY_HANDLERS[usize::from(command)] as u8,
-                SeedProducer::InlineTarget,
-            );
-            match command {
-                0 => {
-                    self.shared_delay = self.read_secondary(catalog);
+                SecondaryAction::Delay(value) => {
+                    self.shared_delay = self.secondary_operand(value);
                 }
-                1 => {
-                    let value = self.read_secondary(catalog);
-                    self.channels[voice.index()].secondary.pitch_step = value as i8;
+                SecondaryAction::PitchStep(value) => {
+                    let value = self.secondary_operand(value);
+                    self.channels[voice.index()].secondary.pitch_step = value;
                 }
-                2 | 3 => {
-                    let value = self.read_secondary(catalog);
+                SecondaryAction::ControlHigh(value) | SecondaryAction::ControlLow(value) => {
+                    let high = matches!(instruction.action, SecondaryAction::ControlHigh(_));
+                    let value = self.secondary_operand(value);
                     let control = &mut self.channels[voice.index()].secondary.control;
-                    *control = if command == 2 {
+                    *control = if high {
                         (*control & 0x3f) | value
                     } else if voice == Voice::Triangle {
                         value
                     } else {
                         (*control & 0xc0) | value
                     };
-                    if command == 2 || voice != Voice::Triangle {
+                    if high || voice != Voice::Triangle {
                         self.select_seed(value, SeedProducer::ControlParameter);
                     }
                 }
-                4 => {
-                    let count = self.read_secondary(catalog);
+                SecondaryAction::Repeat { count, target } => {
+                    let count = self.secondary_operand(count);
                     if count != 0 && count == self.secondary_repeat {
                         self.secondary_repeat = 0;
                         self.secondary_cursor = self.secondary_cursor.wrapping_add(2);
@@ -1011,17 +997,21 @@ impl Driver {
                         if count != 0 {
                             self.secondary_repeat = self.secondary_repeat.wrapping_add(1);
                         }
-                        let low = self.read_secondary(catalog);
-                        let high = self.read_secondary(catalog);
-                        self.select_seed(low, SeedProducer::LoopDestination);
-                        self.secondary_cursor = u16::from_le_bytes([low, high]);
+                        let destination = self.secondary_target(target);
+                        self.select_seed(destination as u8, SeedProducer::LoopDestination);
+                        self.secondary_cursor = destination;
                     }
                 }
-                5 => {
-                    let pitch_interval = self.read_secondary(catalog);
-                    let pitch_shape = self.read_secondary(catalog);
-                    let level_interval = self.read_secondary(catalog);
-                    let level_step = self.read_secondary(catalog) as i8;
+                SecondaryAction::Modulation {
+                    pitch_interval,
+                    pitch_shape,
+                    level_interval,
+                    level_step,
+                } => {
+                    let pitch_interval = self.secondary_operand(pitch_interval);
+                    let pitch_shape = self.secondary_operand(pitch_shape);
+                    let level_interval = self.secondary_operand(level_interval);
+                    let level_step = self.secondary_operand(level_step);
                     let modulation = &mut self.channels[voice.index()].modulation;
                     modulation.pitch_interval = pitch_interval;
                     modulation.pitch_shape = pitch_shape;
@@ -1029,7 +1019,7 @@ impl Driver {
                     modulation.level_step = level_step;
                     self.select_seed(24, SeedProducer::ModulationEnd);
                 }
-                6 => {
+                SecondaryAction::End => {
                     self.secondary_cursor = self.secondary_cursor.wrapping_sub(1);
                     self.priority &= 15;
                     self.secondary_mask &= 0xfe;
@@ -1045,7 +1035,9 @@ impl Driver {
                     self.reset_selected(voice, Reset::InvalidatePeriod, external);
                     return writes;
                 }
-                _ => unreachable!("validated secondary opcode"),
+                SecondaryAction::Invalid(value) => {
+                    panic!("unsupported secondary instruction {value:02X}")
+                }
             }
         }
     }

@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "objective": "Implement all nine reviewed modernization candidates and rerun tests after each change",
+  "status": "complete",
+  "starting_source_sha256": "3774c60ee93c5a1e7db56b1de53ee6fedd719d9cdad0ec487525de96c4eeffc5",
+  "baseline": "modernize/baseline.json",
+  "items": [
+    {
+      "id": "native-health-capacity",
+      "name": "Health model",
+      "status": "retained",
+      "iteration": "010",
+      "results": "checks/modernize/iteration-010/results.json"
+    },
+    {
+      "id": "native-money-quantities",
+      "name": "Money quantities",
+      "status": "retained",
+      "iteration": "011",
+      "results": "checks/modernize/iteration-011/results.json"
+    },
+    {
+      "id": "native-enemy-behavior-state",
+      "name": "Enemy behavior state",
+      "status": "retained",
+      "investigation": {
+        "family": "Ambush (source handler19), complete five-phase behavior",
+        "current_fields": [
+          "ActorContact.state low nibble",
+          "ActorContact.local_state reused opening/segment/rest delay",
+          "ActorContact.local_counter movement-preset cursor"
+        ],
+        "existing_contracts": "port/src/actors/enemies/contracts.rs:ambush_*; exact motion/contact/sound ordering and two-phase same-call transition covered",
+        "ownership_requirement": "Use canonical explicit phase and named counters; do not merely decode/match/reencode the same retained byte every call. Preserve source projections for shared lifecycle/collision/debug callers.",
+        "next_probe": "Choose canonical actor behavior storage and enumerate handler-change/spawn boundaries before conversion. Native state must survive immediate callbacks without a shadow raw owner.",
+        "coupling_evidence": [
+          "ActorContact source fields used across families, spawn lifecycle, player/collision, presentation projection and journal",
+          "ordinary spawn sets state high flags and local_state from template low nibble, clears local_counter",
+          "shared reaction can change handler/state; any native variant must preserve partial-write/retained-local semantics",
+          "collision active/preserved bits and journal observations must remain stable"
+        ]
+      },
+      "iteration": "012",
+      "results": "checks/modernize/iteration-012/results.json"
+    },
+    {
+      "id": "decoded-movement-sequences",
+      "name": "Movement sequences",
+      "status": "retained",
+      "iteration": "013",
+      "results": "checks/modernize/iteration-013/results.json"
+    },
+    {
+      "id": "native-scene-actor-phases",
+      "name": "Scene actor phases",
+      "status": "retained",
+      "investigation": {
+        "scope": "Complete B16 scene actor Bounce/WalkIn/Delay/MoveToMark/Settle/Settled behavior, preserving rebuild/compose continuation order",
+        "canonical_owner": "Extend ActorControl with a native scene payload; no side session mirroring actor source fields. Existing state/local projection API supports migration without another repository-wide field rewrite.",
+        "current_source": "port/src/scenes/mod.rs:update_scene_actor and scene_move_entry; port/src/scenes/contracts.rs contains ordered motion/threshold/wrapping/rebuild cases",
+        "important_evidence": [
+          "scene_move_entry writes handler3, state exactly80 (not merely high-nibble preservation), freezes animation tick80, clears local_state to0 and preserves animation frame",
+          "Bounce initializes11 bounces and speed0400; ascent integrates Y before gravity, descent gravity before Y; apex decrements count and last apex enters MoveToMark",
+          "WalkIn initializes a wrapping zero countdown and moves left while lowX>=90; below mark decrements including0->FF",
+          "Delay initialization returns without decrement; subsequent zero waits wrap toFF",
+          "MoveToMark source low-phase0 decrements a wrapping zero delay until expiry, then sets speed0300 and moves X in same call; X threshold48 precedes Y threshold78; both below decrements palette countdown in same call",
+          "Handlers4/5 simply set handler5; no added palette/countdown/motion",
+          "AwaitRebuild initializes interior actors, returnsCompose; only following resume marks palette/control and settles"
+        ],
+        "next_action": "Design native scene phase/counter payload with lossless projection compatibility for unusual source codes and handler changes. Run source-backed scenes contracts before conversion. Keep actual waits/update order and clone isolation."
+      },
+      "iteration": "014",
+      "results": "checks/modernize/iteration-014/results.json"
+    },
+    {
+      "id": "native-animation-playback",
+      "name": "Animation playback",
+      "status": "retained",
+      "iteration": "015",
+      "results": "checks/modernize/iteration-015/results.json"
+    },
+    {
+      "id": "decoded-dialogue-programs",
+      "name": "Dialogue programs",
+      "status": "retained",
+      "iteration": "016",
+      "results": "checks/modernize/iteration-016/results.json"
+    },
+    {
+      "id": "semantic-terrain-display-updates",
+      "name": "Terrain display updates",
+      "status": "retained",
+      "investigation": {
+        "current_owner": "World functions construct TerrainUpload/VerticalRows as flat PPU-addressed VideoWrite vectors; Game encodes them into primary/secondary records. Actor replacements append fixed14-byte secondary records with byte cursor arithmetic.",
+        "proven_shared_observations": [
+          "Ten/eleven changed records author runtime composite header at secondary offset80",
+          "Absolute base+cursor+field writes can overflow the192-byte secondary prefix into the canonical world attribute cache before later actors",
+          "Audio low-F consumers read canonical primary/secondary/staging bytes",
+          "Primary status overflow and terrain attribute staging can overwrite the same queue bytes",
+          "Collision and logical attribute updates occur before delayed visible commit; top status mask changes outgoing palette only"
+        ],
+        "strongest_candidate": "Native tile-region and palette-cell update plans across world column streaming, changed blocks, bursts and vertical rows. Move PPU address/record construction entirely to the presentation boundary; retain exact canonical alias bytes there rather than adding a cached semantic twin.",
+        "required_scope": "Replace canonical world output representations and affected Game callers; do not count renaming TerrainUpload or extracting encoders alone. Keep row trimming, update ordering, commit timing, byte cursor and alias effects source-grounded.",
+        "next_probe": "Inspect all world upload producers and commit/alias encoders; establish native coordinate model for rows30/31 and original OR-based vertical offsets, then checkpoint and extend boundary contracts before edits.",
+        "tests_to_preserve": [
+          "world::contracts (column/parity/top-bottom masks/mutations/bursts/vertical source rows)",
+          "scenes::contracts (secondary runtime composite aliases, wrap and attribute overflow)",
+          "game::simulation and video integration contracts (full alias writes and immediate/deferred commit)",
+          "game::spawn_tests terrain representation without recovery",
+          "audio alias contracts and full native suite"
+        ]
+      },
+      "iteration": "017",
+      "results": "checks/modernize/iteration-017/results.json"
+    },
+    {
+      "id": "decoded-audio-sequence-programs",
+      "name": "Audio sequence programs",
+      "status": "retained",
+      "investigation": {
+        "current_owner": "Audio Catalog retains source-addressed fragments; Driver::primary_decode and secondary_step interpret byte controls and fetch operands during playback. Header, preset, period and sequence consumers can share source bytes.",
+        "selected_direction": "Canonical decoded primary and secondary instruction programs built at asset import, with typed actions/operands and explicit branch/repeat locations. Preserve resource-location projections for existing source observations; do not merely decode and reencode a local enum every tick.",
+        "known_boundaries": [
+          "Catalog::read serves header/preset/period/sequence data; raw data for genuine table consumers may remain at the asset boundary while instruction interpretation moves out of playback",
+          "Driver seed-selector provenance and low-F reads cross concrete channel/preset/gap/staging/primary/secondary domains",
+          "Primary repeat_control and note_control currently pack observable subfields; identify ownership and partial-write consequences before changing them",
+          "Existing source uncertainty at physicalC522..C524 must remain explicit and excluded; do not invent an audio consumer"
+        ],
+        "next_probe": "Read both complete decoders and all source instruction/operand/loop contracts. Enumerate authored targets, overlapping entry points, control lengths, preset/data reads and synthetic catalog construction before choosing immutable program storage. Checkpoint and source-backed baseline/probes precede edits."
+      },
+      "iteration": "018",
+      "results": "checks/modernize/iteration-018/results.json"
+    }
+  ],
+  "validation_policy": "Source-backed contracts before conversion; full native tests and affected build/static/runtime checks after every candidate; preserve prior records and baseline; no automatic commits/publication",
+  "next_candidate": null,
+  "completed_candidates": 9,
+  "remaining_candidates": 0,
+  "completion_audit": "checks/modernize/nine-candidate-completion-audit.json",
+  "final_source_sha256": "db1d88f1bb361aacc576394a51bf823942e30499d61665950249b9f7c3877b2f"
+}

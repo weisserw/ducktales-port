@@ -424,21 +424,15 @@ impl AudioResource {
                 bytes.push(9);
             }
             origin += bytes.len() as u16;
-            catalog.fragments.insert(
-                0,
-                crate::audio::Fragment {
-                    origin: cursors[channel],
-                    bytes,
-                },
-            );
+            catalog.prepend_fragment(crate::audio::Fragment {
+                origin: cursors[channel],
+                bytes,
+            });
         }
-        catalog.fragments.insert(
-            0,
-            crate::audio::Fragment {
-                origin: PERIOD_TABLE,
-                bytes: self.periods.clone(),
-            },
-        );
+        catalog.prepend_fragment(crate::audio::Fragment {
+            origin: PERIOD_TABLE,
+            bytes: self.periods.clone(),
+        });
         catalog.headers[usize::from(stage)] = crate::audio::Header::Primary {
             priority: 1,
             cursors,
@@ -454,15 +448,13 @@ mod audio_tests {
     fn compiled_notes_keep_original_duration_table_and_loop_on_actual_driver_frames() {
         let value = serde_json::json!({"version":1,"format":"ducktales.audio","periods":vec![321;32],"voices":[[{"key":1,"ticks":2,"volume":9,"duty":2}],[],[],[]]});
         let resource = AudioResource::decode(&serde_json::to_vec(&value).unwrap()).unwrap();
-        let mut catalog = crate::audio::Catalog {
-            headers: vec![crate::audio::Header::Primary {
-                priority: 1,
-                cursors: [0; 4],
-                preset_base: 0,
-            }],
-            duration: [0, 0, 2, 4, 8, 16, 32, 64],
-            ..Default::default()
-        };
+        let mut catalog = crate::audio::Catalog::default();
+        catalog.headers = vec![crate::audio::Header::Primary {
+            priority: 1,
+            cursors: [0; 4],
+            preset_base: 0,
+        }];
+        catalog.duration = [0, 0, 2, 4, 8, 16, 32, 64];
         resource.install(&mut catalog, 0);
         let mut driver = crate::audio::Driver::default();
         driver.command(&catalog, 0, 0, &mut Vec::new());

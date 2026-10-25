@@ -190,6 +190,31 @@ new direction after ledge. No actor visibility prefix, no animation reset.
 
 ## 19 Ambush973C..993B; tables993C..9955
 
+Iteration012 replaces the complete family's packed phase and generic local bytes
+with canonical `AmbushPhase`, `delay_remaining` and `preset_step` in ActorControl.
+WaitingForPlayer/Opening/Tracking/Closing/Attacking are direct game states. The
+native body no longer masks/increments a state byte or reads generic local bytes.
+Source projection APIs exist only for shared legacy-family/lifecycle/collision
+callers and unchanged debug observations. ActorContact's old three raw fields
+are removed, so there is no retained shadow of the native owner. Generic callers
+update this same owner through getters/setters; a handler boundary selects its
+payload losslessly. Normal native calls retain their payload without redecoding.
+
+Actual source9740..993B was reread for all five phases. Both motion gates can
+advance during one call; motion/contact/sound/animation order stays immediate.
+The vertical nibble threshold is expressed as an unsigned gap>=80 (all byte
+height pairs at representative actor heights checked). Animation tick gates and
+wrapping opening/rest/segment delays remain observable rules. Unsupported source
+phase codes remain a bounded compatibility variant with the prior no-work policy.
+
+All prior fixture expectations are unchanged: fixtures use projection setters and
+getters for the removed fields. New regressions verify every state byte across
+representative local values, native/legacy handler transitions, partial reset,
+native payload continuity and the composed family boundary cases. Mechanical
+migration of other actor consumers changes only how they access the one owner;
+their source rules remain separate from this converted family.
+
+
 Invisible OR hit -> LDA39 then reaction WITHOUT STAanimation: retained animation,
 no retry write. Visible nohit calls playercontact unless animation39 BEFORE local
 dispatch. Five source pointers:phase0 9768,phase1 9787,phase2 AND3 alias97F3,

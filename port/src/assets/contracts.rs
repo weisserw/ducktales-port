@@ -6,6 +6,7 @@ use crate::{
     config,
     identifiers::{AssetId, StageId},
 };
+use anyhow::{Context, ensure};
 use romatlas_port::assets::{Asset, Collection, Origin, Rom};
 
 fn rom() -> Vec<u8> {
@@ -636,7 +637,9 @@ fn background_one_page_requires_four_chunks_then_separate_terminal_poll() {
     let mut upload = BackgroundUpload::default();
     for (chunk, fill) in [0x11, 0x33, 0x55, 0x77].into_iter().enumerate() {
         assert_eq!(
-            upload.poll(&bytes, &list, [1, 2, 3, 4], 0).unwrap(),
+            upload
+                .poll_prepared(&prepare_background(&bytes, &list), [1, 2, 3, 4], 0)
+                .unwrap(),
             BackgroundEffect::Chunk {
                 destination: 0x900 + (chunk * BACKGROUND_CHUNK_BYTES) as u16,
                 bytes: vec![fill; BACKGROUND_CHUNK_BYTES],
@@ -647,21 +650,25 @@ fn background_one_page_requires_four_chunks_then_separate_terminal_poll() {
             }
         );
         assert!(
-            !upload.completed,
+            !upload.completed(),
             "last page does not process negative tag on same call"
         );
     }
     assert_eq!(
-        upload.poll(&bytes, &list, [1, 2, 3, 4], 0).unwrap(),
+        upload
+            .poll_prepared(&prepare_background(&bytes, &list), [1, 2, 3, 4], 0)
+            .unwrap(),
         BackgroundEffect::PaletteTail {
             base: [1, 2, 3, 4],
             active: [1, 2, 3, 4],
             terminal_tag: 0xff
         }
     );
-    assert!(upload.completed);
+    assert!(upload.completed());
     assert_eq!(
-        upload.poll(&bytes, &list, [9; 4], 0).unwrap(),
+        upload
+            .poll_prepared(&prepare_background(&bytes, &list), [9; 4], 0)
+            .unwrap(),
         BackgroundEffect::None
     );
 }
@@ -670,7 +677,10 @@ fn suspended_depth_any_nonzero_flushes_each_chunk_immediately() {
     let (bytes, list) = single_page();
     for depth in [1, 2, 127, 128, 255] {
         let mut upload = BackgroundUpload::default();
-        match upload.poll(&bytes, &list, [0; 4], depth).unwrap() {
+        match upload
+            .poll_prepared(&prepare_background(&bytes, &list), [0; 4], depth)
+            .unwrap()
+        {
             BackgroundEffect::Chunk {
                 commit,
                 count_minus_one,
@@ -689,7 +699,10 @@ fn background_source_and_destination_carry_after_fourth_chunk() {
     let mut upload = BackgroundUpload::default();
     for chunk in 0..8 {
         let expected_fill = if chunk < 4 { 0x25 } else { 0x7a };
-        match upload.poll(&bytes, &list, [0; 4], 0).unwrap() {
+        match upload
+            .poll_prepared(&prepare_background(&bytes, &list), [0; 4], 0)
+            .unwrap()
+        {
             BackgroundEffect::Chunk {
                 destination, bytes, ..
             } => {
@@ -700,7 +713,9 @@ fn background_source_and_destination_carry_after_fourth_chunk() {
         }
     }
     assert!(matches!(
-        upload.poll(&bytes, &list, [0; 4], 0).unwrap(),
+        upload
+            .poll_prepared(&prepare_background(&bytes, &list), [0; 4], 0)
+            .unwrap(),
         BackgroundEffect::PaletteTail { .. }
     ));
 }
@@ -712,14 +727,16 @@ fn empty_list_completes_without_bank_or_chunk_and_preserves_actual_negative_tag(
             decode_upload_list(&bytes, SYNTHETIC_DESCRIPTOR, SYNTHETIC_DESCRIPTOR + 1).unwrap();
         let mut upload = BackgroundUpload::default();
         assert_eq!(
-            upload.poll(&bytes, &list, [2, 4, 6, 8], 1).unwrap(),
+            upload
+                .poll_prepared(&prepare_background(&bytes, &list), [2, 4, 6, 8], 1)
+                .unwrap(),
             BackgroundEffect::PaletteTail {
                 base: [2, 4, 6, 8],
                 active: [2, 4, 6, 8],
                 terminal_tag: tag
             }
         );
-        assert!(upload.completed);
+        assert!(upload.completed());
     }
 }
 #[test]
@@ -730,10 +747,14 @@ fn record_boundary_restarts_source_and_destination_and_changes_bank_on_next_poll
     let list = decode_upload_list(&bytes, SYNTHETIC_DESCRIPTOR, SYNTHETIC_DESCRIPTOR + 7).unwrap();
     let mut upload = BackgroundUpload::default();
     for _ in 0..4 {
-        upload.poll(&bytes, &list, [0; 4], 0).unwrap();
+        upload
+            .poll_prepared(&prepare_background(&bytes, &list), [0; 4], 0)
+            .unwrap();
     }
     assert_eq!(
-        upload.poll(&bytes, &list, [0; 4], 0).unwrap(),
+        upload
+            .poll_prepared(&prepare_background(&bytes, &list), [0; 4], 0)
+            .unwrap(),
         BackgroundEffect::Chunk {
             destination: 0xe00,
             bytes: vec![0x68; BACKGROUND_CHUNK_BYTES],
@@ -755,7 +776,9 @@ fn all_original_background_uploads_emit_exactly_every_source_byte_and_final_pale
             for chunk in 0..count {
                 let start = span.source_offset + chunk * BACKGROUND_CHUNK_BYTES;
                 assert_eq!(
-                    upload.poll(&bytes, &list, [7, 8, 9, 10], 1).unwrap(),
+                    upload
+                        .poll_prepared(&prepare_background(&bytes, &list), [7, 8, 9, 10], 1)
+                        .unwrap(),
                     BackgroundEffect::Chunk {
                         destination: span.destination + (chunk * BACKGROUND_CHUNK_BYTES) as u16,
                         bytes: bytes[start..start + BACKGROUND_CHUNK_BYTES].to_vec(),
@@ -768,7 +791,9 @@ fn all_original_background_uploads_emit_exactly_every_source_byte_and_final_pale
             }
         }
         assert_eq!(
-            upload.poll(&bytes, &list, [7, 8, 9, 10], 1).unwrap(),
+            upload
+                .poll_prepared(&prepare_background(&bytes, &list), [7, 8, 9, 10], 1)
+                .unwrap(),
             BackgroundEffect::PaletteTail {
                 base: [7, 8, 9, 10],
                 active: [7, 8, 9, 10],
@@ -783,11 +808,11 @@ fn prepared_backgrounds_preserve_every_original_poll_effect_and_cursor() {
     let bytes = rom();
     for selector in 0..ORIGINAL_BACKGROUND_LISTS {
         let list = original_background_list(&bytes, selector).unwrap();
-        let prepared = PreparedBackground {
+        let prepared = LegacyPreparedBackground {
             spans: list
                 .records
                 .iter()
-                .map(|span| PreparedBackgroundSpan {
+                .map(|span| LegacyPreparedBackgroundSpan {
                     bank: span.bank,
                     destination: span.destination,
                     bytes: bytes[span.source_offset
@@ -798,7 +823,20 @@ fn prepared_backgrounds_preserve_every_original_poll_effect_and_cursor() {
             terminator: list.terminator,
         };
         for depth in [0, 1, 0x80, 0xff] {
-            let mut original = BackgroundUpload::default();
+            let mut original = LegacyBackgroundUpload::default();
+            let prepared_plan = PreparedBackground::new(
+                prepared
+                    .spans
+                    .iter()
+                    .map(|span| PreparedBackgroundSpan {
+                        bank: span.bank,
+                        destination: span.destination,
+                        bytes: span.bytes.clone(),
+                    })
+                    .collect(),
+                prepared.terminator,
+            )
+            .unwrap();
             let mut decoded = BackgroundUpload::default();
             let bound = list
                 .records
@@ -809,20 +847,23 @@ fn prepared_backgrounds_preserve_every_original_poll_effect_and_cursor() {
             for _ in 0..bound {
                 let expected = original.poll(&bytes, &list, [7, 8, 9, 10], depth).unwrap();
                 let actual = decoded
-                    .poll_prepared(&prepared, [7, 8, 9, 10], depth)
+                    .poll_prepared(&prepared_plan, [7, 8, 9, 10], depth)
                     .unwrap();
                 assert_eq!(
                     actual, expected,
                     "selector {selector}, suspend depth {depth}"
                 );
                 assert_eq!(
-                    decoded, original,
-                    "same chunk/record advance and terminal boundary"
+                    decoded.position(&prepared_plan),
+                    (original.record, original.chunk_in_record)
                 );
+                assert_eq!(decoded.completed(), original.completed);
             }
             assert!(original.completed);
             assert_eq!(
-                decoded.poll_prepared(&prepared, [0; 4], depth).unwrap(),
+                decoded
+                    .poll_prepared(&prepared_plan, [0; 4], depth)
+                    .unwrap(),
                 BackgroundEffect::None
             );
         }
@@ -831,15 +872,15 @@ fn prepared_backgrounds_preserve_every_original_poll_effect_and_cursor() {
 #[test]
 fn prepared_background_validation_errors_preserve_continuation_before_advancing() {
     for (length, chunk) in [(63, 0), (65, 0), (0, 0), (64, 1), (256, 4)] {
-        let prepared = PreparedBackground {
-            spans: vec![PreparedBackgroundSpan {
+        let prepared = LegacyPreparedBackground {
+            spans: vec![LegacyPreparedBackgroundSpan {
                 bank: 3,
                 destination: 0xfff0,
                 bytes: vec![7; length],
             }],
             terminator: 0x81,
         };
-        let mut upload = BackgroundUpload {
+        let mut upload = LegacyBackgroundUpload {
             chunk_in_record: chunk,
             ..Default::default()
         };
@@ -1288,4 +1329,223 @@ fn raw_selector_twenty_one_chr_is_banked_negative_terminator_and_background_is_l
         });
     assert_eq!(background.list, 16);
     assert_eq!(background.palette.as_slice(), &bytes[0x1c705..0x1c709]);
+}
+
+#[test]
+fn background_plan_preserves_wrapping_destination_live_commit_policy_and_late_palette() {
+    // C4B9..C4D5 advances the destination modulo 16 bits; C4DB reads the
+    // current suspension depth for each chunk, and C4E9 reads the palette only
+    // at the negative endpoint. These are runtime inputs, never frozen in a plan.
+    let prepared = PreparedBackground::new(
+        vec![PreparedBackgroundSpan {
+            bank: 3,
+            destination: 0xfff0,
+            bytes: vec![7; SOURCE_PAGE_BYTES],
+        }],
+        0x99,
+    )
+    .unwrap();
+    let mut upload = BackgroundUpload::default();
+    for (index, depth) in [0, 1, 0, 255].into_iter().enumerate() {
+        assert_eq!(
+            upload
+                .poll_prepared(&prepared, [index as u8; 4], depth)
+                .unwrap(),
+            BackgroundEffect::Chunk {
+                destination: 0xfff0u16.wrapping_add((index * BACKGROUND_CHUNK_BYTES) as u16),
+                bytes: vec![7; BACKGROUND_CHUNK_BYTES],
+                count_minus_one: 0x3f,
+                commit: if depth == 0 {
+                    UploadCommit::AtInterrupt
+                } else {
+                    UploadCommit::Immediate
+                },
+                selected_bank: 3,
+                queue_terminator: 0xff,
+            }
+        );
+        assert!(!upload.completed());
+    }
+    assert_eq!(
+        upload.poll_prepared(&prepared, [8; 4], 0).unwrap(),
+        BackgroundEffect::PaletteTail {
+            base: [8; 4],
+            active: [8; 4],
+            terminal_tag: 0x99
+        }
+    );
+    assert_eq!(
+        upload.poll_prepared(&prepared, [9; 4], 1).unwrap(),
+        BackgroundEffect::None
+    );
+}
+
+// Frozen iteration-007 continuation, retained only as a test oracle. Production
+// gameplay uses the decoded plan below; source-backed expectations above remain
+// independent of both implementations.
+#[derive(Clone)]
+struct LegacyPreparedBackgroundSpan {
+    bank: u8,
+    destination: u16,
+    bytes: Vec<u8>,
+}
+#[derive(Clone)]
+struct LegacyPreparedBackground {
+    spans: Vec<LegacyPreparedBackgroundSpan>,
+    terminator: u8,
+}
+/// Foreground upload continuation, not another PPU queue owner. B03 consumes its
+/// request immediately or at B01's interrupt boundary as specified by the effect.
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+struct LegacyBackgroundUpload {
+    completed: bool,
+    record: usize,
+    chunk_in_record: usize,
+}
+impl LegacyBackgroundUpload {
+    fn finish_palette(&mut self, palette: [u8; 4], terminal_tag: u8) -> BackgroundEffect {
+        self.completed = true;
+        BackgroundEffect::PaletteTail {
+            base: palette,
+            active: palette,
+            terminal_tag,
+        }
+    }
+    /// Both immutable source adapters validate/read before entering this one
+    /// continuation transition. The palette endpoint is a later, separate poll.
+    fn advance_chunk(
+        &mut self,
+        bytes: Vec<u8>,
+        destination: u16,
+        bank: u8,
+        span_bytes: usize,
+        suspend_depth: u8,
+    ) -> BackgroundEffect {
+        const QUEUE_TERMINATOR: u8 = 0xff;
+        self.chunk_in_record += 1;
+        if self.chunk_in_record * BACKGROUND_CHUNK_BYTES == span_bytes {
+            self.record += 1;
+            self.chunk_in_record = 0;
+        }
+        BackgroundEffect::Chunk {
+            destination,
+            bytes,
+            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
+            commit: if suspend_depth == 0 {
+                UploadCommit::AtInterrupt
+            } else {
+                UploadCommit::Immediate
+            },
+            selected_bank: bank,
+            queue_terminator: QUEUE_TERMINATOR,
+        }
+    }
+    fn poll(
+        &mut self,
+        rom: &[u8],
+        list: &UploadList,
+        palette: [u8; 4],
+        suspend_depth: u8,
+    ) -> anyhow::Result<BackgroundEffect> {
+        if self.completed {
+            return Ok(BackgroundEffect::None);
+        }
+        let Some(span) = list.records.get(self.record) else {
+            return Ok(self.finish_palette(palette, list.terminator));
+        };
+        let offset = self.chunk_in_record * BACKGROUND_CHUNK_BYTES;
+        let start = span
+            .source_offset
+            .checked_add(offset)
+            .context("background source overflow")?;
+        let bytes = rom
+            .get(start..start + BACKGROUND_CHUNK_BYTES)
+            .context("background source bounds")?
+            .to_vec();
+        let destination = span.destination.wrapping_add(offset as u16);
+        Ok(self.advance_chunk(
+            bytes,
+            destination,
+            span.bank,
+            usize::from(span.source_pages) * SOURCE_PAGE_BYTES,
+            suspend_depth,
+        ))
+    }
+}
+impl LegacyBackgroundUpload {
+    fn poll_prepared(
+        &mut self,
+        prepared: &LegacyPreparedBackground,
+        palette: [u8; 4],
+        suspend_depth: u8,
+    ) -> anyhow::Result<BackgroundEffect> {
+        if self.completed {
+            return Ok(BackgroundEffect::None);
+        }
+        let Some(span) = prepared.spans.get(self.record) else {
+            return Ok(self.finish_palette(palette, prepared.terminator));
+        };
+        ensure!(
+            span.bytes.len().is_multiple_of(BACKGROUND_CHUNK_BYTES),
+            "prepared background chunk alignment"
+        );
+        let offset = self.chunk_in_record * BACKGROUND_CHUNK_BYTES;
+        let bytes = span
+            .bytes
+            .get(offset..offset + BACKGROUND_CHUNK_BYTES)
+            .context("prepared background chunk")?
+            .to_vec();
+        Ok(self.advance_chunk(
+            bytes,
+            span.destination.wrapping_add(offset as u16),
+            span.bank,
+            span.bytes.len(),
+            suspend_depth,
+        ))
+    }
+}
+
+fn prepare_background(bytes: &[u8], list: &UploadList) -> PreparedBackground {
+    PreparedBackground::new(
+        list.records
+            .iter()
+            .map(|span| PreparedBackgroundSpan {
+                bank: span.bank,
+                destination: span.destination,
+                bytes: bytes[span.source_offset
+                    ..span.source_offset + usize::from(span.source_pages) * SOURCE_PAGE_BYTES]
+                    .to_vec(),
+            })
+            .collect(),
+        list.terminator,
+    )
+    .unwrap()
+}
+#[test]
+fn background_plan_rejects_invalid_spans_at_asset_boundary_and_accepts_empty_list() {
+    for length in [0, 63, 65] {
+        assert!(
+            PreparedBackground::new(
+                vec![PreparedBackgroundSpan {
+                    bank: 3,
+                    destination: 0xfff0,
+                    bytes: vec![7; length],
+                }],
+                0x81
+            )
+            .is_err()
+        );
+    }
+    let empty = PreparedBackground::new(Vec::new(), 0x81).unwrap();
+    let mut upload = BackgroundUpload::default();
+    assert_eq!(upload.position(&empty), (0, 0));
+    assert_eq!(
+        upload.poll_prepared(&empty, [6; 4], 0).unwrap(),
+        BackgroundEffect::PaletteTail {
+            base: [6; 4],
+            active: [6; 4],
+            terminal_tag: 0x81
+        }
+    );
+    assert!(upload.completed());
 }

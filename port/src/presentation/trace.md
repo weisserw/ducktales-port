@@ -258,3 +258,29 @@ these aliases only in0A/8C/8D; natural co-occurrence/caller reachability still
 pending, no status-frame invention or source behavior exclusion. Details and
 full writer index: ../scenes/trace.md, planning/contracts/B16-consumers.json and
 B14-runtime-frame-author. Existing B03 source contracts remain intact.
+
+## Modernization015: canonical native animation playback
+
+`playback.rs` replaces packed actor/visual tick, frame and restart owners with
+AnimationPlayback: Running/Frozen elapsed time, a frame index and explicit
+Beginning/Restart loop origin. Composition advances that native value and copies
+it back to the sole ActorContact owner. Source projections remain for debug,
+source-contract fixtures, asset-derived partial writes and consumers that
+intentionally inspect unusual source codes. Ordinary gameplay uses reset,
+freeze/resume, initial-pass frame and running-tick events directly.
+
+Independent source reread: game.asm AdvanceObjectAnimation813E..8194. It compares
+old elapsed time, so duration is last_tick+1. Increment127 freezes at0 unless the
+old tick equals the duration. Frame127 advances to restart-mode0 and255 advances
+to beginning0; the post-increment mode decides looping. Destruction happens after
+both increments and before loop reset. Dialogue/frozen clocks still select the
+current visible frame. Restart's high metadata is ignored by looping but retained
+for partial-write/debug fidelity. No animation sequence or sprite geometry changed.
+
+Pre-conversion contracts add tick127 duration-match/nonmatch, frame127/255 loop
+selection including high restart metadata, and destruction's retained playback.
+Native contracts exhaustively roundtrip all tick/frame pairs and partial writes,
+and distinguish initial/looping frame events and frozen/running tick events.
+Existing behavioral expected values remain unchanged. Fresh native route graphics
+and structured state comparisons supplement contracts; they do not cover every
+animation naturally or constitute new original-emulator/physical-device QA.

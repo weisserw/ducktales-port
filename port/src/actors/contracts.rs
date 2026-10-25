@@ -33,7 +33,7 @@ fn pool() -> ActorPool {
 }
 fn occupied() -> ActorPool {
     [ActorContact {
-        state: ACTIVE,
+        control: crate::actors::ActorControl::from_codes(ACTIVE, 0, 0, 0),
         render: VISIBLE,
         ..ActorContact::default()
     }; ACTOR_SLOTS]
@@ -429,8 +429,14 @@ fn named_extensions_preserve_originals_allow_more_than_nine_levels_and_validate_
 fn both_allocation_entries_choose_highest_sign_clear_slot_without_mutation() {
     for reg in [AllocationRegister::X, AllocationRegister::Y] {
         let mut a = occupied();
-        a[14].state = 0x7f;
-        a[3].state = 0;
+        {
+            let actor_value = 0x7f;
+            a[14].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            a[3].set_state_code(actor_value);
+        };
         let before = a;
         assert_eq!(allocate(&a, reg), Some(14));
         assert_eq!(a, before);
@@ -439,7 +445,10 @@ fn both_allocation_entries_choose_highest_sign_clear_slot_without_mutation() {
 #[test]
 fn full_pool_never_allocates_player_even_when_player_inactive() {
     let mut a = occupied();
-    a[PLAYER_SLOT].state = 0;
+    {
+        let actor_value = 0;
+        a[PLAYER_SLOT].set_state_code(actor_value);
+    };
     for r in [AllocationRegister::X, AllocationRegister::Y] {
         assert_eq!(allocate(&a, r), None);
     }
@@ -447,10 +456,22 @@ fn full_pool_never_allocates_player_even_when_player_inactive() {
 #[test]
 fn empty_handler_is_still_a_dispatched_active_slot_and_slot_zero_is_excluded() {
     let mut a = pool();
-    a[0].state = ACTIVE;
-    a[1].state = ACTIVE;
-    a[LAST_ACTOR].state = ACTIVE;
-    a[LAST_ACTOR].handler = 0x42;
+    {
+        let actor_value = ACTIVE;
+        a[0].set_state_code(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[1].set_state_code(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[LAST_ACTOR].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0x42;
+        a[LAST_ACTOR].set_handler(actor_value);
+    };
     let mut gravity = 0;
     let mut seen = vec![];
     let trace = dispatch(&mut a, &mut gravity, &mut |slot, handler, _, g| {
@@ -464,19 +485,40 @@ fn empty_handler_is_still_a_dispatched_active_slot_and_slot_zero_is_excluded() {
 #[test]
 fn dispatch_observes_later_slot_spawn_removal_handler_and_gravity_writes_immediately() {
     let mut a = pool();
-    a[1].state = ACTIVE;
-    a[2].state = ACTIVE;
-    a[2].handler = 2;
+    {
+        let actor_value = ACTIVE;
+        a[1].set_state_code(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        a[2].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        a[2].set_handler(actor_value);
+    };
     let mut gravity = 0;
     let visits = dispatch(&mut a, &mut gravity, &mut |slot, _, actors, g| {
         if slot == 1 {
-            actors[2].state = 0;
-            actors[3].state = ACTIVE;
-            actors[3].handler = 4;
+            {
+                let actor_value = 0;
+                actors[2].set_state_code(actor_value);
+            };
+            {
+                let actor_value = ACTIVE;
+                actors[3].set_state_code(actor_value);
+            };
+            {
+                let actor_value = 4;
+                actors[3].set_handler(actor_value);
+            };
             *g = 0x20;
         } else {
             assert_eq!(*g, 0x20);
-            actors[1].handler = 9;
+            {
+                let actor_value = 9;
+                actors[1].set_handler(actor_value);
+            };
         }
     });
     assert_eq!(visits, vec![(1, 0), (3, 4)]);
@@ -485,14 +527,23 @@ fn dispatch_observes_later_slot_spawn_removal_handler_and_gravity_writes_immedia
 #[test]
 fn dispatch_does_not_revisit_lower_slots_or_follow_callback_slot_changes() {
     let mut a = pool();
-    a[8].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        a[8].set_state_code(actor_value);
+    };
     let mut g = 0;
     let visits = dispatch(&mut a, &mut g, &mut |_, _, a, _| {
-        a[1].state = ACTIVE;
-        a[8].state = 0;
+        {
+            let actor_value = ACTIVE;
+            a[1].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            a[8].set_state_code(actor_value);
+        };
     });
     assert_eq!(visits, vec![(8, 0)]);
-    assert_eq!(a[1].state, ACTIVE);
+    assert_eq!(a[1].state_code(), ACTIVE);
 }
 #[test]
 fn suppression_sets_each_of_all_twohundredfiftysix_identity_bits_preserving_neighbors() {
@@ -602,14 +653,17 @@ fn removal_invalidates_identity_preserves_fields_and_releases_only_matching_occu
             let mut a = occupied();
             a[slot].spawn_identity = Some(9);
             a[slot].animation = 7;
-            a[slot].local_counter = 13;
+            {
+                let actor_value = 13;
+                a[slot].set_local_counter_code(actor_value);
+            };
             let mut control = SpecialControl::Occupied(if matched { slot } else { 2 });
             remove(&mut a, slot, &mut control, true, 0);
-            assert_eq!(a[slot].state, 0);
+            assert_eq!(a[slot].state_code(), 0);
             assert_eq!(a[slot].render, 0);
             assert_eq!(a[slot].spawn_identity, None);
             assert_eq!(a[slot].animation, 7);
-            assert_eq!(a[slot].local_counter, 13);
+            assert_eq!(a[slot].local_counter_code(), 13);
             assert_eq!(
                 control,
                 if matched {
@@ -627,7 +681,7 @@ fn direct_release_stores_callers_accumulator_without_clearing_render_or_suppress
     a[4].spawn_identity = Some(17);
     let mut s = SpecialControl::Cooldown(5);
     remove(&mut a, 4, &mut s, false, 0x20);
-    assert_eq!(a[4].state, 0x20);
+    assert_eq!(a[4].state_code(), 0x20);
     assert_eq!(a[4].render, VISIBLE);
     assert_eq!(a[4].spawn_identity, None);
     assert_eq!(s, SpecialControl::Cooldown(5));
@@ -658,7 +712,10 @@ fn suppressed_candidate_below_camera_duplicate_active_and_full_pool_leave_everyt
         }
         if reason == 2 {
             a[4].spawn_identity = Some(9);
-            a[4].state = ACTIVE;
+            {
+                let actor_value = ACTIVE;
+                a[4].set_state_code(actor_value);
+            };
         }
         let before = a;
         let mut c = context();
@@ -675,26 +732,30 @@ fn suppressed_candidate_below_camera_duplicate_active_and_full_pool_leave_everyt
 fn duplicate_scan_checks_highest_matching_identity_only_even_if_lower_matching_slot_is_active() {
     let mut a = pool();
     a[14].spawn_identity = Some(9);
-    a[14].state = 0;
+    {
+        let actor_value = 0;
+        a[14].set_state_code(actor_value);
+    };
     a[4].spawn_identity = Some(9);
-    a[4].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        a[4].set_state_code(actor_value);
+    };
     let mut c = context();
     let out = candidate(&mut a, &bits(), record(9, 0x0200), &[template()], &mut c);
     assert_eq!(out.ordinary, vec![(9, LAST_ACTOR)]);
-    assert_eq!(a[4].state, ACTIVE);
+    assert_eq!(a[4].state_code(), ACTIVE);
 }
 #[test]
 fn ordinary_spawn_splits_template_low_nibble_and_resets_only_source_initialized_fields() {
     let mut a = pool();
     a[LAST_ACTOR] = ActorContact {
+        playback: crate::presentation::AnimationPlayback::from_codes(99, 99, 0),
+        control: crate::actors::ActorControl::from_codes(0, 99, 99, 0),
         local_aux2: 99,
         sequence_cursor: 98,
         boss_protection: 97,
-        local_state: 99,
-        local_counter: 99,
         hit_marker: 99,
-        animation_tick: 99,
-        animation_frame: 99,
         horizontal_magnitude: 0xbeef,
         vertical_velocity: -17,
         direction: 2,
@@ -708,17 +769,17 @@ fn ordinary_spawn_splits_template_low_nibble_and_resets_only_source_initialized_
     // B11 independent source reconciliation: AF clear is06F0, not06D0.
     assert_eq!((v.local_aux2, v.sequence_cursor), (99, 98));
     assert_eq!(
-        (v.state, v.render, v.local_state),
+        (v.state_code(), v.render, v.local_state_code()),
         (ACTIVE | WORLD_POSITIONED, ACTIVE | WORLD_POSITIONED, 3)
     );
     assert_eq!((v.animation, v.handler, v.profile), (7, 2, 5));
     assert_eq!(
         (
             v.hit_marker,
-            v.local_counter,
+            v.local_counter_code(),
             v.boss_protection,
-            v.animation_frame,
-            v.animation_tick
+            v.playback.frame_code(),
+            v.playback.tick_code()
         ),
         (0, 0, 0, 0, 0)
     );
@@ -773,7 +834,7 @@ fn persistent_negative_animation_normalizes_and_marks_counter_only_outside_split
                 if split == 0 && persistent { 0x11 } else { 0x91 }
             );
             assert_eq!(
-                a[LAST_ACTOR].local_counter,
+                a[LAST_ACTOR].local_counter_code(),
                 if split == 0 && persistent { 0xff } else { 0 }
             );
         }
@@ -843,7 +904,7 @@ fn final_override_accepts_nonzero_route_or_all_five_progress_bits_and_preserves_
             (FINAL_HANDLER, FINAL_ANIMATION, 0)
         );
         assert_eq!(
-            a[LAST_ACTOR].state,
+            a[LAST_ACTOR].state_code(),
             ACTIVE | WORLD_POSITIONED | TERRAIN_REPLACEMENT
         );
         assert_eq!(a[LAST_ACTOR].render, ACTIVE | WORLD_POSITIONED);
@@ -887,7 +948,7 @@ fn stage_one_suppression_deactivates_exact_handler_animation_combinations_but_le
         };
         candidate(&mut a, &bits(), record(1, 0x0200), &[t], &mut c);
         assert_eq!(
-            a[LAST_ACTOR].state,
+            a[LAST_ACTOR].state_code(),
             if clear { 0 } else { ACTIVE | WORLD_POSITIONED }
         );
         assert_eq!(a[LAST_ACTOR].render, ACTIVE | WORLD_POSITIONED);
@@ -924,7 +985,10 @@ fn forward_scan_consumes_suppressed_duplicate_and_full_pool_entries_without_retr
     let out = scan_window(&mut a, &bits(), &records, &[template()], &mut w, &mut c);
     assert!(out.ordinary.is_empty());
     assert_eq!((w.upper, w.lower), (2, 1));
-    a[15].state = 0;
+    {
+        let actor_value = 0;
+        a[15].set_state_code(actor_value);
+    };
     assert!(
         scan_window(&mut a, &bits(), &records, &[template()], &mut w, &mut c)
             .ordinary
@@ -1124,24 +1188,30 @@ fn special_initialization_copies_entire_flag_byte_zeros_local_state_and_preserve
     a[LAST_ACTOR].sequence_cursor = 76;
     a[LAST_ACTOR].boss_protection = 75;
     a[LAST_ACTOR].spawn_y = 88;
-    a[LAST_ACTOR].animation_frame = 9;
-    a[LAST_ACTOR].animation_tick = 8;
+    {
+        let animation_value = 9;
+        a[LAST_ACTOR].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 8;
+        a[LAST_ACTOR].playback.set_tick_code(animation_value);
+    };
     let mut c = context();
     c.camera = 0x0108;
     let out = special_spawn(&mut a, &[vec![special(2, false)]], &[template()], &mut c);
     assert_eq!(out.special, vec![LAST_ACTOR]);
     let actor = a[LAST_ACTOR];
     assert_eq!(
-        (actor.state, actor.render),
+        (actor.state_code(), actor.render),
         (template().flags_and_local, template().flags_and_local)
     );
     assert_eq!(
         (
-            actor.local_state,
-            actor.local_counter,
+            actor.local_state_code(),
+            actor.local_counter_code(),
             actor.hit_marker,
-            actor.animation_frame,
-            actor.animation_tick
+            actor.playback.frame_code(),
+            actor.playback.tick_code()
         ),
         (0, 0, 0, 0, 0)
     );
@@ -1209,7 +1279,10 @@ fn paired_special_allocates_highest_two_slots_forces_first_y_and_toggles_only_lo
 #[test]
 fn paired_one_free_slot_keeps_first_actor_and_first_occupied_latch_after_companion_failure() {
     let mut a = occupied();
-    a[12].state = 0;
+    {
+        let actor_value = 0;
+        a[12].set_state_code(actor_value);
+    };
     let mut c = context();
     c.camera = 0x0108;
     let out = special_spawn(&mut a, &[vec![special(2, true)]], &[template()], &mut c);
@@ -1283,14 +1356,27 @@ fn overlap_height_is_strict_width_inclusive_and_scan_excludes_player_self_choose
 fn overlap_target_exceptions_eight_nine_twentyfive_skip_hit_marker_choose_animation_2a() {
     for handler in [8, 9, 0x25] {
         let mut a = contact_pool();
-        a[LAST_ACTOR].handler = handler;
+        {
+            let actor_value = handler;
+            a[LAST_ACTOR].set_handler(actor_value);
+        };
         a[LAST_ACTOR].hit_marker = 0xff;
-        a[1].animation_frame = 7;
-        a[1].animation_tick = 9;
+        {
+            let animation_value = 7;
+            a[1].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 9;
+            a[1].playback.set_tick_code(animation_value);
+        };
         assert_eq!(actor_overlap(&mut a, 1, &extents()), Some(LAST_ACTOR));
         assert_eq!(a[LAST_ACTOR].hit_marker, 0xff);
         assert_eq!(
-            (a[1].animation, a[1].animation_frame, a[1].animation_tick),
+            (
+                a[1].animation,
+                a[1].playback.frame_code(),
+                a[1].playback.tick_code()
+            ),
             (CONTACT_ANIMATION, 0, 0)
         );
     }
@@ -1300,12 +1386,22 @@ fn ordinary_overlap_hit_wraps_marker_and_preserved_animation_1b_keeps_clocks() {
     let mut a = contact_pool();
     a[LAST_ACTOR].hit_marker = 0xff;
     a[1].animation = PRESERVED_ANIMATION;
-    a[1].animation_frame = 7;
-    a[1].animation_tick = 9;
+    {
+        let animation_value = 7;
+        a[1].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 9;
+        a[1].playback.set_tick_code(animation_value);
+    };
     assert_eq!(actor_overlap(&mut a, 1, &extents()), Some(LAST_ACTOR));
     assert_eq!(a[LAST_ACTOR].hit_marker, 0);
     assert_eq!(
-        (a[1].animation, a[1].animation_frame, a[1].animation_tick),
+        (
+            a[1].animation,
+            a[1].playback.frame_code(),
+            a[1].playback.tick_code()
+        ),
         (PRESERVED_ANIMATION, 7, 9)
     );
 }
@@ -1336,14 +1432,14 @@ fn each_motion_preset_copies_both_words_without_sign_normalization_or_unrelated_
     let c = SpawnCatalog::original(&rom()).unwrap();
     for i in 0..32 {
         let mut actor = ActorContact {
-            state: ACTIVE,
+            control: crate::actors::ActorControl::from_codes(ACTIVE, 0, 0, 0),
             animation: 7,
             ..ActorContact::default()
         };
         motion_preset(&mut actor, &c, i);
         assert_eq!(actor.vertical_velocity, c.vertical_presets[i]);
         assert_eq!(actor.horizontal_magnitude, c.horizontal_presets[i]);
-        assert_eq!((actor.state, actor.animation), (ACTIVE, 7));
+        assert_eq!((actor.state_code(), actor.animation), (ACTIVE, 7));
     }
 }
 #[test]
@@ -1489,4 +1585,54 @@ fn dialogue_additive_suppression_disabled_rules_do_not_clear_existing_low_or_hig
         SuppressionFlags::default(),
     );
     assert_eq!(bits, [0xff; SUPPRESSION_BYTES]);
+}
+
+#[test]
+fn converted_control_roundtrips_source_fields_and_handler_boundaries() {
+    // B10 partial writes and B08 reaction preserve fields not explicitly reset.
+    // The native family payload must be their single lossless owner.
+    for state in 0..=u8::MAX {
+        for delay in [0, 1, 0x7f, 0xff] {
+            for cursor in [0, 13, 0xff] {
+                let mut actor = ActorContact {
+                    control: ActorControl::from_codes(state, delay, cursor, 0x19),
+                    handler: 0x19,
+                    ..Default::default()
+                };
+                assert_eq!(actor.control.codes(), (state, delay, cursor));
+                actor.set_handler(0x0b);
+                assert_eq!(actor.control.codes(), (state, delay, cursor));
+                actor.set_handler(0x19);
+                assert_eq!(actor.control.codes(), (state, delay, cursor));
+                actor.set_state_code(0);
+                assert_eq!(actor.control.codes(), (0, delay, cursor));
+                actor.set_local_state_code(23);
+                assert_eq!(actor.control.codes(), (0, 23, cursor));
+                actor.set_local_counter_code(7);
+                assert_eq!(actor.control.codes(), (0, 23, 7));
+            }
+        }
+    }
+}
+
+#[test]
+fn native_ambush_payload_survives_reaction_and_partial_slot_reinitialization() {
+    let mut actor = ActorContact {
+        control: ActorControl::from_codes(0xb2, 3, 13, 0x19),
+        handler: 0x19,
+        ..Default::default()
+    };
+    let behavior = actor.ambush_mut();
+    behavior.phase = AmbushPhase::Closing;
+    behavior.delay_remaining = 120;
+    assert_eq!(actor.control.codes(), (0xb3, 120, 13));
+    actor.set_handler(0x0b);
+    assert_eq!(actor.control.codes(), (0xb3, 120, 13));
+    actor.set_state_code(0xa0);
+    actor.set_local_state_code(0);
+    actor.set_handler(0x19);
+    assert_eq!(actor.control.codes(), (0xa0, 0, 13));
+    assert_eq!(actor.ambush_mut().phase, AmbushPhase::WaitingForPlayer);
+    actor.advance_ambush();
+    assert_eq!(actor.control.codes(), (0xa1, 0, 13));
 }

@@ -17,6 +17,9 @@ pub const HIDDEN_RENDER: u8 = 0xff;
 pub const OFFPAGE_PERSISTENT_ANIMATION: u8 = 0x5a;
 pub const STATUS_TOP: u8 = 0x30;
 pub const OVERLAY_PLAYER_MIN_Y: u8 = 0x44;
+mod playback;
+pub mod terrain;
+pub use playback::AnimationPlayback;
 pub const NEAR_CAMERA_MARGIN: u8 = 0x40;
 pub const DIALOGUE_PLAYER_STATE: u8 = 0x0f;
 pub const BLACK: u8 = 0x0f;
@@ -35,9 +38,7 @@ pub struct ActorVisual {
     pub screen_x: u8,
     pub screen_y: u8,
     pub animation: u8,
-    pub tick: u8,
-    pub frame: u8,
-    pub restart: u8,
+    pub playback: AnimationPlayback,
     pub spawn_identity: Option<u8>,
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -155,32 +156,21 @@ impl Composition {
         actor.render & FLASH == 0 || self.clock & FLASH != 0
     }
     pub fn advance(actor: &mut ActorVisual, sequence: &Animation, player_state: u8) -> Option<u8> {
-        const ANIMATION_VALUE_MASK: u8 = 0x7f;
-        const ANIMATION_HOLD_BIT: u8 = 0x80;
-        if player_state != DIALOGUE_PLAYER_STATE && actor.tick & ANIMATION_HOLD_BIT == 0 {
-            let old_tick = actor.tick & ANIMATION_VALUE_MASK;
-            actor.tick = actor.tick.wrapping_add(1);
-            if old_tick == sequence.last_tick {
-                actor.tick = 0;
-                let old_frame = actor.frame & ANIMATION_VALUE_MASK;
-                actor.frame = actor.frame.wrapping_add(1);
-                if old_frame == sequence.last_frame {
-                    if actor.render & DESTROY_AT_END != 0 {
-                        actor.state = 0;
-                        actor.render = 0;
-                        actor.spawn_identity = None;
-                        return None;
-                    }
-                    actor.frame = if actor.frame & ANIMATION_HOLD_BIT == 0 {
-                        0
-                    } else {
-                        actor.restart | ANIMATION_HOLD_BIT
-                    };
-                }
-            }
+        if player_state != DIALOGUE_PLAYER_STATE
+            && actor.playback.advance(
+                sequence.last_tick,
+                sequence.last_frame,
+                actor.render & DESTROY_AT_END != 0,
+            )
+        {
+            actor.state = 0;
+            actor.render = 0;
+            actor.spawn_identity = None;
+            return None;
         }
-        Some(sequence.frames[usize::from(actor.frame & ANIMATION_VALUE_MASK)])
+        Some(sequence.frames[actor.playback.frame_index()])
     }
+
     pub fn emit(&mut self, slot: usize, actor: &ActorVisual, frame: &Composite) {
         const SPRITE_BYTES: u8 = 4;
         const OAM_PRIORITY_ATTRIBUTE: u8 = 0x20;
@@ -876,8 +866,8 @@ impl PreparedSecondary {
     /// B04 returns five logical writes; preserve the original two counted tile
     /// pairs plus one attribute encoding and overlapping terminator. Cursor is
     /// incremented by fourteen modulo256 after writing; no duplicate queue.
-    pub fn append_changed(&mut self, cursor: &mut u8, upload: &crate::world::TerrainUpload) {
-        let record = Self::changed_record(upload);
+    pub fn append_changed(&mut self, cursor: &mut u8, upload: &crate::world::TerrainUpdate) {
+        let record = terrain::changed_record(upload);
         let at = usize::from(*cursor);
         let end = at + record.len();
         if self.encoded.len() < end {
@@ -885,28 +875,6 @@ impl PreparedSecondary {
         }
         self.encoded[at..end].copy_from_slice(&record);
         *cursor = cursor.wrapping_add(CHANGED_RECORD_BYTES);
-    }
-    fn changed_record(
-        upload: &crate::world::TerrainUpload,
-    ) -> [u8; CHANGED_RECORD_BYTES as usize + 1] {
-        assert_eq!(
-            upload.writes.len(),
-            5,
-            "changed terrain uses two pairs and one attribute"
-        );
-        let mut encoded = [0; CHANGED_RECORD_BYTES as usize + 1];
-        for (record, source, count) in [(0, 0, 1_u8), (5, 2, 1), (10, 4, 0)] {
-            let address = upload.writes[source].address;
-            encoded[record] = (address >> 8) as u8;
-            encoded[record + 1] = address as u8;
-            encoded[record + 2] = count;
-            encoded[record + 3] = upload.writes[source].value;
-            if count != 0 {
-                encoded[record + 4] = upload.writes[source + 1].value;
-            }
-        }
-        encoded[CHANGED_RECORD_BYTES as usize] = 0xff;
-        encoded
     }
     /// In the composed game, the source address0500 belongs to the world
     /// attribute cache. Keep only the disjoint queue prefix here; overflow
@@ -919,11 +887,11 @@ impl PreparedSecondary {
     pub fn append_changed_shared(
         &mut self,
         cursor: &mut u8,
-        upload: &crate::world::TerrainUpload,
+        upload: &crate::world::TerrainUpdate,
         attributes: &mut [u8; crate::world::CACHE_CELLS],
     ) {
         assert_eq!(self.encoded.len(), SECONDARY_PREFIX_BYTES);
-        for (field, value) in Self::changed_record(upload).into_iter().enumerate() {
+        for (field, value) in terrain::changed_record(upload).into_iter().enumerate() {
             let offset = usize::from(*cursor) + field;
             if offset < SECONDARY_PREFIX_BYTES {
                 self.encoded[offset] = value;

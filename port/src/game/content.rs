@@ -97,10 +97,7 @@ impl Content {
                         })
                     })
                     .collect::<Result<Vec<_>>>()?;
-                Ok(assets::formats::PreparedBackground {
-                    spans,
-                    terminator: list.terminator,
-                })
+                assets::formats::PreparedBackground::new(spans, list.terminator)
             })
             .collect::<Result<Vec<_>>>()?;
         // Runtime composites can request more coordinate pairs than any static

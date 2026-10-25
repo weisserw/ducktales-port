@@ -756,3 +756,98 @@ preserved. Implementation/stage4/QA not performed; coordinator next owns combine
 All eighteen separate workers completed sequentially; no new cohesive areas were discovered. Current native discovery is 1,346 tests: 1,344 substantive behavior contracts and two infrastructure tests. Full combined run: two infrastructure passed, all 1,344 behavior contracts failed at explicit unimplemented stubs, zero ignored; no compile/fixture/assertion/hang failures. Compilation, discovery and format check passed. This is contract readiness, not implemented fidelity. Current per-area counts in the table include cross-area additions (B02 34, B03 55, B05 70, B08 99, B10 60). Historical area outcomes remain preserved.
 
 Combined handoff/evidence: [planning/contracts/combined.md](planning/contracts/combined.md), [checks/contracts/combined/results.json](checks/contracts/combined/results.json). All original 1,302 region and 1,537 unit identities/extents remain intact and pending. Stage 4 must implement every contract and source area, resolve retained integration questions, and update implementation links/accounting before stage 5 QA.
+
+## Optional modernization iteration008
+
+Background preparation now decodes spans into an ordered update plan at asset
+loading; gameplay advances an explicit session. Observable upload cadence, bank
+selection, primary/secondary alias effects, final palette timing and suspension
+policy remain source-defined. Source contracts and validation are linked in
+[assets/trace.md](port/src/assets/trace.md) and
+[modernize/changes.json](modernize/changes.json). This is bounded modernization
+evidence and does not certify whole-game QA.
+
+## Optional modernization iteration009
+
+The stage timer now stores seconds and explicit expiration; normal time subtraction
+and ten-second reward conversion no longer borrow through display glyphs. Entry/
+reload/game-over imports and render/debug exports preserve the original codes.
+Source warning/death timing and conversion waits remain unchanged. Nonnumeric
+inputs preserve the faithful compatibility behavior, including its documented
+BLANK subtraction limitation. See [status/trace.md](port/src/status/trace.md) and
+[modernize/changes.json](modernize/changes.json) for contract scope and evidence.
+
+## Modernization batch: native health (iteration010)
+
+Health rules now operate on native availability/depletion, with sprite layout
+confined to input/output boundaries. Capacity, sparse flags, alternating damage,
+locked-slot restoration, extension, payment and player-death order are preserved.
+All nine requested conversions are tracked in [modernize/batch.json](modernize/batch.json);
+per-change source/build/test evidence is retained in [modernize/changes.json](modernize/changes.json).
+
+## Modernization batch: native money (iteration011)
+
+Reward, total and independent transfer sources now hold native amounts plus the
+blank-layout facts needed by payment/ending rules. Credit producers name game
+denominations; arithmetic no longer operates on encoded ordinary digits. Source
+widths, saturation, partial funding, paid-return provenance, transfer cadence and
+nondecimal boundary behavior remain preserved. Contracts/evidence are linked in
+[status/trace.md](port/src/status/trace.md) and [modernize/changes.json](modernize/changes.json).
+
+## Modernization batch: native enemy behavior (iteration012)
+
+The complete ambush family now retains explicit phases, delay and preset cursor
+in its canonical actor control. Legacy callback, lifecycle and observation
+projections preserve exact source fields and partial updates; no duplicate byte
+state drives the converted enemy. Same-call transitions, animation gates, wrapped
+waits and ordered contact/motion/sound effects retain their source contracts. See
+[enemies/trace.md](port/src/actors/enemies/trace.md) and
+[modernize/changes.json](modernize/changes.json).
+
+## Modernization batch: decoded movement programs (iteration013)
+
+Perimeter routes now describe headings and contact conditions directly. Wave
+programs contain explicit timed spawn and wait-for-last-child instructions. Asset
+loading decodes the old packed/parallel tables; gameplay preserves mirrored routes,
+corrections, exact byte timestamps, paired emissions and immediate callback order.
+Source contracts and evidence are linked in [bosses/trace.md](port/src/actors/bosses/trace.md)
+and [modernize/changes.json](modernize/changes.json).
+
+## Modernization batch: native scene actor phases (iteration014)
+
+Scene actor movement now retains native behavior variants with named counters.
+Bounce direction, entry progress, walking pauses and move/rebuild waits no longer
+depend on packed progress checks in gameplay. Source motion/update/yield order,
+all wrapping waits, exact80 entry reset and partial-field handoffs remain covered.
+See [scenes/trace.md](port/src/scenes/trace.md) and
+[modernize/changes.json](modernize/changes.json) for contract/evidence scope.
+
+Animation modernization015 preserves duration-plus-one updates, dialogue/frozen
+holds, tick127 overflow, post-increment frame loop selection and increment-before-
+destruction behavior. Shared gameplay callers use native playback resets, hold/
+resume and initial-pass events. See `port/src/presentation/trace.md` and its
+source-backed contracts; no animation timing or content was intentionally changed.
+
+Modernization016 retains native dialogue programs instead of encoded message
+streams. Blank pacing/row-limit bypass, visible glyph17, final unpaced period,
+page/scroll and canonical cursor/publication semantics are unchanged. Original18
+message contracts and a fresh807-event/42-page renderer comparison cover the text
+executor; natural original-emulator dialogue and physical-platform QA remain gaps.
+See `port/src/dialogue/trace.md` for scope and source evidence.
+
+Modernization017 replaces flat terrain video writes with native tile/palette
+changes across columns, changed blocks, bursts and vertical rows. World clipping,
+collision/cache updates, retained staging, byte-wrap aliases, publication timing
+and source waits are preserved. Source encoding belongs to Video/presentation;
+2610-case direct-owner comparisons and actual Game vertical/neighbor contracts
+supplement the fresh gameplay route. Source/physical-platform coverage limits
+remain in `port/src/world/trace.md` and the modernization evidence.
+
+Modernization018 replaces raw audio sequence interpretation with immutable typed
+primary/secondary programs. Notes carry decoded keys/duration classes, branches
+carry decoded destinations, and original resource locations remain only where
+cursor/seed or table observations require them. Native actions preserve waits,
+repeat/deferred ordering, reset aliases and register/synthesis cadence. Full
+source-backed contracts and a58-case/13920-frame direct audio probe supplement
+the fresh runtime route; no full soundtrack/device/original-emulator claim is
+made. Details and unchanged C522/C523 uncertainty: `port/src/audio/trace.md`.

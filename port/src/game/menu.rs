@@ -134,8 +134,8 @@ impl Menu {
                             .position(next, &mut core.actors, false);
                         // D755 clears only these two selection actors' clocks.
                         for slot in [2, 4] {
-                            core.actors[slot].animation_frame = 0;
-                            core.actors[slot].animation_tick = 0;
+                            core.actors[slot].playback.reset_frame();
+                            core.actors[slot].playback.restart_clock();
                         }
                         self.operations
                             .push_back(selection::Operation::Sound(selection::MENU_SOUND));

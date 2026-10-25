@@ -28,7 +28,7 @@ const MARK_PLAYER: u8 = 4;
 const MESSAGE_BITS: [u8; 8] = [1, 2, 4, 8, 16, 32, 64, 128];
 fn catalog(text: &[u8]) -> Catalog {
     Catalog {
-        messages: vec![text.to_vec(); MESSAGE_COUNT],
+        messages: vec![MessageProgram::from_source(text).unwrap(); MESSAGE_COUNT],
         destinations: [0x204c, 0x206c, 0x208c],
         row_end_offsets: [0x14, 0x28, 0x3c],
         row_queue_offsets: [0, 0x14, 0x28],
@@ -38,20 +38,20 @@ fn catalog(text: &[u8]) -> Catalog {
 }
 fn status() -> Status {
     Status {
-        reward: [BLANK; 6],
-        total: [BLANK; 7],
+        reward: [BLANK; 6].into(),
+        total: [BLANK; 7].into(),
         lives: 3,
-        health: Health {
-            segments: [HealthSegment {
+        health: Health::from_overlay(
+            [HealthSegment {
                 y: 0,
                 tile: 0,
                 depleted: 0,
                 x: 0,
             }; OVERLAY_SEGMENTS],
-            end: ROW_END,
-            alternating: RETAINED,
-        },
-        countdown: [5, 0, 0],
+            ROW_END,
+            RETAINED,
+        ),
+        countdown: [5, 0, 0].into(),
         divider: 60,
         dirty: 0,
         ui_pending: 0,
@@ -71,14 +71,11 @@ impl Fixture {
     fn new() -> Self {
         let mut actors = [ActorContact::default(); ACTOR_SLOTS];
         actors[SOURCE_SLOT] = ActorContact {
-            state: ACTIVE_WORLD,
+            playback: crate::presentation::AnimationPlayback::from_codes(RETAINED, RETAINED, 0),
+            control: crate::actors::ActorControl::from_codes(ACTIVE_WORLD, RETAINED, RETAINED, 0),
             render: VISIBLE,
             animation: RETAINED,
-            animation_frame: RETAINED,
-            animation_tick: RETAINED,
             profile: 0,
-            local_state: RETAINED,
-            local_counter: RETAINED,
             position: Position {
                 world_x: 0x0320,
                 screen_y: 0x70,
@@ -263,11 +260,14 @@ fn all_eighteen_original_pointer_bounds_and_control_delimiters_are_exact() {
     assert_eq!(c.messages.len(), MESSAGE_COUNT);
     for i in 0..MESSAGE_COUNT {
         assert_eq!(
-            c.messages[i],
+            c.messages[i].source_codes(),
             rom[starts[i]..starts[i] + lengths[i]],
             "selector{i:02X}"
         );
-        assert_eq!(c.messages[i].last(), Some(&MESSAGE_END));
+        assert_eq!(
+            c.messages[i].instructions().last(),
+            Some(&TextInstruction::Finish)
+        );
     }
     assert_eq!(c.destinations, [0x204c, 0x206c, 0x208c]);
     assert_eq!(c.row_queue_offsets, [0, 20, 40]);
@@ -291,7 +291,33 @@ fn synthetic_pointers() -> Vec<u8> {
 fn split_pointer_aliases_decode_independently_without_a_fixed_word_table() {
     let messages =
         Catalog::decode_messages(&synthetic_pointers(), &[TEST_GLYPH, MESSAGE_END]).unwrap();
-    assert_eq!(messages, vec![vec![TEST_GLYPH, MESSAGE_END]; MESSAGE_COUNT]);
+    assert!(messages.iter().all(|program| program.instructions()
+        == [TextInstruction::Glyph(TEST_GLYPH), TextInstruction::Finish]));
+}
+#[test]
+fn native_message_program_contains_actions_and_stops_before_adjacent_data() {
+    let program = MessageProgram::from_source(&[
+        TEST_GLYPH,
+        BLANK,
+        ROW_END,
+        0xfe,
+        MESSAGE_END,
+        SECOND_GLYPH,
+        MESSAGE_END,
+    ])
+    .unwrap();
+    assert_eq!(
+        program.instructions(),
+        &[
+            TextInstruction::Glyph(TEST_GLYPH),
+            TextInstruction::Blank,
+            TextInstruction::NextRow,
+            TextInstruction::Glyph(0xfe),
+            TextInstruction::Finish,
+        ]
+    );
+    assert_eq!(program.instruction(4), Some(TextInstruction::Finish));
+    assert_eq!(program.instruction(5), None);
 }
 #[test]
 fn truncated_pointer_planes_are_rejected() {
@@ -450,6 +476,56 @@ fn row_delimiter_immediately_after_sixteen_glyphs_pads_one_blank() {
     assert_eq!(p.rows()[1], vec![FINAL_GLYPH]);
 }
 #[test]
+fn seventeenth_blank_skips_row_limit_check_and_terminal_stays_on_same_row() {
+    // EEDD branches before the row-limit comparison. This synthetic edge
+    // protects that branch, without claiming an original message uses it.
+    let mut text = vec![TEST_GLYPH; ROW_GLYPHS - 1];
+    text.extend([BLANK, MESSAGE_END]);
+    let (d, cursor, panel, steps) = run_text(&text);
+    assert_eq!(d.line, 0);
+    assert_eq!(cursor, 0);
+    assert_eq!(
+        steps.iter().filter(|s| s.sound.is_some()).count(),
+        ROW_GLYPHS - 1
+    );
+    assert_eq!(panel.encoded[2], ROW_GLYPHS as u8);
+    assert_eq!(&panel.encoded[19..22], &[BLANK, FINAL_GLYPH, ROW_END]);
+    assert_eq!(
+        steps.last().unwrap().boundary,
+        TextBoundary::MessageComplete
+    );
+}
+#[test]
+fn every_noncontrol_tile_is_a_paced_glyph_including_high_tile_ids() {
+    // EECB/EECF/EEDB classify exactly AE/FF/24. No signed or alphabet range
+    // filter may be introduced when message bytes become native instructions.
+    for glyph in 0..=255 {
+        if [MESSAGE_END, ROW_END, BLANK].contains(&glyph) {
+            continue;
+        }
+        let mut d = Dialogue::default();
+        let mut cursor = 0;
+        let mut panel = Panel::default();
+        let step = render_text(
+            &mut d,
+            &mut cursor,
+            &mut panel,
+            &catalog(&[glyph, MESSAGE_END]),
+        )
+        .unwrap();
+        assert_eq!(
+            step,
+            TextStep {
+                boundary: TextBoundary::GlyphWait,
+                sound: Some(GLYPH_SOUND),
+                wait_ticks: GLYPH_WAIT
+            }
+        );
+        assert_eq!((cursor, d.line, d.row_glyphs), (1, 0, 1));
+        assert_eq!(&panel.encoded[..5], &[0x20, 0x4c, 0, glyph, ROW_END]);
+    }
+}
+#[test]
 fn scrolling_copies_all_seventeen_tiles_preserves_headers_and_yields_before_bottom_render() {
     let mut d = Dialogue {
         line: 2,
@@ -499,7 +575,10 @@ fn race_intro_outcome_clears_latch_even_when_b_is_pressed() {
 fn life_loss_outcome_uses_common_reload_and_clears_player_queue_activity_and_alternation() {
     let mut f = Fixture::new();
     f.player.queued = Some(Action::Damage);
-    f.actors[0].state = ACTIVE_WORLD;
+    {
+        let actor_value = ACTIVE_WORLD;
+        f.actors[0].set_state_code(actor_value);
+    };
     f.progression.life_loss_variant = 5;
     f.outcome(
         OutcomeMessage::LifeLoss,
@@ -509,7 +588,7 @@ fn life_loss_outcome_uses_common_reload_and_clears_player_queue_activity_and_alt
     assert_eq!(f.progression.reload_request, 0x8e);
     assert_eq!(f.player.action, Action::Standing);
     assert_eq!(f.player.queued, None);
-    assert_eq!(f.actors[0].state, 0);
+    assert_eq!(f.actors[0].state_code(), 0);
     assert_eq!(f.status.health.alternating, 0);
 }
 #[test]
@@ -537,7 +616,7 @@ fn reveal_reinitializes_only_saved_actor_and_two_collision_cells_before_burst_ze
     let a = &f.actors[SOURCE_SLOT];
     assert_eq!(
         (
-            a.state,
+            a.state_code(),
             a.handler,
             a.animation,
             a.position.screen_y,
@@ -553,10 +632,10 @@ fn reveal_reinitializes_only_saved_actor_and_two_collision_cells_before_burst_ze
     );
     assert_eq!(
         (
-            a.animation_frame,
-            a.animation_tick,
+            a.playback.frame_code(),
+            a.playback.tick_code(),
             a.hit_marker,
-            a.local_state
+            a.local_state_code()
         ),
         (0, 0, 0, REVEAL_PHASE)
     );
@@ -668,7 +747,7 @@ fn message_three_increment_can_cross_sign_boundary_and_wrap_not_saturate() {
 #[test]
 fn paid_reward_rejects_b_without_mutating_status_or_actor() {
     let mut f = Fixture::new();
-    f.status.reward = [9; 6];
+    f.status.reward = [9; 6].into();
     let a = f.actors;
     let s = f.status.clone();
     f.outcome(
@@ -683,7 +762,7 @@ fn paid_reward_rejects_b_without_mutating_status_or_actor() {
 fn paid_reward_underfunded_two_upper_digits_leave_actor_and_all_digits_unchanged() {
     for upper in [[BLANK, BLANK], [BLANK, 2], [0, 2]] {
         let mut f = Fixture::new();
-        f.status.reward = [upper[0], upper[1], 9, 9, 9, 9];
+        f.status.reward = [upper[0], upper[1], 9, 9, 9, 9].into();
         let a = f.actors;
         let s = f.status.clone();
         f.outcome(
@@ -698,21 +777,24 @@ fn paid_reward_underfunded_two_upper_digits_leave_actor_and_all_digits_unchanged
 #[test]
 fn paid_reward_exact_three_blanks_all_leading_zeroes_and_commits_actor_only_on_success() {
     let mut f = Fixture::new();
-    f.status.reward = [BLANK, 3, 0, 0, 0, 0];
-    f.actors[SOURCE_SLOT].state = 0xb7;
+    f.status.reward = [BLANK, 3, 0, 0, 0, 0].into();
+    {
+        let actor_value = 0xb7;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     f.actors[SOURCE_SLOT].profile = 0x35;
     f.outcome(
         OutcomeMessage::PaidReward,
         Buttons::A,
         &mut Recorder::default(),
     );
-    assert_eq!(f.status.reward, [BLANK; 6]);
+    assert_eq!(f.status.reward.display_codes(), [BLANK; 6]);
     assert_eq!(f.status.dirty, 1);
     let a = f.actors[SOURCE_SLOT];
     assert_eq!(
         (
             a.handler,
-            a.state,
+            a.state_code(),
             a.position.screen_y,
             a.position.world_x,
             a.profile
@@ -722,8 +804,8 @@ fn paid_reward_exact_three_blanks_all_leading_zeroes_and_commits_actor_only_on_s
     assert_eq!(
         (
             a.animation,
-            a.animation_frame,
-            a.animation_tick,
+            a.playback.frame_code(),
+            a.playback.tick_code(),
             a.position.x_fraction,
             a.position.y_fraction
         ),
@@ -733,16 +815,16 @@ fn paid_reward_exact_three_blanks_all_leading_zeroes_and_commits_actor_only_on_s
 #[test]
 fn paid_reward_borrows_across_upper_digits_and_preserves_lower_digits_total_and_other_actors() {
     let mut f = Fixture::new();
-    f.status.reward = [1, 0, 5, 4, 3, 2];
-    f.status.total = [9; 7];
+    f.status.reward = [1, 0, 5, 4, 3, 2].into();
+    f.status.total = [9; 7].into();
     let old = f.actors;
     f.outcome(
         OutcomeMessage::PaidReward,
         Buttons::A,
         &mut Recorder::default(),
     );
-    assert_eq!(f.status.reward, [BLANK, 7, 5, 4, 3, 2]);
-    assert_eq!(f.status.total, [9; 7]);
+    assert_eq!(f.status.reward.display_codes(), [BLANK, 7, 5, 4, 3, 2]);
+    assert_eq!(f.status.total.display_codes(), [9; 7]);
     for (i, previous) in old.iter().enumerate() {
         if i != SOURCE_SLOT {
             assert_eq!(&f.actors[i], previous);
@@ -752,14 +834,17 @@ fn paid_reward_borrows_across_upper_digits_and_preserves_lower_digits_total_and_
 #[test]
 fn paid_reward_dirty_increment_wraps_and_normalization_stops_at_first_nonzero() {
     let mut f = Fixture::new();
-    f.status.reward = [0, 3, 0, 4, 0, 0];
+    f.status.reward = [0, 3, 0, 4, 0, 0].into();
     f.status.dirty = ROW_END;
     f.outcome(
         OutcomeMessage::PaidReward,
         Buttons::A,
         &mut Recorder::default(),
     );
-    assert_eq!(f.status.reward, [BLANK, BLANK, BLANK, 4, 0, 0]);
+    assert_eq!(
+        f.status.reward.display_codes(),
+        [BLANK, BLANK, BLANK, 4, 0, 0]
+    );
     assert_eq!(f.status.dirty, 0);
 }
 fn pressed(buttons: Buttons) -> PortInput {
@@ -1105,7 +1190,10 @@ fn three_rows() -> Panel {
 #[test]
 fn progression_contact_returns_without_requests_on_rejected_overlap() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].local_state = SPECIAL_SELECTOR;
+    {
+        let actor_value = SPECIAL_SELECTOR;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     let p = f.progression.clone();
     let mut r = Recorder::default();
     f.actor(Family::ProgressionContact, &mut r);
@@ -1121,7 +1209,10 @@ fn progression_contact_zero_selector_requires_seen_message_three_flag() {
         (0xff, RELOAD_NEGATIVE),
     ] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].local_state = 0;
+        {
+            let actor_value = 0;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.progression.seen_messages[0] = seen;
         let mut r = Recorder {
             contact: true,
@@ -1135,7 +1226,10 @@ fn progression_contact_zero_selector_requires_seen_message_three_flag() {
 fn progression_contact_ordinary_nonzero_selectors_or_negative_without_nibble_masking() {
     for selector in [1, 2, 3, 5, 0x7f, 0x80, 0xff] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].local_state = selector;
+        {
+            let actor_value = selector;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         let mut r = Recorder {
             contact: true,
             ..Recorder::default()
@@ -1148,7 +1242,10 @@ fn progression_contact_ordinary_nonzero_selectors_or_negative_without_nibble_mas
 fn progression_contact_selector_four_requires_only_low_five_complete_bits() {
     for progress in [ALL_LANDS, 0x3f, 0x7f, 0xff] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].local_state = SPECIAL_SELECTOR;
+        {
+            let actor_value = SPECIAL_SELECTOR;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.progression.progress_bits = progress;
         let mut r = Recorder {
             contact: true,
@@ -1163,7 +1260,10 @@ fn progression_contact_selector_four_requires_only_low_five_complete_bits() {
 fn progression_contact_incomplete_selector_four_sets_negative_boundary_and_preserves_reload() {
     for progress in [0, 0x1e, 0x0f, 0xe0] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].local_state = SPECIAL_SELECTOR;
+        {
+            let actor_value = SPECIAL_SELECTOR;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.progression.progress_bits = progress;
         f.progression.reload_request = RETAINED;
         let mut r = Recorder {
@@ -1195,7 +1295,10 @@ fn dialogue_contact_damage_and_death_return_before_overlap_or_phase_change() {
 fn dialogue_contact_any_used_low_phase_returns_before_overlap() {
     for phase in 1..=15 {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = ACTIVE_WORLD | phase;
+        {
+            let actor_value = ACTIVE_WORLD | phase;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
         let a = f.actors;
         let mut r = Recorder {
             contact: true,
@@ -1226,7 +1329,10 @@ fn choice_animation_contact_is_blocked_only_by_current_stage_accepted_bit() {
         let mut f = Fixture::new();
         f.player.action = Action::Standing;
         f.actors[SOURCE_SLOT].animation = CHOICE_ANIMATION;
-        f.actors[SOURCE_SLOT].local_state = OutcomeMessage::StageChoice as u8;
+        {
+            let actor_value = OutcomeMessage::StageChoice as u8;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.progression.accepted_stages = accepted;
         let mut r = Recorder {
             contact: true,
@@ -1242,7 +1348,7 @@ fn choice_animation_contact_is_blocked_only_by_current_stage_accepted_bit() {
             }
         );
         assert_eq!(
-            f.actors[SOURCE_SLOT].state,
+            f.actors[SOURCE_SLOT].state_code(),
             if blocked {
                 ACTIVE_WORLD
             } else {
@@ -1255,13 +1361,16 @@ fn choice_animation_contact_is_blocked_only_by_current_stage_accepted_bit() {
 fn nonchoice_animation_does_not_consult_accepted_stages() {
     let mut f = Fixture::new();
     f.progression.accepted_stages = ROW_END;
-    f.actors[SOURCE_SLOT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     let mut r = Recorder {
         contact: true,
         ..Recorder::default()
     };
     f.actor(Family::DialogueContact, &mut r);
-    assert_eq!(f.actors[SOURCE_SLOT].state, ACTIVE_WORLD + 1);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), ACTIVE_WORLD + 1);
     assert_eq!(f.dialogue.message, 1);
 }
 #[test]
@@ -1269,7 +1378,10 @@ fn all_eighteen_contact_messages_write_exact_bit_plane_and_saved_slot() {
     for message in 0..MESSAGE_COUNT as u8 {
         let mut f = Fixture::new();
         f.dialogue.actor_slot = CHILD_SLOT;
-        f.actors[SOURCE_SLOT].local_state = message;
+        {
+            let actor_value = message;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.progression.seen_messages = [0x20, 0x40, 0x80];
         let mut expected = f.progression.seen_messages;
         expected[usize::from(message / 8)] |= MESSAGE_BITS[usize::from(message % 8)];
@@ -1287,7 +1399,10 @@ fn all_eighteen_contact_messages_write_exact_bit_plane_and_saved_slot() {
 #[test]
 fn message_eight_contact_increments_prerequisite_removes_and_suppresses_original_identity() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].local_state = OutcomeMessage::EscortPrerequisite as u8;
+    {
+        let actor_value = OutcomeMessage::EscortPrerequisite as u8;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     f.progression.escort_prerequisite = ROW_END;
     let mut r = Recorder {
         contact: true,
@@ -1295,7 +1410,7 @@ fn message_eight_contact_increments_prerequisite_removes_and_suppresses_original
     };
     f.actor(Family::DialogueContact, &mut r);
     assert_eq!(f.progression.escort_prerequisite, 0);
-    assert_eq!(f.actors[SOURCE_SLOT].state, 0);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0);
     assert_eq!(f.suppression[19], 8);
     assert_eq!(f.progression.seen_messages, [0, 1, 0]);
     assert_eq!(f.actors[SOURCE_SLOT].spawn_identity, Some(SOURCE_IDENTITY));
@@ -1303,7 +1418,10 @@ fn message_eight_contact_increments_prerequisite_removes_and_suppresses_original
 #[test]
 fn ordinary_contact_is_not_suppressed_or_removed_and_can_override_helper_damage_on_success() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].local_state = 6;
+    {
+        let actor_value = 6;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     f.player.protection = RETAINED;
     let mut r = Recorder {
         contact: true,
@@ -1311,7 +1429,7 @@ fn ordinary_contact_is_not_suppressed_or_removed_and_can_override_helper_damage_
         ..Recorder::default()
     };
     f.actor(Family::DialogueContact, &mut r);
-    assert_eq!(f.actors[SOURCE_SLOT].state, ACTIVE_WORLD + 1);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), ACTIVE_WORLD + 1);
     assert_eq!(f.player.action, Action::Dialogue);
     assert!(f.suppression.iter().all(|b| *b == 0));
 }
@@ -1367,7 +1485,7 @@ fn hit_actor_untriggered_freezes_animation_tick_only() {
     let mut r = Recorder::default();
     f.actor(Family::HitActivated, &mut r);
     let mut expected = old;
-    expected.animation_tick = 0;
+    expected.playback.restart_clock();
     assert_eq!(f.actors[SOURCE_SLOT], expected);
     assert_eq!(f.progression.hit_dialogue_count, 0);
     assert!(r.calls.is_empty());
@@ -1384,11 +1502,11 @@ fn first_hit_increments_wrapping_count_initializes_then_falls_in_same_invocation
     assert_eq!(f.progression.hit_dialogue_count, 0);
     assert_eq!(
         (
-            a.state,
+            a.state_code(),
             a.profile,
             a.vertical_velocity,
-            a.local_counter,
-            a.animation_tick
+            a.local_counter_code(),
+            a.playback.tick_code()
         ),
         (0xa1, 0x80, 0, 0, 0)
     );
@@ -1397,7 +1515,10 @@ fn first_hit_increments_wrapping_count_initializes_then_falls_in_same_invocation
 #[test]
 fn first_fall_ground_contact_initializes_launch_without_rise_or_horizontal_motion_yet() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     let mut r = Recorder {
         motion: CONTACT_BIT,
         ..Recorder::default()
@@ -1406,10 +1527,10 @@ fn first_fall_ground_contact_initializes_launch_without_rise_or_horizontal_motio
     let a = f.actors[SOURCE_SLOT];
     assert_eq!(
         (
-            a.state,
+            a.state_code(),
             a.horizontal_magnitude,
             a.vertical_velocity,
-            a.animation_tick
+            a.playback.tick_code()
         ),
         (0xa2, HIT_LAUNCH_SPEED, HIT_LAUNCH_VELOCITY, 0)
     );
@@ -1418,28 +1539,37 @@ fn first_fall_ground_contact_initializes_launch_without_rise_or_horizontal_motio
 #[test]
 fn first_fall_requires_solid_bit_not_any_collision_result() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     let mut r = Recorder {
         motion: 2,
         ..Recorder::default()
     };
     f.actor(Family::HitActivated, &mut r);
-    assert_eq!(f.actors[SOURCE_SLOT].state, 0xa1);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0xa1);
     assert_eq!(r.calls, vec![Call::Motion(Movement::Fall, 0x2d, 1)]);
 }
 #[test]
 fn hit_arc_positive_velocity_keeps_rising_then_moves_left_and_freezes_animation() {
     for v in [0, 1, HIT_LAUNCH_VELOCITY, 0x7fff] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa2;
-        f.actors[SOURCE_SLOT].local_counter = 0;
+        {
+            let actor_value = 0xa2;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            f.actors[SOURCE_SLOT].set_local_counter_code(actor_value);
+        };
         let mut r = Recorder {
             velocity_after_motion: Some(v),
             ..Recorder::default()
         };
         f.actor(Family::HitActivated, &mut r);
-        assert_eq!(f.actors[SOURCE_SLOT].local_counter, 0);
-        assert_eq!(f.actors[SOURCE_SLOT].animation_tick, 0);
+        assert_eq!(f.actors[SOURCE_SLOT].local_counter_code(), 0);
+        assert_eq!(f.actors[SOURCE_SLOT].playback.tick_code(), 0);
         assert_eq!(
             r.calls,
             vec![
@@ -1452,14 +1582,20 @@ fn hit_arc_positive_velocity_keeps_rising_then_moves_left_and_freezes_animation(
 #[test]
 fn hit_arc_negative_post_rise_velocity_selects_fall_for_next_invocation() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa2;
-    f.actors[SOURCE_SLOT].local_counter = 0;
+    {
+        let actor_value = 0xa2;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.actors[SOURCE_SLOT].set_local_counter_code(actor_value);
+    };
     let mut r = Recorder {
         velocity_after_motion: Some(-1),
         ..Recorder::default()
     };
     f.actor(Family::HitActivated, &mut r);
-    assert_eq!(f.actors[SOURCE_SLOT].local_counter, 1);
+    assert_eq!(f.actors[SOURCE_SLOT].local_counter_code(), 1);
     assert_eq!(f.actors[SOURCE_SLOT].vertical_velocity, 0);
     // The following horizontal boundary may change vertical velocity in a real
     // contact response; this fixture leaves it unchanged to inspect apex clear.
@@ -1475,8 +1611,14 @@ fn hit_arc_negative_post_rise_velocity_selects_fall_for_next_invocation() {
 fn hit_arc_falling_without_ground_continues_left_without_opening_dialogue() {
     let mut f = Fixture::new();
     f.player.action = Action::Standing;
-    f.actors[SOURCE_SLOT].state = 0xa2;
-    f.actors[SOURCE_SLOT].local_counter = 1;
+    {
+        let actor_value = 0xa2;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SOURCE_SLOT].set_local_counter_code(actor_value);
+    };
     let mut r = Recorder::default();
     f.actor(Family::HitActivated, &mut r);
     assert_eq!(f.player.action, Action::Standing);
@@ -1491,10 +1633,22 @@ fn hit_arc_falling_without_ground_continues_left_without_opening_dialogue() {
 #[test]
 fn hit_arc_landing_disables_handler_marks_reveal_bit_suppresses_and_still_moves_left() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa2;
-    f.actors[SOURCE_SLOT].handler = Family::HitActivated as u8;
-    f.actors[SOURCE_SLOT].local_counter = 1;
-    f.actors[SOURCE_SLOT].local_state = 6;
+    {
+        let actor_value = 0xa2;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = Family::HitActivated as u8;
+        f.actors[SOURCE_SLOT].set_handler(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SOURCE_SLOT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 6;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     f.progression.seen_messages[0] = 8;
     let mut r = Recorder {
         ordered_motion: VecDeque::from([CONTACT_BIT, 0]),
@@ -1502,7 +1656,7 @@ fn hit_arc_landing_disables_handler_marks_reveal_bit_suppresses_and_still_moves_
     };
     f.actor(Family::HitActivated, &mut r);
     assert_eq!(f.actors[SOURCE_SLOT].handler, 0);
-    assert_eq!(f.actors[SOURCE_SLOT].state, 0xa2);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0xa2);
     assert_eq!(f.player.action, Action::Dialogue);
     assert_eq!(f.progression.seen_messages[0], 0x48);
     assert_eq!(f.dialogue.message, 6);
@@ -1549,7 +1703,10 @@ fn escort_start_marks_prerequisite_holds_player_copies_camera_and_suppresses_bef
     for prerequisite in [1, 0x7f, 0x80, 0xff] {
         let mut f = Fixture::new();
         f.progression.escort_prerequisite = prerequisite;
-        f.actors[SOURCE_SLOT].state = 0xb0;
+        {
+            let actor_value = 0xb0;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
         let mut r = Recorder {
             distance: ESCORT_DISTANCE - 1,
             ..Recorder::default()
@@ -1563,7 +1720,7 @@ fn escort_start_marks_prerequisite_holds_player_copies_camera_and_suppresses_bef
         assert_eq!(f.player.action, Action::Hold);
         assert_eq!(
             (
-                a.state,
+                a.state_code(),
                 a.position.world_x,
                 a.position.x_fraction,
                 a.horizontal_magnitude,
@@ -1578,7 +1735,10 @@ fn escort_start_marks_prerequisite_holds_player_copies_camera_and_suppresses_bef
 #[test]
 fn escort_approach_moves_and_sets_flip_before_close_distance_test() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     f.actors[SOURCE_SLOT].horizontal_magnitude = ESCORT_SPEED;
     let mut r = Recorder {
         distance: ESCORT_DISTANCE,
@@ -1596,7 +1756,10 @@ fn escort_approach_moves_and_sets_flip_before_close_distance_test() {
 #[test]
 fn escort_close_allocation_failure_still_sets_full_pause_and_never_restores_player() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     f.player.action = Action::Hold;
     let old = f.actors;
     let mut r = Recorder {
@@ -1605,8 +1768,8 @@ fn escort_close_allocation_failure_still_sets_full_pause_and_never_restores_play
         ..Recorder::default()
     };
     f.actor(Family::Escort, &mut r);
-    assert_eq!(f.actors[SOURCE_SLOT].state, 0xa2);
-    assert_eq!(f.actors[SOURCE_SLOT].local_state, ESCORT_PAUSE);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0xa2);
+    assert_eq!(f.actors[SOURCE_SLOT].local_state_code(), ESCORT_PAUSE);
     assert_eq!(f.player.action, Action::Hold);
     for (i, previous) in old.iter().enumerate() {
         if i != SOURCE_SLOT {
@@ -1625,9 +1788,13 @@ fn escort_close_allocation_failure_still_sets_full_pause_and_never_restores_play
 #[test]
 fn escort_companion_initialization_preserves_unwritten_slot_fields_and_source_slot() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     f.actors[SOURCE_SLOT].horizontal_magnitude = ESCORT_SPEED;
     f.actors[CHILD_SLOT] = ActorContact {
+        control: crate::actors::ActorControl::from_codes(0, RETAINED, 0, 0),
         position: Position {
             world_x: 0xffff,
             screen_y: RETAINED,
@@ -1635,7 +1802,6 @@ fn escort_companion_initialization_preserves_unwritten_slot_fields_and_source_sl
             y_fraction: RETAINED,
         },
         profile: RETAINED,
-        local_state: RETAINED,
         spawn_identity: Some(ROW_END),
         vertical_velocity: -1,
         ..ActorContact::default()
@@ -1652,25 +1818,37 @@ fn escort_companion_initialization_preserves_unwritten_slot_fields_and_source_sl
     expected.animation = COMPANION_ANIMATION;
     expected.position.world_x = f.actors[SOURCE_SLOT].position.world_x;
     expected.position.screen_y = f.actors[SOURCE_SLOT].position.screen_y;
-    expected.animation_frame = 0;
-    expected.animation_tick = 0;
-    expected.state = ACTIVE_WORLD;
+    expected.playback.reset_frame();
+    expected.playback.restart_clock();
+    {
+        let actor_value = ACTIVE_WORLD;
+        expected.set_state_code(actor_value);
+    };
     expected.render = ACTIVE_WORLD;
-    expected.handler = COMPANION_HANDLER;
+    {
+        let actor_value = COMPANION_HANDLER;
+        expected.set_handler(actor_value);
+    };
     assert_eq!(a, expected);
-    assert_eq!(f.actors[SOURCE_SLOT].state, 0xa2);
-    assert_eq!(f.actors[SOURCE_SLOT].local_state, ESCORT_PAUSE);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0xa2);
+    assert_eq!(f.actors[SOURCE_SLOT].local_state_code(), ESCORT_PAUSE);
     assert_eq!(f.dialogue.actor_slot, SOURCE_SLOT);
 }
 #[test]
 fn escort_pause_decrements_once_and_defers_exit_even_on_last_tick() {
     for before in [ESCORT_PAUSE, 1] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa2;
-        f.actors[SOURCE_SLOT].local_state = before;
+        {
+            let actor_value = 0xa2;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = before;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         let mut r = Recorder::default();
         f.actor(Family::Escort, &mut r);
-        assert_eq!(f.actors[SOURCE_SLOT].local_state, before - 1);
+        assert_eq!(f.actors[SOURCE_SLOT].local_state_code(), before - 1);
         assert!(r.calls.is_empty());
     }
 }
@@ -1678,12 +1856,18 @@ fn escort_pause_decrements_once_and_defers_exit_even_on_last_tick() {
 fn escort_after_pause_offscreen_deactivates_without_collision_or_render_reset() {
     for render in [0, 0x7f] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa2;
-        f.actors[SOURCE_SLOT].local_state = 0;
+        {
+            let actor_value = 0xa2;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.actors[SOURCE_SLOT].render = render;
         let mut r = Recorder::default();
         f.actor(Family::Escort, &mut r);
-        assert_eq!(f.actors[SOURCE_SLOT].state, 0);
+        assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0);
         assert_eq!(f.actors[SOURCE_SLOT].render, render);
         assert!(r.calls.is_empty());
     }
@@ -1692,8 +1876,14 @@ fn escort_after_pause_offscreen_deactivates_without_collision_or_render_reset() 
 fn escort_after_pause_visible_falls_but_does_not_walk_without_ground_bit() {
     for bits in [0, 2] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa2;
-        f.actors[SOURCE_SLOT].local_state = 0;
+        {
+            let actor_value = 0xa2;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+        };
         f.actors[SOURCE_SLOT].render = VISIBLE | FLIP;
         let mut r = Recorder {
             motion: bits,
@@ -1707,8 +1897,14 @@ fn escort_after_pause_visible_falls_but_does_not_walk_without_ground_bit() {
 #[test]
 fn escort_after_pause_grounded_walks_left_and_clears_only_flip() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa2;
-    f.actors[SOURCE_SLOT].local_state = 0;
+    {
+        let actor_value = 0xa2;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.actors[SOURCE_SLOT].set_local_state_code(actor_value);
+    };
     f.actors[SOURCE_SLOT].render = 0xe5;
     f.actors[SOURCE_SLOT].horizontal_magnitude = ESCORT_SPEED;
     let mut r = Recorder {
@@ -1731,14 +1927,17 @@ fn rightward_transition_phase_zero_reloads_speed_three_and_moves_without_phase_i
     let mut r = Recorder::default();
     f.actor(Family::RightwardTransition, &mut r);
     assert_eq!(f.actors[SOURCE_SLOT].horizontal_magnitude, TRANSITION_SPEED);
-    assert_eq!(f.actors[SOURCE_SLOT].state, ACTIVE_WORLD);
+    assert_eq!(f.actors[SOURCE_SLOT].state_code(), ACTIVE_WORLD);
     assert_eq!(f.actors[SOURCE_SLOT].position.world_x, 0x0323);
     assert_eq!(r.calls, vec![Call::Integrate(true)]);
 }
 #[test]
 fn rightward_transition_nonzero_phase_retains_speed_and_tests_post_integration_position() {
     let mut f = Fixture::new();
-    f.actors[SOURCE_SLOT].state = 0xa1;
+    {
+        let actor_value = 0xa1;
+        f.actors[SOURCE_SLOT].set_state_code(actor_value);
+    };
     f.actors[SOURCE_SLOT].horizontal_magnitude = ESCORT_SPEED;
     let mut r = Recorder::default();
     f.actor(Family::RightwardTransition, &mut r);
@@ -1749,12 +1948,15 @@ fn rightward_transition_nonzero_phase_retains_speed_and_tests_post_integration_p
 fn rightward_transition_requires_exact_page_seven_and_low_x_at_least_seventy_hex() {
     for x in [0x066f, 0x0670, 0x076f, 0x0870, 0x08ff] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa1;
+        {
+            let actor_value = 0xa1;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
         f.actors[SOURCE_SLOT].horizontal_magnitude = 0;
         f.actors[SOURCE_SLOT].position.world_x = x;
         let mut r = Recorder::default();
         f.actor(Family::RightwardTransition, &mut r);
-        assert_eq!(f.actors[SOURCE_SLOT].state, 0xa1);
+        assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0xa1);
         assert_eq!(f.player.action, Action::Dialogue);
         assert_eq!(r.calls, vec![Call::Integrate(true)]);
     }
@@ -1763,13 +1965,16 @@ fn rightward_transition_requires_exact_page_seven_and_low_x_at_least_seventy_hex
 fn rightward_transition_finishes_at_threshold_restores_player_then_burst_six_then_actor_bank() {
     for low in [TRANSITION_END_X, ROW_END] {
         let mut f = Fixture::new();
-        f.actors[SOURCE_SLOT].state = 0xa1;
+        {
+            let actor_value = 0xa1;
+            f.actors[SOURCE_SLOT].set_state_code(actor_value);
+        };
         f.actors[SOURCE_SLOT].horizontal_magnitude = 0;
         f.actors[SOURCE_SLOT].position.world_x =
             u16::from(TRANSITION_END_PAGE) << 8 | u16::from(low);
         let mut r = Recorder::default();
         f.actor(Family::RightwardTransition, &mut r);
-        assert_eq!(f.actors[SOURCE_SLOT].state, 0);
+        assert_eq!(f.actors[SOURCE_SLOT].state_code(), 0);
         assert_eq!(f.player.action, Action::Standing);
         assert_eq!(
             r.calls,
@@ -1831,7 +2036,7 @@ fn assert_original_render(selector: u8, sound_count: usize, scroll_count: usize)
     assert_eq!(cursor, 0);
     assert_eq!(sounds, sound_count);
     assert_eq!(scrolls, scroll_count);
-    let original = &c.messages[usize::from(selector)];
+    let original = c.messages[usize::from(selector)].source_codes();
     let last = original[..original.len() - 1]
         .split(|b| *b == ROW_END)
         .next_back()
@@ -2053,7 +2258,7 @@ fn outcome_exposes_actual_payment_and_life_loss_final_operations() {
         ([0, 3, BLANK, 0, 0, 7], Zero),
         ([0, 2, 0, 0, 0, 0], Zero),
     ] {
-        f.status.reward = codes;
+        f.status.reward = codes.into();
         f.outcome(OutcomeMessage::PaidReward, Buttons::A, &mut r);
         assert_eq!(
             r.outcome_returns.last().unwrap().first_actor_increment(),

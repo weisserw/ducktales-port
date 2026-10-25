@@ -1,6 +1,19 @@
 //! B04 source-backed contracts; see trace.md. No original payload is embedded.
 use super::*;
-use crate::{assets::formats::UploadCommit, config};
+use crate::{assets::formats::UploadCommit, config, presentation::VideoWrite};
+trait SourceWrites {
+    fn source_writes(&self) -> Vec<VideoWrite>;
+}
+impl SourceWrites for TerrainUpdate {
+    fn source_writes(&self) -> Vec<VideoWrite> {
+        crate::presentation::terrain::writes(self)
+    }
+}
+impl SourceWrites for ColumnUpdate {
+    fn source_writes(&self) -> Vec<VideoWrite> {
+        crate::presentation::terrain::column_writes(self)
+    }
+}
 use romatlas_port::assets::Rom;
 const FIXED_BANK_PHYSICAL: usize = 0x1c010;
 const CPU_FIXED_ORIGIN: usize = 0xc000;
@@ -604,7 +617,7 @@ fn missing_or_outside_column_leaves_both_caches_and_upload_untouched() {
         ColumnResult {
             collision: None,
             attribute: None,
-            upload: None
+            update: None
         }
     );
     assert_eq!(
@@ -620,7 +633,7 @@ fn missing_or_outside_column_leaves_both_caches_and_upload_untouched() {
         ColumnResult {
             collision: None,
             attribute: None,
-            upload: None
+            update: None
         }
     );
 }
@@ -641,7 +654,7 @@ fn early_game_even_room_first_row_updates_collision_but_queues_no_tiles_or_attri
     );
     assert_eq!(result.collision, Some((0, 0x39)));
     assert_eq!(result.attribute, None);
-    assert_eq!(result.upload, None);
+    assert_eq!(result.update, None);
 }
 #[test]
 fn ordinary_column_emits_row_major_tiles_and_attribute_with_interrupt_commit() {
@@ -654,25 +667,25 @@ fn ordinary_column_emits_row_major_tiles_and_attribute_with_interrupt_commit() {
         },
         0,
     );
-    let upload = result.upload.unwrap();
+    let upload = result.update.unwrap();
     assert_eq!(upload.commit, UploadCommit::AtInterrupt);
-    assert_eq!(upload.writes.len(), 17);
+    assert_eq!(upload.source_writes().len(), 17);
     assert_eq!(
-        upload.writes[0],
+        upload.source_writes()[0],
         VideoWrite {
             address: 0x2404,
             value: 11
         }
     );
     assert_eq!(
-        upload.writes[4],
+        upload.source_writes()[4],
         VideoWrite {
             address: 0x2424,
             value: 13
         }
     );
     assert_eq!(
-        upload.writes[16],
+        upload.source_writes()[16],
         VideoWrite {
             address: 0x27c1,
             value: 0xe4
@@ -696,17 +709,17 @@ fn even_room_row_one_copies_lower_half_and_masks_palette_to_high_nibble() {
         },
         0,
     );
-    let upload = result.upload.unwrap();
-    assert_eq!(upload.writes.len(), 9);
+    let upload = result.update.unwrap();
+    assert_eq!(upload.source_writes().len(), 9);
     assert_eq!(
-        upload.writes[0],
+        upload.source_writes()[0],
         VideoWrite {
             address: 0x20c0,
             value: 31
         }
     );
     assert_eq!(
-        upload.writes[8],
+        upload.source_writes()[8],
         VideoWrite {
             address: 0x23c8,
             value: 0xe0
@@ -729,17 +742,17 @@ fn last_attribute_row_trims_bottom_half_for_all_layouts_and_masks_low_nibble() {
             },
             0,
         );
-        let upload = result.upload.unwrap();
-        assert_eq!(upload.writes.len(), 9);
+        let upload = result.update.unwrap();
+        assert_eq!(upload.source_writes().len(), 9);
         assert_eq!(
-            upload.writes[0],
+            upload.source_writes()[0],
             VideoWrite {
                 address: 0x2780,
                 value: 11
             }
         );
         assert_eq!(
-            upload.writes[8],
+            upload.source_writes()[8],
             VideoWrite {
                 address: 0x27f8,
                 value: 4
@@ -763,10 +776,10 @@ fn scene_layout_even_first_row_is_full_and_suspended_upload_is_immediate() {
         },
         1,
     );
-    let upload = result.upload.unwrap();
-    assert_eq!(upload.writes.len(), 17);
+    let upload = result.update.unwrap();
+    assert_eq!(upload.source_writes().len(), 17);
     assert_eq!(upload.commit, UploadCommit::Immediate);
-    assert_eq!(upload.writes[0].address, 0x2000);
+    assert_eq!(upload.source_writes()[0].address, 0x2000);
 }
 #[test]
 fn descriptor_probe_uses_room_row_stride_ninth_bit_and_requested_quadrant() {
@@ -1038,7 +1051,7 @@ fn mutation_merges_only_selected_quadrant_and_emits_matching_two_tile_pairs_and_
     assert_eq!(cache.changed_this_frame, 1);
     assert_eq!(upload.commit, UploadCommit::AtInterrupt);
     assert_eq!(
-        upload.writes,
+        upload.source_writes(),
         vec![
             VideoWrite {
                 address: 0x2146,
@@ -1110,7 +1123,7 @@ fn top_status_attribute_mask_changes_upload_only_and_keeps_full_logical_cache() 
     assert_eq!(cache.attributes[0], 0x3f);
     assert_eq!(cache.collision[0], 0x7f);
     assert_eq!(
-        upload.writes.last(),
+        upload.source_writes().last(),
         Some(&VideoWrite {
             address: 0x23c0,
             value: 0x30
@@ -1284,7 +1297,7 @@ fn vertical_rows_merge_directional_attribute_nibbles_and_keep_staged_other_half(
         assert_eq!(rows.tiles[2][0], last_tile);
         assert_eq!(rows.attributes, [attributes; 8]);
         assert_eq!(rows.ring, 2);
-        assert_eq!(rows.uploads.len(), 72);
+        assert_eq!(rows.update.source_writes().len(), 72);
     }
 }
 #[test]
@@ -1335,9 +1348,9 @@ fn vertical_neighbor_ordinary_rows_emit_four_planes_and_four_attributes_in_corre
             &vec![expanded(); 4],
         )
         .unwrap();
-        assert_eq!(rows.uploads.len(), 68);
-        assert_eq!(rows.uploads[0].address, base);
-        assert_eq!(rows.uploads[0].value, 11);
+        assert_eq!(rows.update.source_writes().len(), 68);
+        assert_eq!(rows.update.source_writes()[0].address, base);
+        assert_eq!(rows.update.source_writes()[0].value, 11);
         assert_eq!(rows.ring, 2);
     }
 }
@@ -1353,10 +1366,11 @@ fn vertical_neighbor_row_one_and_seven_trim_half_tile_planes_and_attribute_nibbl
             &vec![expanded(); 4],
         )
         .unwrap();
-        assert_eq!(rows.uploads.len(), 36);
-        assert_eq!(rows.uploads[0].value, first);
+        assert_eq!(rows.update.source_writes().len(), 36);
+        assert_eq!(rows.update.source_writes()[0].value, first);
         assert!(
-            rows.uploads
+            rows.update
+                .source_writes()
                 .iter()
                 .rev()
                 .take(4)
@@ -1376,17 +1390,17 @@ fn changed_bursts_repeat_descriptor_rows_and_request_four_particles_at_direction
         let burst = changed_burst(&set, selector);
         assert_eq!(burst.particle_origin, origin);
         assert_eq!(burst.particles, 4);
-        assert_eq!(burst.upload.commit, UploadCommit::AtInterrupt);
-        assert_eq!(burst.upload.writes.len(), count);
+        assert_eq!(burst.update.commit, UploadCommit::AtInterrupt);
+        assert_eq!(burst.update.source_writes().len(), count);
         assert_eq!(
-            burst.upload.writes[0],
+            burst.update.source_writes()[0],
             VideoWrite {
                 address,
                 value: if selector == 0 { 11 } else { 21 }
             }
         );
         assert_eq!(
-            burst.upload.writes.last().unwrap().address,
+            burst.update.source_writes().last().unwrap().address,
             address + if selector == 0 { 0xe3 } else { 0x1a3 }
         );
     }
@@ -1457,16 +1471,16 @@ fn staged_vertical_copy_uses_opposite_direction_destinations_and_wraps_next_row(
         let (next_row, upload) = copy_vertical_staging(direction, row, &staged);
         assert_eq!(next_row, next);
         assert_eq!(upload.commit, UploadCommit::AtInterrupt);
-        assert_eq!(upload.writes.len(), 72);
-        assert_eq!(upload.writes[0], VideoWrite { address, value: 11 });
+        assert_eq!(upload.source_writes().len(), 72);
+        assert_eq!(upload.source_writes()[0], VideoWrite { address, value: 11 });
         assert_eq!(
-            upload.writes[32],
+            upload.source_writes()[32],
             VideoWrite {
                 address: address | 0x20,
                 value: 13
             }
         );
-        assert_eq!(upload.writes[64].value, 0xe4);
+        assert_eq!(upload.source_writes()[64].value, 0xe4);
     }
 }
 #[test]
@@ -1542,7 +1556,7 @@ fn changed_actor_center_selects_aligned_two_by_two_tile_quadrant_in_both_nametab
         );
         assert_eq!(
             upload
-                .writes
+                .source_writes()
                 .iter()
                 .take(4)
                 .map(|write| write.address)
@@ -1550,4 +1564,79 @@ fn changed_actor_center_selects_aligned_two_by_two_tile_quadrant_in_both_nametab
             [expected, expected + 1, expected + 0x20, expected + 0x21]
         );
     }
+}
+#[test]
+fn bottom_changed_block_keeps_tile_writes_that_overlap_attribute_storage() {
+    // F574 accepts spawnY F8: aligned tile row30 is NOT clipped. The last
+    // tile and outgoing attribute both target cell63, in that source order.
+    for (world_x, base, index) in [(0x00f8, 0x2000, 63), (0x01f8, 0x2400, 127)] {
+        let mut cache = WorldCache::default();
+        let upload = cache.replace(
+            &terrain(),
+            Mutation {
+                world_x,
+                spawn_y: 0xf8,
+                selector: 1,
+                marks_changed: true,
+            },
+        );
+        assert_eq!(
+            upload
+                .source_writes()
+                .iter()
+                .map(|w| (w.address, w.value))
+                .collect::<Vec<_>>(),
+            [
+                (base + 0x3de, 11),
+                (base + 0x3df, 12),
+                (base + 0x3fe, 13),
+                (base + 0x3ff, 14),
+                (base + 0x3ff, 0),
+            ]
+        );
+        assert_eq!(
+            (
+                cache.collision[index],
+                cache.attributes[index],
+                cache.changed_this_frame
+            ),
+            (0x40, 0, 1)
+        );
+    }
+}
+#[test]
+fn native_column_update_keeps_the_full_block_and_names_the_visible_half() {
+    let block = expanded();
+    let result = column(
+        &layout(),
+        ExpansionContext {
+            ring: 1,
+            room_in_row: 0,
+            ..context()
+        },
+        &block,
+        0,
+    );
+    let update = result.update.unwrap();
+    assert_eq!(
+        update.origin,
+        TileOrigin {
+            page: TilePage::First,
+            column: 0,
+            row: 4
+        }
+    );
+    assert_eq!(update.rows, BlockRows::LowerHalf);
+    assert_eq!(
+        update.tiles, block.tiles,
+        "discarded rows remain available to the observable queue boundary"
+    );
+    assert_eq!(
+        update.palette,
+        PaletteRun {
+            page: TilePage::First,
+            first_cell: 8,
+            values: vec![0xe0]
+        }
+    );
 }

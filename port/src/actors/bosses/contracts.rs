@@ -109,15 +109,19 @@ fn catalog() -> Catalog {
         child_horizontal: [0x200, 0x16a, 0x200],
         jump_delays: [3, 5, 7, 9, 11, 13, 15, 17],
         split_offsets: [0xc0, 0xe0],
-        path: [
-            5, 9, 5, 9, 5, 9, 10, 9, 10, 9, 10, 6, 10, 6, 10, 6, 5, 6, 5, 6,
-        ],
-        masks: [1, 0, 1, 0, 1, 2, 0, 2, 0, 2, 1, 0, 1, 0, 1, 2, 0, 2, 0, 2],
+        perimeter: perimeter_program(
+            [
+                5, 9, 5, 9, 5, 9, 10, 9, 10, 9, 10, 6, 10, 6, 10, 6, 5, 6, 5, 6,
+            ],
+            [1, 0, 1, 0, 1, 2, 0, 2, 0, 2, 1, 0, 1, 0, 1, 2, 0, 2, 0, 2],
+        ),
         corrections: [4, -4],
-        wave_x: [
-            0x70, 0xd8, 0x48, 0xa8, 0x18, 0x88, 0, 0x68, 0x98, 0x28, 0xd8, 0x48, 0x88, 0,
-        ],
-        wave_times: [0, 8, 24, 24, 32, 48, 0, 0, 8, 24, 24, 40, 40, 0],
+        wave: wave_program(
+            [
+                0x70, 0xd8, 0x48, 0xa8, 0x18, 0x88, 0, 0x68, 0x98, 0x28, 0xd8, 0x48, 0x88, 0,
+            ],
+            [0, 8, 24, 24, 32, 48, 0, 0, 8, 24, 24, 40, 40, 0],
+        ),
         sequences: [0, 7],
         shake_x: [0, 4],
         center_facing: [0, 0x40],
@@ -143,8 +147,8 @@ impl Fixture {
     fn new(handler: u8) -> Self {
         let mut actors = [ActorContact::default(); ACTOR_SLOTS];
         actors[SUBJECT] = ActorContact {
+            control: crate::actors::ActorControl::from_codes(READY, 0, 0, 0),
             handler,
-            state: READY,
             render: VISIBLE,
             position: Position {
                 world_x: START_X,
@@ -269,14 +273,30 @@ fn original_catalog_decodes_all_impact_path_wave_and_center_parameters() {
     let c = Catalog::original(&b).unwrap();
     assert_eq!(&c.jump_delays[..], bytes(&b, 0xa6c9, 8));
     assert_eq!(&c.split_offsets[..], bytes(&b, 0xa6d1, 2));
-    assert_eq!(&c.path[..], bytes(&b, 0xa8ac, PATH_STEPS));
-    assert_eq!(&c.masks[..], bytes(&b, 0xa8c0, PATH_STEPS));
+    assert_eq!(
+        &c.perimeter.map(|step| step.source_path_code())[..],
+        bytes(&b, 0xa8ac, PATH_STEPS)
+    );
+    assert_eq!(
+        &c.perimeter.map(|step| step.gate.source_code())[..],
+        bytes(&b, 0xa8c0, PATH_STEPS)
+    );
     assert_eq!(
         c.corrections,
         [bytes(&b, 0xa8d4, 2)[0] as i8, bytes(&b, 0xa8d4, 2)[1] as i8]
     );
-    assert_eq!(&c.wave_x[..], bytes(&b, 0xaaa8, WAVE_ENTRIES));
-    assert_eq!(&c.wave_times[..], bytes(&b, 0xaab6, WAVE_ENTRIES));
+    for index in 0..WAVE_ENTRIES {
+        let x = bytes(&b, 0xaaa8, WAVE_ENTRIES)[index];
+        let at_tick = bytes(&b, 0xaab6, WAVE_ENTRIES)[index];
+        assert_eq!(
+            c.wave[index],
+            if x == 0 {
+                WaveStep::AwaitLastChild
+            } else {
+                WaveStep::Spawn { x, at_tick }
+            }
+        );
+    }
     assert_eq!(&c.sequences[..], bytes(&b, 0xaac4, 2));
     assert_eq!(&c.shake_x[..], bytes(&b, 0xaac6, 2));
     assert_eq!(&c.center_facing[..], bytes(&b, 0xac37, 2));
@@ -347,7 +367,10 @@ fn final_protected_invocation_clears_marker_and_only_flash_render_bit() {
 fn unmarked_boss_does_not_tick_shared_protection() {
     let mut f = Fixture::new(ATTACK);
     f.actors[SUBJECT].boss_protection = HIT_FLASH;
-    f.actors[SUBJECT].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actors[SUBJECT].boss_protection, HIT_FLASH);
     assert_eq!(f.hp, 5);
@@ -367,23 +390,27 @@ fn last_hit_allocates_treasure_then_reports_defeat_without_starting_flash() {
 #[test]
 fn treasure_uses_highest_inactive_sign_independent_of_visibility() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SPARE].state = 0x7f;
+    {
+        let actor_value = 0x7f;
+        f.actors[SPARE].set_state_code(actor_value);
+    };
     f.actors[SPARE].render = 0xff;
     let e = treasure(&mut f.actors, SUBJECT, 7);
     assert_eq!(e.treasure, Some(SPARE));
     assert!(e.defeated);
     assert_eq!(f.actors[SPARE].position.world_x, 0x0780);
     assert_eq!(f.actors[SPARE].position.screen_y, TREASURE_Y);
-    assert_eq!(f.actors[SPARE].state, 0xb1);
+    assert_eq!(f.actors[SPARE].state_code(), 0xb1);
     assert_eq!(f.actors[SPARE].render, 0xb0);
     assert_eq!(f.actors[SPARE].handler, TREASURE_HANDLER);
-    assert_eq!(f.actors[SPARE].local_counter, TREASURE_WAIT);
+    assert_eq!(f.actors[SPARE].local_counter_code(), TREASURE_WAIT);
 }
 #[test]
 fn treasure_clears_only_source_fields_and_retains_fractions_motion_identity_and_locals() {
     let mut f = Fixture::new(ATTACK);
     let prior = ActorContact {
-        state: 0x10,
+        playback: crate::presentation::AnimationPlayback::from_codes(6, 7, 8),
+        control: crate::actors::ActorControl::from_codes(0x10, 0x34, 0x56, 0),
         render: 0xff,
         position: Position {
             world_x: 0x1234,
@@ -393,15 +420,10 @@ fn treasure_clears_only_source_fields_and_retains_fractions_motion_identity_and_
         },
         horizontal_magnitude: 0x6789,
         vertical_velocity: -123,
-        local_state: 0x34,
-        local_counter: 0x56,
         local_aux2: 0x78,
         sequence_cursor: 0x9a,
         boss_protection: 0xbc,
         hit_marker: 5,
-        animation_tick: 6,
-        animation_frame: 7,
-        animation_restart: 8,
         profile: 9,
         spawn_identity: Some(0x42),
         spawn_y: 0x43,
@@ -418,14 +440,14 @@ fn treasure_clears_only_source_fields_and_retains_fractions_motion_identity_and_
         (0x6789, -123)
     );
     assert_eq!(
-        (a.local_state, a.local_aux2, a.sequence_cursor),
+        (a.local_state_code(), a.local_aux2, a.sequence_cursor),
         (0x34, 0x78, 0x9a)
     );
     assert_eq!(
         (
             a.hit_marker,
-            a.animation_tick,
-            a.animation_frame,
+            a.playback.tick_code(),
+            a.playback.frame_code(),
             a.profile,
             a.boss_protection
         ),
@@ -433,7 +455,7 @@ fn treasure_clears_only_source_fields_and_retains_fractions_motion_identity_and_
     );
     assert_eq!(
         (
-            a.animation_restart,
+            a.playback.restart_code(),
             a.spawn_identity,
             a.spawn_y,
             a.motion_flags,
@@ -446,7 +468,10 @@ fn treasure_clears_only_source_fields_and_retains_fractions_motion_identity_and_
 fn full_treasure_pool_overwrites_slot_one_and_preserves_player() {
     let mut f = Fixture::new(ATTACK);
     for a in &mut f.actors[1..] {
-        a.state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            a.set_state_code(actor_value);
+        };
     }
     let player = f.actors[0];
     let e = treasure(&mut f.actors, SUBJECT, 4);
@@ -470,7 +495,10 @@ fn every_land_defeat_delegates_reaction_before_local_initialization() {
     for handler in [ATTACK, IMPACT, PERIMETER, WAVE, CENTER] {
         let mut f = Fixture::new(handler);
         f.actors[SUBJECT].hit_marker = 1;
-        f.actors[SUBJECT].state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         // Distinct from discarded LDA5E: proves no animation rewrite.
         f.actors[SUBJECT].animation = CENTER_IDLE;
         f.hp = 1;
@@ -485,7 +513,7 @@ fn every_land_defeat_delegates_reaction_before_local_initialization() {
             f.world.reaction_seen[0].animation, animation,
             "LDA5E is overwritten by shared visibility helper"
         );
-        assert_eq!(f.actors[SUBJECT].state, ACTIVE);
+        assert_eq!(f.actors[SUBJECT].state_code(), ACTIVE);
         if handler == IMPACT {
             assert_eq!((f.split_low, f.split_control), (0xc0, 0));
         } else {
@@ -497,7 +525,10 @@ fn every_land_defeat_delegates_reaction_before_local_initialization() {
 fn same_slot_one_full_pool_treasure_alias_is_visible_to_following_reaction() {
     let mut f = Fixture::new(ATTACK);
     for a in &mut f.actors[1..] {
-        a.state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            a.set_state_code(actor_value);
+        };
     }
     f.actors[1] = f.actors[SUBJECT];
     f.actors[1].hit_marker = 1;
@@ -522,7 +553,7 @@ fn same_slot_one_full_pool_treasure_alias_is_visible_to_following_reaction() {
     );
     assert_eq!(e.treasure, Some(1));
     assert_eq!(f.world.reaction_seen[0].animation, TREASURE_ANIMATION);
-    assert_eq!(f.world.reaction_seen[0].state, 0xb1);
+    assert_eq!(f.world.reaction_seen[0].state_code(), 0xb1);
     assert_eq!(f.world.reaction_seen[0].profile, 0);
 }
 #[test]
@@ -535,22 +566,34 @@ fn attack_opening_writes_collision_cell_and_advances_only_on_sixtieth_increment(
         (0xff, 0, ACTIVE),
     ] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = ACTIVE;
-        f.actors[SUBJECT].local_state = prior;
-        f.actors[SUBJECT].animation_tick = 9;
-        f.actors[SUBJECT].animation_frame = 8;
+        {
+            let actor_value = ACTIVE;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = prior;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = 9;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = 8;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
         f.run();
         assert_eq!(f.terrain.collision[ATTACK_Y_CELL], 0x44);
         assert_eq!(f.terrain.changed_this_frame, 0);
-        assert_eq!(f.actors[SUBJECT].local_state, next);
-        assert_eq!(f.actors[SUBJECT].state, state);
-        assert_eq!(f.actors[SUBJECT].animation_tick, 0);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), next);
+        assert_eq!(f.actors[SUBJECT].state_code(), state);
+        assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
         if state == READY {
             assert_eq!(f.actors[SUBJECT].animation, REVEAL);
-            assert_eq!(f.actors[SUBJECT].animation_frame, 0);
+            assert_eq!(f.actors[SUBJECT].playback.frame_code(), 0);
             assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x0380);
         } else {
-            assert_eq!(f.actors[SUBJECT].animation_frame, 8);
+            assert_eq!(f.actors[SUBJECT].playback.frame_code(), 8);
         }
     }
 }
@@ -559,8 +602,14 @@ fn attack_reveal_requires_both_nonzero_frame_and_exact_tick_five() {
     for (frame, tick) in [(0, 5), (1, 4), (1, 6)] {
         let mut f = Fixture::new(ATTACK);
         f.actors[SUBJECT].animation = REVEAL;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         let before = f.actors;
         f.run();
         assert_eq!(f.actors, before);
@@ -572,21 +621,27 @@ fn attack_reveal_selects_all_four_heights_with_compare_carry_increment_and_byte_
     for word in [0, 1, 2, 3, 0xff] {
         let mut f = Fixture::new(ATTACK);
         f.actors[SUBJECT].animation = REVEAL;
-        f.actors[SUBJECT].animation_frame = 1;
-        f.actors[SUBJECT].animation_tick = 5;
+        {
+            let animation_value = 1;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 5;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.random.words = [word, 0, 0, 0];
         f.run();
         let sum = word.wrapping_add(1);
         assert_eq!(f.random.words, [word, sum, 0, 0]);
         assert_eq!(
-            f.actors[SUBJECT].local_state,
+            f.actors[SUBJECT].local_state_code(),
             f.catalog.heights[usize::from(sum & 3)]
         );
         assert_eq!(
             (
                 f.actors[SUBJECT].animation,
-                f.actors[SUBJECT].animation_tick,
-                f.actors[SUBJECT].animation_frame
+                f.actors[SUBJECT].playback.tick_code(),
+                f.actors[SUBJECT].playback.frame_code()
             ),
             (ATTACK_IDLE, 0, 0)
         );
@@ -597,13 +652,16 @@ fn attack_reveal_selects_all_four_heights_with_compare_carry_increment_and_byte_
 fn attack_rise_integrates_before_strict_height_comparison_and_does_not_fall_through_motion() {
     for y in [0x60, 0x61] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].local_state = 0x60;
+        {
+            let actor_value = 0x60;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.world.integrated = Some(Position {
             screen_y: y,
             ..f.actors[SUBJECT].position
         });
         f.run();
-        assert_eq!(f.actors[SUBJECT].state, READY);
+        assert_eq!(f.actors[SUBJECT].state_code(), READY);
         assert_eq!(f.world.calls, [Work::Integrate(Integration::FallingY)]);
     }
 }
@@ -611,7 +669,10 @@ fn attack_rise_integrates_before_strict_height_comparison_and_does_not_fall_thro
 fn attack_crossed_height_selects_every_target_parity_and_returns_before_preset() {
     for index in 0u8..8 {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].local_state = 0x61;
+        {
+            let actor_value = 0x61;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.actors[SUBJECT].position.screen_y = 0x60;
         f.actors[SUBJECT].local_aux2 = 9;
         f.actors[SUBJECT].sequence_cursor = 8;
@@ -619,11 +680,11 @@ fn attack_crossed_height_selects_every_target_parity_and_returns_before_preset()
         f.run();
         assert_eq!(f.random.words[2], index);
         assert_eq!(
-            f.actors[SUBJECT].local_counter,
+            f.actors[SUBJECT].local_counter_code(),
             f.catalog.targets[usize::from(index)]
         );
         assert_eq!(
-            f.actors[SUBJECT].local_state,
+            f.actors[SUBJECT].local_state_code(),
             f.catalog.delays[usize::from(index & 1)]
         );
         assert_eq!(
@@ -634,7 +695,7 @@ fn attack_crossed_height_selects_every_target_parity_and_returns_before_preset()
             (
                 f.actors[SUBJECT].local_aux2,
                 f.actors[SUBJECT].sequence_cursor,
-                f.actors[SUBJECT].state
+                f.actors[SUBJECT].state_code()
             ),
             (0, 0, SECOND)
         );
@@ -645,8 +706,14 @@ fn attack_crossed_height_selects_every_target_parity_and_returns_before_preset()
 fn actual_preset_phase_executes_every_fourteen_entry_and_normalizes_signed_horizontal() {
     for cursor in 0..MOTION_STEPS {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = SECOND;
-        f.actors[SUBJECT].local_state = 10;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 10;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.actors[SUBJECT].sequence_cursor = cursor as u8;
         f.actors[SUBJECT].direction = 1;
         f.world.preset_x = 0xfe80;
@@ -673,15 +740,21 @@ fn actual_preset_phase_executes_every_fourteen_entry_and_normalizes_signed_horiz
             ((cursor + 1) % MOTION_STEPS) as u8
         );
         assert_eq!(f.actors[SUBJECT].local_aux2, 2);
-        assert_eq!(f.actors[SUBJECT].local_state, 9);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 9);
         assert!(e.sounds.is_empty());
     }
 }
 #[test]
 fn preset_hold_reloads_only_after_three_calls_and_direction_bit_one_selects_left() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 10;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 10;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].direction = 2;
     for _ in 0..3 {
         f.run();
@@ -713,8 +786,14 @@ fn preset_hold_reloads_only_after_three_calls_and_direction_bit_one_selects_left
 fn preset_horizontal_nonnegative_zero_and_signed_min_magnitude_preserve_width() {
     for (raw, expected) in [(0, 0), (0x1234, 0x1234), (0x8000, 0x8000), (0xffff, 1)] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = SECOND;
-        f.actors[SUBJECT].local_state = 9;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 9;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.world.preset_x = raw;
         f.run();
         assert_eq!(f.actors[SUBJECT].horizontal_magnitude, expected);
@@ -731,14 +810,23 @@ fn preset_distance_is_low_byte_and_strict_four_only_after_delay_expires() {
         (0x0680, 0, true),
     ] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = SECOND;
-        f.actors[SUBJECT].local_state = delay;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = delay;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.actors[SUBJECT].local_aux2 = 2;
-        f.actors[SUBJECT].local_counter = 0x80;
+        {
+            let actor_value = 0x80;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.actors[SUBJECT].position.world_x = x;
         f.run();
         assert_eq!(
-            f.actors[SUBJECT].state,
+            f.actors[SUBJECT].state_code(),
             if advanced { THIRD } else { SECOND }
         );
         if advanced {
@@ -751,31 +839,43 @@ fn preset_distance_is_low_byte_and_strict_four_only_after_delay_expires() {
 fn preset_wall_reversal_requires_expired_hold_and_retains_same_call_phase_advance() {
     for (hold, reverse) in [(1, true), (2, false)] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].local_aux2 = hold;
-        f.actors[SUBJECT].local_counter = 0x80;
+        {
+            let actor_value = 0x80;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.actors[SUBJECT].direction = 1;
         f.solid();
         f.run();
         assert_eq!(f.actors[SUBJECT].direction, if reverse { 2 } else { 1 });
-        assert_eq!(f.actors[SUBJECT].state, THIRD);
+        assert_eq!(f.actors[SUBJECT].state_code(), THIRD);
     }
 }
 #[test]
 fn actual_land_phase_waits_floor_then_reveals_and_faces_full_world_x() {
     let mut miss = Fixture::new(ATTACK);
-    miss.actor().state = THIRD;
+    {
+        let actor_value = THIRD;
+        miss.actor().set_state_code(actor_value);
+    };
     miss.run();
-    assert_eq!(miss.actor().state, THIRD);
+    assert_eq!(miss.actor().state_code(), THIRD);
     assert_eq!(miss.world.calls, [motion(Movement::PositiveY, 0x1e, 2)]);
     for (player_x, direction, flip) in [(0x0480, 2, 0), (0x0580, 1, 0x40), (0x0380, 2, 0)] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = THIRD;
+        {
+            let actor_value = THIRD;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[0].position.world_x = player_x;
         f.actors[SUBJECT].render = 0xff;
         f.solid();
         f.run();
-        assert_eq!(f.actors[SUBJECT].state, FOURTH);
+        assert_eq!(f.actors[SUBJECT].state_code(), FOURTH);
         assert_eq!(f.actors[SUBJECT].animation, REVEAL);
         assert_eq!(f.actors[SUBJECT].direction, direction);
         assert_eq!(f.actors[SUBJECT].render, 0xbf | flip);
@@ -784,25 +884,34 @@ fn actual_land_phase_waits_floor_then_reveals_and_faces_full_world_x() {
 #[test]
 fn actual_fire_phase_reveal_gate_and_fifteen_tick_hold_do_not_spawn_on_expiry_call() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SUBJECT].state = FOURTH;
+    {
+        let actor_value = FOURTH;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = REVEAL;
-    f.actors[SUBJECT].animation_frame = 1;
-    f.actors[SUBJECT].animation_tick = 5;
+    {
+        let animation_value = 1;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 5;
+        f.actors[SUBJECT].playback.set_tick_code(animation_value);
+    };
     f.run();
     assert_eq!(
         (
             f.actors[SUBJECT].animation,
-            f.actors[SUBJECT].local_state,
-            f.actors[SUBJECT].local_counter
+            f.actors[SUBJECT].local_state_code(),
+            f.actors[SUBJECT].local_counter_code()
         ),
         (ATTACK_FIRE, SHORT_DELAY, 0)
     );
     for _ in 0..SHORT_DELAY {
         let e = f.run();
         assert!(e.children.is_empty());
-        assert_eq!(f.actors[SUBJECT].animation_tick, 0);
+        assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
     }
-    assert_eq!(f.actors[SUBJECT].local_state, 0);
+    assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
 }
 #[test]
 fn fire_reveal_mismatch_and_nonattack_frame_do_not_allocate() {
@@ -813,10 +922,19 @@ fn fire_reveal_mismatch_and_nonattack_frame_do_not_allocate() {
         (ATTACK_FIRE, 3, 0),
     ] {
         let mut f = Fixture::new(ATTACK);
-        f.actors[SUBJECT].state = FOURTH;
+        {
+            let actor_value = FOURTH;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = animation;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         let e = f.run();
         assert!(e.children.is_empty());
         assert!(e.sounds.is_empty());
@@ -825,17 +943,22 @@ fn fire_reveal_mismatch_and_nonattack_frame_do_not_allocate() {
 #[test]
 fn fire_event_overwrites_reserved_slots_in_reverse_order_with_all_three_speed_pairs() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SUBJECT].state = FOURTH;
+    {
+        let actor_value = FOURTH;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = ATTACK_FIRE;
-    f.actors[SUBJECT].animation_frame = 2;
+    {
+        let animation_value = 2;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
     f.actors[SUBJECT].direction = 1;
     f.actors[SUBJECT].position.world_x = 0x04f8;
     for s in FIRST_CHILD..=LAST_TRIPLET {
         f.actors[s] = ActorContact {
-            state: 0xff,
+            control: crate::actors::ActorControl::from_codes(0xff, 9, 0, 0),
             hit_marker: 7,
             boss_protection: 8,
-            local_state: 9,
             spawn_identity: Some(10),
             position: Position {
                 x_fraction: 11,
@@ -856,7 +979,7 @@ fn fire_event_overwrites_reserved_slots_in_reverse_order_with_all_three_speed_pa
         );
         assert_eq!(a.position.screen_y, START_Y);
         assert_eq!(
-            (a.state, a.render, a.handler, a.animation, a.profile),
+            (a.state_code(), a.render, a.handler, a.animation, a.profile),
             (0xa0, 0xa0, PROJECTILE, ATTACK_CHILD_ANIMATION, 0x1d)
         );
         assert_eq!(
@@ -867,7 +990,7 @@ fn fire_event_overwrites_reserved_slots_in_reverse_order_with_all_three_speed_pa
             (
                 a.hit_marker,
                 a.boss_protection,
-                a.local_state,
+                a.local_state_code(),
                 a.spawn_identity
             ),
             (7, 8, 9, Some(10))
@@ -876,8 +999,8 @@ fn fire_event_overwrites_reserved_slots_in_reverse_order_with_all_three_speed_pa
     }
     assert_eq!(
         (
-            f.actors[SUBJECT].local_state,
-            f.actors[SUBJECT].local_counter
+            f.actors[SUBJECT].local_state_code(),
+            f.actors[SUBJECT].local_counter_code()
         ),
         (IMPACT_TICKS, 1)
     );
@@ -885,17 +1008,29 @@ fn fire_event_overwrites_reserved_slots_in_reverse_order_with_all_three_speed_pa
 #[test]
 fn attack_fire_counter_restarts_reveal_tail_without_opening_cache_write() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SUBJECT].state = FOURTH;
+    {
+        let actor_value = FOURTH;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = ATTACK_FIRE;
-    f.actors[SUBJECT].local_counter = 1;
-    f.actors[SUBJECT].local_state = 0;
-    f.actors[SUBJECT].animation_frame = 4;
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let animation_value = 4;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
     f.run();
-    assert_eq!(f.actors[SUBJECT].state, READY);
+    assert_eq!(f.actors[SUBJECT].state_code(), READY);
     assert_eq!(f.actors[SUBJECT].animation, REVEAL);
     assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x0380);
     assert_eq!(f.terrain.collision[ATTACK_Y_CELL], 0);
-    assert_eq!(f.actors[SUBJECT].local_counter, 1);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 1);
 }
 #[test]
 fn projectile_contact_precedes_integration_and_both_facing_branches() {
@@ -916,7 +1051,7 @@ fn projectile_contact_precedes_integration_and_both_facing_branches() {
                 Work::Integrate(horizontal)
             ]
         );
-        assert_eq!(f.actors[SUBJECT].state, READY);
+        assert_eq!(f.actors[SUBJECT].state_code(), READY);
     }
 }
 #[test]
@@ -924,7 +1059,7 @@ fn projectile_vertical_terminal_clears_state_only_after_contact() {
     let mut f = Fixture::new(PROJECTILE);
     f.actors[SUBJECT].render = 0xa8;
     f.run();
-    assert_eq!(f.actors[SUBJECT].state, 0);
+    assert_eq!(f.actors[SUBJECT].state_code(), 0);
     assert_eq!(f.actors[SUBJECT].render, 0xa8);
     assert_eq!(
         f.world.calls,
@@ -934,8 +1069,14 @@ fn projectile_vertical_terminal_clears_state_only_after_contact() {
 #[test]
 fn impact_initializes_then_moves_and_decrements_delay_in_same_call() {
     let mut f = Fixture::new(IMPACT);
-    f.actors[SUBJECT].state = ACTIVE;
-    f.actors[SUBJECT].local_counter = 7;
+    {
+        let actor_value = ACTIVE;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 7;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.run();
     assert_eq!(
         (
@@ -947,9 +1088,9 @@ fn impact_initializes_then_moves_and_decrements_delay_in_same_call() {
     );
     assert_eq!(
         (
-            f.actors[SUBJECT].state,
-            f.actors[SUBJECT].local_state,
-            f.actors[SUBJECT].local_counter
+            f.actors[SUBJECT].state_code(),
+            f.actors[SUBJECT].local_state_code(),
+            f.actors[SUBJECT].local_counter_code()
         ),
         (READY, 29, 0)
     );
@@ -961,7 +1102,10 @@ fn impact_initializes_then_moves_and_decrements_delay_in_same_call() {
 fn impact_delay_expiry_faces_after_horizontal_and_then_obeys_collision_reversal() {
     for (bits, expected_direction) in [(0, 1), (SOLID, 2)] {
         let mut f = Fixture::new(IMPACT);
-        f.actors[SUBJECT].local_state = 1;
+        {
+            let actor_value = 1;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.actors[SUBJECT].direction = 2;
         f.actors[0].position.world_x = 0x0580;
         f.world.post_x = Some(0x0481);
@@ -971,7 +1115,7 @@ fn impact_delay_expiry_faces_after_horizontal_and_then_obeys_collision_reversal(
         });
         f.run();
         assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x06b7);
-        assert_eq!(f.actors[SUBJECT].local_state, 0);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
         assert_eq!(f.actors[SUBJECT].direction, expected_direction);
         assert_eq!(f.world.calls, [motion(Movement::NegativeX, 0x62, 0)]);
     }
@@ -983,7 +1127,7 @@ fn impact_rising_sign_transition_clears_velocity_and_moves_horizontally() {
         f.actors[SUBJECT].direction = 1;
         f.world.post_velocity = Some(velocity);
         f.run();
-        assert_eq!(f.actors[SUBJECT].state, phase);
+        assert_eq!(f.actors[SUBJECT].state_code(), phase);
         assert_eq!(
             f.world.calls,
             [
@@ -999,7 +1143,10 @@ fn impact_rising_sign_transition_clears_velocity_and_moves_horizontally() {
 #[test]
 fn impact_fall_miss_moves_but_landing_starts_shake_at_twenty_nine_same_call() {
     let mut miss = Fixture::new(IMPACT);
-    miss.actor().state = SECOND;
+    {
+        let actor_value = SECOND;
+        miss.actor().set_state_code(actor_value);
+    };
     miss.run();
     assert_eq!(
         miss.world.calls,
@@ -1009,14 +1156,17 @@ fn impact_fall_miss_moves_but_landing_starts_shake_at_twenty_nine_same_call() {
         ]
     );
     let mut f = Fixture::new(IMPACT);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.impact = 0xff;
     f.tick = 4;
     f.solid();
     let e = f.run();
     assert_eq!(e.sounds, [LAND_SOUND]);
     assert_eq!(f.impact, 0);
-    assert_eq!(f.actors[SUBJECT].local_counter, 29);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 29);
     assert_eq!((f.split_low, f.split_control), (0xe0, 1));
     assert_eq!(f.world.calls, [motion(Movement::Fall, 0x63, 0)]);
 }
@@ -1031,12 +1181,18 @@ fn impact_shake_uses_composition_tick_bit_two_and_never_moves() {
         (0xff, 1, 0xe0),
     ] {
         let mut f = Fixture::new(IMPACT);
-        f.actors[SUBJECT].state = SECOND;
-        f.actors[SUBJECT].local_counter = 2;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 2;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.tick = tick;
         f.run();
         assert_eq!((f.split_control, f.split_low), (control, low));
-        assert_eq!(f.actors[SUBJECT].local_counter, 1);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), 1);
         assert!(f.world.calls.is_empty());
     }
 }
@@ -1045,8 +1201,14 @@ fn impact_shake_expiry_selects_all_eight_delays_and_preserves_caller_specific_in
     for increment in [false, true] {
         for seed in 0u8..8 {
             let mut f = Fixture::new(IMPACT);
-            f.actors[SUBJECT].state = SECOND;
-            f.actors[SUBJECT].local_counter = 1;
+            {
+                let actor_value = SECOND;
+                f.actors[SUBJECT].set_state_code(actor_value);
+            };
+            {
+                let actor_value = 1;
+                f.actors[SUBJECT].set_local_counter_code(actor_value);
+            };
             f.random.words = [seed, 0x44, 0x55, 0];
             f.increment = increment;
             f.impact = 3;
@@ -1056,10 +1218,10 @@ fn impact_shake_expiry_selects_all_eight_delays_and_preserves_caller_specific_in
             let expected = seed + u8::from(increment);
             assert_eq!(f.random.words, [expected, 0x44, 0x55, 0]);
             assert_eq!(
-                f.actors[SUBJECT].local_state,
+                f.actors[SUBJECT].local_state_code(),
                 f.catalog.jump_delays[usize::from(expected & 7)]
             );
-            assert_eq!(f.actors[SUBJECT].state, READY);
+            assert_eq!(f.actors[SUBJECT].state_code(), READY);
             assert_eq!((f.impact, f.split_low, f.split_control), (0, 0xc0, 0));
             assert!(f.world.calls.is_empty());
         }
@@ -1068,8 +1230,14 @@ fn impact_shake_expiry_selects_all_eight_delays_and_preserves_caller_specific_in
 #[test]
 fn marked_surviving_hit_clears_inherited_random_increment_before_impact_expiry() {
     let mut f = Fixture::new(IMPACT);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_counter = 1;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.actors[SUBJECT].hit_marker = 1;
     f.actors[SUBJECT].boss_protection = 2;
     f.increment = true;
@@ -1083,10 +1251,19 @@ fn marked_surviving_hit_clears_inherited_random_increment_before_impact_expiry()
 fn perimeter_reveal_gate_then_profile_enable_returns_without_opening_motion() {
     for (frame, tick, accepted) in [(0, 5, false), (1, 4, false), (1, 5, true)] {
         let mut f = Fixture::new(PERIMETER);
-        f.actors[SUBJECT].state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = REVEAL;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.actors[SUBJECT].profile = 0x12;
         f.run();
         assert_eq!(
@@ -1097,14 +1274,17 @@ fn perimeter_reveal_gate_then_profile_enable_returns_without_opening_motion() {
             f.actors[SUBJECT].animation,
             if accepted { PERIMETER_IDLE } else { REVEAL }
         );
-        assert_eq!(f.actors[SUBJECT].state, ACTIVE);
+        assert_eq!(f.actors[SUBJECT].state_code(), ACTIVE);
         assert!(f.world.calls.is_empty());
     }
 }
 #[test]
 fn perimeter_initialization_preserves_page_fractions_and_falls_same_call() {
     let mut f = Fixture::new(PERIMETER);
-    f.actors[SUBJECT].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = PERIMETER_IDLE;
     f.actors[SUBJECT].position.world_x = 0x09aa;
     f.actors[SUBJECT].position.x_fraction = 7;
@@ -1126,41 +1306,47 @@ fn perimeter_initialization_preserves_page_fractions_and_falls_same_call() {
     );
     assert_eq!(f.terrain.collision[PERIMETER_Y_CELL], 0x55);
     assert_eq!(f.world.calls, [motion(Movement::Fall, 0x31, 2)]);
-    assert_eq!(f.actors[SUBJECT].state, READY);
+    assert_eq!(f.actors[SUBJECT].state_code(), READY);
 }
 #[test]
 fn perimeter_first_two_landed_bounces_launch_without_path_transition() {
     for previous in [0, 1] {
         let mut f = Fixture::new(PERIMETER);
-        f.actors[SUBJECT].local_state = previous;
+        {
+            let actor_value = previous;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.solid();
         let e = f.run();
         assert_eq!(e.sounds, [BOUNCE_SOUND]);
-        assert_eq!(f.actors[SUBJECT].local_state, previous + 1);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), previous + 1);
         assert_eq!(f.actors[SUBJECT].motion_flags, 1);
         assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x02d4);
-        assert_eq!(f.actors[SUBJECT].state, READY);
+        assert_eq!(f.actors[SUBJECT].state_code(), READY);
     }
 }
 #[test]
 fn perimeter_third_bounce_selects_both_orientations_with_compare_increment_and_node_zero() {
     for (seed, word, direction, motion_flags) in [(0, 1, 2, 4), (1, 2, 1, 4), (0xff, 0, 1, 4)] {
         let mut f = Fixture::new(PERIMETER);
-        f.actors[SUBJECT].local_state = 2;
+        {
+            let actor_value = 2;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
         f.random.words = [seed, 0, 0, 0];
         f.solid();
         f.run();
         assert_eq!(f.random.words[1], word);
-        assert_eq!(f.actors[SUBJECT].state, SECOND);
+        assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
         assert_eq!(
-            f.actors[SUBJECT].local_state,
+            f.actors[SUBJECT].local_state_code(),
             if word & 1 == 0 { 1 } else { 2 }
         );
         assert_eq!(
             (f.actors[SUBJECT].direction, f.actors[SUBJECT].motion_flags),
             (direction, motion_flags)
         );
-        assert_eq!(f.actors[SUBJECT].local_counter, 0);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), 0);
         assert_eq!(f.actors[SUBJECT].local_aux2, 0);
         assert_eq!(
             (
@@ -1189,14 +1375,26 @@ fn perimeter_upward_bounce_clears_sign_crossing_without_falling_same_call() {
 #[test]
 fn perimeter_moving_reveal_gate_then_contact_vertical_horizontal_order_and_profile_clear() {
     let mut f = Fixture::new(PERIMETER);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = REVEAL;
-    f.actors[SUBJECT].animation_frame = 1;
-    f.actors[SUBJECT].animation_tick = 5;
+    {
+        let animation_value = 1;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 5;
+        f.actors[SUBJECT].playback.set_tick_code(animation_value);
+    };
     f.actors[SUBJECT].profile = 0x92;
     f.actors[SUBJECT].direction = 1;
     f.actors[SUBJECT].motion_flags = 4;
-    f.actors[SUBJECT].local_counter = 0;
+    {
+        let actor_value = 0;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actors[SUBJECT].animation, PERIMETER_MOVING);
     assert_eq!(f.actors[SUBJECT].profile, 0x12);
@@ -1215,13 +1413,22 @@ fn perimeter_all_twenty_path_records_advance_with_masks_zero_correction_and_mirr
     for orientation in [1, 2] {
         for cursor in 0..PATH_STEPS {
             let mut f = Fixture::new(PERIMETER);
-            f.actors[SUBJECT].state = SECOND;
+            {
+                let actor_value = SECOND;
+                f.actors[SUBJECT].set_state_code(actor_value);
+            };
             f.actors[SUBJECT].animation = PERIMETER_MOVING;
-            f.actors[SUBJECT].local_state = orientation;
-            f.actors[SUBJECT].local_counter = cursor as u8;
+            {
+                let actor_value = orientation;
+                f.actors[SUBJECT].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = cursor as u8;
+                f.actors[SUBJECT].set_local_counter_code(actor_value);
+            };
             f.actors[SUBJECT].motion_flags = 8;
             f.actors[SUBJECT].position.screen_y = 1;
-            let mask = f.catalog.masks[cursor];
+            let mask = f.catalog.perimeter[cursor].gate.source_code();
             f.world.facts.push_back(MotionFacts {
                 bits: if mask & 2 != 0 { 1 } else { 0 },
                 ..Default::default()
@@ -1232,7 +1439,7 @@ fn perimeter_all_twenty_path_records_advance_with_masks_zero_correction_and_mirr
             });
             f.run();
             let next = (cursor + 1) % PATH_STEPS;
-            let record = f.catalog.path[next];
+            let record = f.catalog.perimeter[next].source_path_code();
             let expected_direction = if orientation == 1 {
                 record & 3
             } else {
@@ -1240,7 +1447,7 @@ fn perimeter_all_twenty_path_records_advance_with_masks_zero_correction_and_mirr
             };
             assert_eq!(
                 (
-                    f.actors[SUBJECT].local_counter,
+                    f.actors[SUBJECT].local_counter_code(),
                     f.actors[SUBJECT].direction,
                     f.actors[SUBJECT].motion_flags
                 ),
@@ -1257,29 +1464,53 @@ fn perimeter_all_twenty_path_records_advance_with_masks_zero_correction_and_mirr
 #[test]
 fn perimeter_nonzero_mask_ignores_unrequested_axis_but_zero_mask_requires_neither() {
     let mut f = Fixture::new(PERIMETER);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 1;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = PERIMETER_MOVING;
-    f.actors[SUBJECT].local_counter = 0;
+    {
+        let actor_value = 0;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.solid();
     f.solid();
     f.run();
-    assert_eq!(f.actors[SUBJECT].local_counter, 1);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 1);
     let mut g = Fixture::new(PERIMETER);
-    g.actor().state = SECOND;
+    {
+        let actor_value = SECOND;
+        g.actor().set_state_code(actor_value);
+    };
     g.actor().animation = PERIMETER_MOVING;
-    g.actor().local_counter = 1;
+    {
+        let actor_value = 1;
+        g.actor().set_local_counter_code(actor_value);
+    };
     g.solid();
     g.run();
-    assert_eq!(g.actor().local_counter, 1);
+    assert_eq!(g.actor().local_counter_code(), 1);
 }
 #[test]
 fn perimeter_positive_zero_mask_correction_wraps_integer_y_only() {
     let mut f = Fixture::new(PERIMETER);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = PERIMETER_MOVING;
-    f.actors[SUBJECT].local_counter = 1;
-    f.actors[SUBJECT].local_state = 1;
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].position.screen_y = 0xfe;
     f.actors[SUBJECT].position.y_fraction = 9;
     f.run();
@@ -1301,21 +1532,24 @@ fn perimeter_return_restart_requires_completed_circuit_strict_three_and_mask_mis
         (0x1280, 0, false),
     ] {
         let mut f = Fixture::new(PERIMETER);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = PERIMETER_MOVING;
         f.actors[SUBJECT].local_aux2 = circuit;
         f.actors[SUBJECT].position.world_x = x;
         f.run();
         assert_eq!(
-            f.actors[SUBJECT].state,
+            f.actors[SUBJECT].state_code(),
             if restart { ACTIVE } else { SECOND }
         );
         if restart {
             assert_eq!(
                 (
                     f.actors[SUBJECT].animation,
-                    f.actors[SUBJECT].animation_frame,
-                    f.actors[SUBJECT].animation_tick
+                    f.actors[SUBJECT].playback.frame_code(),
+                    f.actors[SUBJECT].playback.tick_code()
                 ),
                 (REVEAL, 0, 0)
             );
@@ -1325,10 +1559,13 @@ fn perimeter_return_restart_requires_completed_circuit_strict_three_and_mask_mis
 #[test]
 fn wave_opening_initializes_cache_and_velocity_then_frame_zero_waits() {
     let mut f = Fixture::new(WAVE);
-    f.actors[SUBJECT].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = WAVE_MOVING;
     f.run();
-    assert_eq!(f.actors[SUBJECT].state, READY);
+    assert_eq!(f.actors[SUBJECT].state_code(), READY);
     assert_eq!(
         (
             f.actors[SUBJECT].horizontal_magnitude,
@@ -1345,29 +1582,44 @@ fn wave_opening_initializes_cache_and_velocity_then_frame_zero_waits() {
 fn wave_countdown_freezes_tick_and_advances_frame_only_on_expiry_without_motion() {
     for (counter, frame) in [(2, 4), (1, 5)] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].local_counter = counter;
-        f.actors[SUBJECT].animation_tick = 7;
-        f.actors[SUBJECT].animation_frame = 4;
+        {
+            let actor_value = counter;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
+        {
+            let animation_value = 7;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = 4;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
         f.run();
-        assert_eq!(f.actors[SUBJECT].local_counter, counter - 1);
-        assert_eq!(f.actors[SUBJECT].animation_tick, 0);
-        assert_eq!(f.actors[SUBJECT].animation_frame, frame);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), counter - 1);
+        assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
+        assert_eq!(f.actors[SUBJECT].playback.frame_code(), frame);
         assert!(f.world.calls.is_empty());
     }
 }
 #[test]
 fn wave_rise_requires_frame_two_and_sign_crossing_returns_before_horizontal() {
     let mut blocked = Fixture::new(WAVE);
-    blocked.actor().animation_frame = 1;
+    {
+        let animation_value = 1;
+        blocked.actor().playback.set_frame_code(animation_value);
+    };
     blocked.run();
     assert!(blocked.world.calls.is_empty());
     for (v, phase, steps) in [(0, 0, 2), (-1, 1, 1)] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].animation_frame = 2;
+        {
+            let animation_value = 2;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
         f.world.post_velocity = Some(v);
         f.run();
-        assert_eq!(f.actors[SUBJECT].local_state, phase);
-        assert_eq!(f.actors[SUBJECT].animation_tick, 0);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), phase);
+        assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
         assert_eq!(f.world.calls.len(), steps);
         assert_eq!(f.world.calls[0], motion(Movement::Rise, 0x52, 2));
         if v < 0 {
@@ -1378,12 +1630,21 @@ fn wave_rise_requires_frame_two_and_sign_crossing_returns_before_horizontal() {
 #[test]
 fn wave_falling_holds_frame_two_and_no_floor_continues_horizontal() {
     let mut f = Fixture::new(WAVE);
-    f.actors[SUBJECT].local_state = 1;
-    f.actors[SUBJECT].animation_frame = 2;
-    f.actors[SUBJECT].animation_tick = 6;
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let animation_value = 2;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
+    {
+        let animation_value = 6;
+        f.actors[SUBJECT].playback.set_tick_code(animation_value);
+    };
     f.actors[SUBJECT].direction = 1;
     f.run();
-    assert_eq!(f.actors[SUBJECT].animation_tick, 0);
+    assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
     assert_eq!(
         f.world.calls,
         [
@@ -1396,12 +1657,18 @@ fn wave_falling_holds_frame_two_and_no_floor_continues_horizontal() {
 fn wave_landing_sets_frame_one_and_sound_depends_on_tick_zero_even_when_frame_changes() {
     for frame in [0, 1, 2, 3] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].local_state = 1;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = 0;
+        {
+            let actor_value = 1;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        f.actors[SUBJECT].playback.restart_clock();
         f.solid();
         let e = f.run();
-        assert_eq!(f.actors[SUBJECT].animation_frame, 1);
+        assert_eq!(f.actors[SUBJECT].playback.frame_code(), 1);
         assert_eq!(e.sounds, [LAND_SOUND]);
         assert_eq!(f.world.calls, [motion(Movement::Fall, 0x31, 2)]);
     }
@@ -1410,13 +1677,22 @@ fn wave_landing_sets_frame_one_and_sound_depends_on_tick_zero_even_when_frame_ch
 fn wave_landing_nonseven_tick_returns_without_horizontal_or_relaunch() {
     for tick in [1, 6, 8] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].local_state = 1;
-        f.actors[SUBJECT].animation_frame = 1;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let actor_value = 1;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = 1;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.solid();
         let e = f.run();
         assert!(e.sounds.is_empty());
-        assert_eq!(f.actors[SUBJECT].local_counter, 0);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), 0);
         assert_eq!(f.world.calls, [motion(Movement::Fall, 0x31, 2)]);
     }
 }
@@ -1424,9 +1700,18 @@ fn wave_landing_nonseven_tick_returns_without_horizontal_or_relaunch() {
 fn wave_landing_tick_seven_relaunches_and_wall_contact_enters_turn_same_call() {
     for wall in [false, true] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].local_state = 1;
-        f.actors[SUBJECT].animation_frame = 1;
-        f.actors[SUBJECT].animation_tick = 7;
+        {
+            let actor_value = 1;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = 1;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 7;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.actors[SUBJECT].direction = 1;
         f.solid();
         f.world.facts.push_back(MotionFacts {
@@ -1434,18 +1719,21 @@ fn wave_landing_tick_seven_relaunches_and_wall_contact_enters_turn_same_call() {
             ..Default::default()
         });
         let e = f.run();
-        assert_eq!(f.actors[SUBJECT].local_counter, IMPACT_TICKS);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), IMPACT_TICKS);
         assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x06ee);
-        assert_eq!(f.actors[SUBJECT].local_state, 0);
-        assert_eq!(f.actors[SUBJECT].state, if wall { SECOND } else { READY });
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
+        assert_eq!(
+            f.actors[SUBJECT].state_code(),
+            if wall { SECOND } else { READY }
+        );
         assert_eq!(f.actors[SUBJECT].direction, if wall { 2 } else { 1 });
         assert_eq!(e.sounds, if wall { vec![TURN_SOUND] } else { vec![] });
         if wall {
             assert_eq!(
                 (
                     f.actors[SUBJECT].animation,
-                    f.actors[SUBJECT].animation_frame,
-                    f.actors[SUBJECT].animation_tick
+                    f.actors[SUBJECT].playback.frame_code(),
+                    f.actors[SUBJECT].playback.tick_code()
                 ),
                 (WAVE_TURN, 0, 0)
             );
@@ -1455,12 +1743,15 @@ fn wave_landing_tick_seven_relaunches_and_wall_contact_enters_turn_same_call() {
 #[test]
 fn wave_horizontal_wall_without_relaunch_counter_does_not_trigger_wave() {
     let mut f = Fixture::new(WAVE);
-    f.actors[SUBJECT].animation_frame = 2;
+    {
+        let animation_value = 2;
+        f.actors[SUBJECT].playback.set_frame_code(animation_value);
+    };
     f.actors[SUBJECT].direction = 2;
     f.world.facts.push_back(MotionFacts::default());
     f.solid();
     let e = f.run();
-    assert_eq!(f.actors[SUBJECT].state, READY);
+    assert_eq!(f.actors[SUBJECT].state_code(), READY);
     assert_eq!(f.actors[SUBJECT].direction, 2);
     assert!(e.sounds.is_empty());
 }
@@ -1468,10 +1759,19 @@ fn wave_horizontal_wall_without_relaunch_counter_does_not_trigger_wave() {
 fn wave_turn_reveal_waits_both_conditions_before_rng_and_spawning() {
     for (frame, tick) in [(0, 7), (1, 6), (1, 8)] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = WAVE_TURN;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         let before = f.actors;
         f.run();
         assert_eq!(f.actors, before);
@@ -1482,17 +1782,26 @@ fn wave_turn_reveal_waits_both_conditions_before_rng_and_spawning() {
 fn wave_turn_completion_rng_compare_increment_selects_both_sequences_and_spawns_immediately() {
     for (seed, word, start_x, cursor) in [(0, 1, 0x68, 8), (1, 2, 0x70, 1), (0xff, 0, 0x70, 1)] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = WAVE_TURN;
-        f.actors[SUBJECT].animation_frame = 1;
-        f.actors[SUBJECT].animation_tick = 7;
+        {
+            let animation_value = 1;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 7;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         f.random.words = [seed, 0, 0, 0];
         let e = f.run();
         assert_eq!(f.random.words[1], word);
         assert_eq!(e.children, [FIRST_CHILD]);
         assert_eq!(f.actors[FIRST_CHILD].position.world_x, 0x0400 | start_x);
-        assert_eq!(f.actors[SUBJECT].local_counter, cursor);
-        assert_eq!(f.actors[SUBJECT].local_state, 1);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), cursor);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 1);
         assert_eq!(f.actors[SUBJECT].local_aux2, 9);
         assert_eq!(f.actors[SUBJECT].animation, WAVE_MOVING);
     }
@@ -1501,33 +1810,49 @@ fn wave_turn_completion_rng_compare_increment_selects_both_sequences_and_spawns_
 fn wave_emission_uses_composition_tick_shake_preserving_camera_page_and_byte_tick_wrap() {
     for (tick, x) in [(0, 0), (3, 0), (4, 4), (7, 4), (8, 0)] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = WAVE_MOVING;
-        f.actors[SUBJECT].local_state = 0xff;
-        f.actors[SUBJECT].local_counter = 1;
+        {
+            let actor_value = 0xff;
+            f.actors[SUBJECT].set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 1;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.actors[SUBJECT].local_aux2 = 9;
         f.tick = tick;
         f.run();
         assert_eq!(f.camera.x, 0x0400 | x);
-        assert_eq!(f.actors[SUBJECT].local_state, 0);
-        assert_eq!(f.actors[SUBJECT].animation_tick, 0);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
+        assert_eq!(f.actors[SUBJECT].playback.tick_code(), 0);
     }
 }
 #[test]
 fn equal_time_wave_entries_spawn_both_children_same_call_with_selective_overwrite() {
     let mut f = Fixture::new(WAVE);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = WAVE_MOVING;
-    f.actors[SUBJECT].local_counter = 2;
-    f.actors[SUBJECT].local_state = 24;
+    {
+        let actor_value = 2;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
+    {
+        let actor_value = 24;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].local_aux2 = 10;
     for s in [10, 11] {
         f.actors[s] = ActorContact {
-            state: 0xff,
+            control: crate::actors::ActorControl::from_codes(0xff, 7, 6, 0),
             hit_marker: 9,
             boss_protection: 8,
-            local_state: 7,
-            local_counter: 6,
             horizontal_magnitude: 0x1234,
             direction: 2,
             spawn_identity: Some(5),
@@ -1541,9 +1866,9 @@ fn equal_time_wave_entries_spawn_both_children_same_call_with_selective_overwrit
     }
     let e = f.run();
     assert_eq!(e.children, [10, 11]);
-    assert_eq!(f.actors[SUBJECT].local_counter, 4);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 4);
     assert_eq!(f.actors[SUBJECT].local_aux2, 12);
-    assert_eq!(f.actors[SUBJECT].local_state, 25);
+    assert_eq!(f.actors[SUBJECT].local_state_code(), 25);
     for (s, x) in [(10, 0x48), (11, 0xa8)] {
         let a = f.actors[s];
         assert_eq!(
@@ -1552,7 +1877,7 @@ fn equal_time_wave_entries_spawn_both_children_same_call_with_selective_overwrit
         );
         assert_eq!(
             (
-                a.state,
+                a.state_code(),
                 a.render,
                 a.animation,
                 a.handler,
@@ -1565,8 +1890,8 @@ fn equal_time_wave_entries_spawn_both_children_same_call_with_selective_overwrit
             (
                 a.hit_marker,
                 a.boss_protection,
-                a.local_state,
-                a.local_counter,
+                a.local_state_code(),
+                a.local_counter_code(),
                 a.horizontal_magnitude,
                 a.direction,
                 a.spawn_identity
@@ -1580,9 +1905,15 @@ fn equal_time_wave_entries_spawn_both_children_same_call_with_selective_overwrit
 fn both_full_wave_sequences_emit_exactly_six_children_in_reserved_slots() {
     for sequence in [0, 7] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = WAVE_MOVING;
-        f.actors[SUBJECT].local_counter = sequence;
+        {
+            let actor_value = sequence;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.actors[SUBJECT].local_aux2 = FIRST_CHILD as u8;
         let mut children = vec![];
         for _ in 0..49 {
@@ -1592,7 +1923,7 @@ fn both_full_wave_sequences_emit_exactly_six_children_in_reserved_slots() {
         assert_eq!(children, [8, 9, 10, 11, 12, 13]);
         assert_eq!(f.actors[SUBJECT].local_aux2, 14);
         assert_eq!(
-            f.actors[SUBJECT].local_counter,
+            f.actors[SUBJECT].local_counter_code(),
             if sequence == 0 { 6 } else { 13 }
         );
     }
@@ -1601,42 +1932,66 @@ fn both_full_wave_sequences_emit_exactly_six_children_in_reserved_slots() {
 fn wave_sentinel_waits_on_last_child_any_nonzero_state_not_protection_or_earlier_children() {
     for state in [1, 0x7f, ACTIVE, 0xff] {
         let mut f = Fixture::new(WAVE);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = WAVE_MOVING;
-        f.actors[SUBJECT].local_counter = 6;
+        {
+            let actor_value = 6;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.actors[SUBJECT].local_aux2 = 14;
-        f.actors[13].state = state;
+        {
+            let actor_value = state;
+            f.actors[13].set_state_code(actor_value);
+        };
         f.actors[13].boss_protection = 0;
         f.run();
-        assert_eq!(f.actors[SUBJECT].state, SECOND);
-        assert_eq!(f.actors[SUBJECT].local_counter, 6);
+        assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
+        assert_eq!(f.actors[SUBJECT].local_counter_code(), 6);
     }
 }
 #[test]
 fn wave_last_child_zero_resets_even_if_earlier_child_active_and_retains_camera_page() {
     let mut f = Fixture::new(WAVE);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = WAVE_MOVING;
-    f.actors[SUBJECT].local_counter = 6;
+    {
+        let actor_value = 6;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.actors[SUBJECT].local_aux2 = 14;
-    f.actors[SUBJECT].local_state = 49;
-    f.actors[8].state = ACTIVE;
-    f.actors[13].state = 0;
+    {
+        let actor_value = 49;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = ACTIVE;
+        f.actors[8].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0;
+        f.actors[13].set_state_code(actor_value);
+    };
     f.actors[13].boss_protection = 0xff;
     f.tick = 4;
     f.run();
-    assert_eq!(f.actors[SUBJECT].state, READY);
+    assert_eq!(f.actors[SUBJECT].state_code(), READY);
     assert_eq!(
         (
-            f.actors[SUBJECT].local_state,
-            f.actors[SUBJECT].local_counter,
+            f.actors[SUBJECT].local_state_code(),
+            f.actors[SUBJECT].local_counter_code(),
             f.actors[SUBJECT].local_aux2
         ),
         (0, 0, 0)
     );
     assert_eq!(f.actors[SUBJECT].vertical_velocity, 0x06ee);
     assert_eq!(f.camera.x, 0x0400);
-    assert_eq!(f.actors[8].state, ACTIVE);
+    assert_eq!(f.actors[8].state_code(), ACTIVE);
 }
 #[test]
 fn wave_child_floor_clear_is_immediate_before_player_contact_and_miss_preserves_actor() {
@@ -1652,7 +2007,7 @@ fn wave_child_floor_clear_is_immediate_before_player_contact_and_miss_preserves_
         );
         let seen = f.world.contact_seen[0];
         assert_eq!(
-            (seen.state, seen.render),
+            (seen.state_code(), seen.render),
             if floor { (0, 0) } else { (READY, VISIBLE) }
         );
     }
@@ -1660,7 +2015,10 @@ fn wave_child_floor_clear_is_immediate_before_player_contact_and_miss_preserves_
 #[test]
 fn center_initialization_delays_and_faces_by_low_x_only_preserving_page_and_fractions() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].position.world_x = 0x09ff;
     f.actors[SUBJECT].position.x_fraction = 7;
     f.actors[SUBJECT].render = 0xff;
@@ -1702,13 +2060,13 @@ fn center_ground_random_selection_uses_incoming_increment_then_first_addition_ca
         f.run();
         assert_eq!(f.random.words, expected);
         assert_eq!(f.actors[SUBJECT].direction, direction);
-        assert_eq!(f.actors[SUBJECT].local_state, 0);
+        assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
         assert_eq!(
             f.actors[SUBJECT].horizontal_magnitude,
             f.catalog.center_speeds[0]
         );
         assert_eq!(f.actors[SUBJECT].animation, CENTER_MOVING);
-        assert_eq!(f.actors[SUBJECT].state, SECOND);
+        assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
         assert!(matches!(
             f.world.calls.last(),
             Some(Work::Motion(Movement::PositiveX, 0x55, 2))
@@ -1721,7 +2079,7 @@ fn center_jump_selection_uses_second_sum_parity_and_rises_same_call() {
     f.random.words = [0, 0, 1, 0];
     f.run();
     assert_eq!(f.random.words, [0, 1, 1, 0]);
-    assert_eq!(f.actors[SUBJECT].local_state, 2);
+    assert_eq!(f.actors[SUBJECT].local_state_code(), 2);
     assert_eq!(
         f.actors[SUBJECT].horizontal_magnitude,
         f.catalog.center_speeds[1]
@@ -1752,12 +2110,18 @@ fn center_marked_survivor_zeros_unseeded_random_increment_and_still_selects_moti
 #[test]
 fn center_rise_negative_transitions_to_odd_phase_then_horizontal_without_fall() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 2;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 2;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].direction = 2;
     f.world.post_velocity = Some(-1);
     f.run();
-    assert_eq!(f.actors[SUBJECT].local_state, 1);
+    assert_eq!(f.actors[SUBJECT].local_state_code(), 1);
     assert_eq!(f.actors[SUBJECT].vertical_velocity, 0);
     assert_eq!(
         f.world.calls,
@@ -1770,15 +2134,21 @@ fn center_rise_negative_transitions_to_odd_phase_then_horizontal_without_fall() 
 #[test]
 fn center_first_landing_relaunches_once_reverses_and_returns_before_horizontal() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 1;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].direction = 1;
     f.solid();
     f.run();
     assert_eq!(
         (
-            f.actors[SUBJECT].local_state,
-            f.actors[SUBJECT].local_counter,
+            f.actors[SUBJECT].local_state_code(),
+            f.actors[SUBJECT].local_counter_code(),
             f.actors[SUBJECT].direction
         ),
         (2, 1, 2)
@@ -1789,18 +2159,27 @@ fn center_first_landing_relaunches_once_reverses_and_returns_before_horizontal()
 #[test]
 fn center_second_landing_goes_idle_immediately_and_preserves_local_phase_for_next_selection() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 1;
-    f.actors[SUBJECT].local_counter = 1;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.actors[SUBJECT].position.world_x = 0x05c0;
     f.solid();
     f.run();
     assert_eq!(f.actors[SUBJECT].position.world_x, 0x0580);
     assert_eq!(
         (
-            f.actors[SUBJECT].state,
-            f.actors[SUBJECT].local_counter,
-            f.actors[SUBJECT].local_state,
+            f.actors[SUBJECT].state_code(),
+            f.actors[SUBJECT].local_counter_code(),
+            f.actors[SUBJECT].local_state_code(),
             f.actors[SUBJECT].local_aux2
         ),
         (READY, 0, 1, IMPACT_TICKS)
@@ -1811,14 +2190,20 @@ fn center_second_landing_goes_idle_immediately_and_preserves_local_phase_for_nex
 #[test]
 fn center_horizontal_wall_reverses_increments_counter_and_returns_without_center_reset() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].direction = 1;
-    f.actors[SUBJECT].local_counter = 0xff;
+    {
+        let actor_value = 0xff;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.solid();
     f.run();
     assert_eq!(f.actors[SUBJECT].direction, 2);
-    assert_eq!(f.actors[SUBJECT].local_counter, 0);
-    assert_eq!(f.actors[SUBJECT].state, SECOND);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 0);
+    assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
     assert_eq!(f.world.calls, [motion(Movement::PositiveX, 0x55, 2)]);
 }
 #[test]
@@ -1831,26 +2216,44 @@ fn center_ground_return_requires_counter_and_strict_low_byte_four_after_movement
         (0x1280, 0, false),
     ] {
         let mut f = Fixture::new(CENTER);
-        f.actors[SUBJECT].state = SECOND;
-        f.actors[SUBJECT].local_counter = counter;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
+        {
+            let actor_value = counter;
+            f.actors[SUBJECT].set_local_counter_code(actor_value);
+        };
         f.world.post_x = Some(x);
         f.run();
-        assert_eq!(f.actors[SUBJECT].state, if idle { READY } else { SECOND });
+        assert_eq!(
+            f.actors[SUBJECT].state_code(),
+            if idle { READY } else { SECOND }
+        );
         if idle {
             assert_eq!(f.actors[SUBJECT].position.world_x, 0x1280);
             assert_eq!(f.actors[SUBJECT].local_aux2, IMPACT_TICKS);
-            assert_eq!(f.actors[SUBJECT].local_counter, 0);
+            assert_eq!(f.actors[SUBJECT].local_counter_code(), 0);
         }
     }
 }
 #[test]
 fn center_airborne_even_without_contact_does_not_idle_at_center() {
     let mut f = Fixture::new(CENTER);
-    f.actors[SUBJECT].state = SECOND;
-    f.actors[SUBJECT].local_state = 1;
-    f.actors[SUBJECT].local_counter = 1;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.run();
-    assert_eq!(f.actors[SUBJECT].state, SECOND);
+    assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
     assert_eq!(f.actors[SUBJECT].local_aux2, 0);
     assert_eq!(
         f.world.calls,
@@ -1912,9 +2315,15 @@ fn original_spawn_routes_join_all_five_land_boss_templates_without_folklore_iden
 #[test]
 fn preset_positive_fraction_carry_and_integer_wrap_do_not_advance_land_same_call() {
     let mut f = Fixture::new(ATTACK);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].local_aux2 = 1;
-    f.actors[SUBJECT].local_state = 9;
+    {
+        let actor_value = 9;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
     f.actors[SUBJECT].position.screen_y = 0xff;
     f.actors[SUBJECT].position.y_fraction = 0xc0;
     f.actors[SUBJECT].vertical_velocity = 0x0180;
@@ -1936,17 +2345,26 @@ fn impact_no_delay_horizontal_collision_does_not_gain_delayed_phase_reversal() {
     f.solid();
     f.run();
     assert_eq!(f.actors[SUBJECT].direction, 1);
-    assert_eq!(f.actors[SUBJECT].local_state, 0);
+    assert_eq!(f.actors[SUBJECT].local_state_code(), 0);
     assert_eq!(f.world.calls.len(), 2);
 }
 #[test]
 fn perimeter_moving_reveal_mismatch_freezes_all_contact_and_motion() {
     for (frame, tick) in [(0, 5), (1, 4), (1, 6)] {
         let mut f = Fixture::new(PERIMETER);
-        f.actors[SUBJECT].state = SECOND;
+        {
+            let actor_value = SECOND;
+            f.actors[SUBJECT].set_state_code(actor_value);
+        };
         f.actors[SUBJECT].animation = REVEAL;
-        f.actors[SUBJECT].animation_frame = frame;
-        f.actors[SUBJECT].animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actors[SUBJECT].playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actors[SUBJECT].playback.set_tick_code(animation_value);
+        };
         let prior = f.actors;
         f.run();
         assert_eq!(f.actors, prior);
@@ -1956,15 +2374,89 @@ fn perimeter_moving_reveal_mismatch_freezes_all_contact_and_motion() {
 #[test]
 fn perimeter_circuit_counter_wraps_without_forcing_immediate_opening_reset() {
     let mut f = Fixture::new(PERIMETER);
-    f.actors[SUBJECT].state = SECOND;
+    {
+        let actor_value = SECOND;
+        f.actors[SUBJECT].set_state_code(actor_value);
+    };
     f.actors[SUBJECT].animation = PERIMETER_MOVING;
-    f.actors[SUBJECT].local_state = 1;
-    f.actors[SUBJECT].local_counter = 19;
+    {
+        let actor_value = 1;
+        f.actors[SUBJECT].set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 19;
+        f.actors[SUBJECT].set_local_counter_code(actor_value);
+    };
     f.actors[SUBJECT].local_aux2 = 0xff;
     f.solid();
     f.world.facts.push_back(MotionFacts::default());
     f.run();
     assert_eq!(f.actors[SUBJECT].local_aux2, 0);
-    assert_eq!(f.actors[SUBJECT].local_counter, 0);
-    assert_eq!(f.actors[SUBJECT].state, SECOND);
+    assert_eq!(f.actors[SUBJECT].local_counter_code(), 0);
+    assert_eq!(f.actors[SUBJECT].state_code(), SECOND);
+}
+
+#[test]
+fn perimeter_contact_gate_preserves_every_mask_and_both_axis_results() {
+    // A82C..A839: zero requires neither contact; nonzero requires all selected
+    // bits. Masks selecting nonexistent bits can never advance the path.
+    for mask in 0..=u8::MAX {
+        for contacts in 0..4u8 {
+            let mut f = Fixture::new(PERIMETER);
+            f.actors[SUBJECT].set_state_code(SECOND);
+            f.actors[SUBJECT].animation = PERIMETER_MOVING;
+            f.actors[SUBJECT].set_local_state_code(1);
+            f.actors[SUBJECT].set_local_counter_code(0);
+            f.catalog.perimeter[0].gate = ContactGate::from_source(mask);
+            f.world.facts.push_back(MotionFacts {
+                bits: (contacts >> 1) & 1,
+                ..Default::default()
+            });
+            f.world.facts.push_back(MotionFacts {
+                bits: contacts & 1,
+                ..Default::default()
+            });
+            f.run();
+            let advances = if mask == 0 {
+                contacts == 0
+            } else {
+                contacts & mask == mask
+            };
+            assert_eq!(
+                f.actors[SUBJECT].local_counter_code(),
+                u8::from(advances),
+                "mask {mask}, contacts {contacts}"
+            );
+        }
+    }
+}
+
+#[test]
+fn decoded_perimeter_records_preserve_used_source_bits_and_mirrored_heading() {
+    // A889 reads only low direction bits and0C motion bits. Upper source bits
+    // have no movement consumer and are intentionally absent from native steps.
+    for path in 0..=u8::MAX {
+        for mask in [0, 1, 2, 3, 4, 0xff] {
+            let step = PerimeterStep::from_source(path, mask);
+            assert_eq!(step.source_path_code(), path & 0x0f);
+            assert_eq!(step.horizontal.mirrored().direction_code(), (path & 3) ^ 3);
+            assert_eq!(step.motion_code(), path & 0x0c);
+            assert_eq!(step.gate.source_code(), mask);
+        }
+    }
+}
+
+#[test]
+fn decoded_wave_endpoint_ignores_time_and_spawn_retains_exact_byte_timestamp() {
+    // EmitTimedWaveChildren checks X0 before its time-table read; spawn records use
+    // equality against the byte tick (includingFF); no >= or duration inference.
+    for tick in 0..=u8::MAX {
+        assert_eq!(WaveStep::from_source(0, tick), WaveStep::AwaitLastChild);
+        for x in [1, 0x80, 0xff] {
+            assert_eq!(
+                WaveStep::from_source(x, tick),
+                WaveStep::Spawn { x, at_tick: tick }
+            );
+        }
+    }
 }

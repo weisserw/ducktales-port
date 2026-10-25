@@ -2,31 +2,12 @@
 //! secondary queue bytes used by audio/composites; this continuation owns only
 //! the phase/cursor lifetime and the currently entered wait.
 use super::*;
-// Offsets describe the original upload format, projected onto Video's disjoint
-// owners. They are not another retained address space.
+// Room geometry stays in the transition owner; source upload framing and
+// retained byte-plane access belong to Video.
 const ROOM_BLOCKS: u8 = 8;
 const LAST_ROOM_ROW: u8 = ROOM_BLOCKS - 1;
-const FIRST_NAMETABLE: u16 = 0x2000;
-const SECOND_NAMETABLE: u16 = 0x2400;
-const NAMETABLE_ATTRIBUTE_OFFSET: u16 = 0x3c0;
-const BLOCK_ROW_VIDEO_BYTES: u16 = 128;
-const TILE_ROW_VIDEO_BYTES: u16 = 32;
-const HALF_BLOCK_VIDEO_BYTES: u16 = 64;
-const ROW_TILE_COUNT: usize = 32;
-const ROW_COMMANDS: [usize; 3] = [0, 0x23, 0x46];
-const ROW_PAYLOADS: [usize; 2] = [3, 0x26];
-const RETAINED_ROW_PAYLOADS: [usize; 2] = [0x60, 0x80];
-const ROW_ATTRIBUTE_PAYLOAD: usize = 0x49;
-const ROW_TERMINATOR: usize = 0x51;
-const NEIGHBOR_PAYLOADS: [usize; 4] = [3, 0x16, 0x29, 0x3c];
-const NEIGHBOR_COMMAND_BYTES: usize = 19;
-const NEIGHBOR_ATTRIBUTE_COMMAND: usize = 0x4c;
-const NEIGHBOR_ATTRIBUTE_PAYLOAD: usize = 0x4f;
-const NEIGHBOR_TERMINATOR: usize = 0x53;
 const SECOND_CACHE_PAGE: usize = world::CACHE_CELLS / 2;
 const VERTICAL_DIRECTION_DOWN: u8 = 4;
-const PALETTE_LOW_QUADRANTS: u8 = 0x0f;
-const PALETTE_HIGH_QUADRANTS: u8 = 0xf0;
 #[derive(Clone)]
 pub(super) struct VerticalCall {
     transition: world::VerticalTransition,
@@ -203,45 +184,11 @@ fn expand(
     core.cache.collision[coordinate] = block.collision;
     block
 }
+#[cfg(test)]
 fn byte(core: &mut Core, services: &mut Services, offset: usize, value: u8) {
     services
         .video
         .write_primary_byte(offset, value, &mut core.cache.attributes);
-}
-fn header(core: &mut Core, services: &mut Services, offset: usize, address: u16, count: u8) {
-    for (field, value) in [(0, (address >> 8) as u8), (1, address as u8), (2, count)] {
-        byte(core, services, offset + field, value);
-    }
-}
-fn row_headers(core: &mut Core, services: &mut Services, ring: u8, lower: bool) {
-    let address = SECOND_NAMETABLE
-        + u16::from(ring & LAST_ROOM_ROW) * BLOCK_ROW_VIDEO_BYTES
-        + if lower { HALF_BLOCK_VIDEO_BYTES } else { 0 };
-    header(
-        core,
-        services,
-        ROW_COMMANDS[0],
-        address,
-        (ROW_TILE_COUNT - 1) as u8,
-    );
-    header(
-        core,
-        services,
-        ROW_COMMANDS[1],
-        address | TILE_ROW_VIDEO_BYTES,
-        (ROW_TILE_COUNT - 1) as u8,
-    );
-    header(
-        core,
-        services,
-        ROW_COMMANDS[2],
-        SECOND_NAMETABLE
-            + NAMETABLE_ATTRIBUTE_OFFSET
-            + u16::from(ring & LAST_ROOM_ROW) * u16::from(ROOM_BLOCKS),
-        LAST_ROOM_ROW,
-    );
-    byte(core, services, ROW_TERMINATOR, u8::MAX);
-    services.video.display.primary.pending = 0xff;
 }
 fn build_row(core: &mut Core, services: &mut Services, direction: world::VerticalDirection) {
     let ring = core.stream.ring & LAST_ROOM_ROW;
@@ -257,84 +204,32 @@ fn build_row(core: &mut Core, services: &mut Services, direction: world::Vertica
         let attribute_index =
             SECOND_CACHE_PAGE + usize::from(ring) * usize::from(ROOM_BLOCKS) + usize::from(column);
         let old = core.cache.attributes[attribute_index];
-        // Source writes two upload planes and two retained secondary planes
-        // for each block before replacing the cache's complete palette byte.
-        for local in 0..4usize {
-            let first = if up { 8 } else { 0 };
-            let staged = first ^ 8;
-            let at = usize::from(column) * 4 + local;
-            byte(
-                core,
-                services,
-                ROW_PAYLOADS[0] + at,
-                block.tiles[first + local],
-            );
-            byte(
-                core,
-                services,
-                ROW_PAYLOADS[1] + at,
-                block.tiles[first + 4 + local],
-            );
-            byte(
-                core,
-                services,
-                RETAINED_ROW_PAYLOADS[0] + at,
-                block.tiles[staged + local],
-            );
-            byte(
-                core,
-                services,
-                RETAINED_ROW_PAYLOADS[1] + at,
-                block.tiles[staged + 4 + local],
-            );
-        }
-        core.cache.attributes[attribute_index] = block.palette;
-        let merged = if up {
-            old & PALETTE_LOW_QUADRANTS | block.palette & PALETTE_HIGH_QUADRANTS
-        } else {
-            old & PALETTE_HIGH_QUADRANTS | block.palette & PALETTE_LOW_QUADRANTS
-        };
-        byte(
-            core,
-            services,
-            ROW_ATTRIBUTE_PAYLOAD + usize::from(column),
-            merged,
+        let update = world::vertical_block(direction, ring, column, &block, old);
+        services.video.stage_vertical_block(
+            &update,
+            (attribute_index, block.palette),
+            &mut core.cache.attributes,
         );
     }
     core.stream.ring = ring;
-    row_headers(core, services, ring, up);
+    services
+        .video
+        .publish_vertical_row(ring, up, &mut core.cache.attributes);
 }
 fn copy_staged(core: &mut Core, services: &mut Services, direction: world::VerticalDirection) {
-    for offset in (0..ROW_TILE_COUNT).rev() {
-        let upper = services
-            .video
-            .primary_byte(RETAINED_ROW_PAYLOADS[0] + offset, &core.cache.attributes);
-        let lower = services
-            .video
-            .primary_byte(RETAINED_ROW_PAYLOADS[1] + offset, &core.cache.attributes);
-        byte(core, services, ROW_PAYLOADS[0] + offset, upper);
-        byte(core, services, ROW_PAYLOADS[1] + offset, lower);
-    }
     let ring = core.stream.ring & LAST_ROOM_ROW;
-    for column in 0..usize::from(ROOM_BLOCKS) {
-        byte(
-            core,
-            services,
-            ROW_ATTRIBUTE_PAYLOAD + column,
-            core.cache.attributes
-                [SECOND_CACHE_PAGE + usize::from(ring) * usize::from(ROOM_BLOCKS) + column],
-        );
-    }
+    services
+        .video
+        .restore_vertical_row(ring, &mut core.cache.attributes);
     core.stream.ring = ring.wrapping_add(if direction == world::VerticalDirection::Up {
         0xff
     } else {
         1
     }) & LAST_ROOM_ROW;
-    row_headers(
-        core,
-        services,
+    services.video.publish_vertical_row(
         ring,
         direction != world::VerticalDirection::Up,
+        &mut core.cache.attributes,
     );
 }
 fn neighbor(
@@ -375,81 +270,39 @@ fn neighbor(
         if ring == 0 {
             continue;
         }
-        for (row, payload) in NEIGHBOR_PAYLOADS.iter().enumerate() {
-            for tile in 0..4usize {
-                byte(
-                    core,
-                    services,
-                    payload + usize::from(column) * 4 + tile,
-                    block.tiles[row * 4 + tile],
-                );
-            }
-        }
-        core.cache.attributes
-            [usize::from(ring) * 8 + usize::from(column) + if previous { 4 } else { 0 }] =
-            block.palette;
-        byte(
-            core,
-            services,
-            NEIGHBOR_ATTRIBUTE_PAYLOAD + usize::from(column),
-            block.palette,
-        );
+        let page = world::TilePage::First;
+        let update = world::ColumnUpdate {
+            origin: world::TileOrigin {
+                page,
+                column: (if previous { 16 } else { 0 }) + column * 4,
+                row: ring * 4,
+            },
+            tiles: block.tiles,
+            rows: world::BlockRows::All,
+            palette: world::PaletteRun {
+                page,
+                first_cell: ring * 8 + column + if previous { 4 } else { 0 },
+                values: vec![block.palette],
+            },
+            commit: crate::assets::formats::UploadCommit::AtInterrupt,
+        };
+        services
+            .video
+            .stage_neighbor_block(&update, &mut core.cache.attributes);
     }
     core.stream.ring = ring;
     if ring == 0 {
         return;
     }
-    let base =
-        FIRST_NAMETABLE + u16::from(ring) * BLOCK_ROW_VIDEO_BYTES + if previous { 16 } else { 0 };
-    for row in 0..4 {
-        header(
-            core,
-            services,
-            row * NEIGHBOR_COMMAND_BYTES,
-            base + row as u16 * TILE_ROW_VIDEO_BYTES,
-            15,
-        );
-    }
-    header(
-        core,
-        services,
-        NEIGHBOR_ATTRIBUTE_COMMAND,
-        FIRST_NAMETABLE
-            + NAMETABLE_ATTRIBUTE_OFFSET
-            + u16::from(ring) * u16::from(ROOM_BLOCKS)
-            + if previous { 4 } else { 0 },
-        3,
+    services.video.publish_neighbor_row(
+        world::TileOrigin {
+            page: world::TilePage::First,
+            column: if previous { 16 } else { 0 },
+            row: ring * 4,
+        },
+        world::neighbor_visible_rows(ring),
+        &mut core.cache.attributes,
     );
-    byte(core, services, NEIGHBOR_TERMINATOR, u8::MAX);
-    if ring == LAST_ROOM_ROW {
-        for at in (0..8).rev() {
-            let value = services
-                .video
-                .primary_byte(NEIGHBOR_ATTRIBUTE_COMMAND + at, &core.cache.attributes);
-            byte(core, services, ROW_PAYLOADS[1] + at, value);
-        }
-    } else if ring == 1 {
-        for at in 0..0x2e {
-            let value = services
-                .video
-                .primary_byte(ROW_PAYLOADS[1] + at, &core.cache.attributes);
-            byte(core, services, at, value);
-        }
-    }
-    if ring == 1 || ring == LAST_ROOM_ROW {
-        for at in 0..4 {
-            let value = services
-                .video
-                .primary_byte(NEIGHBOR_PAYLOADS[2] + at, &core.cache.attributes)
-                & if ring == 1 {
-                    PALETTE_HIGH_QUADRANTS
-                } else {
-                    PALETTE_LOW_QUADRANTS
-                };
-            byte(core, services, NEIGHBOR_PAYLOADS[2] + at, value);
-        }
-    }
-    services.video.display.primary.pending = 0xff;
 }
 
 #[cfg(test)]
@@ -468,6 +321,133 @@ mod tests {
                 super::super::super::content::Content::load(&rom, &assets, &overrides).unwrap(),
             ),
         )
+    }
+    fn patterned_fixture() -> (Core, Services) {
+        let (mut core, mut services) = fixture();
+        let content = std::sync::Arc::make_mut(&mut services.content);
+        content.world.layouts[0].columns = 3;
+        content.world.layouts[0].rooms.fill(Some(0));
+        content.raw_rooms[0].low.fill(0);
+        content.raw_rooms[0].ninth_bits.fill(0);
+        let set = &mut content.world.terrain[0];
+        set.blocks[0] = [1, 2, 3, 4];
+        set.tiles[1] = [11, 12, 13, 14];
+        set.tiles[2] = [21, 22, 23, 24];
+        set.tiles[3] = [31, 32, 33, 34];
+        set.tiles[4] = [41, 42, 43, 44];
+        set.properties[..5].copy_from_slice(&[0, 0x10, 0x21, 0x32, 0x03]);
+        core.cache.attributes.fill(0xa5);
+        (core, services)
+    }
+    #[test]
+    fn vertical_native_blocks_publish_selected_rows_and_retain_complete_cache_palettes() {
+        // CAA0..CB5A: selected two planes, opposite retained planes, full cache
+        // palette and a direction-specific outgoing nibble merge.
+        for (direction, low, visible, retained, palette) in [
+            (
+                world::VerticalDirection::Up,
+                0xc0,
+                [31, 32, 41, 42, 33, 34, 43, 44],
+                [11, 12, 21, 22, 13, 14, 23, 24],
+                0xe5,
+            ),
+            (
+                world::VerticalDirection::Down,
+                0x80,
+                [11, 12, 21, 22, 13, 14, 23, 24],
+                [31, 32, 41, 42, 33, 34, 43, 44],
+                0xa4,
+            ),
+        ] {
+            let (mut core, mut services) = patterned_fixture();
+            core.stream.ring = 3;
+            build_row(&mut core, &mut services, direction);
+            assert_eq!(
+                &services.video.display.primary.encoded[..3],
+                &[0x25, low, 31]
+            );
+            for column in 0..8 {
+                for local in 0..4 {
+                    for (offset, value) in [
+                        (3, visible[local]),
+                        (0x26, visible[4 + local]),
+                        (0x60, retained[local]),
+                        (0x80, retained[4 + local]),
+                    ] {
+                        assert_eq!(
+                            services
+                                .video
+                                .primary_byte(offset + column * 4 + local, &core.cache.attributes),
+                            value
+                        );
+                    }
+                }
+                assert_eq!(
+                    services
+                        .video
+                        .primary_byte(0x49 + column, &core.cache.attributes),
+                    palette
+                );
+            }
+            assert_eq!(&core.cache.attributes[88..96], &[0xe4; 8]);
+            assert_eq!(&core.cache.collision[88..96], &[0x39; 8]);
+            assert_eq!(
+                services.video.primary_byte(0x51, &core.cache.attributes),
+                0xff
+            );
+            assert_eq!(services.video.display.primary.pending, 0xff);
+        }
+    }
+    #[test]
+    fn native_neighbor_edges_keep_full_cache_but_publish_the_source_trimmed_queue() {
+        // CB8E..CC82: row1 copies the lower planes upward; row7 moves the
+        // attribute command over the unused planes. Both keep full cache data.
+        for (ring, first_low, palette, cache_palette) in
+            [(1, 0xc0, 0xe0, 0xe4), (7, 0x80, 0x04, 0x04)]
+        {
+            for previous in [false, true] {
+                let (mut core, mut services) = patterned_fixture();
+                core.stream.ring = ring;
+                core.camera.x = 256;
+                core.camera.room = 1;
+                neighbor(
+                    &mut core,
+                    &mut services,
+                    world::VerticalDirection::Up,
+                    previous,
+                );
+                assert_eq!(
+                    &services.video.display.primary.encoded[..3],
+                    &[
+                        if ring == 1 { 0x20 } else { 0x23 },
+                        first_low + if previous { 16 } else { 0 },
+                        15
+                    ]
+                );
+                assert_eq!(
+                    &services.video.display.primary.encoded[0x26..0x29],
+                    &[0x23, 0xc0 + ring * 8 + if previous { 4 } else { 0 }, 3]
+                );
+                for column in 0..4 {
+                    assert_eq!(
+                        services
+                            .video
+                            .primary_byte(0x29 + column, &core.cache.attributes),
+                        palette
+                    );
+                    assert_eq!(
+                        core.cache.attributes
+                            [usize::from(ring) * 8 + column + if previous { 4 } else { 0 }],
+                        cache_palette
+                    );
+                }
+                assert_eq!(
+                    services.video.primary_byte(0x2d, &core.cache.attributes),
+                    0xff
+                );
+                assert_eq!(services.video.display.primary.pending, 0xff);
+            }
+        }
     }
     #[test]
     fn copy_phase_uses_retained_secondary_rows_and_current_full_cache_attributes() {

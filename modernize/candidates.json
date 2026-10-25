@@ -314,6 +314,613 @@
       "iteration": "007",
       "rank": 1,
       "outcome": "retained"
+    },
+    {
+      "id": "decoded-background-update-plan",
+      "iteration": "008",
+      "rank": 1,
+      "files": [
+        "port/src/assets/formats.rs",
+        "port/src/game/content.rs",
+        "port/src/game/tasks.rs"
+      ],
+      "subsystem": "B02 background preparation and B13 foreground upload",
+      "current_machinery": "Runtime record/chunk counters and completed flag interpret prepared spans on each poll.",
+      "proposed_abstraction": "Validated immutable sequence of fixed-size background updates compiled at asset loading; explicit Updating/Complete session executes one update per poll.",
+      "benefit": "Gameplay executes decoded updates; record decoding, destination advancement and chunk boundaries disappear from runtime control flow. Invalid spans fail at asset boundary.",
+      "source_references": [
+        "reference/source/game.asm:BeginBackgroundUploadRecord C45A",
+        "reference/source/game.asm:QueueBackgroundChunk C49x..C4DE",
+        "reference/source/game.asm:CompleteBackgroundUpload C4E1..C507",
+        "port/src/assets/trace.md:Background continuation, every state branch"
+      ],
+      "preserve": [
+        "64-byte poll cadence",
+        "separate final palette poll",
+        "bank selection each update",
+        "ordered primary/secondary alias write",
+        "suspension-dependent immediate/interrupt commit",
+        "destination wrapping",
+        "stable record/chunk debug projection"
+      ],
+      "owners_ordering": "Content owns immutable update plans; Tasks owns explicit session progress; Video remains sole queue owner. Existing callers and waits unchanged.",
+      "tests": [
+        "all-original per-poll differential against preserved pre-conversion test oracle",
+        "source-derived original-list byte/destination contracts",
+        "empty, malformed and wrapping plan contracts",
+        "full native tests",
+        "fresh title/selection/Amazon semantic/frame baseline comparison"
+      ],
+      "coverage_gaps": [
+        "No whole-game QA or physical desktop/browser runtime",
+        "No fresh original emulator or audio listening comparison; retained original evidence and source contracts used"
+      ],
+      "coupling_risks": "Startup validation intentionally moves malformed internal-span errors before gameplay; public Game only receives validated source assets. Shared queue aliases and waits remain at Tasks.",
+      "bounded_reason": "All background callers share Tasks::poll_background; no other runtime consumers of spans. Plans are immutable original-resource projections.",
+      "strongest_conversion_considered": "Native money quantities would remove packed arithmetic but blank codes affect payment return provenance and conversion timing; requires wider source/route investigation. Background plan fully removes a bounded runtime decoder now.",
+      "remaining_boundary_encodings": "64-byte updates, selected bank and queue framing remain because source-visible cadence, mapper state and shared-buffer aliases depend on them.",
+      "outcome": "retained"
+    },
+    {
+      "id": "native-countdown-seconds",
+      "iteration": "009",
+      "rank": 1,
+      "files": [
+        "port/src/status/mod.rs",
+        "port/src/status/countdown.rs",
+        "port/src/game/tasks.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/observation.rs"
+      ],
+      "subsystem": "B14 countdown quantity and B13 initialization/rendering boundaries",
+      "current_machinery": "Three display-code bytes are canonical timer state; ordinary ticks and reward conversion borrow through those codes.",
+      "proposed_abstraction": "Opaque Countdown quantity with native remaining seconds, explicit expiration, and isolated compatibility display state for nonnumeric original overlays/raw selectors. Encoding stays at initialization/render/debug boundaries.",
+      "benefit": "Time rules subtract seconds and convert ten-second groups directly; gameplay no longer indexes display digits or performs decimal borrow.",
+      "source_references": [
+        "reference/source/game.asm:CountdownStateGate E28C..E2FD",
+        "reference/source/game.asm:ConvertStageTimerToReward EF62..EFE1",
+        "port/src/status/trace.md:Countdown and timer conversion",
+        "port/src/game/tasks.rs:CopyStatusAndTimer/InitializeCountdown/RestoreAudioCountdown/CopyGameOverOverlay"
+      ],
+      "preserve": [
+        "000 wraps to999",
+        "result000 becomes expired; death on next eligible gate",
+        "death/completion exemptions",
+        "divider byte0 wraps to255",
+        "post-decrement warning below30 at composition modulo16",
+        "conversion discards units and consumes ten seconds only on odd frames",
+        "audio settle256/finish60 waits",
+        "reward saturation and sound-return provenance",
+        "game-over glyphs/raw stage code compatibility",
+        "stage pair replacement preserves existing units"
+      ],
+      "owners_ordering": "Status remains sole countdown owner. Tasks decodes original/authored initialization codes; simulation and observation encode for read-only output. Machine commits actual warning/death effects in unchanged order.",
+      "tests": [
+        "status::contracts all decimal values decrement/conversion",
+        "game::machine::tests::countdown_owner_preserves_warning_submission_and_next_call_death",
+        "game::tasks::tests::conversion_resumes_after_exact_audio_and_finish_waits_and_returns_actual_submission",
+        "raw-code faithful compatibility regressions",
+        "full native suite",
+        "fresh title/selection/Amazon baseline semantic/frame comparison"
+      ],
+      "coverage_gaps": [
+        "No new natural-route expiration/completion observation against emulator",
+        "No whole-game QA/physical desktop/browser/device runs",
+        "Nonnumeric compatibility matches faithful implementation; source timer directly subtracts raw glyphs while old shared subtract_codes normalizes BLANK, a pre-existing discrepancy outside this conversion"
+      ],
+      "coupling_risks": "Game-over shares countdown storage; raw stage tables can expose nondecimal codes. Must preserve these via explicit compatibility state rather than normalize/reject them. Audio reward timing and owner waits remain unchanged.",
+      "bounded_reason": "All timer arithmetic is in Status; initialization, renderer and observer are fully enumerated. Reward/health representation and scheduling remain out of scope.",
+      "strongest_conversion_considered": "Native reward/total money would remove wider packed arithmetic, but blank-code stopping behavior affects paid dialogue RNG provenance and staged transfer; requires broader independently observed payment/transfer contracts. Countdown has fully enumerated state owners and source-backed quantity rules.",
+      "remaining_boundary_encodings": "Original timer overlay codes and raw-selector glyphs are decoded at input and encoded at render/debug. Exceptional raw-code arithmetic retained solely for compatibility, with original-source discrepancy documented separately.",
+      "outcome": "retained"
+    },
+    {
+      "id": "native-health-capacity",
+      "iteration": "010",
+      "rank": 1,
+      "files": [
+        "port/src/status/health.rs",
+        "port/src/status/mod.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/observation.rs",
+        "port/src/player/mod.rs"
+      ],
+      "current_machinery": "Mutable sprite Y/tile/attribute/X records are canonical health; gameplay derives capacity by negative-Y scans.",
+      "proposed_abstraction": "Native segment availability/depletion and capacity queries, with separate appearance storage imported/exported at boundaries.",
+      "benefit": "Damage/recovery/payment/death operate on health states, independent of sprite coordinates and terminators.",
+      "source_references": [
+        "port/src/status/trace.md:Overlay health/lives and source defaults",
+        "reference/source/game.asm:EB5A..EB81",
+        "reference/source/game.asm:8B38..8B9C",
+        "reference/source/game.asm:E2FE..E353"
+      ],
+      "preserve": [
+        "negative-Y capacity vs exactFF rendering sentinel distinction",
+        "sparse depletion patterns and raw nonzero attributes",
+        "locked flags cleared by full restore",
+        "extra slots3/4 selection and next sentinel writes",
+        "alternating byte wrap",
+        "transactional overlay payment and immediate death effects"
+      ],
+      "owners_ordering": "Status remains sole health owner. Source template imported once; renderer/debug export immutable overlay records. Player queries native first-point depletion. No callbacks/waits reordered.",
+      "tests": [
+        "status::contracts all capacity/pattern damage/recovery combinations",
+        "existing health/payment/player/object integration contracts",
+        "full native suite",
+        "fresh title/selection/Amazon comparison"
+      ],
+      "coverage_gaps": [
+        "No new emulator recovery/extension route",
+        "No whole-game/physical device QA"
+      ],
+      "coupling_risks": "Rendering FF and rule-negative-Y termination differ; layout must preserve both. Unusual sparse flags may not be compressed to one remaining-health count.",
+      "bounded_reason": "All direct health storage callers enumerated; fixture mutation adapted through test-only boundary import.",
+      "strongest_conversion_considered": "Money is higher impact but wider; full batch includes it next. Health removes an entire gameplay dependency on sprite layout first.",
+      "remaining_boundary_encodings": "Appearance Y/tile/X/end and noncanonical depletion attribute codes remain only for exact overlay/debug projection.",
+      "outcome": "retained",
+      "removed_machinery": [
+        "sprite-coordinate and sentinel scans in health game rules",
+        "interleaved sprite/health canonical records",
+        "raw depletion-byte tests in player death gate"
+      ]
+    },
+    {
+      "id": "native-money-quantities",
+      "iteration": "011",
+      "rank": 1,
+      "files": [
+        "port/src/status/money.rs",
+        "port/src/status/mod.rs",
+        "port/src/game/tasks.rs",
+        "port/src/game/contact.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/observation.rs",
+        "port/src/actors/objects/mod.rs",
+        "port/src/scenes/mod.rs",
+        "port/src/finale/mod.rs"
+      ],
+      "current_machinery": "Reward/total/source-copy are display-code arrays; game rules manipulate decimal digits and blanks, paid outcomes scan codes.",
+      "proposed_abstraction": "Native monetary amount with explicit blank-format metadata, typed credit denominations and semantic payment/transfer/ending queries. Nondecimal boundary values retain isolated compatibility representation.",
+      "benefit": "Ordinary rewards, theft, costs and transfers use quantity arithmetic; gameplay no longer borrows through display arrays or supplies digit indices.",
+      "source_references": [
+        "port/src/status/trace.md:Native state and exact widths",
+        "port/src/status/trace.md:Rewards, theft and paid operations",
+        "port/src/status/trace.md:Queues and displayed-value transfer",
+        "reference/source/game.asm:8BBF/AD6B/EE22/E2FE/D8D9"
+      ],
+      "preserve": [
+        "blank placement and untouched lower codes",
+        "partial-width funding and saturation",
+        "paid-dialogue zero-prefix return provenance",
+        "transfer ten-unit batching/two-tick waits and independent working source",
+        "dirty/UI byte wrapping",
+        "ending and departure display-derived quirks",
+        "all original/raw display codes at boundaries"
+      ],
+      "owners_ordering": "Status retains reward/total; TransferSession retains independent working quantity. Player borrows TotalMoney directly for synchronous payment. Render/debug project display codes. No sound/callback/wait order change.",
+      "tests": [
+        "existing source-backed status contracts before/after",
+        "native quantity arithmetic differential across ordinary values and blank layouts",
+        "raw-code compatibility comparisons",
+        "full native suite including payment/RNG/ending/transfer/object integration",
+        "fresh title/selection/Amazon baseline route"
+      ],
+      "coverage_gaps": [
+        "No new original-emulator paid dialogue/ending/transfer route",
+        "No full-game/physical-device QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Equal numeric amounts can have behaviorally distinct blank layouts; retain explicit metadata rather than normalize. Source malformed byte behavior must stay isolated but lossless.",
+      "bounded_reason": "All money operations and direct readers enumerated; source-width compatibility stays at Money boundary, not in callers.",
+      "strongest_conversion_considered": "This is the strongest quantity conversion identified in the requested batch, now following native health.",
+      "remaining_boundary_encodings": "Explicit blank-layout metadata where observable game rules depend on it, nondecimal compatibility codes, and display import/export.",
+      "removed_machinery": [
+        "canonical ordinary money digit arrays",
+        "ordinary digit-by-digit carry/borrow in gameplay",
+        "display indices in reward producer calls"
+      ],
+      "outcome": "retained",
+      "contract_adaptations": "Status and borrowed-total fixtures now import native money; expected arrays are checked through display_codes. All previous expected values retained. The denomination-index source probe exists only under cfg(test). Added quantity/blank-layout/native credit and raw-boundary regressions."
+    },
+    {
+      "id": "native-enemy-behavior-state",
+      "iteration": "012",
+      "rank": 1,
+      "files": [
+        "port/src/actors/control.rs",
+        "port/src/actors/mod.rs",
+        "port/src/actors/enemies/mod.rs",
+        "shared ActorContact callers and fixtures"
+      ],
+      "current_machinery": "Ambush reads packed low-nibble state and reuses generic local_state/local_counter bytes for its phase, delay and motion cursor.",
+      "proposed_abstraction": "Canonical ActorControl union with native AmbushPhase, delay_remaining and preset_step; legacy families use a lossless compatibility variant. Shared lifecycle/collision/debug callers read/write explicit projections rather than a second byte store.",
+      "benefit": "Complete five-phase ambush behavior names its states/transitions/timers and retains them across callbacks. The old state/local byte fields are removed, preventing duplicate canonical owners.",
+      "source_references": [
+        "reference/source/game.asm:Bank06_FivePhaseAmbushActor 9740..993B",
+        "port/src/actors/enemies/trace.md:19 Ambush",
+        "port/src/actors/enemies/contracts.rs:ambush_*",
+        "port/src/actors/mod.rs:candidate and special spawn initialization"
+      ],
+      "preserve": [
+        "visibility/hit reaction before contact and phase dispatch",
+        "all five phases and unsupported source-phase compatibility",
+        "exact opening/rest wrapping delays",
+        "motion, contact, animation and sound order",
+        "two phase advances in one call",
+        "partial-field writes across spawning and handler replacement",
+        "stable public actor/debug fields and journal deltas"
+      ],
+      "owners_ordering": "ActorContact remains sole owner through ActorControl. Handler changes convert the one payload losslessly. Generic callbacks update the canonical control through compatibility methods. Ambush gameplay accesses only native phase and named fields.",
+      "tests": [
+        "pre-edit enemies::contracts",
+        "all source-backed ambush boundary/order cases",
+        "control roundtrip and handler-change/reset regressions",
+        "full native suite",
+        "fresh title/selection/Amazon baseline semantic/frame route"
+      ],
+      "coverage_gaps": [
+        "No new natural original-emulator ambush route",
+        "No whole-game/physical runtime QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "State/local projections are consumed across collision/lifecycle/presentation/journal. Mechanical caller migration is required to remove the old fields while retaining partial writes; source flags and source-code observations remain explicit boundaries.",
+      "bounded_reason": "One complete enemy family and its canonical state owner. Other families retain their existing rules behind projections; no timing/state ownership changes outside this actor record.",
+      "strongest_conversion_considered": "The full native five-phase family is selected rather than a local enum decoder that would leave byte state canonical.",
+      "remaining_boundary_encodings": "Source state flags/legacy-family bytes and projection APIs are retained for still-unconverted actors, shared source callers, asset initialization and debug compatibility.",
+      "removed_machinery": [
+        "canonical ambush low-nibble phase byte",
+        "generic ambush local_state/local_counter storage",
+        "state-mask and increment-based dispatch in ambush gameplay"
+      ],
+      "contract_adaptations": "Fixture byte writes use projection setters and assertions use getters; all existing expected values retained.",
+      "outcome": "retained",
+      "verification_note": "First mechanical migration misparsed comma-ended match arms; restored only iteration012 source edits from its checkpoint and reapplied delimiter-aware migration. Full native suite and strict lint checks then passed. Superseded compile logs remain local."
+    },
+    {
+      "id": "decoded-movement-sequences",
+      "iteration": "013",
+      "rank": 1,
+      "files": [
+        "port/src/actors/bosses/programs.rs",
+        "port/src/actors/bosses/mod.rs",
+        "port/src/actors/bosses/contracts.rs",
+        "port/src/actors/bosses/trace.md"
+      ],
+      "current_machinery": "Perimeter gameplay interprets packed path directions and parallel collision masks. Wave gameplay combines parallel X/time arrays and recognizes zero-X sentinel records while running.",
+      "proposed_abstraction": "Immutable PerimeterStep records name headings, correction selection and ContactGate; WaveStep is Spawn{x,at_tick} or AwaitLastChild. Decode source tables once at the catalog boundary.",
+      "benefit": "Movement rules execute named directions/contact conditions and timed spawn instructions, without reconstructing packed source records or sentinel meaning every update.",
+      "source_references": [
+        "reference/source/game.asm:Bank06_PerimeterPathMotion A7C0..A8AC",
+        "reference/source/game.asm:Bank06_AdvancePerimeterPath/Perimeter direction reader",
+        "port/src/actors/bosses/trace.md:PERIMETER28",
+        "port/src/actors/bosses/trace.md:WAVE2A"
+      ],
+      "preserve": [
+        "all20 perimeter nodes and mirrored orientations",
+        "zero mask requires neither contact; nonzero masks require all selected axes",
+        "signed Y correction and byte wrapping",
+        "vertical before horizontal callback ordering",
+        "wave exact equality timing and one increment per mismatch",
+        "same-call equal-time paired spawns",
+        "sentinel waits on last child any nonzero state",
+        "all partial child writes and loop/reset conditions"
+      ],
+      "owners_ordering": "Catalog owns immutable native steps. Existing actor controls retain cursors/orientation/timing and shared motion flags. Immediate motion/child/camera effects stay at their original points.",
+      "tests": [
+        "pre-edit full B11 contracts plus every mask/axis result",
+        "all20 original path nodes/both orientations",
+        "all wave sequences, paired spawns, tick wrap and last-child reset contracts",
+        "native decoder regressions",
+        "full native suite",
+        "fresh title/selection/Amazon baseline route"
+      ],
+      "coverage_gaps": [
+        "No new natural original-emulator perimeter/wave encounter route",
+        "No whole-game/physical-platform QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Shared actor direction/motion flags remain observable runtime boundary state. Wave times are absolute byte ticks, not per-step durations. Zero-X records ignore the parallel time field before any timer comparison.",
+      "bounded_reason": "Complete B11 perimeter and wave movement programs. Plain motion-preset IDs elsewhere remain legitimate catalog references, with no packed control encoding to remove in this candidate.",
+      "strongest_conversion_considered": "Native typed programs selected, replacing the four raw tables rather than only centralizing their indexing. Full actor motion-state replacement would mix additional shared collision/state ownership into this data-boundary conversion.",
+      "remaining_boundary_encodings": "Original byte tables exist only as decoder inputs. Shared actor-facing/motion flag projections and byte clocks remain where source-visible effects require them; ordinary preset IDs remain resource identities.",
+      "removed_machinery": [
+        "runtime packed path direction decoding",
+        "runtime collision-mask interpretation",
+        "parallel path/mask and wave-X/time catalog arrays",
+        "runtime zero-X sentinel decoding"
+      ],
+      "contract_adaptations": "Source metadata assertions project used path bits/gates from native records. Sentinel-time bytes are not retained because source branches before reading them; behavioral sentinel coverage remains. Other existing expected values unchanged.",
+      "outcome": "retained"
+    },
+    {
+      "id": "native-scene-actor-phases",
+      "iteration": "014",
+      "rank": 1,
+      "files": [
+        "port/src/scenes/actor_state.rs",
+        "port/src/scenes/mod.rs",
+        "port/src/actors/control.rs",
+        "port/src/actors/mod.rs",
+        "port/src/scenes/contracts.rs"
+      ],
+      "current_machinery": "Scene actor rules dispatch handler bytes and mask/increment actor progress flags, reusing a generic local byte for bounce counts and multiple waits.",
+      "proposed_abstraction": "Canonical native SceneActorState with Bounce/WalkIn/Delay/MoveToMark/Settle/Settled variants, explicit progress and named associated counters. ActorControl owns the payload; source projections support shared callers and unusual inputs.",
+      "benefit": "Scene motion and transitions read native behavior state and named counters, with no raw handler dispatch or progress-mask tests in the gameplay body.",
+      "source_references": [
+        "reference/source/game.asm:Bank05_SceneBounce B412..B469",
+        "reference/source/game.asm:Bank05_SceneWalkIn B46A..B48E",
+        "reference/source/game.asm:Bank05_SceneDelay B48F..B4B4",
+        "reference/source/game.asm:Bank05_SceneMoveToMark B4B5..B507",
+        "port/src/scenes/trace.md"
+      ],
+      "preserve": [
+        "ascent Y-before-gravity and descent gravity-before-Y",
+        "same-call init and transition ordering",
+        "all zero-counter byte wraps",
+        "world-X low-byte thresholds and X-before-Y movement",
+        "exact80 move-entry reset, tick freeze and frame retention",
+        "settle handler no added work",
+        "rebuild then composition then palette/nametable completion",
+        "lossless shared control fields/partial handler writes"
+      ],
+      "owners_ordering": "ActorContact/ActorControl remains sole actor-control owner. Explicit scene entry selects a native payload; legacy-family entry selects its own representation. All actual motion callbacks operate on that canonical actor. HandlerContinuation retains existing real yield/rebuild ordering.",
+      "tests": [
+        "pre-edit full scenes contracts",
+        "new every initialized progress code/count reset regression",
+        "source-backed motion/threshold/wrapping/rebuild contracts",
+        "scene/native/legacy control roundtrip/transition tests",
+        "full native suite",
+        "fresh title/selection/Amazon baseline route"
+      ],
+      "coverage_gaps": [
+        "No fresh original-emulator complete scene route",
+        "No whole-game/physical-platform QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Scene handler codes0..5 overlap ordinary enemy IDs, so native scene selection must use the scene owner context, not globally infer a scene from handler alone. Source progress values and untouched local-counter bytes must remain lossless.",
+      "bounded_reason": "Complete B16 scene actor motion dispatcher and its canonical state representation. Departure, spawner, completion and scene content scheduling remain unchanged.",
+      "strongest_conversion_considered": "Full canonical phase/counter conversion selected rather than local enum decoding or a side session mirroring byte fields.",
+      "remaining_boundary_encodings": "Shared actor state flags, unusual progress-code metadata and unused preserved local-counter byte remain for source-observable partial writes/debug compatibility. Source handler identities remain dispatch boundaries.",
+      "removed_machinery": [
+        "raw scene handler match in gameplay",
+        "progress low-nibble and direction-bit tests in normal scene gameplay",
+        "generic local-byte use for scene bounce/wait rules",
+        "byte-driven scene transition bookkeeping"
+      ],
+      "outcome": "retained"
+    },
+    {
+      "id": "native-animation-playback",
+      "iteration": "015",
+      "rank": 1,
+      "files": [
+        "port/src/presentation/playback.rs",
+        "port/src/presentation/mod.rs",
+        "port/src/actors/mod.rs",
+        "port/src/game/simulation.rs",
+        "all actor playback callers and contracts"
+      ],
+      "current_machinery": "Actor and visual snapshots own packed tick/frame/restart bytes; composition interprets hold and looping bits during every animation update.",
+      "proposed_abstraction": "Canonical AnimationPlayback with explicit running/frozen clock, frame cursor and beginning/restart loop mode. Asset selectors remain identities; source code projections exist only for compatibility callers and observations.",
+      "benefit": "Animation advancement expresses elapsed time, hold and looping directly; one playback value transfers between canonical actors and transient visual views.",
+      "source_references": [
+        "reference/source/game.asm:AdvanceObjectAnimation 813E..PrepareCompositeSprite 8194",
+        "port/src/presentation/trace.md"
+      ],
+      "preserve": [
+        "duration-plus-one old tick comparison",
+        "dialogue/frozen holds still select frame",
+        "tick127 overflowing into frozen0",
+        "frame127/255 mode toggles before end decision",
+        "destroy preserves incremented playback before deactivation",
+        "full restart source projection"
+      ],
+      "owners_ordering": "ActorContact owns playback; transient ActorVisual borrows a copied playback and composition writes it back. Shared source writes must remain lossless; no raw twin owner.",
+      "tests": [
+        "pre-edit presentation contracts",
+        "source-backed tick/frame wrap and destruction boundary tests",
+        "full native suite",
+        "fresh baseline runtime comparison"
+      ],
+      "coverage_gaps": [
+        "No fresh original-emulator full animation encounter route",
+        "No whole-game/physical-platform QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Hundreds of shared actor field accesses; projection compatibility must preserve exact full-byte predicates, partial writes and journal serialization.",
+      "bounded_reason": "Complete shared animation clock/frame/loop owner and advancement, including actor callers; sprite geometry and scheduling remain unchanged.",
+      "strongest_conversion_considered": "Canonical native playback selected rather than local decode/reencode or an extra side owner.",
+      "remaining_boundary_encodings": "Original animation selector IDs; lossless tick/frame/restart code projections for debug, source fixtures, unusual partial writes and source-dependent return/table indexing. Ordinary gameplay uses native reset/freeze/resume/advance and initial-pass/running-time predicates. Restart high metadata remains observable but unused by looping.",
+      "removed_machinery": [
+        "packed playback bytes in canonical actor and visual state",
+        "runtime packed hold/loop decoding in composition"
+      ],
+      "outcome": "retained",
+      "contract_adaptations": "Existing behavioral expected values unchanged. Actor and visual fixtures import/project native playback. Composed-wait contracts pass canonical playback instead of a raw tick reference. Three source-backed overflow/destruction contracts ran before conversion; two exhaustive native projection/event contracts added afterward."
+    },
+    {
+      "id": "decoded-dialogue-programs",
+      "iteration": "016",
+      "rank": 1,
+      "files": [
+        "port/src/dialogue/program.rs",
+        "port/src/dialogue/mod.rs",
+        "port/src/dialogue/contracts.rs"
+      ],
+      "current_machinery": "Catalog stores encoded message byte vectors; renderer compares AE/FF/24 controls on every update and derives pacing and row transitions from those byte meanings.",
+      "proposed_abstraction": "Immutable MessageProgram containing native Glyph, Blank, NextRow and Finish instructions, decoded once at asset loading. Runtime matches native operations and keeps the single shared cursor/row/panel owners.",
+      "benefit": "Message execution expresses text actions directly. Encoded delimiters and blank-byte classification disappear from gameplay; changing text authoring format does not change renderer control logic.",
+      "source_references": [
+        "reference/source/game.asm:RenderDialogueLine EEAE..FinishDialogueMessage EF58",
+        "port/src/dialogue/trace.md:Exact original data and row processing"
+      ],
+      "preserve": [
+        "all eighteen original split-pointer programs and aliases",
+        "three-tick visible glyph pacing",
+        "blank skips pacing and row-limit check",
+        "seventeenth visible glyph closes row before sound/wait",
+        "row delimiter consumes cursor and pads without pacing",
+        "terminal period has no sound/wait and resets shared cursor",
+        "page/scroll/input and canonical panel publication order",
+        "source cursor byte wrap and reread effects"
+      ],
+      "owners_ordering": "Catalog owns immutable decoded instructions. Progression.dialogue_cursor remains the sole externally observed cursor and maps one-to-one onto source operations. Dialogue owns row/count/continuations; B03 owns canonical panel and commits only at existing interrupt boundaries.",
+      "tests": [
+        "pre-edit complete dialogue contracts",
+        "source-backed blank row-limit and repeated wait-to-next-row cases",
+        "all eighteen original message execution/scroll/wait contracts",
+        "fresh all-message prepared queue/display comparison probe",
+        "full native tests",
+        "fresh title/selection/Amazon baseline route"
+      ],
+      "coverage_gaps": [
+        "No fresh natural original-emulator dialogue route",
+        "No full-game/physical-platform QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Primary queue shares state with rendering/audio and nested owners. Do not cache decoded rendered rows, add another cursor or move a publication/yield boundary. Blank runs cannot be normalized into automatic wrapping.",
+      "bounded_reason": "Complete original dialogue message format and text executor; outcomes, contact rules, source cursor owner and scheduler remain unchanged.",
+      "strongest_conversion_considered": "Full typed message programs selected. Replacing the shared panel or prelaying out rows would lose observable alias writes and blank/row timing; those concerns belong to display boundaries, not a text compiler.",
+      "remaining_boundary_encodings": "Source pointer planes/control byte decoding only at asset import; glyph tile identities and canonical prepared display queue remain presentation boundaries. Shared byte cursor remains observable to source callers and overlay/input logic.",
+      "removed_machinery": [
+        "encoded message vectors in runtime catalog",
+        "runtime AE/FF delimiter interpretation",
+        "runtime blank code classification for pacing"
+      ],
+      "outcome": "retained",
+      "contract_adaptations": "Existing behavioral expected values and all18 original sound/scroll counts unchanged. Metadata assertions use cfg(test) source projection or native instruction expectations; fixture programs compile at import.",
+      "targeted_validation": "checks/modernize/iteration-016/dialogue-review.json"
+    },
+    {
+      "id": "semantic-terrain-display-updates",
+      "iteration": "017",
+      "rank": 1,
+      "files": [
+        "port/src/world/display.rs",
+        "port/src/world/mod.rs",
+        "port/src/presentation/terrain.rs",
+        "port/src/presentation/mod.rs",
+        "port/src/game/video/terrain.rs",
+        "port/src/game/simulation.rs",
+        "port/src/game/task_vertical.rs",
+        "port/src/game/families.rs"
+      ],
+      "current_machinery": "World emits flat PPU-addressed VideoWrite vectors for columns, changed blocks, bursts and vertical rows. Game constructs source upload headers, byte offsets and row copies in terrain scheduling code.",
+      "proposed_abstraction": "Native tile-coordinate regions, palette runs and clipped block-column updates. World and gameplay express visible changes directly; Video/presentation translates them into the one canonical source-observable queue at the existing boundaries.",
+      "benefit": "World rules contain no PPU addresses or upload records. Game schedules native changes; byte headers, field offsets, retained-row encoding and alias projection belong to a single video boundary.",
+      "source_references": [
+        "reference/source/game.asm:BuildTerrainTileRows C852..FinishTerrainQueue C96A",
+        "reference/source/game.asm:BuildChangedTerrainRecord F574..FinishChangedTerrainRecord F652",
+        "port/src/world/trace.md:Mutable terrain, recovery and dialogue bursts",
+        "port/src/game/task_vertical.rs and existing source-backed vertical contracts"
+      ],
+      "preserve": [
+        "immediate collision/cache updates and deferred or suspended-immediate display commit",
+        "top/bottom row clipping and outgoing-only status palette mask",
+        "retained lower expansion staging bytes",
+        "absolute header offsets versus wrapping payload offsets",
+        "canonical primary/secondary/cache aliases and final terminator order",
+        "runtime composite header writes on tenth/eleventh changed records",
+        "source changed cursor wrap and actual audio alias reads",
+        "vertical live staging/copy/cache order and real yields",
+        "burst row order, particle allocation and sound submission order"
+      ],
+      "owners_ordering": "WorldCache owns collision/attributes. Video owns CHR, prepared primary/secondary prefixes and retained expansion bytes. Native updates are transient inputs; no semantic pending mirror bypasses externally observable queue mutations. Existing source cursor remains a presentation boundary token.",
+      "tests": [
+        "pre-edit complete native suite",
+        "source-backed mutation alignment/parity and boundary row cases",
+        "column large byte-offset/alias and final-cache-store contracts",
+        "changed-record/runtime-composite wrap/cache aliases",
+        "vertical copy/neighbor and scheduler integration contracts",
+        "fresh runtime baseline route and terrain mutation probe"
+      ],
+      "coverage_gaps": [
+        "No fresh natural original-emulator complete terrain mutation/vertical route",
+        "No full-game/physical-platform QA",
+        "No new audio listening/sample comparison"
+      ],
+      "coupling_risks": "Primary/secondary queue fields can alias cache and audio/composites. Some logical tile rows30/31 intentionally map into attribute storage. Vertical and column byte copy order must remain at boundary; flattening a queued plan at commit time would lose earlier observable changes.",
+      "bounded_reason": "Terrain display production across regular columns, dynamic blocks/bursts and vertical row geometry; scheduling/collision rules and source stream lifetimes remain unchanged.",
+      "strongest_conversion_considered": "Native geometry/region outputs plus complete gameplay encoder migration selected. A direct immediate draw or cached semantic pending list was rejected because concrete queue aliases are observable before commit; retaining only helper extraction or renaming flat writes would not satisfy the candidate.",
+      "remaining_boundary_encodings": "Only video/presentation boundary retains source queue headers, cursor offsets, absolute/wrapping field writes, alias-sensitive retained row bytes and PPU address mapping. These are observed by audio/composites/cache; raw ROM terrain tile identities remain assets.",
+      "removed_machinery": [
+        "flat PPU-addressed world terrain outputs",
+        "world PPU address arithmetic and per-tile write construction",
+        "gameplay column upload header/payload construction",
+        "gameplay vertical upload field-offset manipulation",
+        "gameplay burst upload encoder"
+      ],
+      "outcome": "retained",
+      "contract_adaptations": "Existing physical-write addresses/values and behavioral expectations unchanged; source expectations project native terrain changes at the presentation boundary. Scene changed-record fixture now authors a native2x2 region and palette cell. Added pre-conversion bottom-row changed-block overlap test; native model and actual Game vertical/neighbor tests follow source CAA0..CC82.",
+      "source_contract_corrections": [
+        {
+          "scope": "Newly added neighbor integration contract only; no earlier expected value changed",
+          "initial_expectation": "New test initially expected E4 as the complete expanded palette on row7, as on row1.",
+          "source_evidence": "DecodeTerrainQuadrant CCE7 skips lower quadrants at coordinate>=38 before accumulating palette, so the bottom-row expanded palette is04. CB8E stores that complete expanded value before outgoing edge masking.",
+          "faithful_reproduction": "checks/modernize/iteration-017/source-expectation-replay.log: checkpoint code with only the new test reproduces left04/rightE4 failure.",
+          "correction": "New test now expects row1 cacheE4 and row7 cache04. Corrected checkpoint replay and full current suite rerun; no gameplay code was changed to address this expectation."
+        }
+      ],
+      "targeted_validation": "checks/modernize/iteration-017/terrain-review.json"
+    },
+    {
+      "id": "decoded-audio-sequence-programs",
+      "iteration": "018",
+      "rank": 1,
+      "files": [
+        "port/src/audio/program.rs",
+        "port/src/audio/source_boundary.rs",
+        "port/src/audio/mod.rs",
+        "port/src/audio/contracts.rs",
+        "port/src/assets/file_resources.rs"
+      ],
+      "current_machinery": "Primary and secondary playback classify raw opcodes, fetch raw operands and decode packed note/control formats every tick from mutable source fragments.",
+      "proposed_abstraction": "Canonical immutable primary/secondary instruction maps compiled at asset import. Typed note durations/keys, controls, branches, modulation and stop/reset actions execute directly. A narrow source boundary preserves observable cursor/read provenance and partial missing-operand behavior.",
+      "benefit": "Playback no longer interprets sequence encodings or dispatch-table indices. Instruction formats, overlapping entries and word/note decoding belong to the catalog; native actions retain exact musical timing and source-derived reset behavior.",
+      "source_references": [
+        "reference/source/game.asm:AudioSecondaryDecode 858C..AudioReadSecondaryByte",
+        "reference/source/game.asm:AudioPrimaryDecode and command handlers 87CF..896A",
+        "port/src/audio/trace.md:Reset/dispatch/interpreters and complete asset consumer closure",
+        "planning/contracts/B18-consumers.json"
+      ],
+      "preserve": [
+        "all56 original headers and overlapping sequence entry points",
+        "primary read cursor low-byte seed provenance on every operand",
+        "inline-target/control/preset/deferred/loop seed producer order",
+        "conditional repeat skip does not read destination bytes",
+        "16-bit cursor wrap and byte repeat/tempo/duration behavior",
+        "recursive deferred prefix ordering and continuation extra ticks",
+        "secondary lowF ignored parameter consumes but does not replace prior reset seed",
+        "secondary end reread per selected channel",
+        "all register writes, priority/mask/preemption and PCM timing",
+        "bounded unknownC522/C523 exclusion and genuine preset/period data reads"
+      ],
+      "owners_ordering": "Catalog owns compiled immutable instructions and private source data for genuine header/preset/period consumers. Driver remains the sole channel/cursor/reset-provenance owner; no raw/native instruction owner pair or per-frame recompilation. Catalog updates rebuild only at explicit asset construction boundaries.",
+      "tests": [
+        "pre-edit full native suite and source-backed skipped unread loop operands",
+        "all primary/secondary source command, duration, seed and alias contracts",
+        "fresh all56-command register/channel/PCM probe",
+        "fresh title/selection/Amazon state/frame/audio route comparison",
+        "strict platform builds/lints"
+      ],
+      "coverage_gaps": [
+        "No new full-game or physical/audio-device QA",
+        "No new natural original-emulator complete soundtrack comparison",
+        "Source C522/C523 remains assessed no-consumer uncertainty"
+      ],
+      "coupling_risks": "Primary operand reads alter reset-selector provenance; secondary reads do not. Loops can skip unavailable target bytes. Instructions may overlap headers/presets/other stream roles, so compilation must not partition bytes into disjoint presumed streams or reject unused partial entries.",
+      "bounded_reason": "Complete primary and secondary sequence format/executors and immutable asset owner, including note decoding and source read boundaries. Oscillators, synthesizer, queue and channel arithmetic remain source-contracted and shared across platforms.",
+      "strongest_conversion_considered": "Immutable typed programs for both interpreters selected, including every imported byte entry to preserve overlapping and synthetic starts. Local enum decode/reencode or a cache that can become stale beside publicly mutable fragments is insufficient.",
+      "remaining_boundary_encodings": "Original resource locations remain necessary for public source cursor observations, branch identity and actual read-derived reset seeds. Private raw asset data remains only for genuine preset/period/header consumers. Packed channel fields remain observable through canonical reset-alias projections; instruction encodings disappear from playback.",
+      "removed_machinery": [
+        "raw sequence opcode dispatch in both playback interpreters",
+        "runtime note key/duration classification",
+        "runtime sequence operand byte fetches",
+        "publicly mutable raw instruction fragments"
+      ],
+      "outcome": "retained",
+      "contract_adaptations": "Synthetic catalog construction now uses explicit fragment import/add methods; file-authored overlays use explicit prepend/recompile. All earlier register/state/timing/seed and PCM expected values unchanged. Two skip-unavailable-target tests passed before conversion; three native model/override/wrap tests added afterward.",
+      "targeted_validation": "checks/modernize/iteration-018/audio-review.json"
     }
   ]
 }

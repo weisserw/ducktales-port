@@ -26,19 +26,19 @@ pub fn action_name(action: player::Action) -> &'static str {
     }
 }
 pub fn actor(slot: usize, a: &actors::ActorContact, label: Option<&str>) -> Value {
-    json!({"slot":slot,"active":a.state & actors::ACTIVE != 0,"state":a.state,"render":a.render,"profile":a.profile,
+    json!({"slot":slot,"active":a.state_code() & actors::ACTIVE != 0,"state":a.state_code(),"render":a.render,"profile":a.profile,
         "handler":a.handler,"family":label,"spawn_identity":a.spawn_identity,
         "position":{"world_x":a.position.world_x,"screen_y":a.position.screen_y,"x_fraction":a.position.x_fraction,"y_fraction":a.position.y_fraction},
         "screen_x":a.screen_x,"horizontal_magnitude":a.horizontal_magnitude,"vertical_velocity":a.vertical_velocity,
-        "animation":{"selector":a.animation,"frame":a.animation_frame,"tick":a.animation_tick,"restart":a.animation_restart},
-        "local":{"state":a.local_state,"counter":a.local_counter,"auxiliary":a.local_aux2,"sequence_cursor":a.sequence_cursor,"boss_protection":a.boss_protection},
+        "animation":{"selector":a.animation,"frame":a.playback.frame_code(),"tick":a.playback.tick_code(),"restart":a.playback.restart_code()},
+        "local":{"state":a.local_state_code(),"counter":a.local_counter_code(),"auxiliary":a.local_aux2,"sequence_cursor":a.sequence_cursor,"boss_protection":a.boss_protection},
         "hit_marker":a.hit_marker,"direction":a.direction,"motion_flags":a.motion_flags,"spawn_y":a.spawn_y})
 }
 pub(super) fn player_value(player: &player::Player) -> Value {
     json!({"action":action_name(player.action),"selector":player.action as u8,"queued":player.queued.map(action_name),"protection":player.protection,"special_mode":player.special_mode,"special_ticks":player.special_ticks,"gravity":player.gravity,"animation_delay":player.animation_delay,"pose_direction":player.pose_direction,"momentum_control":player.momentum_control,"momentum_direction":player.momentum_direction,"external_motion":player.external_motion,"actor_contacts":player.actor_contacts,"pogo_height_control":player.pogo_height_control,"jump_velocity":player.jump_velocity})
 }
 pub(super) fn status_value(status: &crate::status::Status) -> Value {
-    json!({"reward":status.reward,"total":status.total,"lives":status.lives,"health":{"segments":status.health.segments.iter().map(|segment|json!({"y":segment.y,"tile":segment.tile,"depleted":segment.depleted,"x":segment.x})).collect::<Vec<_>>(),"end":status.health.end,"alternating":status.health.alternating},"countdown":status.countdown,"divider":status.divider,"dirty":status.dirty,"ui_pending":status.ui_pending})
+    json!({"reward":status.reward.display_codes(),"total":status.total.display_codes(),"lives":status.lives,"health":{"segments":status.health.overlay_segments().iter().map(|segment|json!({"y":segment.y,"tile":segment.tile,"depleted":segment.depleted,"x":segment.x})).collect::<Vec<_>>(),"end":status.health.overlay_end(),"alternating":status.health.alternating},"countdown":status.countdown.display_codes(),"divider":status.divider,"dirty":status.dirty,"ui_pending":status.ui_pending})
 }
 pub(super) fn progression_value(p: &crate::progression::Progression, row: u8) -> Value {
     json!({"stage":p.stage.0,"room_row":row,"progress_bits":p.progress_bits,"accepted_stages":p.accepted_stages,"escort_prerequisite":p.escort_prerequisite,"hit_dialogue_count":p.hit_dialogue_count,"reward_progress":p.reward_progress,"seen_messages":p.seen_messages,"stage_one_extension":p.stage_one_extension,"boss_hit_points":p.boss_hit_points,"impact_latch":p.impact_latch,"late_route":p.late_route,"late_mode":p.late_mode,"scene_signal":p.scene_signal,"ending_latch":p.ending_latch,"race_intro":p.race_intro,"completion_actor":p.completion_actor,"life_loss_variant":p.life_loss_variant})

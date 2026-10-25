@@ -163,7 +163,7 @@ pub struct PlayerWorld<'a> {
     pub terrain_return: Option<TerrainReturn>,
     pub final_operation: Option<PlayerCallReturn>,
     pub special: &'a mut actors::SpecialControl,
-    pub total: &'a mut [u8; 7],
+    pub total: &'a mut crate::status::TotalMoney,
     pub ui_pending: &'a mut u8,
 }
 impl player::ContactWorld for PlayerWorld<'_> {
@@ -371,7 +371,7 @@ mod tests {
         };
         let cells = [0; world::CACHE_CELLS];
         let mut special = actors::SpecialControl::Ready;
-        let mut total = [0; 7];
+        let mut total: crate::status::TotalMoney = [0; 7].into();
         let mut ui_pending = 0;
         let mut boundary = PlayerWorld {
             content: &content,
@@ -476,7 +476,10 @@ mod tests {
             (actors::SpecialControl::Occupied(15), false),
         ] {
             *boundary.special = control;
-            actors[0].state = actors::ACTIVE;
+            {
+                let actor_value = actors::ACTIVE;
+                actors[0].set_state_code(actor_value);
+            };
             actors[0].position.world_x = u16::MAX;
             actors[0].position.x_fraction = u8::MAX;
             actors[0].horizontal_magnitude = player::NORMAL_SPEED;
@@ -486,7 +489,7 @@ mod tests {
                 &mut player,
             );
             assert_eq!(result.bits, 0);
-            assert_eq!(actors[0].state, 0);
+            assert_eq!(actors[0].state_code(), 0);
             assert_eq!(
                 boundary.final_operation,
                 Some(PlayerCallReturn::ActorZeroWrapper {
@@ -505,7 +508,10 @@ mod tests {
         *boundary.special = actors::SpecialControl::Ready;
         actors[0].position.world_x = 0x100;
         actors[0].position.x_fraction = 0;
-        actors[0].state = actors::ACTIVE;
+        {
+            let actor_value = actors::ACTIVE;
+            actors[0].set_state_code(actor_value);
+        };
         player::ContactWorld::positive_with_collision(&mut boundary, &mut actors, &mut player);
         assert_eq!(
             boundary.final_operation,
@@ -513,20 +519,20 @@ mod tests {
                 identity_comparison: None
             })
         );
-        *boundary.total = [0, 3, crate::status::BLANK, 0, 0, 0, 7];
-        let mut health = crate::status::Health {
-            segments: std::array::from_fn(|index| crate::status::HealthSegment {
+        *boundary.total = [0, 3, crate::status::BLANK, 0, 0, 0, 7].into();
+        let mut health = crate::status::Health::from_overlay(
+            std::array::from_fn(|index| crate::status::HealthSegment {
                 y: if index == 3 { u8::MAX } else { 0x20 },
                 tile: 0,
                 depleted: u8::from(index == 2),
                 x: 0,
             }),
-            end: u8::MAX,
-            alternating: 1,
-        };
+            u8::MAX,
+            1,
+        );
         player::ContactWorld::overlay_cost(&mut boundary, &mut health);
         assert_eq!(
-            *boundary.total,
+            boundary.total.display_codes(),
             [
                 crate::status::BLANK,
                 crate::status::BLANK,
@@ -541,7 +547,7 @@ mod tests {
             (
                 *boundary.ui_pending,
                 health.alternating,
-                health.segments[2].depleted
+                health.overlay_segments()[2].depleted
             ),
             (1, 0, 0)
         );

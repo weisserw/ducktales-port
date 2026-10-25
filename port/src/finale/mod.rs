@@ -119,25 +119,40 @@ pub fn actor_step(
                 if result.defeated {
                     let actor = &mut _pool[slot];
                     actor.animation = 0x2a;
-                    actor.animation_tick = 0;
-                    actor.animation_frame = 0;
+                    actor.playback.restart_clock();
+                    actor.playback.reset_frame();
                     actor.profile = 0;
-                    actor.state = 0xa0;
-                    actor.handler = DEFEATED_HANDLER;
+                    {
+                        let actor_value = 0xa0;
+                        actor.set_state_code(actor_value);
+                    };
+                    {
+                        let actor_value = DEFEATED_HANDLER;
+                        actor.set_handler(actor_value);
+                    };
                     return effects;
                 }
                 increment = false;
             }
-            _pool[slot].animation_tick = 0;
-            if _pool[slot].state & 15 == 0 {
+            _pool[slot].playback.restart_clock();
+            if _pool[slot].state_code() & 15 == 0 {
                 _pool[slot].position.screen_y = OPENING_Y;
-                _pool[slot].local_state = INITIAL_DELAY;
+                {
+                    let actor_value = INITIAL_DELAY;
+                    _pool[slot].set_local_state_code(actor_value);
+                };
                 _context.terrain.collision[BOSS_TERRAIN_CELL] = BOSS_TERRAIN_CODE;
-                _pool[slot].state = _pool[slot].state.wrapping_add(1);
+                {
+                    let actor_value = _pool[slot].state_code().wrapping_add(1);
+                    _pool[slot].set_state_code(actor_value);
+                };
             }
-            if _pool[slot].local_state != 0 {
-                _pool[slot].local_state -= 1;
-                if _pool[slot].local_state != 0 {
+            if _pool[slot].local_state_code() != 0 {
+                {
+                    let actor_value = _pool[slot].local_state_code() - (1);
+                    _pool[slot].set_local_state_code(actor_value);
+                };
+                if _pool[slot].local_state_code() != 0 {
                     return effects;
                 }
                 let words = &mut _context.random.words;
@@ -146,9 +161,15 @@ pub fn actor_step(
                     .wrapping_add(u8::from(increment));
                 _pool[slot].position.world_x = (_pool[slot].position.world_x & 0xff00)
                     | u16::from(_context.catalog.positions[usize::from(words[0] & 15)]);
-                _pool[slot].local_counter = TELEPORT_FLASH;
+                {
+                    let actor_value = TELEPORT_FLASH;
+                    _pool[slot].set_local_counter_code(actor_value);
+                };
                 _pool[slot].render |= 2;
-                _pool[slot].state &= !0x10;
+                {
+                    let actor_value = _pool[slot].state_code() & (!0x10);
+                    _pool[slot].set_state_code(actor_value);
+                };
                 _pool[slot].direction = if _pool[slot].position.world_x < _pool[0].position.world_x
                 {
                     1
@@ -159,24 +180,36 @@ pub fn actor_step(
                     | _context.catalog.facing[usize::from(_pool[slot].direction & 1)];
                 return effects;
             }
-            if _pool[slot].local_counter != 0 {
-                _pool[slot].local_counter -= 1;
-                if _pool[slot].local_counter != 0 {
+            if _pool[slot].local_counter_code() != 0 {
+                {
+                    let actor_value = _pool[slot].local_counter_code() - (1);
+                    _pool[slot].set_local_counter_code(actor_value);
+                };
+                if _pool[slot].local_counter_code() != 0 {
                     return effects;
                 }
                 _pool[slot].render &= 0xf0;
-                _pool[slot].animation_frame = 1;
+                {
+                    let animation_value = 1;
+                    _pool[slot].playback.set_frame_code(animation_value);
+                };
                 _pool[slot].profile = EXPOSED_PROFILE;
                 let parent = _pool[slot];
                 let actor = &mut _pool[ATTACK_SLOT];
                 actor.position.screen_y = ATTACK_Y;
-                actor.animation_tick = 0;
-                actor.animation_frame = 0;
+                actor.playback.restart_clock();
+                actor.playback.reset_frame();
                 actor.hit_marker = 0;
-                actor.state = 0xa0;
+                {
+                    let actor_value = 0xa0;
+                    actor.set_state_code(actor_value);
+                };
                 actor.render = 0xa0;
                 actor.animation = ATTACK_ANIMATION;
-                actor.handler = ATTACK_HANDLER;
+                {
+                    let actor_value = ATTACK_HANDLER;
+                    actor.set_handler(actor_value);
+                };
                 actor.profile = ATTACK_PROFILE;
                 actor.position.world_x = (parent.position.world_x & 0xff00)
                     | u16::from((parent.position.world_x as u8).wrapping_add(
@@ -188,70 +221,112 @@ pub fn actor_step(
             }
             if _pool[slot].local_aux2 == TELEPORT_FLASH {
                 _pool[slot].render |= 2;
-                _pool[slot].animation_frame = 0;
+                _pool[slot].playback.reset_frame();
             }
             _pool[slot].local_aux2 = _pool[slot].local_aux2.wrapping_sub(1);
             if _pool[slot].local_aux2 == 0 {
                 _pool[slot].profile = 0;
-                _pool[slot].state |= 0x10;
-                _pool[slot].local_state = TELEPORT_FLASH;
+                {
+                    let actor_value = _pool[slot].state_code() | (0x10);
+                    _pool[slot].set_state_code(actor_value);
+                };
+                {
+                    let actor_value = TELEPORT_FLASH;
+                    _pool[slot].set_local_state_code(actor_value);
+                };
             }
         }
         DEFEATED_HANDLER => {
-            if _pool[slot].state & 15 == 0 {
-                if _pool[slot].animation_frame == 0
-                    || _pool[slot].animation_tick != DEFEAT_FRAME_TICK
+            if _pool[slot].state_code() & 15 == 0 {
+                if _pool[slot].playback.at_initial_frame(0)
+                    || !_pool[slot].playback.at_running_tick(DEFEAT_FRAME_TICK)
                 {
                     return effects;
                 }
-                _pool[slot].state = 0xb1;
-                _pool[slot].local_state = DEFEAT_PAUSE;
+                {
+                    let actor_value = 0xb1;
+                    _pool[slot].set_state_code(actor_value);
+                };
+                {
+                    let actor_value = DEFEAT_PAUSE;
+                    _pool[slot].set_local_state_code(actor_value);
+                };
             }
-            if _pool[slot].local_state != 0 {
-                _pool[slot].local_state -= 1;
+            if _pool[slot].local_state_code() != 0 {
+                {
+                    let actor_value = _pool[slot].local_state_code() - (1);
+                    _pool[slot].set_local_state_code(actor_value);
+                };
             } else {
-                _pool[slot].state = 0;
+                {
+                    let actor_value = 0;
+                    _pool[slot].set_state_code(actor_value);
+                };
                 _context.player.action = Action::Dialogue;
                 _context.progression.race_intro = _context.progression.race_intro.wrapping_add(1);
                 _context.dialogue.message = 0x0b;
             }
         }
         CLIMBER_HANDLER => {
-            if _pool[slot].state & 15 == 0 {
+            if _pool[slot].state_code() & 15 == 0 {
                 _pool[slot].local_aux2 = 0;
-                _pool[slot].local_state = _pool[slot].position.screen_y;
-                _pool[slot].local_counter = 2;
-                _pool[slot].state = _pool[slot].state.wrapping_add(1);
+                {
+                    let actor_value = _pool[slot].position.screen_y;
+                    _pool[slot].set_local_state_code(actor_value);
+                };
+                {
+                    let actor_value = 2;
+                    _pool[slot].set_local_counter_code(actor_value);
+                };
+                {
+                    let actor_value = _pool[slot].state_code().wrapping_add(1);
+                    _pool[slot].set_state_code(actor_value);
+                };
             }
-            if _pool[LEADER_SLOT].local_counter == 0
-                && _pool[LEADER_SLOT].local_state < LEADER_FINISH_Y
+            if _pool[LEADER_SLOT].local_counter_code() == 0
+                && _pool[LEADER_SLOT].local_state_code() < LEADER_FINISH_Y
             {
-                _pool[LEADER_SLOT].local_aux2 = _pool[LEADER_SLOT].local_state;
-                if _pool[LEADER_SLOT].local_state != 0 {
+                _pool[LEADER_SLOT].local_aux2 = _pool[LEADER_SLOT].local_state_code();
+                if _pool[LEADER_SLOT].local_state_code() != 0 {
                     return effects;
                 }
             }
             let actor = &mut _pool[slot];
-            let (low, borrow) = actor.local_state.overflowing_sub(1);
-            actor.local_state = if borrow { low.wrapping_sub(16) } else { low };
+            let (low, borrow) = actor.local_state_code().overflowing_sub(1);
+            {
+                let actor_value = if borrow { low.wrapping_sub(16) } else { low };
+                actor.set_local_state_code(actor_value);
+            };
             if borrow {
-                actor.local_counter = actor.local_counter.wrapping_sub(1);
+                {
+                    let actor_value = actor.local_counter_code().wrapping_sub(1);
+                    actor.set_local_counter_code(actor_value);
+                };
             }
-            if actor.local_counter == _context.current_row {
-                actor.state &= !0x10;
-                actor.position.screen_y = actor.local_state;
+            if actor.local_counter_code() == _context.current_row {
+                {
+                    let actor_value = actor.state_code() & (!0x10);
+                    actor.set_state_code(actor_value);
+                };
+                actor.position.screen_y = actor.local_state_code();
             } else {
-                actor.state |= 0x10;
+                {
+                    let actor_value = actor.state_code() | (0x10);
+                    actor.set_state_code(actor_value);
+                };
             }
         }
         GOAL_HANDLER => {
-            if _pool[slot].state & 15 == 0 {
+            if _pool[slot].state_code() & 15 == 0 {
                 if _pool[LEADER_SLOT].local_aux2 != 0 {
                     let next = (_pool[slot].position.world_x as u8).wrapping_add(1);
                     _pool[slot].position.world_x =
                         (_pool[slot].position.world_x & 0xff00) | u16::from(next);
                     if next >= GOAL_LOSS_X {
-                        _pool[slot].state = 0;
+                        {
+                            let actor_value = 0;
+                            _pool[slot].set_state_code(actor_value);
+                        };
                         if _context.player.action != Action::Death {
                             _context.dialogue.message = 0x0c;
                             _context.player.action = Action::Dialogue;
@@ -264,16 +339,25 @@ pub fn actor_step(
                 {
                     return effects;
                 }
-                _pool[slot].state = _pool[slot].state.wrapping_add(1);
+                {
+                    let actor_value = _pool[slot].state_code().wrapping_add(1);
+                    _pool[slot].set_state_code(actor_value);
+                };
                 effects
                     .audio
                     .extend([AudioRequest::Stage(0xff), AudioRequest::Effect(GOAL_SOUND)]);
-                _pool[slot].local_state = 0xf0;
+                {
+                    let actor_value = 0xf0;
+                    _pool[slot].set_local_state_code(actor_value);
+                };
                 _context.player.action = Action::Hold;
             }
             _context.status.divider = 0;
-            _pool[slot].local_state = _pool[slot].local_state.wrapping_sub(1);
-            if _pool[slot].local_state == 0 {
+            {
+                let actor_value = _pool[slot].local_state_code().wrapping_sub(1);
+                _pool[slot].set_local_state_code(actor_value);
+            };
+            if _pool[slot].local_state_code() == 0 {
                 _context.progression.ending_latch =
                     _context.progression.ending_latch.wrapping_add(1);
             }
@@ -495,10 +579,10 @@ impl Ending {
                 }
                 EndingPhase::Layout => {
                     self.variation = if _context.progression.progress_bits & 0x7f == 0x7f
-                        && _context.status.total[0] != crate::status::BLANK
+                        && _context.status.total.ending_has_top_digit()
                     {
                         2
-                    } else if _context.status.total[6] == crate::status::BLANK {
+                    } else if _context.status.total.ending_has_no_value() {
                         1
                     } else {
                         0

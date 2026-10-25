@@ -122,6 +122,32 @@ false; slot1 caller residue is explicit integration obligation, not global RNG.
 
 ## PERIMETER28 A6D3..A8AC physical1A6E3..1A8BC
 
+Iteration013 decodes the complete20-node perimeter program at asset loading.
+Each PerimeterStep owns a named horizontal/vertical heading, correction choice
+and ContactGate (Neither/Horizontal/Vertical/Both or an unreachable source mask).
+Gameplay no longer reads packed direction records or interprets collision-mask
+bytes. Mirroring is a heading operation; actor direction/motion projections still
+feed the unchanged shared helpers. Current runtime motion flags remain separately
+observable state and are not replaced by an assumption that fixtures/callbacks
+always match the current catalog node.
+
+The wave program is likewise decoded into Spawn{x,at_tick}/AwaitLastChild
+instructions instead of parallel X/time arrays. The source checks zero-X before
+reading its parallel timer byte, so the unused endpoint-time value is omitted
+rather than retained for an obsolete layout assertion. Spawn timestamps remain
+exact byte equalities, with same-call equal-time child emission and one tick
+increment only on mismatch. The last-child any-nonzero-state gate, camera shake,
+partial child initialization and reset/bounce order are unchanged.
+
+Prior source-backed contracts retain their expected gameplay values. Catalog
+metadata tests compare decoded used path bits and gates, and independently
+source-derived Spawn/Wait instructions. Every source mask and both axis results
+were checked before conversion; all20 nodes/both orientations, paired wave
+spawns, time wrap, endpoints and last-child behavior retain integration coverage.
+Plain motion-preset indices remain asset identities; this conversion removes the
+packed control/parallel movement-program machinery rather than renaming those IDs.
+
+
 Phase0 animation2A waits nonzeroframe/tick5 then animation62,tick/frame0,
 profileOR80,returns. Otheranimation clearsvelocity/localstate/motion,YB0,Xlow80
 preservingpage/fractions,cache05E7=55,INCstate then Fall31/count2 SAMECALL.

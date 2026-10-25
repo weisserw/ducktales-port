@@ -199,16 +199,22 @@ impl PlatformCall<'_, '_, '_> {
     }
     fn increment(&mut self) {
         let s = self.slot;
-        self.actors[s].state = self.actors[s].state.wrapping_add(1);
+        {
+            let actor_value = self.actors[s].state_code().wrapping_add(1);
+            self.actors[s].set_state_code(actor_value);
+        };
     }
     fn decrement(&mut self) {
         let s = self.slot;
-        self.actors[s].state = self.actors[s].state.wrapping_sub(1);
+        {
+            let actor_value = self.actors[s].state_code().wrapping_sub(1);
+            self.actors[s].set_state_code(actor_value);
+        };
     }
     fn clocks(&mut self) {
         let s = self.slot;
-        self.actors[s].animation_tick = 0;
-        self.actors[s].animation_frame = 0;
+        self.actors[s].playback.restart_clock();
+        self.actors[s].playback.reset_frame();
     }
     fn distance(&self) -> u8 {
         let a = self.actors[self.slot].position.world_x;
@@ -243,7 +249,7 @@ impl PlatformCall<'_, '_, '_> {
         match self.actors[s].handler {
             VERTICAL => {
                 self.actors[s].vertical_velocity = WALK_SPEED as i16;
-                if self.actors[s].state & 15 == 0 {
+                if self.actors[s].state_code() & 15 == 0 {
                     self.integrate(Integration::Vertical(
                         VerticalOperation::SubtractEncodedVelocity,
                     ));
@@ -263,13 +269,16 @@ impl PlatformCall<'_, '_, '_> {
                 }
             }
             WALKING => {
-                if self.actors[s].state & 15 == 0 {
+                if self.actors[s].state_code() & 15 == 0 {
                     let a = self.actors[s].position.world_x;
                     let p = self.actors[0].position.world_x;
                     if p < a || (p.wrapping_sub(a) as u8) < 0x10 {
                         return;
                     }
-                    self.actors[s].state &= !0x10;
+                    {
+                        let actor_value = self.actors[s].state_code() & (!0x10);
+                        self.actors[s].set_state_code(actor_value);
+                    };
                     self.actors[s].vertical_velocity = 0;
                     self.actors[s].horizontal_magnitude = WALK_SPEED;
                     self.actors[s].direction = 1;
@@ -287,7 +296,7 @@ impl PlatformCall<'_, '_, '_> {
                 if bits & 1 != 0 {
                     self.actors[s].direction ^= 3;
                 }
-                if self.actors[s].animation_tick == 0 {
+                if self.actors[s].playback.at_running_tick(0) {
                     self.sound(0x27);
                 }
             }
@@ -295,7 +304,7 @@ impl PlatformCall<'_, '_, '_> {
             RIDEABLE => self.ride(),
             PUSHING => self.pushing(),
             CARRYING => {
-                if self.actors[s].state & 15 == 0 {
+                if self.actors[s].state_code() & 15 == 0 {
                     if !self.contact() {
                         return;
                     }
@@ -303,22 +312,28 @@ impl PlatformCall<'_, '_, '_> {
                     self.actors[s].animation = CARRY_ANIMATION;
                     self.actors[0].animation = CARRIED_ANIMATION;
                     self.clocks();
-                    self.actors[0].animation_frame = 0;
-                    self.actors[0].animation_tick = 0;
+                    self.actors[0].playback.reset_frame();
+                    self.actors[0].playback.restart_clock();
                     self.increment();
                     self.actors[s].vertical_velocity = 0;
                     self.actors[s].horizontal_magnitude = WALK_SPEED;
                 }
-                self.actors[s].local_state = Action::CarriedJumpable as u8;
+                {
+                    let actor_value = Action::CarriedJumpable as u8;
+                    self.actors[s].set_local_state_code(actor_value);
+                };
                 if self.motion(Movement::Fall, 0x31, 2).bits & 1 != 0 {
                     self.motion(Movement::NegativeX, 0x38, 0);
-                    self.actors[s].local_state = Action::CarriedLocked as u8;
+                    {
+                        let actor_value = Action::CarriedLocked as u8;
+                        self.actors[s].set_local_state_code(actor_value);
+                    };
                 }
                 if matches!(
                     self.context.player.action,
                     Action::CarriedLocked | Action::CarriedJumpable
                 ) {
-                    self.context.player.action = if self.actors[s].local_state == 10 {
+                    self.context.player.action = if self.actors[s].local_state_code() == 10 {
                         Action::CarriedLocked
                     } else {
                         Action::CarriedJumpable
@@ -326,13 +341,13 @@ impl PlatformCall<'_, '_, '_> {
                     self.actors[0].position.screen_y =
                         self.actors[s].position.screen_y.wrapping_sub(0x0b);
                     self.actors[0].position.world_x = self.actors[s].position.world_x;
-                    if self.actors[s].animation_tick == 0 {
+                    if self.actors[s].playback.at_running_tick(0) {
                         self.sound(0x33);
                     }
                 }
             }
             EXTERNAL => {
-                if self.actors[s].state & 15 == 0 {
+                if self.actors[s].state_code() & 15 == 0 {
                     if self.distance() >= 4 {
                         return;
                     }
@@ -342,7 +357,10 @@ impl PlatformCall<'_, '_, '_> {
                 let facts = self.motion(Movement::PositiveX, 0x35, 0);
                 if facts.bits & 1 != 0 {
                     self.motion(Movement::PositiveX, 1, facts.continuation_remaining);
-                    self.actors[s].handler = 0;
+                    {
+                        let actor_value = 0;
+                        self.actors[s].set_handler(actor_value);
+                    };
                 }
                 if self.distance() < 0x15 && self.y_distance() < 0x15 {
                     self.context.player.external_motion =
@@ -350,17 +368,17 @@ impl PlatformCall<'_, '_, '_> {
                 }
             }
             LIFT => {
-                if self.actors[s].state & 15 == 0 {
+                if self.actors[s].state_code() & 15 == 0 {
                     if !self.contact() || self.context.player.action == Action::Death {
                         return;
                     }
                     self.increment();
                     self.actors[0].animation = 4;
-                    self.actors[0].animation_frame = 0;
+                    self.actors[0].playback.reset_frame();
                     self.actors[0].position.world_x = self.actors[s].position.world_x;
                     self.context.player.action = Action::Hold;
                 }
-                self.actors[0].animation_tick = 0;
+                self.actors[0].playback.restart_clock();
                 self.actors[s].position.screen_y = self.actors[s].position.screen_y.wrapping_sub(2);
                 self.actors[0].position.screen_y = self.actors[s].position.screen_y;
                 if self.actors[s].position.screen_y < 0x10 {
@@ -368,17 +386,29 @@ impl PlatformCall<'_, '_, '_> {
                 }
             }
             FOUR_PHASE => {
-                if self.actors[s].state & 15 == 0 {
-                    self.actors[s].local_state = 0;
-                    self.actors[s].local_counter = 0;
+                if self.actors[s].state_code() & 15 == 0 {
+                    {
+                        let actor_value = 0;
+                        self.actors[s].set_local_state_code(actor_value);
+                    };
+                    {
+                        let actor_value = 0;
+                        self.actors[s].set_local_counter_code(actor_value);
+                    };
                     self.actors[s].horizontal_magnitude = 0x100;
                     self.increment();
                 }
-                if self.actors[s].local_counter == 0 {
-                    let index = usize::from(self.actors[s].local_state & 3);
+                if self.actors[s].local_counter_code() == 0 {
+                    let index = usize::from(self.actors[s].local_state_code() & 3);
                     self.actors[s].direction = self.context.catalog.phases[index];
-                    self.actors[s].local_counter = PHASE_TICKS;
-                    self.actors[s].local_state = self.actors[s].local_state.wrapping_add(1);
+                    {
+                        let actor_value = PHASE_TICKS;
+                        self.actors[s].set_local_counter_code(actor_value);
+                    };
+                    {
+                        let actor_value = self.actors[s].local_state_code().wrapping_add(1);
+                        self.actors[s].set_local_state_code(actor_value);
+                    };
                 }
                 self.integrate(Integration::Horizontal(
                     if self.actors[s].direction & 1 != 0 {
@@ -387,7 +417,10 @@ impl PlatformCall<'_, '_, '_> {
                         HorizontalDirection::Negative
                     },
                 ));
-                self.actors[s].local_counter = self.actors[s].local_counter.wrapping_sub(1);
+                {
+                    let actor_value = self.actors[s].local_counter_code().wrapping_sub(1);
+                    self.actors[s].set_local_counter_code(actor_value);
+                };
                 self.actors[s].profile = CARRY_CONTACT_PROFILE;
                 if self.contact() {
                     let index = usize::from((self.actors[s].direction & 2) >> 1);
@@ -408,29 +441,48 @@ impl PlatformCall<'_, '_, '_> {
             self.reaction();
             return;
         }
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             self.increment();
-            self.actors[s].local_state = 0;
-            self.actors[s].local_counter = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_counter_code(actor_value);
+            };
             self.face();
             if self.actors[s].direction & 2 == 0 {
                 self.actors[s].render |= 0x40;
             }
         }
-        if self.actors[s].local_state == 0 {
-            let selector = self.context.catalog.flight[usize::from(self.actors[s].local_counter)];
+        if self.actors[s].local_state_code() == 0 {
+            let selector =
+                self.context.catalog.flight[usize::from(self.actors[s].local_counter_code())];
             self.world.preset(self.actors, s, selector);
             if self.actors[s].horizontal_magnitude & 0x8000 != 0 {
                 self.actors[s].horizontal_magnitude =
                     self.actors[s].horizontal_magnitude.wrapping_neg();
             }
-            self.actors[s].local_counter = self.actors[s].local_counter.wrapping_add(1);
-            if self.actors[s].local_counter == 14 {
-                self.actors[s].local_counter = 0;
+            {
+                let actor_value = self.actors[s].local_counter_code().wrapping_add(1);
+                self.actors[s].set_local_counter_code(actor_value);
+            };
+            if self.actors[s].local_counter_code() == 14 {
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_local_counter_code(actor_value);
+                };
             }
-            self.actors[s].local_state = FLIGHT_HOLD;
+            {
+                let actor_value = FLIGHT_HOLD;
+                self.actors[s].set_local_state_code(actor_value);
+            };
         }
-        self.actors[s].local_state = self.actors[s].local_state.wrapping_sub(1);
+        {
+            let actor_value = self.actors[s].local_state_code().wrapping_sub(1);
+            self.actors[s].set_local_state_code(actor_value);
+        };
         self.signed_y();
         let positive = self.actors[s].direction & 2 == 0;
         if self.integrate(Integration::Horizontal(if positive {
@@ -442,7 +494,7 @@ impl PlatformCall<'_, '_, '_> {
             crate::actors::remove(self.actors, s, self.context.special, true, 0);
             return;
         }
-        if self.actors[s].animation_tick == 0 {
+        if self.actors[s].playback.at_running_tick(0) {
             self.sound(0x2b);
         }
         self.contact();
@@ -450,27 +502,45 @@ impl PlatformCall<'_, '_, '_> {
     fn ride(&mut self) {
         use crate::player::Action;
         let s = self.slot;
-        if self.actors[s].state & 15 == 0 {
-            self.actors[s].local_state = 0;
-            self.actors[s].local_counter = 0;
+        if self.actors[s].state_code() & 15 == 0 {
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_counter_code(actor_value);
+            };
             self.actors[s].position.x_fraction = 0;
             self.actors[s].position.y_fraction = 0;
             self.increment();
         }
-        if self.actors[s].animation_tick == 0 {
+        if self.actors[s].playback.at_running_tick(0) {
             self.sound(0x26);
         }
-        if self.actors[s].local_state == 0 {
-            let packed = self.context.catalog.ride[usize::from(self.actors[s].local_counter)];
+        if self.actors[s].local_state_code() == 0 {
+            let packed =
+                self.context.catalog.ride[usize::from(self.actors[s].local_counter_code())];
             self.world.preset(self.actors, s, packed & 31);
-            self.actors[s].local_state =
-                self.context.catalog.ride_duration[usize::from(packed >> 7)];
-            self.actors[s].local_counter = self.actors[s].local_counter.wrapping_add(1);
-            if self.actors[s].local_counter == 36 {
-                self.actors[s].local_counter = 0;
+            {
+                let actor_value = self.context.catalog.ride_duration[usize::from(packed >> 7)];
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = self.actors[s].local_counter_code().wrapping_add(1);
+                self.actors[s].set_local_counter_code(actor_value);
+            };
+            if self.actors[s].local_counter_code() == 36 {
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_local_counter_code(actor_value);
+                };
             }
         }
-        self.actors[s].local_state = self.actors[s].local_state.wrapping_sub(1);
+        {
+            let actor_value = self.actors[s].local_state_code().wrapping_sub(1);
+            self.actors[s].set_local_state_code(actor_value);
+        };
         self.signed_y();
         let actor = &mut self.actors[s];
         let fixed = u32::from(actor.position.world_x) << 8 | u32::from(actor.position.x_fraction);
@@ -486,8 +556,8 @@ impl PlatformCall<'_, '_, '_> {
             }
             self.context.player.action = Action::WaitA;
             self.actors[0].animation = 4;
-            self.actors[0].animation_tick = 0;
-            self.actors[0].animation_frame = 0;
+            self.actors[0].playback.restart_clock();
+            self.actors[0].playback.reset_frame();
         }
         self.actors[0].position.world_x = self.actors[s].position.world_x;
         self.actors[0].position.screen_y = self.actors[s].position.screen_y;
@@ -505,31 +575,41 @@ impl PlatformCall<'_, '_, '_> {
         if self.motion(Movement::Fall, 0x4a, 2).bits & 1 == 0 {
             return;
         }
-        if self.actors[s].state & 15 == 0 {
-            self.actors[s].animation_tick = 0;
+        if self.actors[s].state_code() & 15 == 0 {
+            self.actors[s].playback.restart_clock();
             if self.distance() < 0x50 {
                 self.actors[s].vertical_velocity = 0;
-                self.actors[s].local_state = 0;
-                self.actors[s].local_counter = 0;
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_local_state_code(actor_value);
+                };
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_local_counter_code(actor_value);
+                };
                 self.actors[s].horizontal_magnitude = 0x100;
                 self.face();
                 self.increment();
             }
             return;
         }
-        if self.actors[s].state & 2 != 0 {
-            if self.actors[s].animation_frame == 5 {
+        if self.actors[s].state_code() & 2 != 0 {
+            if self.actors[s].playback.at_initial_frame(5) {
                 self.decrement();
                 self.actors[s].animation = self.actors[s].animation.wrapping_sub(1);
                 self.clocks();
                 self.actors[s].horizontal_magnitude =
                     (self.actors[s].horizontal_magnitude & 0xff) | 0x200;
-                self.actors[s].local_counter = self.actors[s].local_counter.wrapping_add(1);
+                {
+                    let actor_value = self.actors[s].local_counter_code().wrapping_add(1);
+                    self.actors[s].set_local_counter_code(actor_value);
+                };
                 return;
             }
-            if self.actors[s].local_state != 0 && self.actors[s].animation_frame == 3 {
+            if self.actors[s].local_state_code() != 0 && self.actors[s].playback.at_initial_frame(3)
+            {
                 self.context.player.pose_direction = self.actors[s].direction;
-                let target = usize::from(self.actors[s].local_state);
+                let target = usize::from(self.actors[s].local_state_code());
                 let effects = self.world.activate_terrain(
                     self.actors,
                     self.context.player,
@@ -537,7 +617,10 @@ impl PlatformCall<'_, '_, '_> {
                     self.context.changed,
                 );
                 merge_effects(&mut self.effects, effects);
-                self.actors[s].local_state = 0;
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_local_state_code(actor_value);
+                };
             }
             return;
         }
@@ -546,17 +629,23 @@ impl PlatformCall<'_, '_, '_> {
         } else {
             self.motion(Movement::NegativeX, 0x47, 2)
         };
-        if self.actors[s].local_counter == 0 {
+        if self.actors[s].local_counter_code() == 0 {
             if facts.bits & 1 == 0 {
                 return;
             }
             if let Some(target) = self.world.actor_contact(self.actors, s) {
                 self.actors[s].animation = WALK_ANIMATION;
                 if self.actors[target].handler == 8 {
-                    self.actors[s].local_state = target as u8;
+                    {
+                        let actor_value = target as u8;
+                        self.actors[s].set_local_state_code(actor_value);
+                    };
                     self.increment();
                     self.actors[s].animation = self.actors[s].animation.wrapping_add(1);
-                    self.actors[s].local_counter = self.actors[s].local_counter.wrapping_add(1);
+                    {
+                        let actor_value = self.actors[s].local_counter_code().wrapping_add(1);
+                        self.actors[s].set_local_counter_code(actor_value);
+                    };
                     self.clocks();
                     let index = usize::from((self.actors[s].direction & 2) >> 1);
                     self.actors[s].position.world_x = self.actors[s]
@@ -568,17 +657,26 @@ impl PlatformCall<'_, '_, '_> {
             }
             self.actors[s].horizontal_magnitude =
                 self.actors[s].horizontal_magnitude.wrapping_add(0x100);
-            self.actors[s].local_counter = self.actors[s].local_counter.wrapping_add(1);
+            {
+                let actor_value = self.actors[s].local_counter_code().wrapping_add(1);
+                self.actors[s].set_local_counter_code(actor_value);
+            };
             return;
         }
-        if self.actors[s].local_state != 0 {
+        if self.actors[s].local_state_code() != 0 {
             return;
         }
-        self.actors[s].state ^= 0x40;
+        {
+            let actor_value = self.actors[s].state_code() ^ (0x40);
+            self.actors[s].set_state_code(actor_value);
+        };
         self.actors[s].horizontal_magnitude =
             self.actors[s].horizontal_magnitude.wrapping_sub(BRAKE_STEP);
         if self.actors[s].horizontal_magnitude & 0x8000 != 0 {
-            self.actors[s].local_state = 0xff;
+            {
+                let actor_value = 0xff;
+                self.actors[s].set_local_state_code(actor_value);
+            };
             self.actors[s].horizontal_magnitude = BRAKE_RESTART;
             self.actors[s].direction ^= 3;
         }

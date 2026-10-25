@@ -118,12 +118,24 @@ The exact four bytes are local source-derived expectations in the tests.
 
 ## Background continuation, every state branch
 
-Modernization iteration007 shares the post-read chunk transition and terminal
-palette effect between ROM-backed and prepared-background adapters. Each adapter
-still validates and reads its own source before advancing the one continuation.
-Every original list is compared per poll (effect and cursor) at suspension depths
-0/1/80/FF against the independently source-contracted ROM adapter. Malformed or
-exhausted prepared spans are checked to leave the continuation unchanged on error.
+Modernization iteration008 compiles validated spans into ordered fixed-size
+updates at the asset boundary. Gameplay retains only Updating(next)/Complete,
+with no record/chunk counters, destination arithmetic or source reads. The final
+palette remains a separate poll. Bank selection,64-byte cadence and queue alias
+framing remain required observable boundaries, not discarded hardware details.
+Record/chunk observations are a read-only metadata projection for debug clients.
+The iteration007 continuation survives only in contracts.rs as a differential
+oracle. Every original list is compared per poll (effect and projected position)
+at suspension depths0/1/80/FF; source-backed literal expectations also exercise
+the new plan directly. Destination wrap, changing suspension and late palette
+selection have independent regression coverage.
+
+Malformed/empty spans now fail transactionally at plan construction, before any
+game session begins. Original decoded records always contain at least one page;
+an empty *list* remains valid and emits its actual negative palette tag. Invalid
+manually edited cursors no longer exist in the production model. Their historical
+regression remains on the frozen oracle, with asset-boundary validation coverage
+on the new model. No expected gameplay value was changed.
 
 A new list increments state0->1, sets descriptor pointer, clears descriptor cursor,
 source low and destination low. State AND02 false: increment1->2, parse record and

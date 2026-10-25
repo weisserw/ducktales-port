@@ -272,7 +272,10 @@ pub fn secondary_shared(
 }
 pub fn collect(actors: &mut ActorPool, slot: usize, context: &mut Context<'_>) -> Effects {
     let animation = actors[slot].animation;
-    actors[slot].state = 0;
+    {
+        let actor_value = 0;
+        actors[slot].set_state_code(actor_value);
+    };
     let mut effects = Effects {
         reward_animation: Some(animation),
         ..Effects::default()
@@ -283,7 +286,9 @@ pub fn collect(actors: &mut ActorPool, slot: usize, context: &mut Context<'_>) -
                 .sounds
                 .push(context.catalog.reward_sound[usize::from(animation - 0x23)]);
             match animation {
-                0x23 => context.status.add_reward(3, 2),
+                0x23 => context
+                    .status
+                    .credit_reward(crate::status::RewardCredit::Pickup),
                 0x24 => context.status.health.recover_one(),
                 0x25 => context.status.health.restore(),
                 0x26 => {
@@ -292,7 +297,9 @@ pub fn collect(actors: &mut ActorPool, slot: usize, context: &mut Context<'_>) -
                     context.player.special_ticks = 0x1e0;
                 }
                 0x27 => context.status.gain_life(),
-                0x28 => context.status.add_reward(2, 1),
+                0x28 => context
+                    .status
+                    .credit_reward(crate::status::RewardCredit::LargePickup),
                 _ => {
                     *context.reward_flags |= if context.stage == 4 { 4 } else { 2 };
                     *context.dialogue = Some(if context.stage == 4 { 0x10 } else { 0x0e });
@@ -302,7 +309,9 @@ pub fn collect(actors: &mut ActorPool, slot: usize, context: &mut Context<'_>) -
         }
         0x61 => {
             effects.sounds.push(0x15);
-            context.status.add_reward(2, 5);
+            context
+                .status
+                .credit_reward(crate::status::RewardCredit::ExtraPickup);
         }
         0x2b => {
             if context.stage == 1 {
@@ -313,7 +322,9 @@ pub fn collect(actors: &mut ActorPool, slot: usize, context: &mut Context<'_>) -
         0x6f..=0x76 => {
             effects.sounds.push(0x37);
             *context.completion_latch = 0;
-            context.status.add_reward(0, 1);
+            context
+                .status
+                .credit_reward(crate::status::RewardCredit::Treasure);
             *context.stage_bits |= 1u8 << (animation - 0x6f);
             if animation < 0x74 {
                 context.player.action = crate::player::Action::ConvertTimer;
@@ -338,11 +349,17 @@ pub fn launch_terrain_shared(
     let actor = &mut actors[slot];
     let selector = actor.animation.wrapping_sub(0x1a);
     actor.direction = pose_direction;
-    actor.state = (actor.state & 0xf0) | selector;
+    {
+        let actor_value = (actor.state_code() & 0xf0) | selector;
+        actor.set_state_code(actor_value);
+    };
     actor.vertical_velocity = catalog.launch_vertical[usize::from(selector)];
     actor.horizontal_magnitude = catalog.launch_horizontal[usize::from(selector)];
     actor.motion_flags = 0;
-    actor.handler = actor.handler.wrapping_add(1);
+    {
+        let actor_value = actor.handler.wrapping_add(1);
+        actor.set_handler(actor_value);
+    };
 }
 /// Exact869D entry skips the preceding swing and animation3F tests.
 pub fn activate_terrain(
@@ -355,8 +372,11 @@ pub fn activate_terrain(
         return Effects::default();
     }
     *context.changed = context.changed.wrapping_add(1);
-    if actors[slot].state & TERRAIN_REPRESENTATION != 0 {
-        actors[slot].state &= !TERRAIN_REPRESENTATION;
+    if actors[slot].state_code() & TERRAIN_REPRESENTATION != 0 {
+        {
+            let actor_value = actors[slot].state_code() & (!TERRAIN_REPRESENTATION);
+            actors[slot].set_state_code(actor_value);
+        };
         world.replace_terrain(actors, slot, context.changed);
     }
     launch_terrain(actors, slot, context);
@@ -365,7 +385,7 @@ pub fn activate_terrain(
 fn free(actors: &ActorPool) -> Option<usize> {
     (1..actors.len())
         .rev()
-        .find(|&i| actors[i].state & 0x80 == 0)
+        .find(|&i| actors[i].state_code() & 0x80 == 0)
 }
 fn merge(into: &mut Effects, other: Effects) {
     let offset = into.sounds.len();
@@ -391,27 +411,51 @@ fn initialize_recovery(
     effects: &mut Effects,
 ) {
     actor.animation = crate::status::option_reward(context.rule, animation);
-    actor.animation_frame = 0;
-    actor.animation_tick = 0;
+    actor.playback.reset_frame();
+    actor.playback.restart_clock();
     actor.profile = 0;
     if matches!(actor.animation, 0x1b | 0x22) {
-        actor.handler = 8;
+        {
+            let actor_value = 8;
+            actor.set_handler(actor_value);
+        };
         actor.profile = 0x80;
-        actor.local_state = 0;
-        actor.local_counter = 0;
+        {
+            let actor_value = 0;
+            actor.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            actor.set_local_counter_code(actor_value);
+        };
         actor.motion_flags = 0;
         if context.late_mode {
-            actor.local_state = context.stage.wrapping_add(6);
-            if actor.local_state == 0x0a {
+            {
+                let actor_value = context.stage.wrapping_add(6);
+                actor.set_local_state_code(actor_value);
+            };
+            if actor.local_state_code() == 0x0a {
                 effects.palette = Some([0x0f, 0x29]);
             }
         }
     } else {
-        actor.handler = 0x13;
-        actor.state = 0xa1;
+        {
+            let actor_value = 0x13;
+            actor.set_handler(actor_value);
+        };
+        {
+            let actor_value = 0xa1;
+            actor.set_state_code(actor_value);
+        };
         actor.vertical_velocity = 0;
-        actor.local_state = 0;
-        actor.local_counter = 0;
+        {
+            let actor_value = 0;
+            actor.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            actor.set_local_counter_code(actor_value);
+        };
     }
 }
 struct ObjectCall<'a, 'b, 'c> {
@@ -447,8 +491,8 @@ impl ObjectCall<'_, '_, '_> {
             .replace_terrain(self.actors, slot, self.context.changed);
     }
     fn clocks(&mut self) {
-        self.actors[self.slot].animation_frame = 0;
-        self.actors[self.slot].animation_tick = 0;
+        self.actors[self.slot].playback.reset_frame();
+        self.actors[self.slot].playback.restart_clock();
     }
     fn suppress(&mut self) {
         if let Some(id) = self.actors[self.slot].spawn_identity {
@@ -460,7 +504,10 @@ impl ObjectCall<'_, '_, '_> {
         if select_animation {
             self.actors[s].animation = REACTION_ANIMATION;
         }
-        self.actors[s].handler = 0;
+        {
+            let actor_value = 0;
+            self.actors[s].set_handler(actor_value);
+        };
         self.actors[s].profile = 0;
         self.actors[s].render = (self.actors[s].render & 0xf0) | 8;
         self.effects.sounds.push(0x16);
@@ -468,26 +515,35 @@ impl ObjectCall<'_, '_, '_> {
     fn special_reward(&mut self) {
         let s = self.slot;
         self.suppress();
-        let local = usize::from(self.actors[s].local_state);
+        let local = usize::from(self.actors[s].local_state_code());
         let stage = if self.actors[s].animation == 0x3f {
             self.context.catalog.stage_rewards[usize::from(self.context.stage) * 3 + local]
         } else {
             0
         };
-        self.actors[s].local_state = if stage != 0 {
-            stage
-        } else {
-            self.context.catalog.recovered[local]
+        {
+            let actor_value = if stage != 0 {
+                stage
+            } else {
+                self.context.catalog.recovered[local]
+            };
+            self.actors[s].set_local_state_code(actor_value);
         };
         self.reward_arc();
     }
     fn reward_arc(&mut self) {
         let s = self.slot;
-        self.actors[s].state &= 0xa0;
+        {
+            let actor_value = self.actors[s].state_code() & (0xa0);
+            self.actors[s].set_state_code(actor_value);
+        };
         self.actors[s].profile = 0;
         self.clocks();
         self.actors[s].vertical_velocity = 0x400;
-        self.actors[s].handler = 0x13;
+        {
+            let actor_value = 0x13;
+            self.actors[s].set_handler(actor_value);
+        };
         self.actors[s].animation = 0x2a;
     }
     fn reaction(&mut self) {
@@ -536,43 +592,61 @@ impl ObjectCall<'_, '_, '_> {
     fn transform(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
         self.actors[s].profile = 0x81;
-        if self.actors[0].animation_tick == 0
+        if self.actors[0].playback.at_running_tick(0)
             && self.actors[0].animation == 9
-            && self.actors[0].animation_frame == 3
+            && self.actors[0].playback.at_initial_frame(3)
             && self.contact()
         {
             self.suppress();
-            let index =
-                usize::from(self.context.stage) * 4 + usize::from(self.actors[s].local_state);
+            let index = usize::from(self.context.stage) * 4
+                + usize::from(self.actors[s].local_state_code());
             self.actors[s].position.screen_y = self.actors[s]
                 .position
                 .screen_y
                 .wrapping_sub(self.context.catalog.transform_y_offset[index]);
             if self.context.catalog.transform_handler[index] == 0 {
-                self.actors[s].local_state = 0x28;
+                {
+                    let actor_value = 0x28;
+                    self.actors[s].set_local_state_code(actor_value);
+                };
                 self.reward_arc();
                 return;
             }
             self.actors[s].profile = 0;
             self.clocks();
             self.actors[s].hit_marker = 0;
-            self.actors[s].state &= 0xe0;
+            {
+                let actor_value = self.actors[s].state_code() & (0xe0);
+                self.actors[s].set_state_code(actor_value);
+            };
             if index == 6 {
-                self.actors[s].handler = 0x17;
+                {
+                    let actor_value = 0x17;
+                    self.actors[s].set_handler(actor_value);
+                };
                 self.actors[s].profile = 0x10;
                 self.actors[s].animation = 0x21;
             } else {
                 self.actors[s].animation = 0x2a;
-                self.actors[s].handler = self.actors[s].handler.wrapping_add(1);
+                {
+                    let actor_value = self.actors[s].handler.wrapping_add(1);
+                    self.actors[s].set_handler(actor_value);
+                };
             }
             return;
         }
-        if self.context.stage == 1 && self.actors[s].local_state >= 2 {
-            self.actors[s].state &= 0xe0;
+        if self.context.stage == 1 && self.actors[s].local_state_code() >= 2 {
+            {
+                let actor_value = self.actors[s].state_code() & (0xe0);
+                self.actors[s].set_state_code(actor_value);
+            };
             if self.actors[0].animation != 9 {
                 self.actors[s].animation = 0x5b;
                 self.actors[s].profile = if self.actors[s]
@@ -591,18 +665,27 @@ impl ObjectCall<'_, '_, '_> {
     fn reveal(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
-        if self.actors[s].animation_frame == 0 || self.actors[s].animation_tick != 5 {
+        if self.actors[s].playback.at_initial_frame(0)
+            || !self.actors[s].playback.at_running_tick(5)
+        {
             return;
         }
-        let index = usize::from(self.context.stage) * 4 + usize::from(self.actors[s].local_state);
+        let index =
+            usize::from(self.context.stage) * 4 + usize::from(self.actors[s].local_state_code());
         if index == 7 {
             self.actors[s].position.screen_y = self.actors[s].position.screen_y.wrapping_add(0x18);
         }
         self.actors[s].animation = self.context.catalog.transform_animation[index];
-        self.actors[s].handler = self.context.catalog.transform_handler[index];
+        {
+            let actor_value = self.context.catalog.transform_handler[index];
+            self.actors[s].set_handler(actor_value);
+        };
         self.actors[s].profile = self.context.catalog.transform_profile[index];
         self.clocks();
         self.actors[s].hit_marker = 0;
@@ -613,34 +696,49 @@ impl ObjectCall<'_, '_, '_> {
     fn sliding(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             self.actors[s].vertical_velocity = 0;
-            self.actors[s].local_state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
             self.actors[s].horizontal_magnitude = 0x200;
             self.face();
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
         }
-        if self.actors[s].local_state != 8 {
+        if self.actors[s].local_state_code() != 8 {
             if self.context.composition_tick & 3 == 0 {
-                let index = usize::from(self.actors[s].local_state & 3);
+                let index = usize::from(self.actors[s].local_state_code() & 3);
                 self.actors[s].position.world_x = self.actors[s]
                     .position
                     .world_x
                     .wrapping_add_signed(self.context.catalog.slide_nudge[index]);
-                self.actors[s].local_state = self.actors[s].local_state.wrapping_add(1);
+                {
+                    let actor_value = self.actors[s].local_state_code().wrapping_add(1);
+                    self.actors[s].set_local_state_code(actor_value);
+                };
             }
             return;
         }
         let floor = self.motion(Movement::Fall, 0x2d, 1);
-        self.actors[s].local_counter = floor;
+        {
+            let actor_value = floor;
+            self.actors[s].set_local_counter_code(actor_value);
+        };
         if floor & 1 != 0 && self.actors[s].horizontal_magnitude != 0 {
             self.actors[s].horizontal_magnitude =
                 self.actors[s].horizontal_magnitude.wrapping_sub(0x10);
         }
-        let mut stopped = self.actors[s].state & 2 != 0;
+        let mut stopped = self.actors[s].state_code() & 2 != 0;
         if !stopped {
             let wall = if self.actors[s].direction & 2 == 0 {
                 self.motion(Movement::PositiveX, 0x29, 1)
@@ -651,24 +749,36 @@ impl ObjectCall<'_, '_, '_> {
             stopped = self.actors[s].horizontal_magnitude == 0 || wall & 1 != 0;
         }
         if stopped && floor & 1 != 0 {
-            self.actors[s].handler = 8;
+            {
+                let actor_value = 8;
+                self.actors[s].set_handler(actor_value);
+            };
             self.actors[s].profile = 0x80;
         }
     }
     fn dispenser(&mut self) {
         let s = self.slot;
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             let a = self.actors[s].position.world_x;
             let p = self.actors[0].position.world_x;
             let distance = if a >= p { (a - p) as u8 } else { (p - a) as u8 };
             if distance >= 4 {
                 return;
             }
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
-            self.actors[s].local_state = 0;
-            self.actors[s].local_counter = 0;
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_counter_code(actor_value);
+            };
         }
-        let counter = self.actors[s].local_counter;
+        let counter = self.actors[s].local_counter_code();
         if counter == 0 {
             let Some(child) = free(self.actors) else {
                 return;
@@ -677,45 +787,63 @@ impl ObjectCall<'_, '_, '_> {
             self.actors[s].animation = self.actors[s].animation.wrapping_add(1);
             self.clocks();
             let parent = self.actors[s];
-            let index = usize::from(parent.local_state);
+            let index = usize::from(parent.local_state_code());
             let actor = &mut self.actors[child];
-            actor.state = 0xa0;
+            {
+                let actor_value = 0xa0;
+                actor.set_state_code(actor_value);
+            };
             actor.render = 0xa0;
             actor.animation = 0x24;
             actor.position.world_x = parent.position.world_x;
             actor.position.screen_y = parent.position.screen_y.wrapping_sub(0x10);
-            actor.animation_tick = 0;
-            actor.animation_frame = 0;
+            actor.playback.restart_clock();
+            actor.playback.reset_frame();
             actor.profile = 0;
-            actor.handler = 0x2d;
+            {
+                let actor_value = 0x2d;
+                actor.set_handler(actor_value);
+            };
             actor.vertical_velocity = 0x2d4;
             actor.direction = self.context.catalog.dispenser_direction[index];
             actor.horizontal_magnitude = self.context.catalog.dispenser_speed[index];
             self.effects.spawned.push(child);
-            self.actors[s].local_state = self.actors[s].local_state.wrapping_add(1);
-            self.actors[s].local_counter = if self.actors[s].local_state == 4 {
-                0xff
-            } else {
-                0x3c
+            {
+                let actor_value = self.actors[s].local_state_code().wrapping_add(1);
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = if self.actors[s].local_state_code() == 4 {
+                    0xff
+                } else {
+                    0x3c
+                };
+                self.actors[s].set_local_counter_code(actor_value);
             };
             return;
         }
         if counter & 0x80 == 0 {
-            self.actors[s].local_counter -= 1;
+            {
+                let actor_value = self.actors[s].local_counter_code() - (1);
+                self.actors[s].set_local_counter_code(actor_value);
+            };
         }
-        if self.actors[s].animation != 0x48 && self.actors[s].animation_tick == 7 {
+        if self.actors[s].animation != 0x48 && self.actors[s].playback.at_running_tick(7) {
             self.actors[s].animation = self.actors[s].animation.wrapping_sub(1);
             self.clocks();
         }
     }
     fn dispensed(&mut self) {
         let s = self.slot;
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             self.integrate(Integration::FallingY);
             self.integrate(Integration::Gravity);
             if self.actors[s].vertical_velocity < 0 {
                 self.actors[s].vertical_velocity = 0;
-                self.actors[s].state = self.actors[s].state.wrapping_add(1);
+                {
+                    let actor_value = self.actors[s].state_code().wrapping_add(1);
+                    self.actors[s].set_state_code(actor_value);
+                };
             }
         } else {
             if (self.actors[s].vertical_velocity as u16 >> 8) != 0xfd {
@@ -729,7 +857,7 @@ impl ObjectCall<'_, '_, '_> {
             } else {
                 Integration::NegativeX
             });
-            if self.actors[s].state & 15 != 0 {
+            if self.actors[s].state_code() & 15 != 0 {
                 self.actors[s].horizontal_magnitude =
                     self.actors[s].horizontal_magnitude.wrapping_sub(0x40);
                 if self.actors[s].horizontal_magnitude == 0 {
@@ -738,22 +866,31 @@ impl ObjectCall<'_, '_, '_> {
             }
         }
         if self.contact() {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             self.context.status.health.recover_one();
             return;
         }
         if self.actors[s].position.screen_y >= 0xf0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             self.actors[s].render = 0;
         }
     }
     fn released(&mut self) {
         let s = self.slot;
-        if self.actors[s].state & 15 == 0 {
-            if self.actors[0].animation == 9 && self.actors[0].animation_frame == 3 {
+        if self.actors[s].state_code() & 15 == 0 {
+            if self.actors[0].animation == 9 && self.actors[0].playback.at_initial_frame(3) {
                 self.actors[s].profile = 0x81;
                 if self.contact() {
-                    self.actors[s].state = self.actors[s].state.wrapping_add(1);
+                    {
+                        let actor_value = self.actors[s].state_code().wrapping_add(1);
+                        self.actors[s].set_state_code(actor_value);
+                    };
                     self.actors[s].animation = 0x2a;
                     self.clocks();
                     self.actors[s].profile = 0;
@@ -775,12 +912,17 @@ impl ObjectCall<'_, '_, '_> {
             return;
         }
         if !matches!(self.actors[s].animation, 0x25 | 0x28) {
-            if self.actors[s].animation_frame == 0 || self.actors[s].animation_tick != 5 {
+            if self.actors[s].playback.at_initial_frame(0)
+                || !self.actors[s].playback.at_running_tick(5)
+            {
                 return;
             }
             self.actors[s].animation = crate::status::option_reward(self.context.rule, 0x25);
             self.clocks();
-            self.actors[s].local_state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
             self.actors[s].vertical_velocity = 0;
             self.actors[s].horizontal_magnitude = 0x120;
             self.face();
@@ -792,10 +934,19 @@ impl ObjectCall<'_, '_, '_> {
             return;
         }
         if floor & 1 == 0 {
-            self.actors[s].local_state = self.actors[s].local_state.wrapping_add(1);
-        } else if self.actors[s].local_state != 0 {
-            self.actors[s].state = 0xa2;
-            self.actors[s].local_state = 0xff;
+            {
+                let actor_value = self.actors[s].local_state_code().wrapping_add(1);
+                self.actors[s].set_local_state_code(actor_value);
+            };
+        } else if self.actors[s].local_state_code() != 0 {
+            {
+                let actor_value = 0xa2;
+                self.actors[s].set_state_code(actor_value);
+            };
+            {
+                let actor_value = 0xff;
+                self.actors[s].set_local_state_code(actor_value);
+            };
             self.collect_contact();
             return;
         }
@@ -810,12 +961,15 @@ impl ObjectCall<'_, '_, '_> {
         if !skip_hit_gate && self.actors[s].hit_marker == 0 {
             return;
         }
-        if self.actors[s].state & TERRAIN_REPRESENTATION != 0 {
+        if self.actors[s].state_code() & TERRAIN_REPRESENTATION != 0 {
             if *self.context.changed != 0 {
                 return;
             }
             self.replace(s);
-            self.actors[s].state &= !TERRAIN_REPRESENTATION;
+            {
+                let actor_value = self.actors[s].state_code() & (!TERRAIN_REPRESENTATION);
+                self.actors[s].set_state_code(actor_value);
+            };
         }
         match self.actors[s].animation {
             0x1b | 0x3f => self.special_reward(),
@@ -826,13 +980,16 @@ impl ObjectCall<'_, '_, '_> {
     fn terrain(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 && !matches!(self.actors[s].animation, 0x1d | 0x1e) {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
-        if self.actors[0].animation_tick == 0
+        if self.actors[0].playback.at_running_tick(0)
             && self.actors[0].animation == 9
             && self.contact()
-            && self.actors[0].animation_frame == SWING_FRAME
+            && self.actors[0].playback.at_initial_frame(SWING_FRAME)
         {
             if self.actors[s].animation == 0x3f {
                 self.special_reward();
@@ -855,7 +1012,7 @@ impl ObjectCall<'_, '_, '_> {
     }
     fn moving(&mut self) {
         let s = self.slot;
-        let phase = self.context.catalog.motion[usize::from(self.actors[s].state & 15)];
+        let phase = self.context.catalog.motion[usize::from(self.actors[s].state_code() & 15)];
         match phase {
             MotionPhase::Arc => {
                 let mut floor = 0;
@@ -930,7 +1087,10 @@ impl ObjectCall<'_, '_, '_> {
                     }
                 }
                 if bits & 1 != 0 {
-                    self.actors[s].handler = 8;
+                    {
+                        let actor_value = 8;
+                        self.actors[s].set_handler(actor_value);
+                    };
                 }
             }
         }
@@ -938,10 +1098,13 @@ impl ObjectCall<'_, '_, '_> {
     fn falling(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             if *self.context.changed != 0 {
                 return;
             }
@@ -962,10 +1125,16 @@ impl ObjectCall<'_, '_, '_> {
                 return;
             }
             self.actors[s].vertical_velocity = 0;
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
             if self.actors[s].animation != 0x87 {
-                self.actors[s].state &= !TERRAIN_REPRESENTATION;
-                self.actors[s].render = self.actors[s].state & 0xf0;
+                {
+                    let actor_value = self.actors[s].state_code() & (!TERRAIN_REPRESENTATION);
+                    self.actors[s].set_state_code(actor_value);
+                };
+                self.actors[s].render = self.actors[s].state_code() & 0xf0;
                 self.replace(s);
                 if self.actors[s].position.screen_y < self.actors[0].position.screen_y {
                     self.actors[s].profile = 0x10;
@@ -982,7 +1151,10 @@ impl ObjectCall<'_, '_, '_> {
             return;
         }
         if self.context.player.action == Action::Death {
-            self.actors[self.slot].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[self.slot].set_state_code(actor_value);
+            };
             return;
         }
         if self.contact() {
@@ -1000,90 +1172,145 @@ impl ObjectCall<'_, '_, '_> {
             {
                 self.context.suppression[usize::from(id >> 3)] &= !(1 << (id & 7));
             }
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
         if self.actors[s].animation == 0x2a {
-            if self.actors[s].animation_frame == 0 || self.actors[s].animation_tick != 5 {
+            if self.actors[s].playback.at_initial_frame(0)
+                || !self.actors[s].playback.at_running_tick(5)
+            {
                 return;
             }
             self.actors[s].animation =
-                crate::status::option_reward(self.context.rule, self.actors[s].local_state);
+                crate::status::option_reward(self.context.rule, self.actors[s].local_state_code());
             self.clocks();
         }
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             self.integrate(Integration::FallingY);
             self.integrate(Integration::Gravity);
             if self.actors[s].vertical_velocity >= 0 {
                 return;
             }
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
             self.actors[s].vertical_velocity = 0;
         }
-        if self.actors[s].state & 2 == 0 {
+        if self.actors[s].state_code() & 2 == 0 {
             if self.motion(Movement::Fall, 0x2d, 1) & 1 != 0 {
-                self.actors[s].state = self.actors[s].state.wrapping_add(1);
-                self.actors[s].local_state = 0xff;
+                {
+                    let actor_value = self.actors[s].state_code().wrapping_add(1);
+                    self.actors[s].set_state_code(actor_value);
+                };
+                {
+                    let actor_value = 0xff;
+                    self.actors[s].set_local_state_code(actor_value);
+                };
             }
         } else if self.actors[s].animation < 0x29 || self.actors[s].animation == 0x61 {
-            let count = self.actors[s].local_state;
+            let count = self.actors[s].local_state_code();
             if count == 0 {
-                self.actors[s].state = 0;
+                {
+                    let actor_value = 0;
+                    self.actors[s].set_state_code(actor_value);
+                };
                 return;
             }
             if count == 0x78 {
                 self.actors[s].render |= 2;
             }
-            self.actors[s].local_state = count - 1;
+            {
+                let actor_value = count - 1;
+                self.actors[s].set_local_state_code(actor_value);
+            };
         }
         self.collect_contact();
     }
     fn contact_recovery(&mut self) {
         let s = self.slot;
         if self.actors[s].render & 0x80 == 0 {
-            self.actors[s].state = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
-        if self.actors[s].state & 15 == 0 {
+        if self.actors[s].state_code() & 15 == 0 {
             if self.context.player.protection != 0 || !self.contact() {
                 return;
             }
             self.suppress();
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
-            self.actors[s].local_counter = CONTACT_DELAY;
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
+            {
+                let actor_value = CONTACT_DELAY;
+                self.actors[s].set_local_counter_code(actor_value);
+            };
         }
-        if self.actors[s].state & 2 == 0 {
-            self.actors[s].local_counter = self.actors[s].local_counter.wrapping_sub(1);
-            if self.actors[s].local_counter != 0 {
+        if self.actors[s].state_code() & 2 == 0 {
+            {
+                let actor_value = self.actors[s].local_counter_code().wrapping_sub(1);
+                self.actors[s].set_local_counter_code(actor_value);
+            };
+            if self.actors[s].local_counter_code() != 0 {
                 return;
             }
-            self.actors[s].state &= !TERRAIN_REPRESENTATION;
+            {
+                let actor_value = self.actors[s].state_code() & (!TERRAIN_REPRESENTATION);
+                self.actors[s].set_state_code(actor_value);
+            };
             self.actors[s].vertical_velocity = 0;
-            self.actors[s].local_state = self.actors[s].animation;
+            {
+                let actor_value = self.actors[s].animation;
+                self.actors[s].set_local_state_code(actor_value);
+            };
             self.actors[s].animation = 0x2a;
-            self.actors[s].state = self.actors[s].state.wrapping_add(1);
+            {
+                let actor_value = self.actors[s].state_code().wrapping_add(1);
+                self.actors[s].set_state_code(actor_value);
+            };
             return;
         }
         if self.actors[s].animation != 0x2a {
             // 8C9B branches directly to 8CE1, bypassing the ordinary reset.
-            self.actors[s].handler = 8;
+            {
+                let actor_value = 8;
+                self.actors[s].set_handler(actor_value);
+            };
             self.actors[s].profile = 0x80;
-            self.actors[s].local_state = 0;
-            self.actors[s].local_counter = 0;
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_state_code(actor_value);
+            };
+            {
+                let actor_value = 0;
+                self.actors[s].set_local_counter_code(actor_value);
+            };
             self.actors[s].motion_flags = 0;
             if self.context.late_mode {
-                self.actors[s].local_state = self.context.stage.wrapping_add(6);
-                if self.actors[s].local_state == 0x0a {
+                {
+                    let actor_value = self.context.stage.wrapping_add(6);
+                    self.actors[s].set_local_state_code(actor_value);
+                };
+                if self.actors[s].local_state_code() == 0x0a {
                     self.effects.palette = Some([0x0f, 0x29]);
                 }
             }
             return;
         }
         if self.actors[s].animation == 0x2a {
-            if self.actors[s].animation_frame == 0 || self.actors[s].animation_tick != 5 {
+            if self.actors[s].playback.at_initial_frame(0)
+                || !self.actors[s].playback.at_running_tick(5)
+            {
                 return;
             }
-            self.actors[s].animation = self.actors[s].local_state;
+            self.actors[s].animation = self.actors[s].local_state_code();
         }
         let animation = self.actors[s].animation;
         initialize_recovery(
@@ -1104,9 +1331,12 @@ pub fn launched_shared(
     s: usize,
     integrate: &mut impl FnMut(&mut ActorPool, usize, Integration) -> bool,
 ) {
-    if actors[s].state & 15 == 0 {
+    if actors[s].state_code() & 15 == 0 {
         actors[s].motion_flags = 0;
-        actors[s].state = actors[s].state.wrapping_add(1);
+        {
+            let actor_value = actors[s].state_code().wrapping_add(1);
+            actors[s].set_state_code(actor_value);
+        };
         actors[s].vertical_velocity = 0x2d4;
         actors[s].horizontal_magnitude = 0x80;
     }
@@ -1120,7 +1350,10 @@ pub fn launched_shared(
     } else {
         integrate(actors, s, Integration::Gravity);
         if integrate(actors, s, Integration::FallingY) {
-            actors[s].state = 0;
+            {
+                let actor_value = 0;
+                actors[s].set_state_code(actor_value);
+            };
             return;
         }
     }
@@ -1135,7 +1368,10 @@ pub fn launched_shared(
         },
     );
     if boundary == positive {
-        actors[s].state = 0;
+        {
+            let actor_value = 0;
+            actors[s].set_state_code(actor_value);
+        };
     }
 }
 
@@ -1151,7 +1387,10 @@ pub fn reaction_shared(
 ) -> Effects {
     let mut effects = Effects::default();
     if actors[slot].render & 0x80 == 0 {
-        actors[slot].state = 0;
+        {
+            let actor_value = 0;
+            actors[slot].set_state_code(actor_value);
+        };
         actors[slot].render = 0;
         return effects;
     }
@@ -1168,11 +1407,17 @@ pub fn reaction_shared(
             submission.random_increment(),
         ),
     );
-    actors[slot].animation_tick = 0x80;
-    actors[slot].animation_frame = 0;
+    actors[slot].playback.freeze_at_start();
+    actors[slot].playback.reset_frame();
     actors[slot].profile = 0;
-    actors[slot].state &= 0xf0;
-    actors[slot].handler = 0x0b;
+    {
+        let actor_value = actors[slot].state_code() & (0xf0);
+        actors[slot].set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0x0b;
+        actors[slot].set_handler(actor_value);
+    };
     actors[slot].direction = if actors[slot].position.world_x >= actors[0].position.world_x {
         1
     } else {

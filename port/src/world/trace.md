@@ -301,3 +301,40 @@ before F69C reads tile/property planes. Content decodes that fixed byte-indexed
 extent once; callers retain the single native cache and secondary queue owners.
 Source initial Moon spawn attr46/47 are0; preserved native event472 erroneously
 wrote40/54hex. Actual spawn and active-gate regressions reproduced both defects.
+
+## Modernization017: native terrain display changes
+
+World outputs TileRegion/PaletteRun/TerrainUpdate in logical tile coordinates and
+palette cells, rather than flat PPU-addressed writes. ColumnUpdate carries a full
+4x4 block with explicit All/UpperHalf/LowerHalf visibility, preserving discarded
+rows needed by the canonical video boundary. Changed blocks, bursts and vertical
+row plans share native geometry; no world gameplay path constructs video
+addresses, headers or per-tile upload instructions.
+
+Game column and vertical orchestration now supplies native changes to Video.
+Video/presentation alone maps geometry to source-visible records. The source
+queue cannot be replaced by a cached semantic pending list: audio low-F reads,
+runtime composite aliases and immediate overflow into WorldCache observe its
+bytes before commit. Header versus payload cursor arithmetic, live retained-row
+copies, final terminator after cache store, primary/secondary/cache overlap and
+suspended immediate flush remain explicit boundary behavior. No raw/native twin
+queue is kept. Native changes are transient call inputs.
+
+Independent source reread: C852..C96A, CA4E..CC82 and F574..F652. Row30/31 changed
+blocks are legal source writes into nametable attribute storage and are not
+clipped by TileRegion. At expansion coordinate>=38, CCE7 skips lower quadrants
+before accumulating properties, so bottom-row packed palette/collision already
+have high nibbles0. A neighbor's complete expanded cache palette can therefore
+be04 rather thanE4 even though normal-row outgoing masking is separate. Added
+integration contracts distinguish these two facts rather than inventing a full
+unexpanded descriptor at the bottom row.
+
+Existing physical-write expectations are retained as immutable presentation
+projections from native changes, including all source addresses and values.
+The source-backed bottom changed-block overlap contract ran before conversion.
+Native-column and actual Game vertical/neighbor contracts cover full staging,
+visible slices, nibble merges, retained rows and canonical cache publication.
+The direct-owner modernize/terrain-probe.{rs,py} captures2610 original-bank mutation,
+column, vertical/neighbor and burst cases. It compares logical writes, complete
+cache/secondary states and sampled terrain pixels. Its review uses original CHR
+list2 and a fixed palette; it is not a natural game/emulator route or device QA.

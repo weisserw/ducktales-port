@@ -1,6 +1,7 @@
 //! Prepared display data and immutable committed pixels have separate lifetimes.
 //! The world owns the overlapping0500 attribute bytes; only disjoint secondary
 //! queue bytes are retained here. Rendering never advances source clocks.
+mod terrain;
 use crate::presentation::{
     self, Composition, Display, RasterSnapshot, Sprite, VideoMemory, VideoWrite,
 };

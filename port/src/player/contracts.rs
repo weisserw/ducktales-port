@@ -28,17 +28,16 @@ const ORDINARY_THRESHOLD: u16 = 0x042d;
 const POGO_THRESHOLD: u16 = 0x05d2;
 fn actor() -> ActorContact {
     ActorContact {
+        playback: crate::presentation::AnimationPlayback::from_codes(TEST_TICK, TEST_FRAME, 0),
+        control: crate::actors::ActorControl::from_codes(HELD_ACTOR, 0, 0, 0),
         position: Position {
             world_x: TEST_X,
             screen_y: TEST_Y,
             x_fraction: TEST_FRACTION,
             y_fraction: TEST_FRACTION,
         },
-        state: HELD_ACTOR,
         render: TEST_RENDER,
         horizontal_magnitude: NORMAL_SPEED,
-        animation_tick: TEST_TICK,
-        animation_frame: TEST_FRAME,
         ..Default::default()
     }
 }
@@ -55,16 +54,16 @@ fn input(held: Buttons, pressed: Buttons) -> PortInput {
     PortInput { held, pressed }
 }
 fn health() -> Health {
-    Health {
-        segments: std::array::from_fn(|i| HealthSegment {
+    Health::from_overlay(
+        std::array::from_fn(|i| HealthSegment {
             y: if i == 3 { 0xff } else { 0x20 },
             tile: 0,
             depleted: 0,
             x: 0x20,
         }),
-        end: 0xff,
-        alternating: 0,
-    }
+        0xff,
+        0,
+    )
 }
 fn data() -> PlayerData {
     PlayerData {
@@ -316,7 +315,7 @@ fn standing_after_immediate_vertical_reaction_skips_select_and_jump() {
     let e = p.standing_controls(&mut a, input(Buttons::NONE, Buttons::SELECT | Buttons::A));
     assert_eq!(p.action, Action::Damage);
     assert_eq!(e.work, [Work::HorizontalInput]);
-    assert_eq!(a.animation_frame, TEST_FRAME);
+    assert_eq!(a.playback.frame_code(), TEST_FRAME);
 }
 #[test]
 fn select_cost_precedes_ready_b_swing_and_b_precedes_a() {
@@ -330,7 +329,7 @@ fn select_cost_precedes_ready_b_swing_and_b_precedes_a() {
     );
     assert_eq!(p.action, Action::Swing);
     assert_eq!(
-        (a.animation, a.animation_frame, a.animation_tick),
+        (a.animation, a.playback.frame_code(), a.playback.tick_code()),
         (SWING_ANIMATION, 0, 0)
     );
     assert_eq!(
@@ -360,8 +359,8 @@ fn held_a_without_edge_does_not_jump_and_up_only_is_idle() {
     assert_eq!(
         (
             a.animation,
-            a.animation_frame,
-            a.animation_tick,
+            a.playback.frame_code(),
+            a.playback.tick_code(),
             p.animation_delay
         ),
         (IDLE_ANIMATION, 0, 0, ANIMATION_DELAY)
@@ -375,7 +374,7 @@ fn standing_keeps_landing_pose_without_movement() {
     a.animation = LAND_ANIMATION;
     p.standing_controls(&mut a, input(Buttons::NONE, Buttons::NONE));
     assert_eq!(
-        (a.animation, a.animation_tick, a.animation_frame),
+        (a.animation, a.playback.tick_code(), a.playback.frame_code()),
         (LAND_ANIMATION, TEST_TICK, TEST_FRAME)
     );
 }
@@ -387,16 +386,19 @@ fn down_dominates_horizontal_and_restarts_crouch_only_on_selector_change() {
     assert_eq!(
         (
             a.animation,
-            a.animation_tick,
-            a.animation_frame,
-            a.animation_restart
+            a.playback.tick_code(),
+            a.playback.frame_code(),
+            a.playback.restart_code()
         ),
         (CROUCH_ANIMATION, 0, RESTART_FRAME, 1)
     );
     assert!(e.work.is_empty());
-    a.animation_tick = TEST_TICK;
+    {
+        let animation_value = TEST_TICK;
+        a.playback.set_tick_code(animation_value);
+    };
     p.standing_controls(&mut a, input(Buttons::DOWN, Buttons::NONE));
-    assert_eq!(a.animation_tick, TEST_TICK);
+    assert_eq!(a.playback.tick_code(), TEST_TICK);
 }
 #[test]
 fn blocked_walk_delay_selects_ready_pose_at_zero_and_captures_direction() {
@@ -407,8 +409,8 @@ fn blocked_walk_delay_selects_ready_pose_at_zero_and_captures_direction() {
     assert_eq!(
         (
             a.animation,
-            a.animation_frame,
-            a.animation_tick,
+            a.playback.frame_code(),
+            a.playback.tick_code(),
             p.pose_direction
         ),
         (STRIKE_READY_ANIMATION, 0, 0, Buttons::LEFT.0)
@@ -434,7 +436,11 @@ fn free_walk_resets_delay_and_preserves_existing_walk_animation_progress() {
     a.animation = WALK_ANIMATION;
     p.finish_walk(&mut a, input(Buttons::LEFT, Buttons::NONE), 0);
     assert_eq!(
-        (p.animation_delay, a.animation_tick, a.animation_frame),
+        (
+            p.animation_delay,
+            a.playback.tick_code(),
+            a.playback.frame_code()
+        ),
         (ANIMATION_DELAY, TEST_TICK, TEST_FRAME)
     );
 }
@@ -821,13 +827,13 @@ fn pogo_state_overrides_swing_guard_but_swing_state_preserves_animation_under_do
     let mut a = actor();
     player(Action::ForcedJump).airborne_animation(&mut a, 0);
     assert_eq!(
-        (a.animation, a.animation_tick, a.animation_frame),
+        (a.animation, a.playback.tick_code(), a.playback.frame_code()),
         (POGO_ANIMATION, FROZEN_TICK, 0)
     );
     a = actor();
     player(Action::Swing).airborne_animation(&mut a, Buttons::DOWN.0 | Buttons::B.0);
     assert_eq!(
-        (a.animation, a.animation_tick, a.animation_frame),
+        (a.animation, a.playback.tick_code(), a.playback.frame_code()),
         (0, TEST_TICK, TEST_FRAME)
     );
 }
@@ -837,14 +843,14 @@ fn already_pogo_retains_progress_and_ready_pose_requires_exact_direction() {
     let mut a = actor();
     a.animation = POGO_ANIMATION;
     p.airborne_animation(&mut a, Buttons::DOWN.0 | Buttons::B.0);
-    assert_eq!(a.animation_tick, TEST_TICK);
+    assert_eq!(a.playback.tick_code(), TEST_TICK);
     a.animation = STRIKE_READY_ANIMATION;
     p.pose_direction = Buttons::LEFT.0;
     p.airborne_animation(&mut a, Buttons::LEFT.0);
     assert_eq!(a.animation, STRIKE_READY_ANIMATION);
     p.airborne_animation(&mut a, Buttons::RIGHT.0);
     assert_eq!(
-        (a.animation, a.animation_tick, a.animation_frame),
+        (a.animation, a.playback.tick_code(), a.playback.frame_code()),
         (AIR_ANIMATION, 0, 0)
     );
 }
@@ -854,7 +860,7 @@ fn ordinary_air_animation_resets_progress_even_if_selector_already_two() {
     let mut a = actor();
     a.animation = AIR_ANIMATION;
     p.airborne_animation(&mut a, 0);
-    assert_eq!((a.animation_frame, a.animation_tick), (0, 0));
+    assert_eq!((a.playback.frame_code(), a.playback.tick_code()), (0, 0));
 }
 #[test]
 fn airborne_ready_b_edge_enters_swing_and_returns_before_landing_or_horizontal() {
@@ -871,7 +877,7 @@ fn airborne_ready_b_edge_enters_swing_and_returns_before_landing_or_horizontal()
         },
     );
     assert_eq!((p.action, a.animation), (Action::Swing, SWING_ANIMATION));
-    assert_eq!((a.animation_frame, a.animation_tick), (0, 0));
+    assert_eq!((a.playback.frame_code(), a.playback.tick_code()), (0, 0));
     assert!(e.work.is_empty());
 }
 #[test]
@@ -910,9 +916,9 @@ fn ordinary_landing_sound_animation_restart_and_action_are_exact() {
     assert_eq!(
         (
             a.animation,
-            a.animation_frame,
-            a.animation_tick,
-            a.animation_restart
+            a.playback.frame_code(),
+            a.playback.tick_code(),
+            a.playback.restart_code()
         ),
         (LAND_ANIMATION, RESTART_FRAME, 0, 1)
     );
@@ -952,8 +958,8 @@ fn pogo_requires_actor_contact_held_b_and_down_unless_already_forced() {
                 (
                     a.vertical_velocity,
                     a.animation,
-                    a.animation_frame,
-                    a.animation_restart
+                    a.playback.frame_code(),
+                    a.playback.restart_code()
                 ),
                 (POGO_SPEED, POGO_ANIMATION, POGO_START_FRAME, 2)
             );
@@ -1026,7 +1032,7 @@ fn climb_alignment_descending_sample_priority_and_right_rounds_next_cell() {
         (Some(Horizontal::Positive), 0x0200, Action::Climbing)
     );
     assert_eq!(
-        (a.animation, a.animation_frame, a.animation_tick),
+        (a.animation, a.playback.frame_code(), a.playback.tick_code()),
         (CLIMB_ANIMATION, 0, 0)
     );
     assert_eq!(a.position.screen_y, TEST_Y);
@@ -1100,7 +1106,7 @@ fn climbing_idle_freezes_tick_and_pressed_a_leaves_with_zero_velocity() {
     let mut a = actor();
     a.vertical_velocity = 0x0123;
     p.climbing(&mut a, input(Buttons::NONE, Buttons::NONE), CLIMB_CLASS);
-    assert_eq!(a.animation_tick, TEST_TICK | FROZEN_TICK);
+    assert_eq!(a.playback.tick_code(), TEST_TICK | FROZEN_TICK);
     assert_eq!(p.action, Action::Climbing);
     p.climbing(&mut a, input(Buttons::A, Buttons::A), CLIMB_CLASS);
     assert_eq!((p.action, a.vertical_velocity), (Action::Standing, 0));
@@ -1113,10 +1119,13 @@ fn climb_direction_copies_horizontal_magnitude_and_sound_only_unfrozen_tick_zero
     ] {
         let mut p = player(Action::Climbing);
         let mut a = actor();
-        a.animation_tick = tick;
+        {
+            let animation_value = tick;
+            a.playback.set_tick_code(animation_value);
+        };
         let e = p.climbing(&mut a, input(Buttons::UP, Buttons::NONE), CLIMB_CLASS);
         assert_eq!(a.vertical_velocity, NORMAL_SPEED as i16);
-        assert_eq!(a.animation_tick, tick & !FROZEN_TICK);
+        assert_eq!(a.playback.tick_code(), tick & !FROZEN_TICK);
         assert_eq!(e.sounds, sounds);
         assert_eq!(
             e.work,
@@ -1339,8 +1348,11 @@ fn swing_impact_only_tick_zero_frame_two_and_all_three_exempt_handlers() {
         let mut p = player(Action::Swing);
         let mut a = actor();
         a.animation = SWING_ANIMATION;
-        a.animation_frame = IMPACT_FRAME;
-        a.animation_tick = 0;
+        {
+            let animation_value = IMPACT_FRAME;
+            a.playback.set_frame_code(animation_value);
+        };
+        a.playback.restart_clock();
         let e = p.swing(&mut a, 0, Some(handler));
         assert_eq!(a.animation, SWING_ANIMATION);
         assert_eq!(e.sounds, [SWING_SOUND]);
@@ -1353,15 +1365,18 @@ fn swing_no_contact_and_nonexempt_contact_both_enter_blocked_pose() {
         let mut p = player(Action::Swing);
         let mut a = actor();
         a.animation = SWING_ANIMATION;
-        a.animation_frame = IMPACT_FRAME;
-        a.animation_tick = 0;
+        {
+            let animation_value = IMPACT_FRAME;
+            a.playback.set_frame_code(animation_value);
+        };
+        a.playback.restart_clock();
         let e = p.swing(&mut a, 0, contact);
         assert_eq!(
             (
                 a.animation,
-                a.animation_frame,
-                a.animation_tick,
-                a.local_state
+                a.playback.frame_code(),
+                a.playback.tick_code(),
+                a.local_state_code()
             ),
             (BLOCKED_SWING_ANIMATION, 0, 0, BLOCKED_CYCLES)
         );
@@ -1378,8 +1393,14 @@ fn swing_nonimpact_frames_or_nonzero_ticks_do_not_scan_or_emit_sound() {
         let mut p = player(Action::Swing);
         let mut a = actor();
         a.animation = SWING_ANIMATION;
-        a.animation_frame = frame;
-        a.animation_tick = tick;
+        {
+            let animation_value = frame;
+            a.playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            a.playback.set_tick_code(animation_value);
+        };
         let e = p.swing(&mut a, 0, None);
         assert!(e.sounds.is_empty());
         assert!(!e.work.contains(&Work::ActorScan));
@@ -1396,7 +1417,10 @@ fn swing_frame_six_directional_match_restores_ready_pose_otherwise_resets_delay(
         p.animation_delay = 1;
         let mut a = actor();
         a.animation = SWING_ANIMATION;
-        a.animation_frame = FINISH_SWING_FRAME;
+        {
+            let animation_value = FINISH_SWING_FRAME;
+            a.playback.set_frame_code(animation_value);
+        };
         let e = p.swing(&mut a, held.0, None);
         assert_eq!(p.action, Action::Standing);
         assert_eq!((a.animation, p.animation_delay), (animation, delay));
@@ -1408,15 +1432,21 @@ fn blocked_swing_counts_only_cycle_boundary_and_finishes_at_fifth_decrement() {
     let mut p = player(Action::Swing);
     let mut a = actor();
     a.animation = BLOCKED_SWING_ANIMATION;
-    a.local_state = 1;
-    a.animation_frame = 0;
-    a.animation_tick = 1;
+    {
+        let actor_value = 1;
+        a.set_local_state_code(actor_value);
+    };
+    a.playback.reset_frame();
+    {
+        let animation_value = 1;
+        a.playback.set_tick_code(animation_value);
+    };
     p.swing(&mut a, 0, None);
-    assert_eq!(a.local_state, 1);
-    a.animation_tick = 0;
+    assert_eq!(a.local_state_code(), 1);
+    a.playback.restart_clock();
     p.swing(&mut a, 0, None);
     assert_eq!(
-        (a.local_state, p.action, p.animation_delay),
+        (a.local_state_code(), p.action, p.animation_delay),
         (0, Action::Standing, ANIMATION_DELAY)
     );
 }
@@ -1425,11 +1455,14 @@ fn blocked_swing_zero_counter_wraps_instead_of_finishing() {
     let mut p = player(Action::Swing);
     let mut a = actor();
     a.animation = BLOCKED_SWING_ANIMATION;
-    a.local_state = 0;
-    a.animation_tick = 0;
-    a.animation_frame = 0;
+    {
+        let actor_value = 0;
+        a.set_local_state_code(actor_value);
+    };
+    a.playback.restart_clock();
+    a.playback.reset_frame();
     p.swing(&mut a, 0, None);
-    assert_eq!((a.local_state, p.action), (0xff, Action::Swing));
+    assert_eq!((a.local_state_code(), p.action), (0xff, Action::Swing));
 }
 #[test]
 fn protected_motion_holds_at_eight_or_above_including_negative_controls() {
@@ -1472,19 +1505,22 @@ fn protected_expiry_restores_normal_speed_then_applies_health_rule() {
         (Action::Standing, NORMAL_SPEED)
     );
     assert_eq!(e.work, [Work::DamageHealth]);
-    assert_eq!(h.segments[2].depleted, 1);
+    assert_eq!(h.overlay_segments()[2].depleted, 1);
 }
 #[test]
 fn protected_expiry_exhaustion_enters_death_with_phase_cleared() {
     let mut p = player(Action::Protected);
     let mut a = actor();
-    a.state = 0xa7;
+    {
+        let actor_value = 0xa7;
+        a.set_state_code(actor_value);
+    };
     let mut h = health();
-    h.segments[1].depleted = 1;
+    h.edit_overlay(|segments| segments[1].depleted = 1);
     let e = p.protected(&mut a, &mut h, TitleRule::OrdinaryDamage);
     assert_eq!(p.action, Action::Death);
-    assert_eq!(a.state & 0xf0, 0xa0);
-    assert_eq!(a.state & 0x0f, 0);
+    assert_eq!(a.state_code() & 0xf0, 0xa0);
+    assert_eq!(a.state_code() & 0x0f, 0);
     assert_eq!(e.work, [Work::DamageHealth, Work::DeathTrajectory]);
 }
 #[test]
@@ -1498,10 +1534,10 @@ fn damage_first_entry_initializes_arc_once_and_applies_alternating_rule() {
         (p.protection, a.vertical_velocity, a.horizontal_magnitude),
         (DAMAGE_PROTECTION, DAMAGE_SPEED, 0x0300)
     );
-    assert_eq!((a.animation_frame, a.animation_tick), (0, 0));
+    assert_eq!((a.playback.frame_code(), a.playback.tick_code()), (0, 0));
     assert_eq!(e.sounds, [DAMAGE_SOUND]);
     assert_eq!(h.alternating, 1);
-    assert_eq!(h.segments[0].depleted, 0);
+    assert_eq!(h.overlay_segments()[0].depleted, 0);
     assert_eq!(e.work.first(), Some(&Work::DamageHealth));
     assert!(e.work.contains(&Work::VerticalRise));
     let again = p.damage(&mut a, &mut h, TitleRule::AlternatingDamage);
@@ -1529,12 +1565,15 @@ fn damage_release_at_exact_three_c_resets_fraction_only_and_action() {
 fn damage_zero_health_initializes_protection_then_immediately_delegates_death() {
     let mut p = player(Action::Damage);
     let mut a = actor();
-    a.state = 0xaf;
+    {
+        let actor_value = 0xaf;
+        a.set_state_code(actor_value);
+    };
     let mut h = health();
-    h.segments[1].depleted = 1;
+    h.edit_overlay(|segments| segments[1].depleted = 1);
     let e = p.damage(&mut a, &mut h, TitleRule::OrdinaryDamage);
     assert_eq!((p.action, p.protection), (Action::Death, DAMAGE_PROTECTION));
-    assert_eq!(a.state & 0x0f, 0);
+    assert_eq!(a.state_code() & 0x0f, 0);
     assert_eq!(e.sounds, [DAMAGE_SOUND]);
     assert!(!e.work.contains(&Work::Horizontal(Horizontal::Positive)));
 }
@@ -1548,14 +1587,20 @@ fn provisional_terrain_pose_applies_four_pixel_wrap_only_on_animation_change() {
         (
             a.position.screen_y,
             a.animation,
-            a.animation_frame,
-            a.animation_tick
+            a.playback.frame_code(),
+            a.playback.tick_code()
         ),
         (2, POSE_ANIMATION, 0, 0)
     );
-    a.animation_tick = TEST_TICK;
+    {
+        let animation_value = TEST_TICK;
+        a.playback.set_tick_code(animation_value);
+    };
     p.pose(&mut a, input(Buttons::A, Buttons::NONE));
-    assert_eq!((a.position.screen_y, a.animation_tick), (2, TEST_TICK));
+    assert_eq!(
+        (a.position.screen_y, a.playback.tick_code()),
+        (2, TEST_TICK)
+    );
     assert_eq!(p.action, Action::TerrainPose);
 }
 #[test]
@@ -1590,7 +1635,7 @@ fn fall_out_at_d0_requests_reload_and_clears_all_transients_without_touching_pos
     let e = p.fall_out(&mut a, 2, 1, &mut h);
     assert_eq!(e.reload, Some(0x8a));
     assert_eq!(
-        (p.action, p.queued, a.state, h.alternating),
+        (p.action, p.queued, a.state_code(), h.alternating),
         (Action::Standing, None, 0, 0)
     );
     assert_eq!(a.position.screen_y, LIFE_LOSS_Y);
@@ -1624,7 +1669,7 @@ fn wait_a_uses_edge_bit_and_always_clears_tick_without_restarting_frame() {
         let mut a = actor();
         p.wait_a(&mut a, input(held, pressed));
         assert_eq!(
-            (p.action, a.animation_tick, a.animation_frame),
+            (p.action, a.playback.tick_code(), a.playback.frame_code()),
             (want, 0, TEST_FRAME)
         );
     }
@@ -1642,7 +1687,7 @@ fn carried_down_hides_player_and_bypasses_probe_and_jump_even_on_a_edge() {
                 ..Default::default()
             },
         );
-        assert_eq!(a.state, 0);
+        assert_eq!(a.state_code(), 0);
         assert_eq!(p.action, action);
         assert_eq!((e.scroll, e.spawn), (Some(2), Some(2)));
         assert!(e.work.is_empty());
@@ -1664,7 +1709,7 @@ fn only_jumpable_carried_state_accepts_exact_a_edge_byte() {
             CollisionFacts::default(),
         );
         assert_eq!(p.action, if jump { Action::Airborne } else { action });
-        assert_eq!(a.state, HELD_ACTOR);
+        assert_eq!(a.state_code(), HELD_ACTOR);
         assert_eq!(
             e.work,
             if jump {
@@ -1717,7 +1762,11 @@ fn external_launch_phase_zero_below_ceiling_skips_vertical_and_always_resets_air
     assert!(!w.calls.iter().any(|c| matches!(c, Call::Gravity(_))));
     assert_eq!((e.scroll, e.spawn), (Some(1), Some(1)));
     assert_eq!(
-        (a[0].animation, a[0].animation_frame, a[0].animation_tick),
+        (
+            a[0].animation,
+            a[0].playback.frame_code(),
+            a[0].playback.tick_code()
+        ),
         (AIR_ANIMATION, 0, 0)
     );
 }
@@ -1738,7 +1787,7 @@ fn external_launch_fall_phase_sets_e0_and_gravity_before_y() {
     a[0].motion_flags = 1;
     let mut w = World::default();
     p.launch(&mut a, &mut w);
-    assert_eq!(a[0].state, LAUNCH_ACTOR);
+    assert_eq!(a[0].state_code(), LAUNCH_ACTOR);
     assert_eq!(&w.calls[..2], &[Call::Gravity(PLAYER_GRAVITY), Call::Y]);
 }
 #[test]
@@ -1785,10 +1834,10 @@ fn death_first_phase_initializes_arc_once_preserving_high_flags() {
     p.death(&mut a, &mut w, 2, 0, &mut health());
     assert_eq!(
         (
-            a[0].state,
+            a[0].state_code(),
             a[0].motion_flags,
             a[0].animation,
-            a[0].animation_frame,
+            a[0].playback.frame_code(),
             a[0].direction
         ),
         (HELD_ACTOR | 1, 0, HURT_ANIMATION, 0, 1)
@@ -1810,7 +1859,10 @@ fn death_first_phase_initializes_arc_once_preserving_high_flags() {
 fn death_apex_changes_phase_and_returns_before_horizontal_drift() {
     let mut p = player(Action::Death);
     let mut a = pool();
-    a[0].state |= 1;
+    {
+        let actor_value = a[0].state_code() | (1);
+        a[0].set_state_code(actor_value);
+    };
     let mut w = World {
         velocity: Some(-1),
         ..Default::default()
@@ -1823,7 +1875,10 @@ fn death_apex_changes_phase_and_returns_before_horizontal_drift() {
 fn death_falling_gravity_before_y_then_drift_until_e0() {
     let mut p = player(Action::Death);
     let mut a = pool();
-    a[0].state |= 1;
+    {
+        let actor_value = a[0].state_code() | (1);
+        a[0].set_state_code(actor_value);
+    };
     a[0].motion_flags = 1;
     let mut w = World {
         y: Some(BOTTOM_ROOM_Y - 1),
@@ -1845,7 +1900,10 @@ fn death_at_e0_uses_common_reload_and_returns_without_horizontal() {
     let mut p = player(Action::Death);
     p.queued = Some(Action::Damage);
     let mut a = pool();
-    a[0].state |= 1;
+    {
+        let actor_value = a[0].state_code() | (1);
+        a[0].set_state_code(actor_value);
+    };
     a[0].motion_flags = 1;
     let mut h = health();
     h.alternating = 1;
@@ -1856,7 +1914,7 @@ fn death_at_e0_uses_common_reload_and_returns_without_horizontal() {
     let e = p.death(&mut a, &mut w, 2, 1, &mut h);
     assert_eq!(e.reload, Some(0x8a));
     assert_eq!(
-        (p.action, p.queued, a[0].state, h.alternating),
+        (p.action, p.queued, a[0].state_code(), h.alternating),
         (Action::Standing, None, 0, 0)
     );
     assert_eq!(w.calls, [Call::Gravity(PLAYER_GRAVITY), Call::Y]);
@@ -1866,7 +1924,7 @@ fn held_state_changes_tick_only_and_preserves_motion_animation_and_action() {
     let p = player(Action::Hold);
     let mut a = actor();
     let mut expected = a;
-    expected.animation_tick = 0;
+    expected.playback.restart_clock();
     p.hold(&mut a);
     assert_eq!(a, expected);
     assert_eq!(p.action, Action::Hold);
@@ -2048,10 +2106,10 @@ fn ready_airborne_pose_loses_pose_only_when_horizontal_solid_contact_is_absent()
         p.airborne_horizontal_exit(&mut a, bits);
         assert_eq!(a.animation, want);
         if want == AIR_ANIMATION {
-            assert_eq!((a.animation_frame, a.animation_tick), (0, 0));
+            assert_eq!((a.playback.frame_code(), a.playback.tick_code()), (0, 0));
         } else {
             assert_eq!(
-                (a.animation_frame, a.animation_tick),
+                (a.playback.frame_code(), a.playback.tick_code()),
                 (TEST_FRAME, TEST_TICK)
             );
         }
@@ -2102,7 +2160,7 @@ fn complete_carried_upper_contact_initializes_damage_and_health_before_return() 
         (p.action, p.protection),
         (Action::Damage, DAMAGE_PROTECTION)
     );
-    assert_eq!(h.segments[2].depleted, 1);
+    assert_eq!(h.overlay_segments()[2].depleted, 1);
     assert_eq!(e.sounds, [DAMAGE_SOUND]);
     assert!(w.calls.contains(&Call::Probe(3, 2)));
     assert!(w.calls.contains(&Call::Y));
@@ -2111,12 +2169,15 @@ fn complete_carried_upper_contact_initializes_damage_and_health_before_return() 
 fn complete_protected_expiry_exhaustion_runs_death_initializer_in_same_call() {
     let mut p = player(Action::Protected);
     let mut actors = pool();
-    actors[0].state = 0xa7;
+    {
+        let actor_value = 0xa7;
+        actors[0].set_state_code(actor_value);
+    };
     let mut inputs = Controllers::default();
     let mut r = room();
     let entries = rooms();
     let mut h = health();
-    h.segments[1].depleted = 1;
+    h.edit_overlay(|segments| segments[1].depleted = 1);
     let mut w = World::default();
     let mut c = StepContext {
         room: &mut r,
@@ -2128,7 +2189,10 @@ fn complete_protected_expiry_exhaustion_runs_death_initializer_in_same_call() {
         current_stage_audio: 0,
     };
     p.step(&mut actors, &mut inputs, &mut c, &data(), &mut w);
-    assert_eq!((p.action, actors[0].state), (Action::Death, HELD_ACTOR | 1));
+    assert_eq!(
+        (p.action, actors[0].state_code()),
+        (Action::Death, HELD_ACTOR | 1)
+    );
     assert_eq!(
         (actors[0].vertical_velocity, actors[0].horizontal_magnitude),
         (DEATH_SPEED, DEATH_DRIFT)
@@ -2180,11 +2244,20 @@ fn full_swing_uses_the_actual_contact_slot_instead_of_an_older_hit_marker() {
     let mut p = player(Action::Swing);
     let mut actors = pool();
     actors[0].animation = SWING_ANIMATION;
-    actors[0].animation_frame = 2;
-    actors[0].animation_tick = 0;
+    {
+        let animation_value = 2;
+        actors[0].playback.set_frame_code(animation_value);
+    };
+    actors[0].playback.restart_clock();
     actors[1].hit_marker = 1;
-    actors[1].handler = 1;
-    actors[2].handler = 8;
+    {
+        let actor_value = 1;
+        actors[1].set_handler(actor_value);
+    };
+    {
+        let actor_value = 8;
+        actors[2].set_handler(actor_value);
+    };
     let mut inputs = Controllers::default();
     let mut r = room();
     let entries = rooms();
@@ -2460,7 +2533,7 @@ fn protected_recoil_restores_hurt_pose_after_falling_animation_before_horizontal
             p.step(&mut actors, &mut inputs, &mut context, &data(), &mut world);
             assert_eq!(p.action, Action::Protected);
             assert_eq!(actors[0].animation, HURT_ANIMATION);
-            assert_eq!(actors[0].animation_tick, expected_tick);
+            assert_eq!(actors[0].playback.tick_code(), expected_tick);
             assert_eq!(world.horizontal_entry_animations, [HURT_ANIMATION]);
             assert_eq!(actors[0].render & FACE_POSITIVE, render & FACE_POSITIVE);
             assert!(world.calls.contains(&Call::X(direction)));

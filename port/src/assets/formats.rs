@@ -237,82 +237,41 @@ pub enum BackgroundEffect {
     },
     None,
 }
-/// Foreground upload continuation, not another PPU queue owner. B03 consumes its
-/// request immediately or at B01's interrupt boundary as specified by the effect.
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
-pub struct BackgroundUpload {
-    pub completed: bool,
-    pub record: usize,
-    pub chunk_in_record: usize,
+/// Progress through a validated background update plan. The final palette is
+/// deliberately its own poll; finishing the last tile update does not finish
+/// the session. Content owns the immutable plan, Tasks owns only this progress.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum BackgroundUpload {
+    Updating { next: usize },
+    Complete,
+}
+impl Default for BackgroundUpload {
+    fn default() -> Self {
+        Self::Updating { next: 0 }
+    }
 }
 impl BackgroundUpload {
-    fn finish_palette(&mut self, palette: [u8; 4], terminal_tag: u8) -> BackgroundEffect {
-        self.completed = true;
-        BackgroundEffect::PaletteTail {
-            base: palette,
-            active: palette,
-            terminal_tag,
+    pub fn completed(&self) -> bool {
+        matches!(self, Self::Complete)
+    }
+    fn next_update(&self) -> usize {
+        match self {
+            Self::Updating { next } => *next,
+            Self::Complete => unreachable!("completed session has no next update"),
         }
     }
-    /// Both immutable source adapters validate/read before entering this one
-    /// continuation transition. The palette endpoint is a later, separate poll.
-    fn advance_chunk(
-        &mut self,
-        bytes: Vec<u8>,
-        destination: u16,
-        bank: u8,
-        span_bytes: usize,
-        suspend_depth: u8,
-    ) -> BackgroundEffect {
-        const QUEUE_TERMINATOR: u8 = 0xff;
-        self.chunk_in_record += 1;
-        if self.chunk_in_record * BACKGROUND_CHUNK_BYTES == span_bytes {
-            self.record += 1;
-            self.chunk_in_record = 0;
-        }
-        BackgroundEffect::Chunk {
-            destination,
-            bytes,
-            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
-            commit: if suspend_depth == 0 {
-                UploadCommit::AtInterrupt
-            } else {
-                UploadCommit::Immediate
-            },
-            selected_bank: bank,
-            queue_terminator: QUEUE_TERMINATOR,
-        }
-    }
-    pub fn poll(
-        &mut self,
-        rom: &[u8],
-        list: &UploadList,
-        palette: [u8; 4],
-        suspend_depth: u8,
-    ) -> Result<BackgroundEffect> {
-        if self.completed {
-            return Ok(BackgroundEffect::None);
-        }
-        let Some(span) = list.records.get(self.record) else {
-            return Ok(self.finish_palette(palette, list.terminator));
+    /// Compatibility observation only: source record/chunk coordinates are
+    /// projected from asset metadata and never drive gameplay progression.
+    pub fn position(&self, prepared: &PreparedBackground) -> (usize, usize) {
+        let index = if self.completed() {
+            prepared.updates.len()
+        } else {
+            self.next_update()
         };
-        let offset = self.chunk_in_record * BACKGROUND_CHUNK_BYTES;
-        let start = span
-            .source_offset
-            .checked_add(offset)
-            .context("background source overflow")?;
-        let bytes = rom
-            .get(start..start + BACKGROUND_CHUNK_BYTES)
-            .context("background source bounds")?
-            .to_vec();
-        let destination = span.destination.wrapping_add(offset as u16);
-        Ok(self.advance_chunk(
-            bytes,
-            destination,
-            span.bank,
-            usize::from(span.source_pages) * SOURCE_PAGE_BYTES,
-            suspend_depth,
-        ))
+        prepared
+            .updates
+            .get(index)
+            .map_or((prepared.record_count, 0), |update| update.source_position)
     }
 }
 
@@ -511,8 +470,7 @@ impl RawBackgroundCatalog {
     }
 }
 
-/// Immutable decoded source copies. The foreground upload continuation retains
-/// cursors only; prepared data and the canonical PPU queue have separate owners.
+/// Input to the asset boundary. Gameplay never traverses source spans.
 #[derive(Clone)]
 pub struct PreparedBackgroundSpan {
     pub bank: u8,
@@ -520,9 +478,46 @@ pub struct PreparedBackgroundSpan {
     pub bytes: Vec<u8>,
 }
 #[derive(Clone)]
+struct BackgroundUpdate {
+    bank: u8,
+    destination: u16,
+    bytes: [u8; BACKGROUND_CHUNK_BYTES],
+    source_position: (usize, usize),
+}
+/// Ordered tile updates decoded once at startup. Fixed update size retains the
+/// observable upload cadence; bank and destination retain Video's boundary
+/// effects. Source record coordinates exist solely for debug compatibility.
+#[derive(Clone)]
 pub struct PreparedBackground {
-    pub spans: Vec<PreparedBackgroundSpan>,
-    pub terminator: u8,
+    updates: Vec<BackgroundUpdate>,
+    record_count: usize,
+    terminator: u8,
+}
+impl PreparedBackground {
+    pub fn new(spans: Vec<PreparedBackgroundSpan>, terminator: u8) -> Result<Self> {
+        let mut updates = Vec::new();
+        for (record, span) in spans.iter().enumerate() {
+            ensure!(
+                !span.bytes.is_empty() && span.bytes.len().is_multiple_of(BACKGROUND_CHUNK_BYTES),
+                "prepared background chunk alignment or empty span"
+            );
+            for (chunk, bytes) in span.bytes.chunks_exact(BACKGROUND_CHUNK_BYTES).enumerate() {
+                updates.push(BackgroundUpdate {
+                    bank: span.bank,
+                    destination: span
+                        .destination
+                        .wrapping_add((chunk * BACKGROUND_CHUNK_BYTES) as u16),
+                    bytes: bytes.try_into().expect("fixed-size background update"),
+                    source_position: (record, chunk),
+                });
+            }
+        }
+        Ok(Self {
+            updates,
+            record_count: spans.len(),
+            terminator,
+        })
+    }
 }
 impl BackgroundUpload {
     pub fn poll_prepared(
@@ -531,28 +526,31 @@ impl BackgroundUpload {
         palette: [u8; 4],
         suspend_depth: u8,
     ) -> Result<BackgroundEffect> {
-        if self.completed {
+        if self.completed() {
             return Ok(BackgroundEffect::None);
         }
-        let Some(span) = prepared.spans.get(self.record) else {
-            return Ok(self.finish_palette(palette, prepared.terminator));
+        let next = self.next_update();
+        let Some(update) = prepared.updates.get(next) else {
+            *self = Self::Complete;
+            return Ok(BackgroundEffect::PaletteTail {
+                base: palette,
+                active: palette,
+                terminal_tag: prepared.terminator,
+            });
         };
-        ensure!(
-            span.bytes.len().is_multiple_of(BACKGROUND_CHUNK_BYTES),
-            "prepared background chunk alignment"
-        );
-        let offset = self.chunk_in_record * BACKGROUND_CHUNK_BYTES;
-        let bytes = span
-            .bytes
-            .get(offset..offset + BACKGROUND_CHUNK_BYTES)
-            .context("prepared background chunk")?
-            .to_vec();
-        Ok(self.advance_chunk(
-            bytes,
-            span.destination.wrapping_add(offset as u16),
-            span.bank,
-            span.bytes.len(),
-            suspend_depth,
-        ))
+        *self = Self::Updating { next: next + 1 };
+        // Suspension is live per poll, not a property of the decoded asset.
+        Ok(BackgroundEffect::Chunk {
+            destination: update.destination,
+            bytes: update.bytes.to_vec(),
+            count_minus_one: (BACKGROUND_CHUNK_BYTES - 1) as u8,
+            commit: if suspend_depth == 0 {
+                UploadCommit::AtInterrupt
+            } else {
+                UploadCommit::Immediate
+            },
+            selected_bank: update.bank,
+            queue_terminator: u8::MAX,
+        })
     }
 }

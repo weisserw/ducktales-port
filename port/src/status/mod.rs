@@ -1,8 +1,14 @@
-//! Encoded status values, overlay health, lives and countdown (B14).
-//! Native domain declarations only; all operations await stage4. See trace.md.
+//! Status values, overlay health, lives and native stage time (B14).
+//! Adjacent trace.md derives the original arithmetic, ordering and display contracts.
+mod countdown;
 mod formats;
+mod health;
+mod money;
 use crate::actors::ActorContact;
 use anyhow::{Context, Result, ensure};
+pub use countdown::Countdown;
+pub use health::{Health, HealthSegment};
+pub use money::{RewardCredit, RewardMoney, TotalMoney};
 pub const BLANK: u8 = 0x24;
 pub const EXPIRED: [u8; 3] = [0x1e, 0x19, BLANK];
 pub const COUNTDOWN_PERIOD: u8 = 60;
@@ -45,88 +51,13 @@ pub enum TitleRule {
     OrdinaryDamage,
     AlternateRewards,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct HealthSegment {
-    pub y: u8,
-    pub tile: u8,
-    pub depleted: u8,
-    pub x: u8,
-}
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Health {
-    pub segments: [HealthSegment; OVERLAY_SEGMENTS],
-    pub end: u8,
-    pub alternating: u8,
-}
-impl Health {
-    /// Health rules stop at the first negative Y, exposing only the unlocked
-    /// prefix. Rendering's FF marker and restore's all-five reset are separate.
-    fn unlocked_segments(&self) -> &[HealthSegment] {
-        let end = self
-            .segments
-            .iter()
-            .position(|segment| segment.y & 0x80 != 0)
-            .unwrap_or(OVERLAY_SEGMENTS);
-        &self.segments[..end]
-    }
-    /// Marks the flag preceding the first depleted segment or negative Y.
-    pub fn damage(&mut self, rule: TitleRule) {
-        if rule == TitleRule::AlternatingDamage {
-            self.alternating = self.alternating.wrapping_add(1);
-            if self.alternating & 1 != 0 {
-                return;
-            }
-        }
-        let unlocked = self.unlocked_segments();
-        let end = unlocked
-            .iter()
-            .position(|segment| segment.depleted != 0)
-            .unwrap_or(unlocked.len());
-        if let Some(index) = end.checked_sub(1) {
-            self.segments[index].depleted = 1;
-        }
-    }
-    pub fn recover_one(&mut self) {
-        self.alternating = 0;
-        if let Some(index) = self
-            .unlocked_segments()
-            .iter()
-            .position(|segment| segment.depleted != 0)
-        {
-            self.segments[index].depleted = 0;
-        }
-    }
-    pub fn restore(&mut self) {
-        self.alternating = 0;
-        for segment in &mut self.segments {
-            segment.depleted = 0;
-        }
-    }
-    pub fn extend(&mut self) -> bool {
-        const INITIAL_SEGMENTS: usize = 3;
-        const OVERLAY_Y: u8 = 0x20;
-        let Some(index) =
-            (INITIAL_SEGMENTS..OVERLAY_SEGMENTS).find(|&index| self.segments[index].y & 0x80 != 0)
-        else {
-            return false;
-        };
-        self.segments[index].y = OVERLAY_Y;
-        if index + 1 < OVERLAY_SEGMENTS {
-            self.segments[index + 1].y = u8::MAX;
-        } else {
-            self.end = u8::MAX;
-        }
-        self.restore();
-        true
-    }
-}
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Status {
-    pub reward: [u8; 6],
-    pub total: [u8; 7],
+    pub reward: RewardMoney,
+    pub total: TotalMoney,
     pub lives: u8,
     pub health: Health,
-    pub countdown: [u8; 3],
+    pub countdown: Countdown,
     pub divider: u8,
     pub dirty: u8,
     pub ui_pending: u8,
@@ -149,7 +80,7 @@ pub enum TransferLayout {
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TransferSession {
-    pub source: [u8; 6],
+    pub source: RewardMoney,
     pub started: bool,
 }
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
@@ -179,29 +110,28 @@ pub struct ConversionOutcome {
     pub freeze_player_animation: bool,
 }
 impl Status {
-    pub fn add_reward(&mut self, digit: usize, amount: u8) {
-        if add_codes(
-            &mut self.reward[..=digit],
-            amount,
-            DigitTraversal::CarryOnly,
-        ) {
-            self.saturate_reward();
-        }
+    pub fn credit_reward(&mut self, credit: RewardCredit) {
+        self.reward.credit(credit);
+        self.dirty = self.dirty.wrapping_add(1);
+    }
+    // Source-contract fixtures can still probe original denomination boundaries.
+    #[cfg(test)]
+    fn add_reward(&mut self, digit: usize, amount: u8) {
+        self.reward.credit_at(digit, amount);
         self.dirty = self.dirty.wrapping_add(1);
     }
     pub fn saturate_reward(&mut self) {
-        self.reward[..4].fill(9);
+        self.reward.saturate();
     }
     pub fn saturate_total(&mut self) {
-        self.total[..5].fill(9);
+        self.total.saturate();
     }
     pub fn steal(&mut self, actor: &mut ActorContact) {
-        actor.local_state = actor.local_state.wrapping_add(1);
-        if subtract_codes(&mut self.reward[..3], 1) {
-            self.reward.fill(BLANK);
-        } else {
-            blank_leading_zeroes(&mut self.reward);
-        }
+        {
+            let actor_value = actor.local_state_code().wrapping_add(1);
+            actor.set_local_state_code(actor_value);
+        };
+        self.reward.steal();
         self.dirty = self.dirty.wrapping_add(1);
     }
     pub fn pay(&mut self, cost: Cost, rejected: bool) -> bool {
@@ -219,24 +149,13 @@ impl Status {
     /// other two fields lets SELECT pay immediately without constructing another
     /// Status owner or deferring restoration until after later collision calls.
     pub fn pay_overlay_parts(
-        total: &mut [u8; 7],
+        total: &mut TotalMoney,
         health: &mut Health,
         ui_pending: &mut u8,
     ) -> bool {
-        const PAYMENT: u8 = 3;
-        if health
-            .unlocked_segments()
-            .last()
-            .is_none_or(|segment| segment.depleted == 0)
-        {
+        if !health.needs_paid_restore() || !total.pay_restore() {
             return false;
         }
-        let mut upper = [total[0], total[1]];
-        if subtract_codes(&mut upper, PAYMENT) {
-            return false;
-        }
-        total[..2].copy_from_slice(&upper);
-        blank_literal_zero_prefix(total);
         health.restore();
         *ui_pending = ui_pending.wrapping_add(1);
         true
@@ -245,21 +164,11 @@ impl Status {
     /// literal zeroes only. Do not reuse general display normalization: that
     /// skips existing blank codes and changes untouched lower display bytes.
     pub fn pay_reward_dialogue(&mut self) -> RewardPayment {
-        const PRICE_UPPER_CODES: u8 = 3;
-        let mut upper = [self.reward[0], self.reward[1]];
-        if subtract_codes(&mut upper, PRICE_UPPER_CODES) {
-            return RewardPayment::Underfunded;
+        let payment = self.reward.pay_dialogue();
+        if payment.accepted() {
+            self.dirty = self.dirty.wrapping_add(1);
         }
-        self.reward[..2].copy_from_slice(&upper);
-        let zeroes = blank_literal_zero_prefix(&mut self.reward);
-        self.dirty = self.dirty.wrapping_add(1);
-        if zeroes == 0 {
-            RewardPayment::FirstCodeNonzero
-        } else if zeroes == self.reward.len() {
-            RewardPayment::AllCodesZero
-        } else {
-            RewardPayment::PartialZeroPrefix
-        }
+        payment
     }
     pub fn gain_life(&mut self) {
         if self.lives != MAX_LIVES {
@@ -269,12 +178,11 @@ impl Status {
     pub fn timer_tick(&mut self, player_state: u8, composition_tick: u8) -> TimerOutcome {
         const DEATH: u8 = 0x0d;
         const COMPLETION: u8 = 0x10;
-        const WARNING_TENS: u8 = 3;
         const WARNING_TICK_MASK: u8 = 0x0f;
         if matches!(player_state, DEATH | COMPLETION) {
             return TimerOutcome::default();
         }
-        if self.countdown[0] == EXPIRED[0] {
+        if self.countdown.expired() {
             return TimerOutcome {
                 player_state: Some(DEATH),
                 clear_late_route: true,
@@ -284,15 +192,10 @@ impl Status {
         self.divider = self.divider.wrapping_sub(1);
         if self.divider == 0 {
             self.divider = COUNTDOWN_PERIOD;
-            subtract_codes(&mut self.countdown, 1);
-            if self.countdown == [0; 3] {
-                self.countdown = EXPIRED;
-            }
+            self.countdown.elapse_second();
         }
         TimerOutcome {
-            sound: (self.countdown[0] == 0
-                && self.countdown[1] < WARNING_TENS
-                && composition_tick & WARNING_TICK_MASK == 0)
+            sound: (self.countdown.warning() && composition_tick & WARNING_TICK_MASK == 0)
                 .then_some(WARNING_SOUND),
             ..TimerOutcome::default()
         }
@@ -301,29 +204,26 @@ impl Status {
         if primary_busy {
             return None;
         }
-        if let Some(first) = self.reward.iter().position(|&code| code < BLANK) {
-            for code in &mut self.reward[first..] {
-                if *code == BLANK {
-                    *code = 0;
-                }
-            }
-        }
+        self.reward.prepare_display();
         self.dirty = 0;
-        Some(number_upload(REWARD_UI_ADDRESS, &self.reward))
+        Some(number_upload(
+            REWARD_UI_ADDRESS,
+            &self.reward.display_codes(),
+        ))
     }
     pub fn queue_ui(&mut self, primary_busy: bool) -> Option<Vec<u8>> {
         if primary_busy {
             return None;
         }
         self.ui_pending = 0;
-        Some(number_upload(TOTAL_UI_ADDRESS, &self.total))
+        Some(number_upload(TOTAL_UI_ADDRESS, &self.total.display_codes()))
     }
     pub fn transfer_batch(
         &mut self,
         layout: TransferLayout,
         session: &mut TransferSession,
     ) -> TransferOutcome {
-        if !session.started && self.reward[5] == BLANK {
+        if !session.started && self.reward.transfer_exhausted() {
             return TransferOutcome {
                 complete: true,
                 ..TransferOutcome::default()
@@ -332,25 +232,24 @@ impl Status {
         session.started = true;
         let mut moved = 0;
         loop {
-            subtract_codes(&mut session.source[..4], 1);
-            blank_leading_zeroes(&mut session.source);
-            if add_codes(&mut self.total[..5], 1, DigitTraversal::WholeRow) {
-                self.saturate_total();
-            }
-            self.total[5..].fill(0);
+            session.source.transfer_one();
+            self.total.receive_transfer();
             moved += 1;
-            if session.source[5] == BLANK || moved == TRANSFER_BATCH {
+            if session.source.transfer_exhausted() || moved == TRANSFER_BATCH {
                 break;
             }
         }
-        let complete = session.source[5] == BLANK;
+        let complete = session.source.transfer_exhausted();
         let (total_address, reward_address) = match layout {
             TransferLayout::Stage => (0x220a, 0x226b),
             TransferLayout::Selection => (TOTAL_UI_ADDRESS, REWARD_UI_ADDRESS),
         };
-        let mut upload = number_upload(total_address, &self.total);
+        let mut upload = number_upload(total_address, &self.total.display_codes());
         upload.pop();
-        upload.extend(number_upload(reward_address, &session.source));
+        upload.extend(number_upload(
+            reward_address,
+            &session.source.display_codes(),
+        ));
         TransferOutcome {
             submission_value: Some(u8::MAX),
             moved,
@@ -382,13 +281,11 @@ impl Status {
             return result;
         }
         result.freeze_player_animation = true;
-        self.countdown[2] = 0;
-        if self.countdown[0] | self.countdown[1] == 0 {
+        if !self.countdown.convert_group() {
             result.wait_ticks = CONVERSION_FINISH_WAIT;
             return result;
         }
-        subtract_codes(&mut self.countdown[..2], 1);
-        self.add_reward(3, 1);
+        self.credit_reward(RewardCredit::Timer);
         result.value_sound = Some(VALUE_SOUND);
         result
     }
@@ -509,8 +406,12 @@ impl StatusCatalog {
                         }
                         StreamOp::Insert(fragment) => match fragment {
                             Fragment::Literal(tiles) => bytes.extend_from_slice(tiles),
-                            Fragment::Reward => bytes.extend(number_payload(&status.reward)),
-                            Fragment::Total => bytes.extend(number_payload(&status.total)),
+                            Fragment::Reward => {
+                                bytes.extend(number_payload(&status.reward.display_codes()))
+                            }
+                            Fragment::Total => {
+                                bytes.extend(number_payload(&status.total.display_codes()))
+                            }
                             Fragment::Conditional {
                                 progression: index,
                                 mask,
@@ -589,8 +490,8 @@ impl StatusCatalog {
                 original_selector
             };
             let payload = match selector {
-                TOTAL_PAYLOAD => number_payload(&status.total).collect(),
-                REWARD_PAYLOAD => number_payload(&status.reward).collect(),
+                TOTAL_PAYLOAD => number_payload(&status.total.display_codes()).collect(),
+                REWARD_PAYLOAD => number_payload(&status.reward.display_codes()).collect(),
                 _ => self
                     .payloads
                     .get(selector)
@@ -636,7 +537,10 @@ impl StatusCatalog {
         };
         if selector != 0 {
             for slot in [0, 2, 3, 4] {
-                actors[slot].state = 0;
+                {
+                    let actor_value = 0;
+                    actors[slot].set_state_code(actor_value);
+                };
             }
         }
         Ok(self.write_message(selector, stage, status)?.bytes)

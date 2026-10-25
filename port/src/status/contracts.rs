@@ -22,24 +22,24 @@ const OVERLAY_X_STEP: u8 = 8;
 const END_OVERLAY: u8 = 0xff;
 const WARNING_BOUNDARY: u8 = 3;
 fn health() -> Health {
-    Health {
-        segments: std::array::from_fn(|i| HealthSegment {
+    Health::from_overlay(
+        std::array::from_fn(|i| HealthSegment {
             y: if i == 3 { END_OVERLAY } else { OVERLAY_Y },
             tile: OVERLAY_TILE,
             depleted: 0,
             x: OVERLAY_FIRST_X + i as u8 * OVERLAY_X_STEP,
         }),
-        end: END_OVERLAY,
-        alternating: 0,
-    }
+        END_OVERLAY,
+        0,
+    )
 }
 fn state() -> Status {
     Status {
-        reward: [BLANK; 6],
-        total: [BLANK; 7],
+        reward: [BLANK; 6].into(),
+        total: [BLANK; 7].into(),
         lives: 3,
         health: health(),
-        countdown: [5, 0, 0],
+        countdown: [5, 0, 0].into(),
         divider: COUNTDOWN_PERIOD,
         dirty: 0,
         ui_pending: 0,
@@ -55,7 +55,7 @@ fn numeric_producers_preserve_every_raw_code_and_their_distinct_framing() {
     };
     for code in 0..=u8::MAX {
         let mut s = state();
-        s.total = [code; 7];
+        s.total = [code; 7].into();
         let before = s.clone();
         let message = catalog.write_message(0, 0, &s).unwrap();
         let rows = StatusCatalog::expand(
@@ -89,23 +89,26 @@ fn rom() -> Vec<u8> {
 #[test]
 fn reward_add_preserves_leading_blank_codes_and_trailing_display_digits() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, BLANK, 1, 0, 0];
+    s.reward = [BLANK, BLANK, BLANK, 1, 0, 0].into();
     s.add_reward(REWARD_HUNDREDS_DIGIT, UNIT_INCREMENT);
-    assert_eq!(s.reward, [BLANK, BLANK, BLANK, 2, 0, 0]);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, BLANK, 2, 0, 0]);
     assert_eq!(s.dirty, 1);
 }
 #[test]
 fn reward_add_to_blank_normalizes_encoded_sum_above_blank() {
     let mut s = state();
     s.add_reward(REWARD_THOUSANDS_DIGIT, EXTRA_REWARD_INCREMENT);
-    assert_eq!(s.reward, [BLANK, BLANK, 5, BLANK, BLANK, BLANK]);
+    assert_eq!(
+        s.reward.display_codes(),
+        [BLANK, BLANK, 5, BLANK, BLANK, BLANK]
+    );
     assert_eq!(s.dirty, 1);
 }
 #[test]
 fn reward_add_zero_at_blank_takes_equal_blank_exit() {
     let mut s = state();
     s.add_reward(REWARD_TOP_DIGIT, 0);
-    assert_eq!(s.reward, [BLANK; 6]);
+    assert_eq!(s.reward.display_codes(), [BLANK; 6]);
     assert_eq!(s.dirty, 1);
 }
 #[test]
@@ -117,21 +120,21 @@ fn reward_carry_crosses_every_higher_digit_and_saturates_upper_four() {
     ];
     for (before, after) in cases {
         let mut s = state();
-        s.reward = before;
+        s.reward = before.into();
         s.add_reward(REWARD_HUNDREDS_DIGIT, UNIT_INCREMENT);
-        assert_eq!(s.reward, after);
+        assert_eq!(s.reward.display_codes(), after);
         assert_eq!(s.dirty, 1);
     }
 }
 #[test]
 fn saturators_fill_only_source_owned_upper_widths_without_dirty_increment() {
     let mut s = state();
-    s.reward = [1, 2, 3, 4, 5, 6];
-    s.total = [1, 2, 3, 4, 5, 6, 7];
+    s.reward = [1, 2, 3, 4, 5, 6].into();
+    s.total = [1, 2, 3, 4, 5, 6, 7].into();
     s.saturate_reward();
     s.saturate_total();
-    assert_eq!(s.reward, [9, 9, 9, 9, 5, 6]);
-    assert_eq!(s.total, [9, 9, 9, 9, 9, 6, 7]);
+    assert_eq!(s.reward.display_codes(), [9, 9, 9, 9, 5, 6]);
+    assert_eq!(s.total.display_codes(), [9, 9, 9, 9, 9, 6, 7]);
     assert_eq!(s.dirty, 0);
 }
 #[test]
@@ -144,45 +147,45 @@ fn dirty_request_wraps_as_source_byte() {
 #[test]
 fn theft_subtracts_one_at_third_digit_and_increments_same_actor_phase() {
     let mut s = state();
-    s.reward = [BLANK, 1, 0, 6, 0, 0];
+    s.reward = [BLANK, 1, 0, 6, 0, 0].into();
     let mut a = ActorContact {
-        local_state: u8::MAX,
+        control: crate::actors::ActorControl::from_codes(0, u8::MAX, 0, 0),
         ..Default::default()
     };
     s.steal(&mut a);
-    assert_eq!(s.reward, [BLANK, BLANK, 9, 6, 0, 0]);
-    assert_eq!(a.local_state, 0);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, 9, 6, 0, 0]);
+    assert_eq!(a.local_state_code(), 0);
     assert_eq!(s.dirty, 1);
 }
 #[test]
 fn theft_borrow_crosses_blank_upper_digits_and_underflow_blanks_all_six() {
     for reward in [[BLANK; 6], [0, 0, 0, 9, 9, 9], [BLANK, BLANK, 0, 1, 2, 3]] {
         let mut s = state();
-        s.reward = reward;
+        s.reward = reward.into();
         s.steal(&mut ActorContact::default());
-        assert_eq!(s.reward, [BLANK; 6]);
+        assert_eq!(s.reward.display_codes(), [BLANK; 6]);
         assert_eq!(s.dirty, 1);
     }
 }
 #[test]
 fn theft_zero_result_blanks_leading_run_but_retains_lower_nonzero() {
     let mut s = state();
-    s.reward = [0, 0, 1, 0, 2, 0];
+    s.reward = [0, 0, 1, 0, 2, 0].into();
     s.steal(&mut ActorContact::default());
-    assert_eq!(s.reward, [BLANK, BLANK, BLANK, BLANK, 2, 0]);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, BLANK, BLANK, 2, 0]);
 }
 #[test]
 fn theft_exact_exhaustion_blanks_all_digits() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, 1, 0, 0, 0];
+    s.reward = [BLANK, BLANK, 1, 0, 0, 0].into();
     s.steal(&mut ActorContact::default());
-    assert_eq!(s.reward, [BLANK; 6]);
+    assert_eq!(s.reward.display_codes(), [BLANK; 6]);
 }
 #[test]
 fn dialogue_payment_is_atomic_on_insufficient_upper_two_digits() {
     for reward in [[BLANK; 6], [0, 2, 9, 9, 9, 9], [BLANK, 2, 0, 0, 0, 0]] {
         let mut s = state();
-        s.reward = reward;
+        s.reward = reward.into();
         let old = s.clone();
         assert!(!s.pay(Cost::RewardDialogue, false));
         assert_eq!(s, old);
@@ -196,16 +199,16 @@ fn dialogue_payment_exact_and_borrow_cases_preserve_lower_value() {
         ([BLANK, 3, 0, 2, 0, 0], [BLANK, BLANK, BLANK, 2, 0, 0]),
     ] {
         let mut s = state();
-        s.reward = before;
+        s.reward = before.into();
         assert!(s.pay(Cost::RewardDialogue, false));
-        assert_eq!(s.reward, after);
+        assert_eq!(s.reward.display_codes(), after);
         assert_eq!(s.dirty, 1);
     }
 }
 #[test]
 fn rejected_dialogue_choice_does_not_pay_or_dirty() {
     let mut s = state();
-    s.reward = [9; 6];
+    s.reward = [9; 6].into();
     let old = s.clone();
     assert!(!s.pay(Cost::RewardDialogue, true));
     assert_eq!(s, old);
@@ -213,7 +216,7 @@ fn rejected_dialogue_choice_does_not_pay_or_dirty() {
 #[test]
 fn total_overlay_payment_requires_preceding_damage_flag() {
     let mut s = state();
-    s.total = [9; 7];
+    s.total = [9; 7].into();
     let old = s.clone();
     assert!(!s.pay(Cost::TotalOverlay, false));
     assert_eq!(s, old);
@@ -221,26 +224,26 @@ fn total_overlay_payment_requires_preceding_damage_flag() {
 #[test]
 fn total_overlay_payment_checks_upper_two_digits_and_commits_all_or_none() {
     let mut s = state();
-    s.health.segments[2].depleted = 1;
-    s.total = [BLANK, 2, 9, 9, 9, 9, 9];
+    s.health.edit_overlay(|segments| segments[2].depleted = 1);
+    s.total = [BLANK, 2, 9, 9, 9, 9, 9].into();
     let old = s.clone();
     assert!(!s.pay(Cost::TotalOverlay, false));
     assert_eq!(s, old);
-    s.total = [1, 0, 0, 0, 0, 0, 0];
+    s.total = [1, 0, 0, 0, 0, 0, 0].into();
     assert!(s.pay(Cost::TotalOverlay, false));
-    assert_eq!(s.total, [BLANK, 7, 0, 0, 0, 0, 0]);
-    assert!(s.health.segments.iter().all(|x| x.depleted == 0));
+    assert_eq!(s.total.display_codes(), [BLANK, 7, 0, 0, 0, 0, 0]);
+    assert!(s.health.overlay_segments().iter().all(|x| x.depleted == 0));
     assert_eq!(s.ui_pending, 1);
     assert_eq!(s.dirty, 0);
 }
 #[test]
 fn total_payment_normalizes_seven_codes_and_resets_alternation() {
     let mut s = state();
-    s.health.segments[2].depleted = 1;
+    s.health.edit_overlay(|segments| segments[2].depleted = 1);
     s.health.alternating = 7;
-    s.total = [BLANK, 3, 0, 0, 0, 0, 0];
+    s.total = [BLANK, 3, 0, 0, 0, 0, 0].into();
     assert!(s.pay(Cost::TotalOverlay, false));
-    assert_eq!(s.total, [BLANK; 7]);
+    assert_eq!(s.total.display_codes(), [BLANK; 7]);
     assert_eq!(s.health.alternating, 0);
 }
 #[test]
@@ -248,7 +251,7 @@ fn ordinary_damage_marks_last_available_segment_then_walks_toward_first() {
     let mut h = health();
     for expected in [[0, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 1, 1, 0, 0]] {
         h.damage(TitleRule::OrdinaryDamage);
-        assert_eq!(h.segments.map(|s| s.depleted), expected);
+        assert_eq!(h.overlay_segments().map(|s| s.depleted), expected);
     }
 }
 #[test]
@@ -256,40 +259,40 @@ fn alternating_damage_skips_odd_events_and_wraps_latch() {
     let mut h = health();
     h.damage(TitleRule::AlternatingDamage);
     assert_eq!(h.alternating, 1);
-    assert_eq!(h.segments[2].depleted, 0);
+    assert_eq!(h.overlay_segments()[2].depleted, 0);
     h.damage(TitleRule::AlternatingDamage);
     assert_eq!(h.alternating, 2);
-    assert_eq!(h.segments[2].depleted, 1);
+    assert_eq!(h.overlay_segments()[2].depleted, 1);
     h.alternating = u8::MAX;
     h.damage(TitleRule::AlternatingDamage);
     assert_eq!(h.alternating, 0);
-    assert_eq!(h.segments[1].depleted, 1);
+    assert_eq!(h.overlay_segments()[1].depleted, 1);
 }
 #[test]
 fn alternate_rewards_option_uses_each_damage_event_without_alternating_latch() {
     let mut h = health();
     h.alternating = 5;
     h.damage(TitleRule::AlternateRewards);
-    assert_eq!(h.segments[2].depleted, 1);
+    assert_eq!(h.overlay_segments()[2].depleted, 1);
     assert_eq!(h.alternating, 5);
 }
 #[test]
 fn recover_one_clears_first_depleted_flag_and_alternation() {
     let mut h = health();
     h.alternating = 3;
-    h.segments[1].depleted = 1;
-    h.segments[2].depleted = 1;
+    h.edit_overlay(|segments| segments[1].depleted = 1);
+    h.edit_overlay(|segments| segments[2].depleted = 1);
     h.recover_one();
-    assert_eq!(h.segments.map(|s| s.depleted), [0, 0, 1, 0, 0]);
+    assert_eq!(h.overlay_segments().map(|s| s.depleted), [0, 0, 1, 0, 0]);
     assert_eq!(h.alternating, 0);
 }
 #[test]
 fn recovery_stops_at_negative_y_and_does_not_reveal_hidden_segments() {
     let mut h = health();
-    h.segments[4].depleted = 1;
+    h.edit_overlay(|segments| segments[4].depleted = 1);
     h.recover_one();
-    assert_eq!(h.segments[4].depleted, 1);
-    assert_eq!(h.segments[3].y, END_OVERLAY);
+    assert_eq!(h.overlay_segments()[4].depleted, 1);
+    assert_eq!(h.overlay_segments()[3].y, END_OVERLAY);
 }
 #[test]
 fn health_rules_respect_every_negative_y_sentinel_and_preserve_locked_geometry() {
@@ -298,49 +301,55 @@ fn health_rules_respect_every_negative_y_sentinel_and_preserve_locked_geometry()
     for sentinel in 0x80..=u8::MAX {
         for capacity in 0..=OVERLAY_SEGMENTS {
             let mut h = health();
-            for segment in &mut h.segments {
-                segment.y = 0x7f;
-                segment.depleted = 0;
-            }
+            h.edit_overlay(|segments| {
+                for segment in segments {
+                    segment.y = 0x7f;
+                    segment.depleted = 0;
+                }
+            });
             if capacity < OVERLAY_SEGMENTS {
-                h.segments[capacity].y = sentinel;
+                h.edit_overlay(|segments| segments[capacity].y = sentinel);
             }
             let mut damaged = h.clone();
             damaged.damage(TitleRule::OrdinaryDamage);
             let mut expected = h.clone();
             if capacity != 0 {
-                expected.segments[capacity - 1].depleted = 1;
+                expected.edit_overlay(|segments| segments[capacity - 1].depleted = 1);
             }
             assert_eq!(damaged, expected);
 
             h.alternating = 23;
-            for segment in &mut h.segments {
-                segment.depleted = 0x7f;
-            }
+            h.edit_overlay(|segments| {
+                for segment in segments {
+                    segment.depleted = 0x7f;
+                }
+            });
             let mut recovered = h.clone();
             recovered.recover_one();
             expected = h.clone();
             expected.alternating = 0;
             if capacity != 0 {
-                expected.segments[0].depleted = 0;
+                expected.edit_overlay(|segments| segments[0].depleted = 0);
             }
             assert_eq!(recovered, expected);
 
             let mut s = state();
             s.health = h;
-            s.total = [9, 9, 0, 0, 0, 0, 0];
+            s.total = [9, 9, 0, 0, 0, 0, 0].into();
             let before = s.clone();
             assert_eq!(s.pay(Cost::TotalOverlay, false), capacity != 0);
             if capacity == 0 {
                 assert_eq!(s, before);
             } else {
-                assert_eq!(s.total, [9, 6, 0, 0, 0, 0, 0]);
+                assert_eq!(s.total.display_codes(), [9, 6, 0, 0, 0, 0, 0]);
                 assert_eq!(s.ui_pending, 1);
                 expected = before.health;
                 expected.alternating = 0;
-                for segment in &mut expected.segments {
-                    segment.depleted = 0;
-                }
+                expected.edit_overlay(|segments| {
+                    for segment in segments {
+                        segment.depleted = 0;
+                    }
+                });
                 assert_eq!(
                     s.health, expected,
                     "full restoration also clears locked flags"
@@ -352,14 +361,18 @@ fn health_rules_respect_every_negative_y_sentinel_and_preserve_locked_geometry()
 #[test]
 fn restore_clears_five_flags_but_preserves_geometry_and_terminator() {
     let mut h = health();
-    for s in &mut h.segments {
-        s.depleted = 3;
-    }
+    h.edit_overlay(|segments| {
+        for s in segments {
+            s.depleted = 3;
+        }
+    });
     h.alternating = 9;
     let mut expected = h.clone();
-    for s in &mut expected.segments {
-        s.depleted = 0;
-    }
+    expected.edit_overlay(|segments| {
+        for s in segments {
+            s.depleted = 0;
+        }
+    });
     expected.alternating = 0;
     h.restore();
     assert_eq!(h, expected);
@@ -368,11 +381,11 @@ fn restore_clears_five_flags_but_preserves_geometry_and_terminator() {
 fn extra_health_reveals_fourth_then_fifth_segment_and_stops_at_capacity() {
     let mut h = health();
     assert!(h.extend());
-    assert_eq!(h.segments[3].y, OVERLAY_Y);
-    assert_eq!(h.segments[4].y, END_OVERLAY);
+    assert_eq!(h.overlay_segments()[3].y, OVERLAY_Y);
+    assert_eq!(h.overlay_segments()[4].y, END_OVERLAY);
     assert!(h.extend());
-    assert_eq!(h.segments[4].y, OVERLAY_Y);
-    assert_eq!(h.end, END_OVERLAY);
+    assert_eq!(h.overlay_segments()[4].y, OVERLAY_Y);
+    assert_eq!(h.overlay_end(), END_OVERLAY);
     let before = h.clone();
     assert!(!h.extend());
     assert_eq!(h, before);
@@ -413,7 +426,7 @@ fn life_reward_stops_at_exactly_nine_not_generic_clamping() {
 fn countdown_exempt_states_preserve_expiration_and_divider() {
     for player in [DEATH_PLAYER, COMPLETION_PLAYER] {
         let mut s = state();
-        s.countdown = EXPIRED;
+        s.countdown = EXPIRED.into();
         s.divider = 1;
         let before = s.clone();
         assert_eq!(s.timer_tick(player, 0), TimerOutcome::default());
@@ -423,7 +436,7 @@ fn countdown_exempt_states_preserve_expiration_and_divider() {
 #[test]
 fn expired_marker_enters_death_and_clears_late_route_without_decrement() {
     let mut s = state();
-    s.countdown = EXPIRED;
+    s.countdown = EXPIRED.into();
     s.divider = 1;
     assert_eq!(
         s.timer_tick(ORDINARY_PLAYER, 0),
@@ -446,7 +459,7 @@ fn countdown_divider_decrements_before_zero_test_and_zero_wraps() {
         s.divider = before;
         s.timer_tick(ORDINARY_PLAYER, 1);
         assert_eq!(s.divider, after);
-        assert_eq!(s.countdown, digits);
+        assert_eq!(s.countdown.display_codes(), digits);
     }
 }
 #[test]
@@ -458,10 +471,10 @@ fn countdown_borrow_and_exact_zero_install_non_numeric_expiration() {
         ([0, 0, 0], [9, 9, 9]),
     ] {
         let mut s = state();
-        s.countdown = before;
+        s.countdown = before.into();
         s.divider = 1;
         s.timer_tick(ORDINARY_PLAYER, 1);
-        assert_eq!(s.countdown, after);
+        assert_eq!(s.countdown.display_codes(), after);
     }
 }
 #[test]
@@ -474,7 +487,7 @@ fn warning_uses_post_decrement_digits_and_composition_modulo_sixteen() {
         ([0, 0, 0], 16, Some(WARNING_SOUND)),
     ] {
         let mut s = state();
-        s.countdown = digits;
+        s.countdown = digits.into();
         s.divider = 2;
         assert_eq!(s.timer_tick(ORDINARY_PLAYER, tick).sound, sound);
     }
@@ -482,15 +495,15 @@ fn warning_uses_post_decrement_digits_and_composition_modulo_sixteen() {
 #[test]
 fn countdown_crossing_thirty_to_twenty_nine_can_warn_same_tick() {
     let mut s = state();
-    s.countdown = [0, 3, 0];
+    s.countdown = [0, 3, 0].into();
     s.divider = 1;
     assert_eq!(s.timer_tick(ORDINARY_PLAYER, 0).sound, Some(WARNING_SOUND));
-    assert_eq!(s.countdown, [0, 2, 9]);
+    assert_eq!(s.countdown.display_codes(), [0, 2, 9]);
 }
 #[test]
 fn reward_refresh_busy_is_transactional_and_retains_dirty() {
     let mut s = state();
-    s.reward = [BLANK, 0, BLANK, 1, BLANK, 0];
+    s.reward = [BLANK, 0, BLANK, 1, BLANK, 0].into();
     s.dirty = 4;
     let old = s.clone();
     assert_eq!(s.queue_reward(true), None);
@@ -499,13 +512,13 @@ fn reward_refresh_busy_is_transactional_and_retains_dirty() {
 #[test]
 fn refresh_preserves_initial_blanks_and_zeroes_later_blank_codes() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, 1, BLANK, 0, BLANK];
+    s.reward = [BLANK, BLANK, 1, BLANK, 0, BLANK].into();
     s.dirty = 3;
     assert_eq!(
         s.queue_reward(false),
         Some(vec![0x20, 0x43, 7, 0x2c, BLANK, BLANK, 1, 0, 0, 0, 0, 0xff])
     );
-    assert_eq!(s.reward, [BLANK, BLANK, 1, 0, 0, 0]);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, 1, 0, 0, 0]);
     assert_eq!(s.dirty, 0);
 }
 #[test]
@@ -515,13 +528,13 @@ fn refresh_all_blank_still_queues_template_without_normalization() {
     let upload = s.queue_reward(false).unwrap();
     assert_eq!(upload.len(), 12);
     assert_eq!(&upload[4..10], &[BLANK; 6]);
-    assert_eq!(s.reward, [BLANK; 6]);
+    assert_eq!(s.reward.display_codes(), [BLANK; 6]);
     assert_eq!(s.dirty, 0);
 }
 #[test]
 fn stage_ui_busy_retains_latch_and_free_upload_copies_thirteen_bytes() {
     let mut s = state();
-    s.total = [1, 2, 3, 4, 5, 6, 7];
+    s.total = [1, 2, 3, 4, 5, 6, 7].into();
     s.ui_pending = 2;
     assert_eq!(s.queue_ui(true), None);
     assert_eq!(s.ui_pending, 2);
@@ -534,7 +547,7 @@ fn stage_ui_busy_retains_latch_and_free_upload_copies_thirteen_bytes() {
 #[test]
 fn transfer_blank_final_source_code_returns_before_arithmetic_or_upload() {
     let mut s = state();
-    s.reward = [1, 2, 3, 4, 0, BLANK];
+    s.reward = [1, 2, 3, 4, 0, BLANK].into();
     let before = s.clone();
     let mut session = TransferSession {
         source: s.reward,
@@ -550,7 +563,7 @@ fn transfer_blank_final_source_code_returns_before_arithmetic_or_upload() {
 #[test]
 fn transfer_final_partial_batch_has_no_sound_or_two_frame_wait() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, BLANK, 2, 0, 0];
+    s.reward = [BLANK, BLANK, BLANK, 2, 0, 0].into();
     let mut session = TransferSession {
         source: s.reward,
         started: false,
@@ -561,9 +574,12 @@ fn transfer_final_partial_batch_has_no_sound_or_two_frame_wait() {
     assert!(out.complete);
     assert_eq!(out.sound, None);
     assert_eq!(out.wait_ticks, 0);
-    assert_eq!(s.total, [BLANK, BLANK, BLANK, BLANK, 2, 0, 0]);
-    assert_eq!(session.source, [BLANK; 6]);
-    assert_eq!(s.reward, [BLANK, BLANK, BLANK, 2, 0, 0]);
+    assert_eq!(
+        s.total.display_codes(),
+        [BLANK, BLANK, BLANK, BLANK, 2, 0, 0]
+    );
+    assert_eq!(session.source.display_codes(), [BLANK; 6]);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, BLANK, 2, 0, 0]);
     let upload = out.upload.unwrap();
     assert_eq!(&upload[..2], &[0x22, 0x0a]);
     assert_eq!(&upload[12..14], &[0x22, 0x6b]);
@@ -571,7 +587,7 @@ fn transfer_final_partial_batch_has_no_sound_or_two_frame_wait() {
 #[test]
 fn transfer_ten_units_submits_sound_and_yields_two_frames_until_next_batch() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, 1, 1, 0, 0];
+    s.reward = [BLANK, BLANK, 1, 1, 0, 0].into();
     let mut session = TransferSession {
         source: s.reward,
         started: false,
@@ -584,14 +600,17 @@ fn transfer_ten_units_submits_sound_and_yields_two_frames_until_next_batch() {
     let upload = out.upload.unwrap();
     assert_eq!(&upload[..2], &[0x20, 0x6c]);
     assert_eq!(&upload[12..14], &[0x20, 0x43]);
-    assert_eq!(session.source, [BLANK, BLANK, BLANK, 1, 0, 0]);
-    assert_eq!(s.reward, [BLANK, BLANK, 1, 1, 0, 0]);
-    assert_eq!(s.total, [BLANK, BLANK, BLANK, 1, 0, 0, 0]);
+    assert_eq!(
+        session.source.display_codes(),
+        [BLANK, BLANK, BLANK, 1, 0, 0]
+    );
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, 1, 1, 0, 0]);
+    assert_eq!(s.total.display_codes(), [BLANK, BLANK, BLANK, 1, 0, 0, 0]);
 }
 #[test]
 fn transfer_exact_tenth_exhaustion_returns_without_full_batch_sound() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, 1, 0, 0, 0];
+    s.reward = [BLANK, BLANK, 1, 0, 0, 0].into();
     let mut session = TransferSession {
         source: s.reward,
         started: false,
@@ -605,15 +624,15 @@ fn transfer_exact_tenth_exhaustion_returns_without_full_batch_sound() {
 #[test]
 fn transfer_total_carry_saturates_five_digits_and_keeps_trailing_zeroes() {
     let mut s = state();
-    s.reward = [BLANK, BLANK, BLANK, 1, 0, 0];
-    s.total = [9, 9, 9, 9, 9, 7, 8];
+    s.reward = [BLANK, BLANK, BLANK, 1, 0, 0].into();
+    s.total = [9, 9, 9, 9, 9, 7, 8].into();
     let mut session = TransferSession {
         source: s.reward,
         started: false,
     };
     let out = s.transfer_batch(TransferLayout::Stage, &mut session);
     assert!(out.complete);
-    assert_eq!(s.total, [9, 9, 9, 9, 9, 0, 0]);
+    assert_eq!(s.total.display_codes(), [9, 9, 9, 9, 9, 0, 0]);
 }
 #[test]
 fn conversion_nonnegative_stage_audio_waits_full_wrapped_zero_count() {
@@ -630,7 +649,7 @@ fn conversion_resumes_audio_wait_with_stop_command_even_on_even_tick() {
     let out = s.convert_timer(ConversionPhase::AfterAudioWait, 0, 0);
     assert_eq!(out.stage_sound, Some(STOP_STAGE_SOUND));
     assert!(!out.freeze_player_animation);
-    assert_eq!(s.countdown, [5, 0, 0]);
+    assert_eq!(s.countdown.display_codes(), [5, 0, 0]);
 }
 #[test]
 fn conversion_even_composition_tick_preserves_digits_and_dirty() {
@@ -645,10 +664,13 @@ fn conversion_even_composition_tick_preserves_digits_and_dirty() {
 #[test]
 fn conversion_odd_tick_discards_units_borrows_upper_pair_and_adds_reward() {
     let mut s = state();
-    s.countdown = [1, 0, 9];
+    s.countdown = [1, 0, 9].into();
     let out = s.convert_timer(ConversionPhase::Running, STOP_STAGE_SOUND, 1);
-    assert_eq!(s.countdown, [0, 9, 0]);
-    assert_eq!(s.reward, [BLANK, BLANK, BLANK, 1, BLANK, BLANK]);
+    assert_eq!(s.countdown.display_codes(), [0, 9, 0]);
+    assert_eq!(
+        s.reward.display_codes(),
+        [BLANK, BLANK, BLANK, 1, BLANK, BLANK]
+    );
     assert_eq!(s.dirty, 1);
     assert_eq!(out.value_sound, Some(VALUE_SOUND));
     assert!(out.freeze_player_animation);
@@ -656,35 +678,40 @@ fn conversion_odd_tick_discards_units_borrows_upper_pair_and_adds_reward() {
 #[test]
 fn conversion_upper_pair_empty_waits_sixty_then_signals_only_after_wait() {
     let mut s = state();
-    s.countdown = [0, 0, 9];
+    s.countdown = [0, 0, 9].into();
     let out = s.convert_timer(ConversionPhase::Running, STOP_STAGE_SOUND, 1);
     assert_eq!(out.wait_ticks, CONVERSION_FINISH_WAIT);
     assert!(!out.completion_increment);
     assert_eq!(out.value_sound, None);
-    assert_eq!(s.countdown, [0, 0, 0]);
+    assert_eq!(s.countdown.display_codes(), [0, 0, 0]);
     let finish = s.convert_timer(ConversionPhase::AfterFinishWait, STOP_STAGE_SOUND, 0);
     assert!(finish.completion_increment);
 }
 #[test]
 fn conversion_overflow_saturates_reward_upper_four_and_increments_dirty_byte() {
     let mut s = state();
-    s.countdown = [0, 1, 0];
-    s.reward = [9, 9, 9, 9, 0, 0];
+    s.countdown = [0, 1, 0].into();
+    s.reward = [9, 9, 9, 9, 0, 0].into();
     s.dirty = u8::MAX;
     s.convert_timer(ConversionPhase::Running, STOP_STAGE_SOUND, 1);
-    assert_eq!(s.reward, [9, 9, 9, 9, 0, 0]);
+    assert_eq!(s.reward.display_codes(), [9, 9, 9, 9, 0, 0]);
     assert_eq!(s.dirty, 0);
-    assert_eq!(s.countdown, [0, 0, 0]);
+    assert_eq!(s.countdown.display_codes(), [0, 0, 0]);
 }
 #[test]
 fn extending_health_restores_all_flags_and_alternating_damage() {
     let mut h = health();
     h.alternating = 9;
-    for s in &mut h.segments {
-        s.depleted = 1;
-    }
+    h.edit_overlay(|segments| {
+        for s in segments {
+            s.depleted = 1;
+        }
+    });
     assert!(h.extend());
-    assert_eq!(h.segments.map(|s| s.depleted), [0; OVERLAY_SEGMENTS]);
+    assert_eq!(
+        h.overlay_segments().map(|s| s.depleted),
+        [0; OVERLAY_SEGMENTS]
+    );
     assert_eq!(h.alternating, 0);
 }
 #[test]
@@ -913,8 +940,8 @@ fn stream_expansion_keeps_fixed_count_thirty_and_ff_terminator_per_yield() {
 #[test]
 fn stream_runtime_value_fragments_use_counts_plus_one_and_marker_byte() {
     let mut s = state();
-    s.reward = [1, 2, 3, 4, 5, 6];
-    s.total = [1, 2, 3, 4, 5, 6, 7];
+    s.reward = [1, 2, 3, 4, 5, 6].into();
+    s.total = [1, 2, 3, 4, 5, 6, 7].into();
     let rows = vec![StreamRow {
         destination: 0x2041,
         operations: vec![
@@ -1007,7 +1034,7 @@ fn message_mode_zero_preserves_actors_and_all_other_modes_clear_only_four_slots(
         (4, 0, 0, 4),
     ] {
         let mut actors = [ActorContact {
-            state: 0xa0,
+            control: crate::actors::ActorControl::from_codes(0xa0, 0, 0, 0),
             ..Default::default()
         }; crate::actors::ACTOR_SLOTS];
         let out = c
@@ -1017,7 +1044,7 @@ fn message_mode_zero_preserves_actors_and_all_other_modes_clear_only_four_slots(
         assert_eq!(out.last(), Some(&0xff));
         for (slot, a) in actors.iter().enumerate() {
             assert_eq!(
-                a.state,
+                a.state_code(),
                 if mode != 0 && [0, 2, 3, 4].contains(&slot) {
                     0
                 } else {
@@ -1033,8 +1060,8 @@ fn message_zero_selector_resolves_stage_plus_two_and_runtime_value_payloads() {
     for stage in 0..5 {
         let mut actors = [ActorContact::default(); crate::actors::ACTOR_SLOTS];
         let mut s = state();
-        s.total = [1, 2, 3, 4, 5, 6, 7];
-        s.reward = [7, 6, 5, 4, 3, 2];
+        s.total = [1, 2, 3, 4, 5, 6, 7].into();
+        s.reward = [7, 6, 5, 4, 3, 2].into();
         let out = c.build_message(0, 1, 0, stage, &mut actors, &s).unwrap();
         assert_eq!(out[2], c.payload_counts[usize::from(stage) + 2].unwrap());
         assert!(out.windows(9).any(|v| v == [0x2c, 1, 2, 3, 4, 5, 6, 7, 0]));
@@ -1045,27 +1072,347 @@ fn message_zero_selector_resolves_stage_plus_two_and_runtime_value_payloads() {
 #[test]
 fn reward_addition_stops_at_settled_carry_without_normalizing_higher_codes() {
     let mut s = state();
-    s.reward = [0x35, BLANK, 2, 3, 0, 0];
+    s.reward = [0x35, BLANK, 2, 3, 0, 0].into();
     s.add_reward(3, 1);
-    assert_eq!(s.reward, [0x35, BLANK, 2, 4, 0, 0]);
-    s.reward[3] = BLANK.wrapping_sub(1);
+    assert_eq!(s.reward.display_codes(), [0x35, BLANK, 2, 4, 0, 0]);
+    s.reward
+        .edit_display_codes(|codes| codes[3] = BLANK.wrapping_sub(1));
     s.add_reward(3, 1);
-    assert_eq!(s.reward, [0x35, BLANK, 2, BLANK, 0, 0]);
+    assert_eq!(s.reward.display_codes(), [0x35, BLANK, 2, BLANK, 0, 0]);
 }
 
 #[test]
 fn dialogue_payment_stops_zero_normalization_at_an_existing_blank_code() {
     let mut s = state();
-    s.reward = [0, 3, BLANK, 0, 0, 7];
+    s.reward = [0, 3, BLANK, 0, 0, 7].into();
     assert!(s.pay(Cost::RewardDialogue, false));
-    assert_eq!(s.reward, [BLANK, BLANK, BLANK, 0, 0, 7]);
+    assert_eq!(s.reward.display_codes(), [BLANK, BLANK, BLANK, 0, 0, 7]);
 }
 
 #[test]
 fn overlay_payment_stops_at_existing_blank_and_preserves_following_zeroes() {
     let mut s = state();
-    s.total = [0, 3, BLANK, 0, 0, 0, 7];
-    s.health.segments[2].depleted = 1;
+    s.total = [0, 3, BLANK, 0, 0, 0, 7].into();
+    s.health.edit_overlay(|segments| segments[2].depleted = 1);
     assert!(s.pay(Cost::TotalOverlay, false));
-    assert_eq!(s.total, [BLANK, BLANK, BLANK, 0, 0, 0, 7]);
+    assert_eq!(s.total.display_codes(), [BLANK, BLANK, BLANK, 0, 0, 0, 7]);
+}
+
+#[test]
+fn countdown_all_decimal_values_preserve_decrement_warning_and_delayed_expiration() {
+    // E2A6..E2FD: decrement first, install expiration on result zero, then
+    // evaluate warning; E28C requests death only on the following gate call.
+    for seconds in 0u16..1000 {
+        let digits = |value: u16| {
+            [
+                (value / 100) as u8,
+                ((value / 10) % 10) as u8,
+                (value % 10) as u8,
+            ]
+        };
+        let mut s = state();
+        s.countdown = digits(seconds).into();
+        s.divider = 1;
+        let result = s.timer_tick(ORDINARY_PLAYER, 0);
+        let remaining = if seconds == 0 { 999 } else { seconds - 1 };
+        assert_eq!(
+            s.countdown.display_codes(),
+            if remaining == 0 {
+                EXPIRED
+            } else {
+                digits(remaining)
+            }
+        );
+        assert_eq!(result.player_state, None);
+        assert_eq!(
+            result.sound,
+            (remaining != 0 && remaining < 30).then_some(WARNING_SOUND)
+        );
+        assert_eq!(s.divider, COUNTDOWN_PERIOD);
+        if seconds == 1 {
+            assert_eq!(
+                s.timer_tick(ORDINARY_PLAYER, 1).player_state,
+                Some(DEATH_PLAYER)
+            );
+            assert_eq!(s.divider, COUNTDOWN_PERIOD);
+        }
+    }
+}
+
+#[test]
+fn countdown_all_decimal_values_convert_ten_seconds_and_discard_remainder() {
+    // EF70..EFA9: an odd composition frame clears units, tests upper pair,
+    // and consumes exactly ten seconds for one reward increment. Empty upper
+    // pair waits on this call; the final successful conversion itself never waits.
+    for seconds in 0u16..1000 {
+        let mut s = state();
+        s.countdown = [
+            (seconds / 100) as u8,
+            ((seconds / 10) % 10) as u8,
+            (seconds % 10) as u8,
+        ]
+        .into();
+        let result = s.convert_timer(ConversionPhase::Running, STOP_STAGE_SOUND, 1);
+        let groups = seconds / 10;
+        let remaining = groups.saturating_sub(1) * 10;
+        assert_eq!(
+            s.countdown.display_codes(),
+            [(remaining / 100) as u8, ((remaining / 10) % 10) as u8, 0]
+        );
+        assert_eq!(result.value_sound, (groups != 0).then_some(VALUE_SOUND));
+        assert_eq!(
+            result.wait_ticks,
+            if groups == 0 {
+                CONVERSION_FINISH_WAIT
+            } else {
+                0
+            }
+        );
+        assert_eq!(s.dirty, u8::from(groups != 0));
+        assert!(result.freeze_player_animation);
+    }
+}
+
+#[test]
+fn countdown_display_boundary_preserves_raw_codes_and_faithful_compatibility() {
+    // The old status owner accepted any three codes. Raw source-stage presets
+    // and game-over text still cross this boundary. This oracle preserves that
+    // faithful implementation's BLANK-as-zero quirk, not a new claim about the
+    // original source's SBC on nondecimal bytes (see trace.md).
+    fn old_subtract(codes: &mut [u8]) {
+        let mut borrow = 1i16;
+        for byte in codes.iter_mut().rev() {
+            let value = i16::from(if *byte == BLANK { 0 } else { *byte }) - borrow;
+            borrow = i16::from(value < 0);
+            *byte = if value < 0 { value + 10 } else { value } as u8;
+        }
+    }
+    for base in [[0; 3], [9; 3], [BLANK; 3], EXPIRED, [u8::MAX; 3]] {
+        for position in 0..3 {
+            for code in 0..=u8::MAX {
+                let mut input = base;
+                input[position] = code;
+                let timer = Countdown::from_display_codes(input);
+                assert_eq!(timer.display_codes(), input);
+                let mut s = state();
+                s.countdown = timer;
+                s.divider = 1;
+                let result = s.timer_tick(ORDINARY_PLAYER, 0);
+                if input[0] == EXPIRED[0] {
+                    assert_eq!(result.player_state, Some(DEATH_PLAYER));
+                    assert_eq!(s.countdown.display_codes(), input);
+                    assert_eq!(s.divider, 1);
+                } else {
+                    let mut expected = input;
+                    old_subtract(&mut expected);
+                    if expected == [0; 3] {
+                        expected = EXPIRED;
+                    }
+                    assert_eq!(
+                        s.countdown.display_codes(),
+                        expected,
+                        "tick input {input:?}"
+                    );
+                    assert_eq!(
+                        result.sound,
+                        (expected[0] == 0 && expected[1] < 3).then_some(WARNING_SOUND)
+                    );
+                }
+                let mut expected = input;
+                expected[2] = 0;
+                let consumes = expected[0] != 0 || expected[1] != 0;
+                if consumes {
+                    old_subtract(&mut expected[..2]);
+                }
+                s.countdown = timer;
+                let result = s.convert_timer(ConversionPhase::Running, STOP_STAGE_SOUND, 1);
+                assert_eq!(
+                    s.countdown.display_codes(),
+                    expected,
+                    "conversion input {input:?}"
+                );
+                assert_eq!(result.value_sound, consumes.then_some(VALUE_SOUND));
+                assert_eq!(
+                    result.wait_ticks,
+                    if consumes { 0 } else { CONVERSION_FINISH_WAIT }
+                );
+                let mut replaced = timer;
+                replaced.replace_upper_codes([6, 4]);
+                assert_eq!(replaced.display_codes(), [6, 4, input[2]]);
+            }
+        }
+    }
+}
+
+#[test]
+fn health_damage_and_recovery_preserve_each_pattern_and_locked_flags() {
+    // EB5A and 8B82 operate on the unlocked prefix; a sparse set of depleted
+    // flags is retained rather than silently normalized to a health count.
+    for capacity in 0..=OVERLAY_SEGMENTS {
+        for pattern in 0..(1 << OVERLAY_SEGMENTS) {
+            let mut h = health();
+            h.edit_overlay(|segments| {
+                for (index, segment) in segments.iter_mut().enumerate() {
+                    segment.y = if index == capacity { 0x80 } else { 0x20 };
+                    segment.depleted = if pattern & (1 << index) != 0 { 0x7f } else { 0 };
+                }
+            });
+            let before = h.overlay_segments().map(|s| s.depleted);
+            let first = before[..capacity]
+                .iter()
+                .position(|&flag| flag != 0)
+                .unwrap_or(capacity);
+            let mut expected = before;
+            if first != 0 {
+                expected[first - 1] = 1;
+            }
+            let mut damaged = h.clone();
+            damaged.damage(TitleRule::OrdinaryDamage);
+            assert_eq!(damaged.overlay_segments().map(|s| s.depleted), expected);
+            let mut expected = before;
+            if let Some(first) = before[..capacity].iter().position(|&flag| flag != 0) {
+                expected[first] = 0;
+            }
+            h.recover_one();
+            assert_eq!(h.overlay_segments().map(|s| s.depleted), expected);
+        }
+    }
+}
+
+#[test]
+fn health_overlay_boundary_roundtrips_geometry_flags_and_capacity() {
+    for code in 0..=u8::MAX {
+        for negative_y in [0x80, 0x99, 0xff] {
+            let segments = std::array::from_fn(|index| HealthSegment {
+                y: if index == 3 { negative_y } else { 0x20 },
+                tile: code,
+                depleted: code,
+                x: code.wrapping_add(index as u8),
+            });
+            let h = Health::from_overlay(segments, code, 23);
+            assert_eq!(h.capacity(), 3);
+            assert_eq!(h.overlay_segments(), segments);
+            assert_eq!(h.overlay_end(), code);
+            assert_eq!(h.exhausted(), code != 0);
+        }
+    }
+}
+
+#[test]
+fn native_reward_credit_matches_source_arithmetic_across_values_and_blank_layouts() {
+    // Source 8BBF/EFAB stops carry propagation once settled. Compare the native
+    // quantity path against the retained source-contracted encoded adapter.
+    for prefix in 0..10_000u32 {
+        for blank_leading in [false, true] {
+            let mut input = [
+                (prefix / 1000) as u8,
+                ((prefix / 100) % 10) as u8,
+                ((prefix / 10) % 10) as u8,
+                (prefix % 10) as u8,
+                0,
+                7,
+            ];
+            if blank_leading {
+                for code in input.iter_mut().take(4) {
+                    if *code != 0 {
+                        break;
+                    }
+                    *code = BLANK;
+                }
+            }
+            let mut expected = input;
+            if add_codes(&mut expected[..4], 1, DigitTraversal::CarryOnly) {
+                expected[..4].fill(9);
+            }
+            let mut s = state();
+            s.reward = input.into();
+            s.credit_reward(RewardCredit::Timer);
+            assert_eq!(
+                s.reward.display_codes(),
+                expected,
+                "prefix {prefix}, blank {blank_leading}"
+            );
+            let expected_amount = expected.iter().fold(0u32, |value, &code| {
+                value * 10 + u32::from(if code == BLANK { 0 } else { code })
+            });
+            assert_eq!(s.reward.amount(), Some(expected_amount));
+            assert_eq!(s.dirty, 1);
+        }
+    }
+}
+
+#[test]
+fn native_money_preserves_blank_payment_provenance_and_raw_boundaries() {
+    for mask in 0u8..64 {
+        let mut input = [0, 3, 0, 0, 0, 0];
+        for (index, code) in input.iter_mut().enumerate() {
+            if *code == 0 && mask & (1 << index) != 0 {
+                *code = BLANK;
+            }
+        }
+        let mut expected = input;
+        assert!(!subtract_codes(&mut expected[..2], 3));
+        let prefix = blank_literal_zero_prefix(&mut expected);
+        let expected_payment = if prefix == 0 {
+            RewardPayment::FirstCodeNonzero
+        } else if prefix == 6 {
+            RewardPayment::AllCodesZero
+        } else {
+            RewardPayment::PartialZeroPrefix
+        };
+        let mut s = state();
+        s.reward = input.into();
+        assert_eq!(s.pay_reward_dialogue(), expected_payment);
+        assert_eq!(s.reward.display_codes(), expected);
+        assert_eq!(s.reward.amount(), Some(0));
+    }
+    // Every byte is retained at every display position. This includes malformed
+    // nondecimal source-boundary inputs, without pretending they have a value.
+    for code in 0..=u8::MAX {
+        for position in 0..6 {
+            let mut input = [BLANK; 6];
+            input[position] = code;
+            let money = RewardMoney::from_display_codes(input);
+            assert_eq!(money.display_codes(), input);
+            assert_eq!(money.amount().is_some(), code < 10 || code == BLANK);
+        }
+    }
+}
+
+#[test]
+fn native_reward_credit_preserves_interior_blanks_during_carry() {
+    // A blank encountered by a carry becomes a digit; untouched blanks, even
+    // inside a row, must survive until the separate display refresh operation.
+    for prefix in [0u32, 9, 90, 909, 990, 9009, 9999] {
+        for mask in 0u8..64 {
+            let mut input = [
+                (prefix / 1000) as u8,
+                ((prefix / 100) % 10) as u8,
+                ((prefix / 10) % 10) as u8,
+                (prefix % 10) as u8,
+                0,
+                0,
+            ];
+            for (index, code) in input.iter_mut().enumerate() {
+                if *code == 0 && mask & (1 << index) != 0 {
+                    *code = BLANK;
+                }
+            }
+            for (credit, position, units) in [
+                (RewardCredit::Timer, 3, 1),
+                (RewardCredit::Pickup, 3, 2),
+                (RewardCredit::LargePickup, 2, 1),
+                (RewardCredit::ExtraPickup, 2, 5),
+                (RewardCredit::Treasure, 0, 1),
+            ] {
+                let mut expected = input;
+                if add_codes(&mut expected[..=position], units, DigitTraversal::CarryOnly) {
+                    expected[..4].fill(9);
+                }
+                let mut actual = RewardMoney::from_display_codes(input);
+                actual.credit(credit);
+                assert_eq!(actual.display_codes(), expected, "{input:?} {credit:?}");
+            }
+        }
+    }
 }

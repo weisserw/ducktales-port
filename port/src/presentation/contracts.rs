@@ -202,7 +202,7 @@ fn protection_flash_uses_composition_bit_one_and_suppresses_animation() {
         let mut a = actor();
         a.render |= FLASH;
         assert_eq!(c.project(&mut a, 0), expected);
-        assert_eq!(a.tick, 0);
+        assert_eq!(a.playback.tick_code(), 0);
     }
 }
 #[test]
@@ -210,11 +210,11 @@ fn animation_compares_old_tick_and_uses_duration_plus_one() {
     let mut a = actor();
     let s = sequence();
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(9));
-    assert_eq!((a.tick, a.frame), (1, 0));
+    assert_eq!((a.playback.tick_code(), a.playback.frame_code()), (1, 0));
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(9));
-    assert_eq!((a.tick, a.frame), (2, 0));
+    assert_eq!((a.playback.tick_code(), a.playback.frame_code()), (2, 0));
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(12));
-    assert_eq!((a.tick, a.frame), (0, 1));
+    assert_eq!((a.playback.tick_code(), a.playback.frame_code()), (0, 1));
 }
 #[test]
 fn zero_tick_duration_advances_on_first_composition_and_loops_last_frame() {
@@ -225,24 +225,36 @@ fn zero_tick_duration_advances_on_first_composition_and_loops_last_frame() {
     };
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(12));
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(9));
-    assert_eq!(a.frame, 0);
+    assert_eq!(a.playback.frame_code(), 0);
 }
 #[test]
 fn dialogue_and_negative_animation_tick_freeze_but_still_select_frame() {
     for (tick, player) in [(0, DIALOGUE_PLAYER_STATE), (0x80, 0), (0xff, 0)] {
         let mut a = actor();
-        a.tick = tick;
-        a.frame = 1;
+        {
+            let animation_value = tick;
+            a.playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = 1;
+            a.playback.set_frame_code(animation_value);
+        };
         assert_eq!(Composition::advance(&mut a, &sequence(), player), Some(12));
-        assert_eq!((a.tick, a.frame), (tick, 1));
+        assert_eq!((a.playback.tick_code(), a.playback.frame_code()), (tick, 1));
     }
 }
 #[test]
 fn animation_destroy_clears_active_render_and_spawn_at_sequence_end() {
     let mut a = actor();
     a.render |= DESTROY_AT_END;
-    a.tick = 2;
-    a.frame = 1;
+    {
+        let animation_value = 2;
+        a.playback.set_tick_code(animation_value);
+    };
+    {
+        let animation_value = 1;
+        a.playback.set_frame_code(animation_value);
+    };
     assert_eq!(Composition::advance(&mut a, &sequence(), 0), None);
     assert_eq!((a.state, a.render, a.spawn_identity), (0, 0, None));
 }
@@ -250,16 +262,177 @@ fn animation_destroy_clears_active_render_and_spawn_at_sequence_end() {
 fn negative_frame_restarts_only_when_post_increment_remains_negative() {
     for (frame, last, restart, expected) in [(0x81, 1, 0, 0x80), (0xff, 0x7f, 1, 0), (1, 1, 1, 0)] {
         let mut a = actor();
-        a.tick = 2;
-        a.frame = frame;
-        a.restart = restart;
+        {
+            let animation_value = 2;
+            a.playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = frame;
+            a.playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = restart;
+            a.playback.set_restart_code(animation_value);
+        };
         let s = Animation {
             last_frame: last,
             frames: vec![9; 128],
             ..sequence()
         };
         Composition::advance(&mut a, &s, 0);
-        assert_eq!(a.frame, expected);
+        assert_eq!(a.playback.frame_code(), expected);
+    }
+}
+#[test]
+fn animation_tick_overflow_freezes_unless_old_tick_matches_duration() {
+    // AdvanceObjectAnimation increments before comparing the OLD tick. A
+    // nonmatching 127 crosses the hold bit; the matching duration resets it.
+    for (last_tick, expected_tick, expected_frame) in [(126, 128, 0), (127, 0, 1)] {
+        let mut a = actor();
+        {
+            let animation_value = 127;
+            a.playback.set_tick_code(animation_value);
+        };
+        let s = Animation {
+            last_tick,
+            ..sequence()
+        };
+        assert_eq!(
+            Composition::advance(&mut a, &s, 0),
+            Some(if expected_frame == 0 { 9 } else { 12 })
+        );
+        assert_eq!(
+            (a.playback.tick_code(), a.playback.frame_code()),
+            (expected_tick, expected_frame)
+        );
+        if expected_tick == 128 {
+            Composition::advance(&mut a, &s, 0);
+            assert_eq!((a.playback.tick_code(), a.playback.frame_code()), (128, 0));
+        }
+    }
+}
+#[test]
+fn animation_frame_overflow_selects_loop_origin_after_increment() {
+    // Source817F tests the post-increment sign, including 127->128 and255->0.
+    for (frame, restart, expected) in [(127, 5, 133), (127, 133, 133), (255, 5, 0)] {
+        let mut a = actor();
+        {
+            let animation_value = frame;
+            a.playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = restart;
+            a.playback.set_restart_code(animation_value);
+        };
+        let s = Animation {
+            last_tick: 0,
+            last_frame: 127,
+            frames: (0..128).collect(),
+        };
+        assert_eq!(Composition::advance(&mut a, &s, 0), Some(expected & 127));
+        assert_eq!(
+            (
+                a.playback.tick_code(),
+                a.playback.frame_code(),
+                a.playback.restart_code()
+            ),
+            (0, expected, restart)
+        );
+    }
+}
+#[test]
+fn animation_destruction_retains_incremented_playback_before_culling() {
+    for frame in [1, 127, 129, 255] {
+        let mut a = actor();
+        a.render |= DESTROY_AT_END;
+        {
+            let animation_value = 127;
+            a.playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = frame;
+            a.playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 219;
+            a.playback.set_restart_code(animation_value);
+        };
+        let s = Animation {
+            last_tick: 127,
+            last_frame: frame & 127,
+            frames: vec![9; 128],
+        };
+        assert_eq!(Composition::advance(&mut a, &s, 0), None);
+        assert_eq!(
+            (
+                a.playback.tick_code(),
+                a.playback.frame_code(),
+                a.playback.restart_code()
+            ),
+            (0, frame.wrapping_add(1), 219)
+        );
+        assert_eq!((a.state, a.render, a.spawn_identity), (0, 0, None));
+    }
+}
+#[test]
+fn native_playback_preserves_all_codes_and_independent_partial_writes() {
+    for tick in 0..=255 {
+        for frame in 0..=255 {
+            let restart = tick ^ frame;
+            let mut playback = AnimationPlayback::from_codes(tick, frame, restart);
+            assert_eq!(
+                (
+                    playback.tick_code(),
+                    playback.frame_code(),
+                    playback.restart_code()
+                ),
+                (tick, frame, restart)
+            );
+            let original = playback;
+            playback.set_tick_code(frame);
+            assert_eq!(
+                (
+                    playback.tick_code(),
+                    playback.frame_code(),
+                    playback.restart_code()
+                ),
+                (frame, frame, restart)
+            );
+            playback.set_frame_code(tick);
+            playback.set_restart_code(frame);
+            assert_eq!(
+                (
+                    playback.tick_code(),
+                    playback.frame_code(),
+                    playback.restart_code()
+                ),
+                (frame, tick, frame)
+            );
+            assert_eq!(
+                (
+                    original.tick_code(),
+                    original.frame_code(),
+                    original.restart_code()
+                ),
+                (tick, frame, restart)
+            );
+        }
+    }
+}
+#[test]
+fn native_playback_event_gates_distinguish_looping_frames_and_frozen_ticks() {
+    for index in 0..128 {
+        let mut playback = AnimationPlayback::from_codes(index, index, 0);
+        assert!(playback.at_initial_frame(index));
+        assert!(playback.at_running_tick(index));
+        playback.freeze();
+        assert!(!playback.at_running_tick(index));
+        assert_eq!(playback.tick_code(), index | 128);
+        playback.resume();
+        assert!(playback.at_running_tick(index));
+        playback.start_looping_at(index);
+        assert!(!playback.at_initial_frame(index));
+        assert_eq!(playback.frame_index(), usize::from(index));
     }
 }
 fn piece(dy: i8, dx: i8) -> Composite {
@@ -1053,15 +1226,18 @@ fn attribute_flip_is_xor_while_priority_is_or_and_palette_bits_stay_piece_owned(
 #[test]
 fn maximal_nonfrozen_tick_wraps_and_bit_seven_becomes_a_freeze_latch() {
     let mut a = actor();
-    a.tick = 0x7f;
+    {
+        let animation_value = 0x7f;
+        a.playback.set_tick_code(animation_value);
+    };
     let s = Animation {
         last_tick: 0x7e,
         ..sequence()
     };
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(9));
-    assert_eq!(a.tick, 0x80);
+    assert_eq!(a.playback.tick_code(), 0x80);
     assert_eq!(Composition::advance(&mut a, &s, 0), Some(9));
-    assert_eq!(a.tick, 0x80);
+    assert_eq!(a.playback.tick_code(), 0x80);
 }
 #[test]
 fn zero_lower_fill_page_count_wraps_to_twohundredfiftysix_pages() {

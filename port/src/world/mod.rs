@@ -2,8 +2,11 @@
 //! Source derivations and native ownership are documented in trace.md.
 use crate::assets::formats::UploadCommit;
 use crate::identifiers::StageId;
-use crate::presentation::VideoWrite;
+mod display;
 use anyhow::{Context, Result, ensure};
+pub use display::{
+    BlockRows, ColumnUpdate, PaletteRun, TerrainUpdate, TileOrigin, TilePage, TileRegion,
+};
 pub const ROOM_CELLS: usize = 64;
 const ROOM_AXIS_CELLS: usize = 8;
 const ROOM_AXIS_BITS: u8 = 3;
@@ -337,15 +340,10 @@ pub fn advance_cursor(
     cursor
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct TerrainUpload {
-    pub writes: Vec<VideoWrite>,
-    pub commit: UploadCommit,
-}
-#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ColumnResult {
     pub collision: Option<(usize, u8)>,
     pub attribute: Option<(usize, u8)>,
-    pub upload: Option<TerrainUpload>,
+    pub update: Option<ColumnUpdate>,
 }
 pub fn column(
     layout: &Layout,
@@ -354,14 +352,10 @@ pub fn column(
     suspended: u8,
 ) -> ColumnResult {
     const FIRST_SCENE_LAYOUT: u8 = 5;
-    const NAMETABLE_BASE: u16 = 0x2000;
-    const NAMETABLE_BYTES: u16 = 0x400;
-    const TILE_ROW_BYTES: u16 = 32;
-    const ATTRIBUTE_OFFSET: u16 = 0x3c0;
     let mut result = ColumnResult {
         collision: None,
         attribute: None,
-        upload: None,
+        update: None,
     };
     if context.room_in_row >= layout.columns
         || layout
@@ -379,37 +373,33 @@ pub fn column(
     if early_even && row == 0 {
         return result;
     }
-    let first_tile_row = if early_even && row == 1 { 2 } else { 0 };
-    let last_tile_row = if row == ROOM_AXIS_MASK { 2 } else { 4 };
-    let parity_base = NAMETABLE_BASE + u16::from(context.room_in_row & 1) * NAMETABLE_BYTES;
-    let tile_base = parity_base
-        + u16::from(row) * 4 * TILE_ROW_BYTES
-        + u16::from(context.ring >> ROOM_AXIS_BITS) * 4;
-    let mut writes = Vec::new();
-    for tile_row in first_tile_row..last_tile_row {
-        for tile_column in 0..4 {
-            writes.push(VideoWrite {
-                address: tile_base + tile_row as u16 * TILE_ROW_BYTES + tile_column as u16,
-                value: block.tiles[tile_row * 4 + tile_column],
-            });
-        }
-    }
-    let palette = if first_tile_row != 0 {
-        block.palette & 0xf0
-    } else if last_tile_row != 4 {
-        block.palette & 0x0f
+    let rows = if early_even && row == 1 {
+        BlockRows::LowerHalf
+    } else if row == ROOM_AXIS_MASK {
+        BlockRows::UpperHalf
     } else {
-        block.palette
+        BlockRows::All
     };
-    let coordinate =
-        usize::from(row) * ROOM_AXIS_CELLS + usize::from(context.ring >> ROOM_AXIS_BITS);
-    writes.push(VideoWrite {
-        address: parity_base + ATTRIBUTE_OFFSET + coordinate as u16,
-        value: palette,
-    });
+    let palette = match rows {
+        BlockRows::LowerHalf => block.palette & 0xf0,
+        BlockRows::UpperHalf => block.palette & 0x0f,
+        BlockRows::All => block.palette,
+    };
+    let page = TilePage::from_world_page(context.room_in_row);
     result.attribute = Some((block.cache_index, palette));
-    result.upload = Some(TerrainUpload {
-        writes,
+    result.update = Some(ColumnUpdate {
+        origin: TileOrigin {
+            page,
+            column: (context.ring >> ROOM_AXIS_BITS) * 4,
+            row: row * 4,
+        },
+        tiles: block.tiles,
+        rows,
+        palette: PaletteRun {
+            page,
+            first_cell: row * ROOM_AXIS_CELLS as u8 + (context.ring >> ROOM_AXIS_BITS),
+            values: vec![palette],
+        },
         commit: if suspended == 0 {
             UploadCommit::AtInterrupt
         } else {
@@ -610,7 +600,7 @@ pub struct Mutation {
 }
 impl WorldCache {
     /// Cache changes occur now, display writes are committed at B01/B03 boundary.
-    pub fn replace(&mut self, set: &TerrainSet, mutation: Mutation) -> TerrainUpload {
+    pub fn replace(&mut self, set: &TerrainSet, mutation: Mutation) -> TerrainUpdate {
         replace_cache(
             &mut self.attributes,
             &mut self.collision,
@@ -778,22 +768,48 @@ pub struct VerticalRows {
     pub tiles: [[u8; 32]; 4],
     pub attributes: [u8; 8],
     pub ring: u8,
-    pub uploads: Vec<VideoWrite>,
+    pub update: TerrainUpdate,
 }
-// Source nametable row tables reduce to a 128-byte attribute-row stride.
-// Vertical room rows always target the second nametable; neighbors target first.
-const VIDEO_NAMETABLE_FIRST: u16 = 0x2000;
-const VIDEO_NAMETABLE_SECOND: u16 = 0x2400;
-const VIDEO_ATTRIBUTE_OFFSET: u16 = 0x3c0;
-const VIDEO_TILE_ROW: u16 = 32;
-fn vertical_destination(base: u16, ring: u8, lower_half: bool) -> u16 {
-    base + u16::from(ring & ROOM_AXIS_MASK) * 0x80 + if lower_half { 0x40 } else { 0 }
+/// One live block in a vertical transition. Only the selected half is visible;
+/// the video boundary retains the other half in its canonical staged rows.
+pub fn vertical_block(
+    direction: VerticalDirection,
+    ring: u8,
+    column: u8,
+    block: &ExpandedBlock,
+    old: u8,
+) -> ColumnUpdate {
+    let up = direction == VerticalDirection::Up;
+    ColumnUpdate {
+        origin: TileOrigin {
+            page: TilePage::Second,
+            column: column * 4,
+            row: (ring & ROOM_AXIS_MASK) * 4,
+        },
+        tiles: block.tiles,
+        rows: if up {
+            BlockRows::LowerHalf
+        } else {
+            BlockRows::UpperHalf
+        },
+        palette: PaletteRun {
+            page: TilePage::Second,
+            first_cell: (ring & ROOM_AXIS_MASK) * 8 + column,
+            values: vec![if up {
+                (old & 0x0f) | (block.palette & 0xf0)
+            } else {
+                (old & 0xf0) | (block.palette & 0x0f)
+            }],
+        },
+        commit: UploadCommit::AtInterrupt,
+    }
 }
-fn append_row(writes: &mut Vec<VideoWrite>, address: u16, values: &[u8]) {
-    writes.extend(values.iter().enumerate().map(|(index, &value)| VideoWrite {
-        address: address.wrapping_add(index as u16),
-        value,
-    }));
+pub fn neighbor_visible_rows(ring: u8) -> BlockRows {
+    match ring & ROOM_AXIS_MASK {
+        1 => BlockRows::LowerHalf,
+        ROOM_AXIS_MASK => BlockRows::UpperHalf,
+        _ => BlockRows::All,
+    }
 }
 pub fn vertical_rows(
     direction: VerticalDirection,
@@ -822,22 +838,31 @@ pub fn vertical_rows(
         };
     }
     let ring = ring & ROOM_AXIS_MASK;
-    let destination = vertical_destination(VIDEO_NAMETABLE_SECOND, ring, up);
-    let mut uploads = Vec::with_capacity(72);
-    append_row(&mut uploads, destination, &tiles[0]);
-    append_row(&mut uploads, destination | VIDEO_TILE_ROW, &tiles[1]);
-    append_row(
-        &mut uploads,
-        VIDEO_NAMETABLE_SECOND + VIDEO_ATTRIBUTE_OFFSET + u16::from(ring) * 8,
-        &attributes,
-    );
+    let update = TerrainUpdate {
+        region: TileRegion::new(
+            TileOrigin {
+                page: TilePage::Second,
+                column: 0,
+                row: ring * 4 + if up { 2 } else { 0 },
+            },
+            32,
+            tiles[..2].concat(),
+        ),
+        palette: Some(PaletteRun {
+            page: TilePage::Second,
+            first_cell: ring * 8,
+            values: attributes.to_vec(),
+        }),
+        commit: UploadCommit::AtInterrupt,
+    };
     VerticalRows {
         tiles,
         attributes,
         ring,
-        uploads,
+        update,
     }
 }
+
 pub fn vertical_neighbor(
     _direction: VerticalDirection,
     previous: bool,
@@ -881,34 +906,36 @@ pub fn vertical_neighbor(
     for attribute in &mut attributes[..4] {
         *attribute &= mask;
     }
-    let half_offset = if previous { 16 } else { 0 };
-    let destination = vertical_destination(VIDEO_NAMETABLE_FIRST, ring, false) + half_offset;
-    let mut uploads = Vec::new();
-    for (row, tile_row) in tiles.iter().enumerate().take(end_row).skip(start_row) {
-        append_row(
-            &mut uploads,
-            destination + row as u16 * VIDEO_TILE_ROW,
-            &tile_row[..16],
-        );
-    }
-    append_row(
-        &mut uploads,
-        VIDEO_NAMETABLE_FIRST
-            + VIDEO_ATTRIBUTE_OFFSET
-            + u16::from(ring) * 8
-            + if previous { 4 } else { 0 },
-        &attributes[..4],
-    );
+    let update = TerrainUpdate {
+        region: TileRegion::new(
+            TileOrigin {
+                page: TilePage::First,
+                column: if previous { 16 } else { 0 },
+                row: ring * 4 + start_row as u8,
+            },
+            16,
+            tiles[start_row..end_row]
+                .iter()
+                .flat_map(|row| row[..16].iter().copied())
+                .collect(),
+        ),
+        palette: Some(PaletteRun {
+            page: TilePage::First,
+            first_cell: ring * 8 + if previous { 4 } else { 0 },
+            values: attributes[..4].to_vec(),
+        }),
+        commit: UploadCommit::AtInterrupt,
+    };
     Some(VerticalRows {
         tiles,
         attributes,
         ring,
-        uploads,
+        update,
     })
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Burst {
-    pub upload: TerrainUpload,
+    pub update: TerrainUpdate,
     pub particle_origin: (u8, u8),
     pub particles: usize,
 }
@@ -916,34 +943,38 @@ pub fn changed_burst(set: &TerrainSet, selector: u8) -> Burst {
     const FIRST_BURST: u8 = 0;
     const SECOND_BURST: u8 = 6;
     const BURST_PARTICLES: usize = 4;
-    let (pairs, destination, seeds, origin) = match selector {
-        FIRST_BURST => (4, 0x2204_u16, [0x88_u8, 0x88], (0x88, 0x28)),
-        SECOND_BURST => (7, 0x260e_u16, [0xd6_u8, 0xd7], (0x88, 0x78)),
+    let (pairs, page, column, seeds, origin) = match selector {
+        FIRST_BURST => (4, TilePage::First, 4, [0x88_u8, 0x88], (0x88, 0x28)),
+        SECOND_BURST => (7, TilePage::Second, 14, [0xd6_u8, 0xd7], (0x88, 0x78)),
         _ => panic!("validated burst descriptor selector"),
     };
-    let mut writes = Vec::new();
-    for pair in 0..pairs {
-        let address = destination + pair * 2 * VIDEO_TILE_ROW;
+    let mut tiles = Vec::new();
+    for _ in 0..pairs {
         for row in 0..2 {
-            for (index, &seed) in seeds.iter().enumerate() {
-                let tiles = set.tiles[usize::from(seed)];
-                append_row(
-                    &mut writes,
-                    address + row as u16 * VIDEO_TILE_ROW + index as u16 * 2,
-                    &tiles[row * 2..row * 2 + 2],
-                );
+            for seed in seeds {
+                tiles.extend_from_slice(&set.tiles[usize::from(seed)][row * 2..row * 2 + 2]);
             }
         }
     }
     Burst {
-        upload: TerrainUpload {
-            writes,
+        update: TerrainUpdate {
+            region: TileRegion::new(
+                TileOrigin {
+                    page,
+                    column,
+                    row: 16,
+                },
+                4,
+                tiles,
+            ),
+            palette: None,
             commit: UploadCommit::AtInterrupt,
         },
         particle_origin: origin,
         particles: BURST_PARTICLES,
     }
 }
+
 #[cfg(test)]
 mod contracts;
 /// B08/B10 consume this one-shot recovery allocation before the same terrain
@@ -1000,26 +1031,29 @@ pub fn copy_vertical_staging(
     direction: VerticalDirection,
     ring: u8,
     staging: &VerticalStaging,
-) -> (u8, TerrainUpload) {
+) -> (u8, TerrainUpdate) {
     let up = direction == VerticalDirection::Up;
-    let destination = vertical_destination(VIDEO_NAMETABLE_SECOND, ring, !up);
-    let mut writes = Vec::with_capacity(72);
-    append_row(&mut writes, destination, &staging.upper);
-    append_row(&mut writes, destination | VIDEO_TILE_ROW, &staging.lower);
-    append_row(
-        &mut writes,
-        VIDEO_NAMETABLE_SECOND + VIDEO_ATTRIBUTE_OFFSET + u16::from(ring & ROOM_AXIS_MASK) * 8,
-        &staging.attributes,
-    );
+    let update = TerrainUpdate {
+        region: TileRegion::new(
+            TileOrigin {
+                page: TilePage::Second,
+                column: 0,
+                row: (ring & ROOM_AXIS_MASK) * 4 + if up { 0 } else { 2 },
+            },
+            32,
+            [staging.upper, staging.lower].concat(),
+        ),
+        palette: Some(PaletteRun {
+            page: TilePage::Second,
+            first_cell: (ring & ROOM_AXIS_MASK) * 8,
+            values: staging.attributes.to_vec(),
+        }),
+        commit: UploadCommit::AtInterrupt,
+    };
     let next = ring.wrapping_add(if up { u8::MAX } else { 1 }) & ROOM_AXIS_MASK;
-    (
-        next,
-        TerrainUpload {
-            writes,
-            commit: UploadCommit::AtInterrupt,
-        },
-    )
+    (next, update)
 }
+
 pub fn vertical_wrap_action(
     direction: VerticalDirection,
     ring: u8,
@@ -1102,11 +1136,7 @@ pub fn replace_cache(
     changed: &mut u8,
     set: &TerrainSet,
     mutation: Mutation,
-) -> TerrainUpload {
-    const NAMETABLE_BASE: u16 = 0x2000;
-    const NAMETABLE_BYTES: u16 = 0x400;
-    const ATTRIBUTE_OFFSET: u16 = 0x3c0;
-    const TILE_ROW_BYTES: u16 = 32;
+) -> TerrainUpdate {
     const STATUS_ATTRIBUTE_CELLS: usize = 0x10;
     let x = mutation.world_x as u8;
     let y = mutation.spawn_y;
@@ -1122,39 +1152,27 @@ pub fn replace_cache(
     if mutation.marks_changed {
         *changed = changed.wrapping_add(1);
     }
-    let base = NAMETABLE_BASE + u16::from(parity) * NAMETABLE_BYTES;
-    // F574 chooses a 16-pixel quadrant origin; actor coordinates are centers.
-    let tile_address =
-        base + u16::from((y & 0xf0) >> 3) * TILE_ROW_BYTES + u16::from((x & 0xf0) >> 3);
-    let tiles = set.tiles[usize::from(mutation.selector)];
     let attribute = if index < STATUS_ATTRIBUTE_CELLS {
         attributes[index] & 0xf0
     } else {
         attributes[index]
     };
-    TerrainUpload {
+    let page = TilePage::from_world_page(parity);
+    TerrainUpdate {
+        region: TileRegion::new(
+            TileOrigin {
+                page,
+                column: (x & 0xf0) >> 3,
+                row: (y & 0xf0) >> 3,
+            },
+            2,
+            set.tiles[usize::from(mutation.selector)].to_vec(),
+        ),
+        palette: Some(PaletteRun {
+            page,
+            first_cell: coordinate,
+            values: vec![attribute],
+        }),
         commit: UploadCommit::AtInterrupt,
-        writes: vec![
-            VideoWrite {
-                address: tile_address,
-                value: tiles[0],
-            },
-            VideoWrite {
-                address: tile_address + 1,
-                value: tiles[1],
-            },
-            VideoWrite {
-                address: tile_address + TILE_ROW_BYTES,
-                value: tiles[2],
-            },
-            VideoWrite {
-                address: tile_address + TILE_ROW_BYTES + 1,
-                value: tiles[3],
-            },
-            VideoWrite {
-                address: base + ATTRIBUTE_OFFSET + u16::from(coordinate),
-                value: attribute,
-            },
-        ],
     }
 }

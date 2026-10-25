@@ -39,6 +39,14 @@ additional gameplay smoke route was performed during stage4.
   audio-program stop policy are specified in EXTENSIONS.md. Original global
   progress effects remain; no new content-selection menu is added.
 
+- Countdown now uses native seconds and explicit expiration. For nondecimal
+  inputs only, it retains the faithful implementation's shared subtraction rule:
+  BLANK24 behaves as zero. Original timer E2B5/EF8D subtracts raw bytes instead.
+  Synthetic[00,00,24] consequently ticks to999 natively versus[00,00,23] in source.
+  Natural reachability at a timer gate is unestablished; this pre-existing edge
+  discrepancy is preserved, not repaired or certified, by iteration009. See
+  [status/trace.md](port/src/status/trace.md) for the follow-up probe.
+
 The original has no battery saving. Debug checkpoints use validated deterministic
 replay rather than invented cartridge saves or arbitrary memory writes. Desktop
 and Wasm compilation are checked headlessly; macOS/Windows/browser/device runtime

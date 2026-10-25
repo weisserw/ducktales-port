@@ -517,8 +517,8 @@ impl Player {
                     self.vertical(_actors, Vertical::Rising, input.held.0, data, _world),
                 );
                 let swing_animation = _actors[0].animation;
-                let swing_frame = _actors[0].animation_frame;
-                let swing_tick = _actors[0].animation_tick;
+                let swing_frame = _actors[0].playback.frame_code();
+                let swing_tick = _actors[0].playback.tick_code();
                 let direct_walk = swing_frame == 6 && input.held.0 & self.pose_direction != 0;
                 if swing_animation == BLOCKED_SWING_ANIMATION {
                     _world.returned(ReturnOperation::BlockedSwing);
@@ -528,8 +528,8 @@ impl Player {
                     _world.returned(ReturnOperation::SwingFrameTwo(swing_frame));
                 }
                 let contact = if _actors[0].animation != BLOCKED_SWING_ANIMATION
-                    && _actors[0].animation_frame == 2
-                    && _actors[0].animation_tick == 0
+                    && _actors[0].playback.at_initial_frame(2)
+                    && _actors[0].playback.at_running_tick(0)
                 {
                     _world
                         .scan(_actors, self, false)
@@ -901,9 +901,12 @@ impl Player {
         } else if movement & Buttons::DOWN.0 != 0 {
             if actor.animation != CROUCH_ANIMATION {
                 actor.animation = CROUCH_ANIMATION;
-                actor.animation_tick = 0;
-                actor.animation_frame = RESTART_FRAME;
-                actor.animation_restart = 1;
+                actor.playback.restart_clock();
+                actor.playback.start_looping_at(0);
+                {
+                    let animation_value = 1;
+                    actor.playback.set_restart_code(animation_value);
+                };
                 self.animation_delay = ANIMATION_DELAY;
             }
         } else {
@@ -1286,8 +1289,8 @@ impl Player {
         if self.action == Action::ForcedJump || held & pogo_buttons == pogo_buttons {
             if actor.animation != POGO_ANIMATION {
                 actor.animation = POGO_ANIMATION;
-                actor.animation_tick = FROZEN_TICK;
-                actor.animation_frame = 0;
+                actor.playback.freeze_at_start();
+                actor.playback.reset_frame();
             }
         } else if actor.animation != STRIKE_READY_ANIMATION || held & 3 != self.pose_direction {
             actor.animation = AIR_ANIMATION;
@@ -1325,17 +1328,23 @@ impl Player {
             self.action = Action::ForcedJump;
             actor.vertical_velocity = POGO_SPEED;
             actor.animation = POGO_ANIMATION;
-            actor.animation_restart = 2;
-            actor.animation_frame = POGO_START_FRAME;
+            {
+                let animation_value = 2;
+                actor.playback.set_restart_code(animation_value);
+            };
+            actor.playback.start_looping_at(1);
             effects.sounds.push(POGO_SOUND);
         } else {
             self.action = Action::Standing;
             actor.animation = LAND_ANIMATION;
-            actor.animation_restart = 1;
-            actor.animation_frame = RESTART_FRAME;
+            {
+                let animation_value = 1;
+                actor.playback.set_restart_code(animation_value);
+            };
+            actor.playback.start_looping_at(0);
             effects.sounds.push(LAND_SOUND);
         }
-        actor.animation_tick = 0;
+        actor.playback.restart_clock();
         effects
     }
     pub fn airborne_boundaries(
@@ -1527,12 +1536,12 @@ impl Player {
                 self.action = Action::Standing;
                 actor.vertical_velocity = 0;
             } else {
-                actor.animation_tick |= FROZEN_TICK;
+                actor.playback.freeze();
             }
             return effects;
         }
-        actor.animation_tick &= !FROZEN_TICK;
-        if actor.animation_tick == 0 {
+        actor.playback.resume();
+        if actor.playback.at_running_tick(0) {
             effects.sounds.push(CLIMB_SOUND);
         }
         actor.vertical_velocity = actor.horizontal_magnitude as i16;
@@ -1632,16 +1641,19 @@ impl Player {
             ..Effects::default()
         };
         if actor.animation == BLOCKED_SWING_ANIMATION {
-            if actor.animation_tick == 0 && actor.animation_frame == 0 {
-                actor.local_state = actor.local_state.wrapping_sub(1);
-                if actor.local_state == 0 {
+            if actor.playback.at_running_tick(0) && actor.playback.at_initial_frame(0) {
+                {
+                    let actor_value = actor.local_state_code().wrapping_sub(1);
+                    actor.set_local_state_code(actor_value);
+                };
+                if actor.local_state_code() == 0 {
                     self.action = Action::Standing;
                     self.animation_delay = ANIMATION_DELAY;
                 }
             }
             return effects;
         }
-        if actor.animation_frame == 6 {
+        if actor.playback.at_initial_frame(6) {
             self.action = Action::Standing;
             if held & self.pose_direction != 0 {
                 actor.animation = STRIKE_READY_ANIMATION;
@@ -1650,12 +1662,15 @@ impl Player {
             }
             self.animation_delay = ANIMATION_DELAY;
         }
-        if actor.animation_tick == 0 && actor.animation_frame == 2 {
+        if actor.playback.at_running_tick(0) && actor.playback.at_initial_frame(2) {
             effects.sounds.push(SWING_SOUND);
             effects.work.push(Work::ActorScan);
             if !matches!(contact_handler, Some(8 | 0x15 | 0x42)) {
                 reset_animation(actor);
-                actor.local_state = BLOCKED_CYCLES;
+                {
+                    let actor_value = BLOCKED_CYCLES;
+                    actor.set_local_state_code(actor_value);
+                };
                 actor.animation = BLOCKED_SWING_ANIMATION;
                 effects.sounds.push(BLOCKED_SOUND);
             }
@@ -1679,9 +1694,12 @@ impl Player {
                 work: vec![Work::DamageHealth],
                 ..Effects::default()
             };
-            if health.segments[0].depleted != 0 {
+            if health.exhausted() {
                 self.action = Action::Death;
-                actor.state &= 0xf0;
+                {
+                    let actor_value = actor.state_code() & (0xf0);
+                    actor.set_state_code(actor_value);
+                };
                 effects.work.push(Work::DeathTrajectory);
             }
             return effects;
@@ -1708,9 +1726,12 @@ impl Player {
             self.protection = DAMAGE_PROTECTION;
             health.damage(rule);
             effects.work.push(Work::DamageHealth);
-            if health.segments[0].depleted != 0 {
+            if health.exhausted() {
                 self.action = Action::Death;
-                actor.state &= 0xf0;
+                {
+                    let actor_value = actor.state_code() & (0xf0);
+                    actor.set_state_code(actor_value);
+                };
                 effects.work.push(Work::DeathTrajectory);
                 return effects;
             }
@@ -1750,7 +1771,10 @@ impl Player {
         let (base, carry) = stage.overflowing_add(LIFE_LOSS_REQUEST);
         self.action = Action::Standing;
         self.queued = None;
-        actor.state = 0;
+        {
+            let actor_value = 0;
+            actor.set_state_code(actor_value);
+        };
         health.alternating = 0;
         Effects {
             reload: Some(base.wrapping_add(variant).wrapping_add(u8::from(carry))),
@@ -1782,7 +1806,7 @@ impl Player {
         if input.pressed.0 & Buttons::A.0 != 0 {
             self.action = Action::Standing;
         }
-        actor.animation_tick = 0;
+        actor.playback.restart_clock();
     }
     pub fn carried(
         &mut self,
@@ -1790,14 +1814,20 @@ impl Player {
         input: PortInput,
         facts: CollisionFacts,
     ) -> Effects {
-        actor.state = 0xa0;
+        {
+            let actor_value = 0xa0;
+            actor.set_state_code(actor_value);
+        };
         let mut effects = Effects {
             scroll: Some(2),
             spawn: Some(2),
             ..Effects::default()
         };
         if input.held.0 & Buttons::DOWN.0 != 0 {
-            actor.state = 0;
+            {
+                let actor_value = 0;
+                actor.set_state_code(actor_value);
+            };
             return effects;
         }
         if self.action == Action::CarriedJumpable && input.pressed == Buttons::A {
@@ -1826,7 +1856,10 @@ impl Player {
             ..Effects::default()
         };
         if actor.motion_flags != 0 {
-            actor.state = 0xe0;
+            {
+                let actor_value = 0xe0;
+                actor.set_state_code(actor_value);
+            };
             effects.work.extend([Work::Gravity, Work::IntegrateY]);
             _world.gravity(actor, self.gravity);
             _world.integrate_y(actor);
@@ -1871,14 +1904,17 @@ impl Player {
         health: &mut Health,
     ) -> Effects {
         let actor = &mut _actors[0];
-        if actor.state & 15 == 0 {
+        if actor.state_code() & 15 == 0 {
             actor.motion_flags = 0;
-            actor.animation_frame = 0;
+            actor.playback.reset_frame();
             actor.animation = HURT_ANIMATION;
             actor.direction = 1;
             actor.vertical_velocity = DEATH_SPEED;
             actor.horizontal_magnitude = DEATH_DRIFT;
-            actor.state = actor.state.wrapping_add(1);
+            {
+                let actor_value = actor.state_code().wrapping_add(1);
+                actor.set_state_code(actor_value);
+            };
         }
         let mut effects = Effects::default();
         if actor.motion_flags == 0 {
@@ -1907,15 +1943,15 @@ impl Player {
         effects
     }
     pub fn hold(&self, actor: &mut ActorContact) {
-        actor.animation_tick = 0;
+        actor.playback.restart_clock();
     }
 }
 #[cfg(test)]
 mod contracts;
 
 fn reset_animation(actor: &mut ActorContact) {
-    actor.animation_frame = 0;
-    actor.animation_tick = 0;
+    actor.playback.reset_frame();
+    actor.playback.restart_clock();
 }
 
 fn merge_effects(into: &mut Effects, other: Effects) {

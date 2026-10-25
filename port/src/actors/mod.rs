@@ -2,6 +2,8 @@
 //! Source-derived lifecycle and spawn ordering are documented in trace.md.
 pub mod bosses;
 mod catalog;
+mod control;
+pub use control::{ActorControl, AmbushBehavior, AmbushPhase};
 pub mod enemies;
 pub mod objects;
 pub mod platforms;
@@ -38,19 +40,14 @@ pub struct ActorContact {
     pub position: Position,
     pub horizontal_magnitude: u16,
     pub vertical_velocity: i16,
-    pub state: u8,
+    pub control: ActorControl,
     pub render: u8,
     pub profile: u8,
     pub handler: u8,
     pub hit_marker: u8,
     pub spawn_identity: Option<u8>,
     pub animation: u8,
-    pub animation_frame: u8,
-    pub animation_tick: u8,
-    /// Shared animation restart frame count consumed by presentation.
-    pub animation_restart: u8,
-    pub local_state: u8,
-    pub local_counter: u8,
+    pub playback: crate::presentation::AnimationPlayback,
     pub local_aux2: u8,
     /// Handler-local path cursor (source06E0), borrowed by boss motion.
     pub sequence_cursor: u8,
@@ -60,6 +57,59 @@ pub struct ActorContact {
     pub screen_x: u8,
     pub direction: u8,
     pub motion_flags: u8,
+}
+
+impl ActorContact {
+    pub fn state_code(&self) -> u8 {
+        self.control.codes().0
+    }
+    pub fn local_state_code(&self) -> u8 {
+        self.control.codes().1
+    }
+    pub fn local_counter_code(&self) -> u8 {
+        self.control.codes().2
+    }
+    pub fn set_state_code(&mut self, value: u8) {
+        self.control.set_state_code(value);
+    }
+    pub fn set_local_state_code(&mut self, value: u8) {
+        self.control.set_local_state_code(value);
+    }
+    pub fn set_local_counter_code(&mut self, value: u8) {
+        self.control.set_local_counter_code(value);
+    }
+    pub fn set_handler(&mut self, handler: u8) {
+        self.control.select_handler(handler);
+        self.handler = handler;
+    }
+    pub fn select_behavior(&mut self) {
+        self.control.select_family(self.handler);
+    }
+    pub fn ambush_mut(&mut self) -> &mut AmbushBehavior {
+        self.control.ambush_mut()
+    }
+    pub fn advance_ambush(&mut self) {
+        self.control.advance_ambush();
+    }
+    pub fn enter_scene(&mut self) {
+        self.control.enter_scene(self.handler);
+    }
+    pub fn scene_mut(&mut self) -> &mut crate::scenes::SceneActorState {
+        self.control.scene_mut(self.handler)
+    }
+    pub fn scene_for(
+        &mut self,
+        kind: crate::scenes::SceneHandler,
+    ) -> &mut crate::scenes::SceneActorState {
+        self.control.scene_mut(kind as u8)
+    }
+    pub fn advance_scene_bounce(&mut self, forward: bool) {
+        self.control.advance_scene_bounce(forward);
+    }
+    pub fn start_scene_move(&mut self) {
+        self.set_handler(crate::scenes::SceneHandler::MoveToMark as u8);
+        self.control.start_scene_move();
+    }
 }
 
 pub type ActorPool = [ActorContact; ACTOR_SLOTS];
@@ -248,7 +298,7 @@ pub enum AllocationRegister {
 pub fn allocate(actors: &ActorPool, _register: AllocationRegister) -> Option<usize> {
     (FIRST_ACTOR_SLOT..ACTOR_SLOTS)
         .rev()
-        .find(|&slot| actors[slot].state & ACTIVE == 0)
+        .find(|&slot| actors[slot].state_code() & ACTIVE == 0)
 }
 pub fn dispatch(
     actors: &mut ActorPool,
@@ -258,7 +308,7 @@ pub fn dispatch(
     *gravity = DEFAULT_GRAVITY;
     let mut visits = Vec::new();
     for slot in FIRST_ACTOR_SLOT..ACTOR_SLOTS {
-        if actors[slot].state & ACTIVE != 0 {
+        if actors[slot].state_code() & ACTIVE != 0 {
             let selector = actors[slot].handler;
             visits.push((slot, selector));
             handler(slot, selector, actors, gravity);
@@ -273,7 +323,10 @@ pub fn remove(
     clear_render: bool,
     state_value: u8,
 ) {
-    actors[slot].state = state_value;
+    {
+        let actor_value = state_value;
+        actors[slot].set_state_code(actor_value);
+    };
     actors[slot].spawn_identity = None;
     if clear_render {
         actors[slot].render = 0;
@@ -357,7 +410,7 @@ pub fn candidate(
     if let Some(slot) = (FIRST_ACTOR_SLOT..ACTOR_SLOTS)
         .rev()
         .find(|&slot| actors[slot].spawn_identity.unwrap_or(NO_SOURCE_IDENTITY) == record.identity)
-        && actors[slot].state & ACTIVE != 0
+        && actors[slot].state_code() & ACTIVE != 0
     {
         return report;
     }
@@ -371,21 +424,36 @@ pub fn candidate(
     actor.position.screen_y = record.screen_y;
     actor.spawn_y = record.screen_y;
     actor.hit_marker = 0;
-    actor.local_counter = 0;
+    {
+        let actor_value = 0;
+        actor.set_local_counter_code(actor_value);
+    };
     actor.boss_protection = 0;
-    actor.local_state = template.flags_and_local & 0x0f;
-    actor.state = template.flags_and_local & 0xf0;
-    actor.render = actor.state;
+    {
+        let actor_value = template.flags_and_local & 0x0f;
+        actor.set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = template.flags_and_local & 0xf0;
+        actor.set_state_code(actor_value);
+    };
+    actor.render = actor.state_code();
     actor.animation = template.animation;
-    actor.handler = template.handler;
+    {
+        let actor_value = template.handler;
+        actor.set_handler(actor_value);
+    };
     actor.profile = template.profile;
-    actor.animation_frame = 0;
-    actor.animation_tick = 0;
+    actor.playback.reset_frame();
+    actor.playback.restart_clock();
     report.ordinary.push((record.identity, slot));
-    if context.split_transition == 0 && actor.state & PERSISTENT != 0 {
+    if context.split_transition == 0 && actor.state_code() & PERSISTENT != 0 {
         if actor.animation & NORMALIZE_ANIMATION != 0 {
             actor.animation &= !NORMALIZE_ANIMATION;
-            actor.local_counter = u8::MAX;
+            {
+                let actor_value = u8::MAX;
+                actor.set_local_counter_code(actor_value);
+            };
         }
         if TERRAIN_HANDLERS.contains(&actor.handler) {
             report.terrain_replacements.push(slot);
@@ -395,9 +463,15 @@ pub fn candidate(
     if context.late_mode & ACTIVE != 0 {
         context.boss_hit_points = FINAL_HIT_POINTS;
         if context.late_route != 0 || context.stage_progress & ALL_LANDS == ALL_LANDS {
-            actor.handler = FINAL_HANDLER;
+            {
+                let actor_value = FINAL_HANDLER;
+                actor.set_handler(actor_value);
+            };
             actor.profile = 0;
-            actor.state |= PERSISTENT;
+            {
+                let actor_value = actor.state_code() | (PERSISTENT);
+                actor.set_state_code(actor_value);
+            };
             actor.animation = FINAL_ANIMATION;
         }
     }
@@ -406,7 +480,10 @@ pub fn candidate(
         && (SUPPRESSED_HANDLERS.contains(&actor.handler)
             || actor.handler == 8 && actor.animation == PRESERVED_ANIMATION)
     {
-        actor.state = 0;
+        {
+            let actor_value = 0;
+            actor.set_state_code(actor_value);
+        };
     }
     report
 }
@@ -543,16 +620,28 @@ pub fn special_spawn(
         let slot = allocate(actors, AllocationRegister::X)?;
         let template = templates[record.template];
         let actor = &mut actors[slot];
-        actor.state = template.flags_and_local;
+        {
+            let actor_value = template.flags_and_local;
+            actor.set_state_code(actor_value);
+        };
         actor.render = template.flags_and_local;
         actor.animation = template.animation;
-        actor.handler = template.handler;
+        {
+            let actor_value = template.handler;
+            actor.set_handler(actor_value);
+        };
         actor.profile = template.profile;
-        actor.animation_tick = 0;
-        actor.animation_frame = 0;
+        actor.playback.restart_clock();
+        actor.playback.reset_frame();
         actor.hit_marker = 0;
-        actor.local_state = 0;
-        actor.local_counter = 0;
+        {
+            let actor_value = 0;
+            actor.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            actor.set_local_counter_code(actor_value);
+        };
         actor.position.world_x = edge;
         actor.position.screen_y = record.screen_y;
         actor.spawn_identity = None;
@@ -615,8 +704,8 @@ pub fn actor_overlap(
         } else {
             MARKED_CONTACT_ANIMATION
         };
-        actors[source].animation_frame = 0;
-        actors[source].animation_tick = 0;
+        actors[source].playback.reset_frame();
+        actors[source].playback.restart_clock();
     }
     Some(slot)
 }

@@ -32,20 +32,20 @@ fn input(pressed: Buttons) -> PortInput {
 }
 fn status() -> Status {
     Status {
-        reward: [0; 6],
-        total: [0; 7],
+        reward: [0; 6].into(),
+        total: [0; 7].into(),
         lives: 3,
-        health: Health {
-            segments: [HealthSegment {
+        health: Health::from_overlay(
+            [HealthSegment {
                 y: 0,
                 tile: 0,
                 depleted: 0,
                 x: 0,
             }; OVERLAY_SEGMENTS],
-            end: 0xff,
-            alternating: 0,
-        },
-        countdown: [5, 0, 0],
+            0xff,
+            0,
+        ),
+        countdown: [5, 0, 0].into(),
         divider: 60,
         dirty: 0,
         ui_pending: 0,
@@ -1442,6 +1442,8 @@ fn player_runtime_defaults_set_jump_magnitude_and_low_camera_but_retain_world_po
     };
     let mut actors = [ActorContact::default(); ACTOR_SLOTS];
     actors[0] = ActorContact {
+        playback: crate::presentation::AnimationPlayback::from_codes(0, 0, MARKER),
+        control: crate::actors::ActorControl::from_codes(0, MARKER, 0, MARKER),
         position: Position {
             world_x: 0x0580,
             x_fraction: MARKER,
@@ -1451,9 +1453,7 @@ fn player_runtime_defaults_set_jump_magnitude_and_low_camera_but_retain_world_po
         vertical_velocity: -0x123,
         handler: MARKER,
         profile: MARKER,
-        local_state: MARKER,
         spawn_identity: Some(MARKER),
-        animation_restart: MARKER,
         ..ActorContact::default()
     };
     let old = actors[0];
@@ -1465,7 +1465,7 @@ fn player_runtime_defaults_set_jump_magnitude_and_low_camera_but_retain_world_po
     initialize_player(&mut player, &mut actors, &mut camera);
     assert_eq!(
         (
-            actors[0].state,
+            actors[0].state_code(),
             actors[0].render,
             actors[0].position.screen_y
         ),
@@ -1474,8 +1474,8 @@ fn player_runtime_defaults_set_jump_magnitude_and_low_camera_but_retain_world_po
     assert_eq!(
         (
             actors[0].animation,
-            actors[0].animation_tick,
-            actors[0].animation_frame,
+            actors[0].playback.tick_code(),
+            actors[0].playback.frame_code(),
             actors[0].position.x_fraction
         ),
         (0, 0, 0, 0)
@@ -1494,9 +1494,9 @@ fn player_runtime_defaults_set_jump_magnitude_and_low_camera_but_retain_world_po
         (
             actors[0].handler,
             actors[0].profile,
-            actors[0].local_state,
+            actors[0].local_state_code(),
             actors[0].spawn_identity,
-            actors[0].animation_restart
+            actors[0].playback.restart_code()
         ),
         (MARKER, MARKER, MARKER, Some(MARKER), MARKER)
     );
@@ -1626,14 +1626,17 @@ fn reload_completion_uses_wait_return_zero_not_duration_as_player_protection() {
     };
     let mut actors = [ActorContact::default(); ACTOR_SLOTS];
     actors[0].render = MARKER;
-    actors[0].state = MARKER;
+    {
+        let actor_value = MARKER;
+        actors[0].set_state_code(actor_value);
+    };
     finish_reload(&mut p, &mut player, &mut actors);
     assert_eq!(
         (
             p.reload_request,
             player.protection,
             player.action,
-            actors[0].state
+            actors[0].state_code()
         ),
         (0, 0, Action::Standing, MARKER)
     );
@@ -1699,22 +1702,22 @@ fn selection_ordinary_delay_is_180_and_nonzero_special_selector_returns_without_
 }
 #[test]
 fn reload_wait_freezes_player_tick_after_each_resume_and_last_zero_finishes() {
-    let mut tick = LIVE_ANIMATION_TICK;
+    let mut tick = crate::presentation::AnimationPlayback::from_codes(LIVE_ANIMATION_TICK, 0, 0);
     assert_eq!(composed_wait_step(2, &mut tick, true), (1, false));
-    assert_eq!(tick, 0);
-    tick = LIVE_ANIMATION_TICK;
+    assert_eq!(tick.tick_code(), 0);
+    tick.set_tick_code(LIVE_ANIMATION_TICK);
     assert_eq!(composed_wait_step(1, &mut tick, true), (0, true));
-    assert_eq!(tick, 0);
+    assert_eq!(tick.tick_code(), 0);
 }
 #[test]
 fn gameover_and_selection_waits_retain_animation_tick_and_zero_count_wraps_to_256_iterations() {
-    let mut tick = LIVE_ANIMATION_TICK;
+    let mut tick = crate::presentation::AnimationPlayback::from_codes(LIVE_ANIMATION_TICK, 0, 0);
     assert_eq!(composed_wait_step(0, &mut tick, false), (255, false));
-    assert_eq!(tick, LIVE_ANIMATION_TICK);
+    assert_eq!(tick.tick_code(), LIVE_ANIMATION_TICK);
     assert_eq!(composed_wait_step(240, &mut tick, false), (239, false));
-    assert_eq!(tick, LIVE_ANIMATION_TICK);
+    assert_eq!(tick.tick_code(), LIVE_ANIMATION_TICK);
     assert_eq!(composed_wait_step(1, &mut tick, false), (0, true));
-    assert_eq!(tick, LIVE_ANIMATION_TICK);
+    assert_eq!(tick.tick_code(), LIVE_ANIMATION_TICK);
 }
 
 #[test]
@@ -2017,14 +2020,17 @@ fn reload_activity_is_written_before_final_wait_without_overwriting_render_or_mo
     let mut actors = [ActorContact::default(); ACTOR_SLOTS];
     actors[0].render = MARKER;
     actors[0].vertical_velocity = -0x123;
-    actors[0].animation_tick = LIVE_ANIMATION_TICK;
+    {
+        let animation_value = LIVE_ANIMATION_TICK;
+        actors[0].playback.set_tick_code(animation_value);
+    };
     activate_reload_player(&mut actors);
     assert_eq!(
         (
-            actors[0].state,
+            actors[0].state_code(),
             actors[0].render,
             actors[0].vertical_velocity,
-            actors[0].animation_tick
+            actors[0].playback.tick_code()
         ),
         (PLAYER_ACTIVE, MARKER, -0x123, LIVE_ANIMATION_TICK)
     );

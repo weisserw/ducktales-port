@@ -57,28 +57,40 @@ impl Terrain<'_> {
     }
     fn replace(&mut self, actors: &mut ActorPool, slot: usize, changed: &mut u8) {
         let actor = actors[slot];
-        let active = std::array::from_fn(|index| actors[index].state & actors::ACTIVE != 0);
+        let active = std::array::from_fn(|index| actors[index].state_code() & actors::ACTIVE != 0);
         if let Some(recovery) = world::recovery_actor(
-            actor.local_counter,
-            actor.local_state,
+            actor.local_counter_code(),
+            actor.local_state_code(),
             actor.position.world_x,
             actor.position.screen_y,
             &active,
         ) {
             let target = &mut actors[recovery.slot];
-            target.state = recovery.state;
-            target.handler = recovery.handler;
+            {
+                let actor_value = recovery.state;
+                target.set_state_code(actor_value);
+            };
+            {
+                let actor_value = recovery.handler;
+                target.set_handler(actor_value);
+            };
             target.animation = recovery.animation;
             target.position.world_x = recovery.world_x;
             target.position.screen_y = recovery.screen_y;
-            target.animation_tick = recovery.animation_tick;
-            target.animation_frame = recovery.animation_frame;
+            {
+                let animation_value = recovery.animation_tick;
+                target.playback.set_tick_code(animation_value);
+            };
+            {
+                let animation_value = recovery.animation_frame;
+                target.playback.set_frame_code(animation_value);
+            };
             target.profile = recovery.collision_profile;
             target.vertical_velocity = recovery.vertical_velocity;
         }
         let index = world::replacement_index(world::Replacement::ActorState {
             stage: crate::identifiers::StageId(self.stage),
-            local: actor.local_state,
+            local: actor.local_state_code(),
         });
         let selector = self.content.changed_terrain_selectors[usize::from(index)];
         let upload = world::replace_cache(
@@ -430,8 +442,11 @@ impl platforms::World for PlatformWorld<'_> {
             return platforms::Effects::default();
         }
         *changed = changed.wrapping_add(1);
-        if actors[slot].state & objects::TERRAIN_REPRESENTATION != 0 {
-            actors[slot].state &= !objects::TERRAIN_REPRESENTATION;
+        if actors[slot].state_code() & objects::TERRAIN_REPRESENTATION != 0 {
+            {
+                let actor_value = actors[slot].state_code() & (!objects::TERRAIN_REPRESENTATION);
+                actors[slot].set_state_code(actor_value);
+            };
             self.terrain.replace(actors, slot, changed);
         }
         objects::launch_terrain_shared(
@@ -878,7 +893,7 @@ impl crate::dialogue::Systems for DialogueActorWorld<'_> {
     fn allocate(&mut self, actors: &ActorPool) -> Option<usize> {
         (actors::FIRST_ACTOR_SLOT..actors::ACTOR_SLOTS)
             .rev()
-            .find(|&slot| actors[slot].state & actors::ACTIVE == 0)
+            .find(|&slot| actors[slot].state_code() & actors::ACTIVE == 0)
     }
 }
 /// The burst prepares primary rows before allocating particles and submitting
@@ -896,7 +911,7 @@ pub(super) fn burst_owners(
     selector: u8,
 ) -> audio::Submission {
     let burst = world::changed_burst(&content.world.terrain[usize::from(bank)], selector);
-    let bytes = super::simulation::encode_upload(&burst.upload.writes);
+    let bytes = presentation::terrain::encoded(&burst.update);
     super::video::prepare_primary_owners(
         primary,
         secondary,
@@ -946,7 +961,7 @@ pub fn update_actors(
 ) {
     frame.player.gravity = actors::DEFAULT_GRAVITY;
     for slot in actors::FIRST_ACTOR_SLOT..actors::ACTOR_SLOTS {
-        if frame.actors[slot].state & actors::ACTIVE == 0 {
+        if frame.actors[slot].state_code() & actors::ACTIVE == 0 {
             continue;
         }
         let before = super::journal::Snapshot::frame(frame);
@@ -1168,8 +1183,14 @@ mod tests {
             );
             assert_eq!(player_result.collision_bits & 1, u8::from(solid));
             let actor = &mut core.actors[15];
-            actor.state = 0xa2;
-            actor.handler = 0x25;
+            {
+                let actor_value = 0xa2;
+                actor.set_state_code(actor_value);
+            };
+            {
+                let actor_value = 0x25;
+                actor.set_handler(actor_value);
+            };
             actor.render = 0xa0;
             actor.position.world_x = 1368;
             actor.position.screen_y = 254;
@@ -1177,7 +1198,10 @@ mod tests {
             actor.vertical_velocity = 0x1cc;
             actor.horizontal_magnitude = 0x1cc;
             actor.animation = 0x4c;
-            actor.animation_tick = 3;
+            {
+                let animation_value = 3;
+                actor.playback.set_tick_code(animation_value);
+            };
             let mut secondary = presentation::PreparedSecondary::source_shared();
             let mut cursor = 0;
             let mut queue = audio::CommandQueue::default();
@@ -1262,7 +1286,7 @@ mod tests {
             let actor = core.actors[15];
             assert_eq!(
                 (
-                    actor.state,
+                    actor.state_code(),
                     actor.render,
                     actor.position.screen_y,
                     actor.position.y_fraction
@@ -1274,8 +1298,8 @@ mod tests {
                     (
                         actor.motion_flags,
                         actor.animation,
-                        actor.animation_frame,
-                        actor.animation_tick
+                        actor.playback.frame_code(),
+                        actor.playback.tick_code()
                     ),
                     (8, 0x4d, 0, 0)
                 );
@@ -1287,7 +1311,11 @@ mod tests {
                 assert_eq!(queue.slots[0], 0x24);
             } else {
                 assert_eq!(
-                    (actor.motion_flags, actor.animation, actor.animation_tick),
+                    (
+                        actor.motion_flags,
+                        actor.animation,
+                        actor.playback.tick_code()
+                    ),
                     (0, 0x4c, 3)
                 );
                 assert_eq!(
@@ -1312,14 +1340,26 @@ mod tests {
         let content = Content::load(&rom, &raw, &overrides).unwrap();
         let mut core = Core::reset();
         for actor in &mut core.actors[1..] {
-            actor.state = actors::ACTIVE;
+            {
+                let actor_value = actors::ACTIVE;
+                actor.set_state_code(actor_value);
+            };
         }
-        core.actors[14].state = 0;
+        {
+            let actor_value = 0;
+            core.actors[14].set_state_code(actor_value);
+        };
         core.actors[15].position.world_x = 312;
         core.actors[15].position.screen_y = 184;
         core.actors[15].spawn_y = 184;
-        core.actors[15].local_counter = 0xff;
-        core.actors[15].local_state = 0;
+        {
+            let actor_value = 0xff;
+            core.actors[15].set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = 0;
+            core.actors[15].set_local_state_code(actor_value);
+        };
         core.actors[15].animation = 0x1a;
         core.cache.attributes[105] = 0xff;
         core.cache.collision[105] = 0xff;
@@ -1342,7 +1382,7 @@ mod tests {
         terrain.replace(&mut core.actors, 15, &mut core.cache.changed_this_frame);
         assert_eq!(
             (
-                core.actors[14].state,
+                core.actors[14].state_code(),
                 core.actors[14].handler,
                 core.actors[14].animation
             ),
@@ -1381,8 +1421,14 @@ mod tests {
         let mut core = Core::reset();
         core.cache.collision.fill(0x55);
         let slot = 3;
-        core.actors[slot].state = 0x82;
-        core.actors[slot].handler = 0x10;
+        {
+            let actor_value = 0x82;
+            core.actors[slot].set_state_code(actor_value);
+        };
+        {
+            let actor_value = 0x10;
+            core.actors[slot].set_handler(actor_value);
+        };
         core.actors[slot].render = 0x80;
         core.actors[slot].hit_marker = 1;
         core.actors[slot].position.world_x = 128;
@@ -1526,7 +1572,7 @@ mod tests {
         core.progression.stage = StageId(1);
         core.progression.late_mode = 0x80;
         core.actors[3] = actors::ActorContact {
-            state: 0xa2,
+            control: crate::actors::ActorControl::from_codes(0xa2, 0, 0, objects::RECOVERY_HANDLER),
             render: actors::VISIBLE,
             handler: objects::RECOVERY_HANDLER,
             animation: EXTENSION_ANIMATION,
@@ -1559,7 +1605,7 @@ mod tests {
         ));
         assert_eq!(
             (
-                core.actors[3].state,
+                core.actors[3].state_code(),
                 core.progression.stage_one_extension,
                 core.progression.late_mode
             ),

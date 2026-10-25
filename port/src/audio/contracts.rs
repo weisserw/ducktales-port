@@ -15,40 +15,39 @@ const PULSE_CONTROL: u16 = 0x4000;
 const PULSE_PERIOD: u16 = 0x4002;
 const PULSE_LENGTH: u16 = 0x4003;
 fn catalog(primary: &[u8], secondary: &[u8]) -> Catalog {
-    Catalog {
-        headers: vec![
-            Header::Primary {
-                priority: 7,
-                cursors: [PRIMARY_ORIGIN; CHANNELS],
-                preset_base: PRESET_ORIGIN,
-            },
-            Header::Secondary {
-                priority: 0x50,
-                mask: 0x0a,
-                cursor: SECONDARY_ORIGIN,
-            },
-        ],
-        duration: [0, 0, 2, 4, 8, 16, 32, 64],
-        alternate_duration: [0, 0, 3, 6, 12, 24, 48, 96],
-        fragments: vec![
-            Fragment {
-                origin: PRIMARY_ORIGIN,
-                bytes: primary.to_vec(),
-            },
-            Fragment {
-                origin: SECONDARY_ORIGIN,
-                bytes: secondary.to_vec(),
-            },
-            Fragment {
-                origin: PERIOD_ORIGIN,
-                bytes: vec![0, 0, 0x34, 0x02, 0x78, 0x01],
-            },
-            Fragment {
-                origin: PRESET_ORIGIN,
-                bytes: vec![1, 2, 3, 4, 5, 6, 7, 8],
-            },
-        ],
-    }
+    let mut c = Catalog::from_fragments(vec![
+        Fragment {
+            origin: PRIMARY_ORIGIN,
+            bytes: primary.to_vec(),
+        },
+        Fragment {
+            origin: SECONDARY_ORIGIN,
+            bytes: secondary.to_vec(),
+        },
+        Fragment {
+            origin: PERIOD_ORIGIN,
+            bytes: vec![0, 0, 0x34, 0x02, 0x78, 0x01],
+        },
+        Fragment {
+            origin: PRESET_ORIGIN,
+            bytes: vec![1, 2, 3, 4, 5, 6, 7, 8],
+        },
+    ]);
+    c.headers = vec![
+        Header::Primary {
+            priority: 7,
+            cursors: [PRIMARY_ORIGIN; CHANNELS],
+            preset_base: PRESET_ORIGIN,
+        },
+        Header::Secondary {
+            priority: 0x50,
+            mask: 0x0a,
+            cursor: SECONDARY_ORIGIN,
+        },
+    ];
+    c.duration = [0, 0, 2, 4, 8, 16, 32, 64];
+    c.alternate_duration = [0, 0, 3, 6, 12, 24, 48, 96];
+    c
 }
 fn driver() -> Driver {
     let mut d = Driver::default();
@@ -442,13 +441,143 @@ fn primary_loop_exhaustion_clears_count_preserves_continue_and_skips_word_with_c
     d.channels[0].primary.cursor = 0xd0fc;
     d.channels[0].primary.repeat_control = 2;
     let mut c = catalog(&[], &[]);
-    c.fragments.push(Fragment {
+    c.add_fragment(Fragment {
         origin: 0xd0fc,
         bytes: vec![4, 2, 0x34, 0x12, NOTE],
     });
     d.primary_step(&c, Voice::PulseOne);
     assert_eq!(d.channels[0].primary.cursor, 0xd101);
     assert_eq!(d.channels[0].primary.repeat_control, 0);
+}
+#[test]
+fn exhausted_primary_loop_skips_unavailable_destination_bytes_without_reading_them() {
+    // AudioPrimaryLoop_Continue_883C advances two positions without a read.
+    let mut c = catalog(&[4, 1], &[]);
+    c.add_fragment(Fragment {
+        origin: PRIMARY_ORIGIN + 4,
+        bytes: vec![NOTE],
+    });
+    let mut d = driver();
+    d.channels[0].primary.repeat_control = 1;
+    d.primary_step(&c, Voice::PulseOne);
+    assert_eq!(d.channels[0].primary.cursor, PRIMARY_ORIGIN + 5);
+    assert_eq!(d.channels[0].primary.repeat_control, 0);
+}
+#[test]
+fn exhausted_secondary_loop_skips_unavailable_destination_bytes_without_reading_them() {
+    // AudioSecondaryLoop_Clear_862A has the same skip, and no read seed.
+    let mut c = catalog(&[], &[4, 1]);
+    c.add_fragment(Fragment {
+        origin: SECONDARY_ORIGIN + 4,
+        bytes: vec![0x82, 0x34],
+    });
+    let mut d = driver();
+    d.secondary_repeat = 1;
+    d.secondary_step(&c, Voice::PulseOne);
+    assert_eq!(d.secondary_cursor, SECONDARY_ORIGIN + 6);
+    assert_eq!(d.channels[0].secondary.period, 0x0234);
+    assert_eq!(d.secondary_repeat, 0);
+}
+#[test]
+fn compiled_programs_keep_overlapping_entries_and_native_note_meanings() {
+    let c = catalog(&[0x21, 0x30, 5, 0xff, 6, 0xe1, 9], &[]);
+    assert_eq!(
+        c.programs.primary[&PRIMARY_ORIGIN].action,
+        PrimaryAction::Deferred(1)
+    );
+    assert_eq!(
+        c.programs.primary[&(PRIMARY_ORIGIN + 1)].action,
+        PrimaryAction::Continue
+    );
+    assert_eq!(
+        c.programs.primary[&(PRIMARY_ORIGIN + 2)].action,
+        PrimaryAction::PeriodTable(Some(0x8a79))
+    );
+    let note = Note {
+        key: 1,
+        duration: DurationClass::Alternate(7),
+    };
+    assert_eq!(
+        c.programs.primary[&(PRIMARY_ORIGIN + 4)].action,
+        PrimaryAction::AlternateNote(Some(note))
+    );
+    assert_eq!(
+        c.programs.primary[&(PRIMARY_ORIGIN + 5)].action,
+        PrimaryAction::Note(Note {
+            duration: DurationClass::Standard(7),
+            ..note
+        })
+    );
+    assert_eq!(
+        c.programs.secondary[&(PRIMARY_ORIGIN + 5)].action,
+        SecondaryAction::Period(Some(0x0109))
+    );
+}
+#[test]
+fn explicit_asset_overrides_rebuild_both_instruction_roles_without_stale_entries() {
+    let mut c = catalog(&[NOTE], &[]);
+    let original = c.clone();
+    c.prepend_fragment(Fragment {
+        origin: PRIMARY_ORIGIN,
+        bytes: vec![0x8f, 0x77],
+    });
+    assert_eq!(c.read(PRIMARY_ORIGIN).unwrap(), 0x8f);
+    assert_eq!(
+        c.programs.secondary[&PRIMARY_ORIGIN].action,
+        SecondaryAction::KeepPeriod(Some(0x77))
+    );
+    assert_eq!(
+        c.programs.primary[&PRIMARY_ORIGIN].action,
+        PrimaryAction::Note(Note {
+            key: 15,
+            duration: DurationClass::Standard(4)
+        })
+    );
+    assert_eq!(
+        original.programs.primary[&PRIMARY_ORIGIN].action,
+        PrimaryAction::Note(Note {
+            key: 1,
+            duration: DurationClass::Standard(2)
+        })
+    );
+}
+#[test]
+fn native_program_positions_wrap_across_ffff_for_both_stream_roles() {
+    let mut c = catalog(&[], &[]);
+    c.add_fragment(Fragment {
+        origin: 0xffff,
+        bytes: vec![1],
+    });
+    c.add_fragment(Fragment {
+        origin: 0,
+        bytes: vec![0xfe, NOTE],
+    });
+    let mut d = driver();
+    d.channels[0].primary.cursor = 0xffff;
+    d.primary_step(&c, Voice::PulseOne);
+    assert_eq!(
+        (
+            d.channels[0].primary.cursor,
+            d.channels[0].primary.pitch_step
+        ),
+        (2, -2)
+    );
+    let mut c = catalog(&[], &[]);
+    c.add_fragment(Fragment {
+        origin: 0xffff,
+        bytes: vec![0x82],
+    });
+    c.add_fragment(Fragment {
+        origin: 0,
+        bytes: vec![0x34],
+    });
+    let mut d = driver();
+    d.secondary_cursor = 0xffff;
+    d.secondary_step(&c, Voice::PulseOne);
+    assert_eq!(
+        (d.secondary_cursor, d.channels[0].secondary.period),
+        (1, 0x0234)
+    );
 }
 #[test]
 fn primary_loop_zero_jumps_without_incrementing_repeat_count() {
@@ -567,7 +696,7 @@ fn primary_byte_read_carries_cursor_across_page() {
     let mut d = driver();
     d.channels[0].primary.cursor = 0xd0ff;
     let mut c = catalog(&[], &[]);
-    c.fragments.push(Fragment {
+    c.add_fragment(Fragment {
         origin: 0xd0ff,
         bytes: vec![NOTE],
     });
@@ -691,7 +820,7 @@ fn secondary_note_uses_only_three_high_period_bits_and_reads_with_page_carry() {
     let mut d = driver();
     d.secondary_cursor = 0xd1ff;
     let mut c = catalog(&[], &[]);
-    c.fragments.push(Fragment {
+    c.add_fragment(Fragment {
         origin: 0xd1ff,
         bytes: vec![0xfe, 0x34],
     });
@@ -1066,7 +1195,7 @@ fn drained_primary_install_supplies_three_to_following_fade_command() {
     // A newly installed primary record has a zero table pointer. Original
     // streams select their period table before their first tonal note.
     let mut c = catalog(&[5, 0, NOTE], &[]);
-    c.fragments.push(Fragment {
+    c.add_fragment(Fragment {
         origin: 0x897b,
         bytes: vec![0, 0, 0x34, 0x02],
     });
@@ -1299,7 +1428,7 @@ fn streamed_preset_uses_full_index_byte_while_restore_uses_low_five_bits() {
     d.preset_base = PRESET_ORIGIN;
     let mut c = catalog(&[8, 0xe1, NOTE], &[]);
     //225*4 wraps to132, not4. The unmasked command's X retains raw E1.
-    c.fragments.push(Fragment {
+    c.add_fragment(Fragment {
         origin: PRESET_ORIGIN + 132,
         bytes: vec![9, 10, 11, 12],
     });

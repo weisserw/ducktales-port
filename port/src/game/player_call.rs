@@ -306,8 +306,11 @@ mod tests {
         let (mut core, mut services, mut tasks) = fixture();
         core.player.action = player::Action::Swing;
         core.actors[0].animation = player::SWING_ANIMATION;
-        core.actors[0].animation_frame = 2;
-        core.actors[0].animation_tick = 0;
+        {
+            let animation_value = 2;
+            core.actors[0].playback.set_frame_code(animation_value);
+        };
+        core.actors[0].playback.restart_clock();
         core.actors[0].position.screen_y = 0x80;
         core.actors[0].position.world_x = 0x100;
         core.actors[0].vertical_velocity = 0x100;

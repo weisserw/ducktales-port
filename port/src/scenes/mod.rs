@@ -1,5 +1,6 @@
 //! Special-room and ending-screen content, scene actors and departures (B16).
 //! Source trace: trace.md. Declarations only; implementation awaits stage4.
+mod actor_state;
 use crate::{
     actors::{ActorContact, ActorPool},
     player::Player,
@@ -8,6 +9,9 @@ use crate::{
     runtime::RandomState,
     status::Status,
     world::{Camera, StreamCursor},
+};
+pub use actor_state::{
+    BounceProgress, BounceState, DelayState, EntryProgress, MoveState, SceneActorState, WalkState,
 };
 use anyhow::{Context as _, Result, ensure};
 pub const SCENE_COUNT: usize = 6;
@@ -244,13 +248,20 @@ pub fn initialize_actors(_pool: &mut ActorPool, _list: &ActorList) {
             actor.animation = p.animation;
             actor.position.screen_y = p.y;
             actor.position.world_x = u16::from(p.x);
-            actor.animation_tick = 0;
-            actor.animation_frame = 0;
-            actor.state = 0x80;
+            actor.playback.restart_clock();
+            actor.playback.reset_frame();
+            {
+                let actor_value = 0x80;
+                actor.set_state_code(actor_value);
+            };
             actor.render = RENDER_SCENE | if p.flipped { 0x40 } else { 0 };
         }
     }
-    _pool[0].handler = _list.handler as u8;
+    {
+        let actor_value = _list.handler as u8;
+        _pool[0].set_handler(actor_value);
+    };
+    _pool[0].enter_scene();
 }
 pub fn initialize_special_actors(
     _pool: &mut ActorPool,
@@ -262,12 +273,18 @@ pub fn initialize_special_actors(
         actor.animation = record.animation;
         actor.position.world_x = record.x;
         actor.position.screen_y = record.y;
-        actor.handler = record.handler;
+        {
+            let actor_value = record.handler;
+            actor.set_handler(actor_value);
+        };
         actor.profile = record.profile;
-        actor.state = 0xa0;
+        {
+            let actor_value = 0xa0;
+            actor.set_state_code(actor_value);
+        };
         actor.render = 0xa0;
-        actor.animation_tick = 0;
-        actor.animation_frame = 0;
+        actor.playback.restart_clock();
+        actor.playback.reset_frame();
     }
     _player.action = _definition.player_action;
 }
@@ -315,7 +332,10 @@ pub fn update_scene_actor(
     if *_continuation == HandlerContinuation::AwaitComposition {
         _display.palette_pending = true;
         _display.control |= 1;
-        _pool[0].handler = SceneHandler::Settled as u8;
+        {
+            let actor_value = SceneHandler::Settled as u8;
+            _pool[0].set_handler(actor_value);
+        };
         *_continuation = HandlerContinuation::Done;
         return HandlerStep::Complete;
     }
@@ -323,85 +343,112 @@ pub fn update_scene_actor(
         return HandlerStep::Complete;
     }
     let actor = &mut _pool[0];
-    match actor.handler {
-        0 => {
-            if actor.state & 15 == 0 {
-                actor.local_state = BOUNCE_COUNT;
+    actor.enter_scene();
+    let result = step_scene_motion(actor, _gravity, _motion, _continuation);
+    // A callback may replace the source handler before this invocation finishes.
+    // Reconcile only at that real ownership boundary, preserving partial fields.
+    actor.enter_scene();
+    result
+}
+fn step_scene_motion(
+    actor: &mut ActorContact,
+    gravity: u8,
+    motion: &mut impl Motion,
+    continuation: &mut HandlerContinuation,
+) -> HandlerStep {
+    match actor.scene_mut().kind() {
+        Some(SceneHandler::Bounce) => {
+            let bounce = actor.scene_for(SceneHandler::Bounce).bounce_mut();
+            if bounce.progress.is_entering() {
+                bounce.bounces_remaining = BOUNCE_COUNT;
+                bounce.progress = BounceProgress::Rising;
                 actor.vertical_velocity = BOUNCE_SPEED;
-                actor.state = actor.state.wrapping_add(1);
             }
-            if actor.state & 2 == 0 {
-                _motion.apply(actor, Integration::SubtractY, _gravity);
-                _motion.apply(actor, Integration::Gravity, _gravity);
+            if !actor
+                .scene_for(SceneHandler::Bounce)
+                .bounce_mut()
+                .progress
+                .descending()
+            {
+                motion.apply(actor, Integration::SubtractY, gravity);
+                motion.apply(actor, Integration::Gravity, gravity);
                 if actor.vertical_velocity < 0 {
                     actor.vertical_velocity = 0;
-                    actor.state = actor.state.wrapping_add(1);
-                    actor.local_state = actor.local_state.wrapping_sub(1);
-                    if actor.local_state == 0 {
+                    actor.advance_scene_bounce(true);
+                    let bounce = actor.scene_for(SceneHandler::Bounce).bounce_mut();
+                    bounce.bounces_remaining = bounce.bounces_remaining.wrapping_sub(1);
+                    if bounce.bounces_remaining == 0 {
                         scene_move_entry(actor);
                     }
                 }
             } else {
-                _motion.apply(actor, Integration::Gravity, _gravity);
-                _motion.apply(actor, Integration::SubtractY, _gravity);
+                motion.apply(actor, Integration::Gravity, gravity);
+                motion.apply(actor, Integration::SubtractY, gravity);
                 if actor.position.screen_y >= BOUNCE_FLOOR {
                     actor.vertical_velocity = BOUNCE_SPEED;
-                    actor.state = actor.state.wrapping_sub(1);
+                    actor.advance_scene_bounce(false);
                 }
             }
         }
-        1 => {
-            if actor.state & 15 == 0 {
-                actor.local_state = 0;
+        Some(SceneHandler::WalkIn) => {
+            let walk = actor.scene_for(SceneHandler::WalkIn).walk_mut();
+            if walk.progress.is_entering() {
+                walk.pause_remaining = 0;
+                walk.progress.activate();
                 actor.horizontal_magnitude = ONE_PIXEL_SPEED;
-                actor.state = actor.state.wrapping_add(1);
             }
             if actor.position.world_x as u8 >= WALK_MARK_X {
-                _motion.apply(actor, Integration::SubtractX, _gravity);
+                motion.apply(actor, Integration::SubtractX, gravity);
             } else {
-                actor.local_state = actor.local_state.wrapping_sub(1);
-                if actor.local_state == 0 {
+                let walk = actor.scene_for(SceneHandler::WalkIn).walk_mut();
+                walk.pause_remaining = walk.pause_remaining.wrapping_sub(1);
+                if walk.pause_remaining == 0 {
                     scene_move_entry(actor);
                 }
             }
         }
-        2 => {
-            if actor.state & 15 == 0 {
-                actor.local_state = 0;
-                actor.state = actor.state.wrapping_add(1);
+        Some(SceneHandler::Delay) => {
+            let delay = actor.scene_for(SceneHandler::Delay).delay_mut();
+            if delay.progress.is_entering() {
+                delay.ticks_remaining = 0;
+                delay.progress.activate();
             } else {
-                actor.local_state = actor.local_state.wrapping_sub(1);
-                if actor.local_state == 0 {
+                delay.ticks_remaining = delay.ticks_remaining.wrapping_sub(1);
+                if delay.ticks_remaining == 0 {
                     scene_move_entry(actor);
                 }
             }
         }
-        3 => {
-            if actor.state & 15 == 0 {
-                actor.local_state = actor.local_state.wrapping_sub(1);
-                if actor.local_state != 0 {
+        Some(SceneHandler::MoveToMark) => {
+            let movement = actor.scene_for(SceneHandler::MoveToMark).movement_mut();
+            if movement.progress.is_entering() {
+                movement.wait_remaining = movement.wait_remaining.wrapping_sub(1);
+                if movement.wait_remaining != 0 {
                     return HandlerStep::Complete;
                 }
+                movement.progress.activate();
                 actor.horizontal_magnitude = MOVE_SPEED;
                 actor.vertical_velocity = MOVE_SPEED as i16;
-                actor.state = actor.state.wrapping_add(1);
             }
             if actor.position.world_x as u8 >= MOVE_MARK_X {
-                _motion.apply(actor, Integration::SubtractX, _gravity);
+                motion.apply(actor, Integration::SubtractX, gravity);
                 return HandlerStep::Complete;
             }
             if actor.position.screen_y >= MOVE_MARK_Y {
-                _motion.apply(actor, Integration::SubtractY, _gravity);
+                motion.apply(actor, Integration::SubtractY, gravity);
                 return HandlerStep::Complete;
             }
-            actor.local_state = actor.local_state.wrapping_sub(1);
-            if actor.local_state == 0 {
-                *_continuation = HandlerContinuation::AwaitRebuild;
+            let movement = actor.scene_for(SceneHandler::MoveToMark).movement_mut();
+            movement.wait_remaining = movement.wait_remaining.wrapping_sub(1);
+            if movement.wait_remaining == 0 {
+                *continuation = HandlerContinuation::AwaitRebuild;
                 return HandlerStep::RebuildInterior;
             }
         }
-        4 | 5 => actor.handler = SceneHandler::Settled as u8,
-        _ => {}
+        Some(SceneHandler::Settle | SceneHandler::Settled) => {
+            actor.set_handler(SceneHandler::Settled as u8)
+        }
+        None => {}
     }
     HandlerStep::Complete
 }
@@ -425,15 +472,18 @@ pub fn linked_departure(
     _motion: &mut impl Motion,
     _gravity: u8,
 ) {
-    _pool[0].animation_tick = 0;
+    _pool[0].playback.restart_clock();
     _context.status.divider = 0;
     let actor = &mut _pool[_slot];
-    if actor.state & 15 == 0 {
+    if actor.state_code() & 15 == 0 {
         actor.vertical_velocity = 0;
         actor.horizontal_magnitude = ONE_PIXEL_SPEED;
-        actor.state = actor.state.wrapping_add(1);
+        {
+            let actor_value = actor.state_code().wrapping_add(1);
+            actor.set_state_code(actor_value);
+        };
     }
-    if actor.state & 2 != 0 {
+    if actor.state_code() & 2 != 0 {
         _motion.apply(actor, Integration::Gravity, _gravity);
         let no_borrow = _motion.apply(actor, Integration::SubtractY, _gravity);
         _pool[0].position.screen_y = _pool[_slot].position.screen_y;
@@ -450,14 +500,17 @@ pub fn linked_departure(
         .wrapping_sub(actor.horizontal_magnitude >> 8)
         .wrapping_sub(u16::from(fraction_borrow));
     _pool[0].position.world_x = _pool[_slot].position.world_x;
-    if _context.status.reward[2] == REWARD_CODE_GATE {
+    if _context.status.reward.departure_brakes() {
         let actor = &mut _pool[_slot];
         if actor.position.world_x as u8 >= BRAKE_START_X {
             return;
         }
         actor.horizontal_magnitude = actor.horizontal_magnitude.wrapping_sub(BRAKE_STEP);
         if actor.horizontal_magnitude == 0 {
-            actor.state = actor.state.wrapping_add(1);
+            {
+                let actor_value = actor.state_code().wrapping_add(1);
+                actor.set_state_code(actor_value);
+            };
         }
     } else if (_pool[0].position.world_x as u8) < DEPARTURE_LEFT_EDGE {
         _context.progression.scene_signal = _context.progression.scene_signal.wrapping_add(1);
@@ -481,20 +534,32 @@ pub fn timed_spawner(
         return DepartureResult::LifeLoss;
     }
     let actor = &mut _pool[_slot];
-    if actor.state & 15 == 0 {
+    if actor.state_code() & 15 == 0 {
         actor.horizontal_magnitude = ONE_PIXEL_SPEED;
         actor.vertical_velocity = SPAWNER_DOWN_SPEED;
-        actor.local_counter = 0;
-        actor.local_state = SPAWNER_DELAY;
-        actor.state = actor.state.wrapping_add(1);
+        {
+            let actor_value = 0;
+            actor.set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = SPAWNER_DELAY;
+            actor.set_local_state_code(actor_value);
+        };
+        {
+            let actor_value = actor.state_code().wrapping_add(1);
+            actor.set_state_code(actor_value);
+        };
     }
-    if actor.local_state != 0 {
-        actor.local_state -= 1;
+    if actor.local_state_code() != 0 {
+        {
+            let actor_value = actor.local_state_code() - (1);
+            actor.set_local_state_code(actor_value);
+        };
         return DepartureResult::Complete;
     }
-    match actor.state & 15 {
+    match actor.state_code() & 15 {
         2 => {
-            if actor.local_counter == 0 {
+            if actor.local_counter_code() == 0 {
                 spawn_reward(
                     _pool,
                     _slot,
@@ -503,34 +568,52 @@ pub fn timed_spawner(
                     &_catalog.reward_delays,
                 );
             }
-            _pool[_slot].local_counter = _pool[_slot].local_counter.wrapping_sub(1);
+            {
+                let actor_value = _pool[_slot].local_counter_code().wrapping_sub(1);
+                _pool[_slot].set_local_counter_code(actor_value);
+            };
             _motion.apply(&mut _pool[_slot], Integration::SubtractX, 0);
             if _pool[_slot].position.world_x >> 8 == 0
                 && (_pool[_slot].position.world_x as u8) < SPAWNER_LEFT_MARK
             {
-                _pool[_slot].state = _pool[_slot].state.wrapping_add(1);
+                {
+                    let actor_value = _pool[_slot].state_code().wrapping_add(1);
+                    _pool[_slot].set_state_code(actor_value);
+                };
                 let actor = &mut _pool[SPAWNER_EXIT_SLOT];
-                actor.state = 0xa0;
+                {
+                    let actor_value = 0xa0;
+                    actor.set_state_code(actor_value);
+                };
                 actor.render = 0xa0;
                 actor.animation = 0x5a;
                 actor.position.world_x = 0x30;
                 actor.position.screen_y = 0x80;
-                actor.handler = 0x38;
+                {
+                    let actor_value = 0x38;
+                    actor.set_handler(actor_value);
+                };
                 actor.profile = 0;
-                actor.animation_tick = 0;
-                actor.animation_frame = 0;
+                actor.playback.restart_clock();
+                actor.playback.reset_frame();
             }
         }
         3 => {
             _motion.apply(actor, Integration::SubtractY, 0);
             if actor.position.screen_y < SPAWNER_EXIT_MARK {
-                actor.state = 0;
+                {
+                    let actor_value = 0;
+                    actor.set_state_code(actor_value);
+                };
             }
         }
         _ => {
             _motion.apply(actor, Integration::AddY, 0);
             if actor.position.screen_y >= SPAWNER_DOWN_MARK {
-                actor.state = actor.state.wrapping_add(1);
+                {
+                    let actor_value = actor.state_code().wrapping_add(1);
+                    actor.set_state_code(actor_value);
+                };
                 *_context.departure_signal = 0x80;
             }
         }
@@ -551,15 +634,21 @@ pub fn spawn_reward(
 ) -> Option<usize> {
     let selected = (REWARD_FIRST_SLOT.._pool.len())
         .rev()
-        .find(|&index| _pool[index].state & 0x80 == 0)?;
+        .find(|&index| _pool[index].state_code() & 0x80 == 0)?;
     let parent = _pool[_slot];
     let actor = &mut _pool[selected];
-    actor.state = 0xa0;
+    {
+        let actor_value = 0xa0;
+        actor.set_state_code(actor_value);
+    };
     actor.render = 0xa0;
     actor.animation = REWARD_ANIMATION;
-    actor.handler = REWARD_HANDLER;
-    actor.animation_tick = 0;
-    actor.animation_frame = 0;
+    {
+        let actor_value = REWARD_HANDLER;
+        actor.set_handler(actor_value);
+    };
+    actor.playback.restart_clock();
+    actor.playback.reset_frame();
     actor.profile = 0;
     actor.position.world_x = parent.position.world_x;
     actor.position.screen_y = parent.position.screen_y;
@@ -567,7 +656,10 @@ pub fn spawn_reward(
     _random.words[1] = _random.words[0]
         .wrapping_add(_random.words[1])
         .wrapping_add(u8::from(_increment == RandomIncrement::One));
-    _pool[_slot].local_counter = _delays[usize::from(_random.words[1] & 7)];
+    {
+        let actor_value = _delays[usize::from(_random.words[1] & 7)];
+        _pool[_slot].set_local_counter_code(actor_value);
+    };
     Some(selected)
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -621,12 +713,15 @@ impl Completion {
                 }
                 CompletionPhase::Moving => {
                     let actor = &mut _pool[COMPLETION_SLOT];
-                    if actor.local_counter == 0 {
+                    if actor.local_counter_code() == 0 {
                         _motion.apply(actor, Integration::SubtractY, *_gravity);
                         _motion.apply(actor, Integration::Gravity, *_gravity);
                         if actor.vertical_velocity < 0 {
                             actor.vertical_velocity = 0;
-                            actor.local_counter = actor.local_counter.wrapping_add(1);
+                            {
+                                let actor_value = actor.local_counter_code().wrapping_add(1);
+                                actor.set_local_counter_code(actor_value);
+                            };
                         }
                     } else {
                         _motion.apply(actor, Integration::Gravity, *_gravity);
@@ -659,7 +754,10 @@ impl Completion {
                         completion_pose(&mut _pool[COMPLETION_SLOT]);
                         self.phase = CompletionPhase::Moving;
                     } else {
-                        _pool[COMPLETION_SLOT].state = 0;
+                        {
+                            let actor_value = 0;
+                            _pool[COMPLETION_SLOT].set_state_code(actor_value);
+                        };
                         self.phase = CompletionPhase::FlashColor;
                     }
                 }
@@ -797,8 +895,14 @@ impl Content {
                             return ContentWork::ClearNonplayer;
                         }
                         if self.operation_cursor == 1 {
-                            _context.actors[0].state = 0;
-                            _context.actors[1].state = 0;
+                            {
+                                let actor_value = 0;
+                                _context.actors[0].set_state_code(actor_value);
+                            };
+                            {
+                                let actor_value = 0;
+                                _context.actors[1].set_state_code(actor_value);
+                            };
                             self.operation_cursor = 2;
                             return ContentWork::HideOam;
                         }
@@ -1121,20 +1225,24 @@ pub fn runtime_frame_consumers(_rom: &[u8]) -> Result<RuntimeFrameConsumers> {
 mod contracts;
 
 fn scene_move_entry(actor: &mut ActorContact) {
-    actor.handler = SceneHandler::MoveToMark as u8;
-    actor.state = 0x80;
-    actor.animation_tick = 0x80;
-    actor.local_state = 0;
+    actor.start_scene_move();
+    actor.playback.freeze_at_start();
 }
 
 fn completion_pose(actor: &mut ActorContact) {
-    actor.state = 0xa0;
+    {
+        let actor_value = 0xa0;
+        actor.set_state_code(actor_value);
+    };
     actor.render = 0xa0;
     actor.position.screen_y = COMPLETION_START_Y;
     actor.position.world_x = COMPLETION_START_X;
-    actor.animation_tick = 0;
-    actor.animation_frame = 0;
-    actor.local_counter = 0;
+    actor.playback.restart_clock();
+    actor.playback.reset_frame();
+    {
+        let actor_value = 0;
+        actor.set_local_counter_code(actor_value);
+    };
     actor.horizontal_magnitude = COMPLETION_HORIZONTAL_SPEED;
     actor.vertical_velocity = COMPLETION_UPWARD_SPEED;
 }

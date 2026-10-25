@@ -328,14 +328,17 @@ pub fn title_animation(
     _random: &mut RandomState,
     _composition: &mut Composition,
 ) -> Vec<Operation> {
-    if _actors[0].animation_frame == 0 && _actors[0].animation_tick == 1 {
-        _actors[0].animation_tick = 0;
+    if _actors[0].playback.at_initial_frame(0) && _actors[0].playback.at_running_tick(1) {
+        _actors[0].playback.restart_clock();
         if _composition.clock == TITLE_RANDOM_PERIOD {
             _composition.clock = 0;
             _random.words[0] = _random.words[0]
                 .wrapping_add(_random.words[1])
                 .wrapping_add(1);
-            _actors[0].animation_frame = _random.words[0] & 1;
+            {
+                let animation_value = _random.words[0] & 1;
+                _actors[0].playback.set_frame_code(animation_value);
+            };
         }
     }
     vec![Operation::HideSprites, Operation::Compose, Operation::Yield]
@@ -395,13 +398,16 @@ pub fn initialize_land_actors(_actors: &mut ActorPool, _catalog: &Catalog) {
 /// handler, restart and other unlisted fields survive. This is not a spawn/reset.
 fn initialize_menu_actors(actors: &mut ActorPool, placements: &[ActorPlacement], render: u8) {
     for (actor, placement) in actors.iter_mut().zip(placements).rev() {
-        actor.state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            actor.set_state_code(actor_value);
+        };
         actor.render = render;
         actor.animation = placement.animation;
         actor.position.screen_y = placement.y;
         actor.position.world_x = u16::from(placement.x);
-        actor.animation_tick = 0;
-        actor.animation_frame = 0;
+        actor.playback.restart_clock();
+        actor.playback.reset_frame();
     }
 }
 pub fn completion_plan(_input: CompletionInput) -> CompletionPlan {
@@ -472,8 +478,8 @@ pub fn land_input(
         *_land = land_from_selector(selector);
         position_selector(selector, _actors, _catalog, false);
         for slot in [2, 4] {
-            _actors[slot].animation_frame = 0;
-            _actors[slot].animation_tick = 0;
+            _actors[slot].playback.reset_frame();
+            _actors[slot].playback.restart_clock();
         }
         operations.push(Operation::Sound(MENU_SOUND));
     } else if _input.pressed.0 & Buttons::A.0 != 0 {
@@ -597,7 +603,10 @@ fn position_selector(selector: u8, actors: &mut ActorPool, catalog: &Catalog, in
         (actors[3].position.world_x & 0xff00) | u16::from(catalog.name_x[index]);
     if initialize {
         for slot in [0, 2, 4, 3] {
-            actors[slot].state = 0x80;
+            {
+                let actor_value = 0x80;
+                actors[slot].set_state_code(actor_value);
+            };
         }
         actors[3].render = 0x90;
     }
@@ -641,7 +650,10 @@ impl RawLandCatalog {
             (actors[3].position.world_x & 0xff00) | u16::from(self.bytes[Self::NAME_X + index]);
         if initialize {
             for slot in [0, 2, 4, 3] {
-                actors[slot].state = 0x80;
+                {
+                    let actor_value = 0x80;
+                    actors[slot].set_state_code(actor_value);
+                };
             }
             actors[3].render = 0x90;
         }

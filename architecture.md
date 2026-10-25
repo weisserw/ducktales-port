@@ -46,6 +46,29 @@ submission even on drop, preventing end-of-family replay or reordered RNG facts.
 SourceAE extension and FB late-mode are distinct fields; spawn-window direction,
 scroll direction and previous scroll retain separate actual source ownership.
 
+Perimeter and wave movement programs decode into immutable native records at
+asset loading. Named headings/contact gates replace packed path/mask arrays;
+Spawn-at-tick/AwaitLastChild replace parallel wave position/time arrays. Actors
+retain their existing cursor/timing ownership and shared motion projections, so
+callback order, mirrors, byte waits and equal-time emissions remain unchanged.
+See [bosses/trace.md](port/src/actors/bosses/trace.md) for iteration013.
+
+ActorContact owns one ActorControl payload. The ambush enemy retains explicit
+WaitingForPlayer/Opening/Tracking/Closing/Attacking phases with named delay and
+preset cursor. Other families retain a compatibility payload while their shared
+callbacks and debug views use lossless control projections. Handler changes select
+the payload without losing partially preserved fields. The old state/local byte
+fields are removed; no shadow native/source pair exists. See
+[enemies/trace.md](port/src/actors/enemies/trace.md) for iteration012.
+
+Scene actor control uses native Bounce/WalkIn/Delay/MoveToMark/Settle/Settled
+variants with associated counters and progress. Scene context is selected by the
+entered owner, since small handler codes overlap ordinary enemies. The canonical
+ActorControl switches context through lossless shared-field projections; no side
+scene-state copy exists. Source waits, motion order, exact move-entry reset and
+rebuild/composition/palette continuations remain unchanged. See
+[scenes/trace.md](port/src/scenes/trace.md) for iteration014.
+
 PlayerCall and DialogueCall carry complete invocation outcomes across text,
 conversion and vertical waits. First-slot RNG uses the actual final named source
 operation: source controller filter return, comparisons, snap/integrator/gravity,
@@ -61,9 +84,29 @@ retain their own framing, normalization and publication order. The bounded
 modernization evidence is indexed in [modernize/changes.json](modernize/changes.json);
 the original source contract remains in [status/trace.md](port/src/status/trace.md).
 
-Health rules borrow the unlocked segment prefix from the canonical Health owner.
-The private view centralizes negative-Y capacity traversal while full restoration
-and sprite rendering retain their separate source contracts.
+Reward, total and transfer-source money use native quantities with explicit
+blank-layout metadata. Gameplay names credit denominations and semantic payment,
+theft, transfer, departure and ending operations. Original display-code imports
+and exports remain at template/render/debug boundaries; nondecimal source input
+uses an isolated compatibility representation. Paid-return provenance, trailing
+codes, staged transfer waits and canonical immediate ownership are preserved.
+See [status/trace.md](port/src/status/trace.md) for iteration011 and source rules.
+
+Stage countdown owns native remaining seconds or explicit expiration. Numeric
+ticking and ten-second reward conversion operate on that quantity; original
+codes are imported at initialization and exported only at render/debug boundaries.
+Game-over and nondecimal raw-selector inputs use an isolated compatibility state.
+The divider, warning sound, player-death commit and audio/finish waits retain their
+existing owners. See [status/trace.md](port/src/status/trace.md) for source rules
+and the pre-existing unusual-glyph subtraction limitation.
+
+Health stores native segment availability and Filled/Depleted state separately
+from appearance. Damage, recovery, paid restoration and player death use native
+health queries. Template import and immutable render/debug projections preserve
+original geometry, nonzero attribute bytes and the distinct FF rendering marker.
+Full restore still clears hidden segments; extension updates native availability
+and its corresponding presentation in one owner operation. See
+[status/trace.md](port/src/status/trace.md) for the contract and iteration010 evidence.
 
 Video owns logical CHR, nametables, palette, committed OAM/raster and prepared
 uploads. Render is read-only. Primary owns64 prefix bytes; writes past0440 borrow
@@ -103,10 +146,13 @@ for instruction-as-data consumers, then dropped. Rules use decoded immutable
 catalogs, source selector domains and native typed data. Unnamed data is retained
 through established consumers, not assumed junk from appearance.
 
-ROM-backed and prepared background sources share one post-read chunk transition
-and terminal palette operation. Validation stays in each source adapter; the
-existing continuation and commit boundaries remain unchanged. See
-[assets/trace.md](port/src/assets/trace.md) for the per-poll source contract.
+Background spans compile once into immutable ordered tile updates at asset loading.
+Tasks owns an explicit Updating/Complete session and executes one update per poll;
+source record/chunk counters and destination advancement no longer drive gameplay.
+The final palette poll, live suspension policy, bank selection and Video queue alias
+writes retain their original order. Debug record/chunk coordinates are projections
+from plan metadata. See [assets/trace.md](port/src/assets/trace.md) and
+[modernize/changes.json](modernize/changes.json) for the contracts and evidence.
 
 Authored registry levels have distinct named identity, predecessor and original
 rule profile. Graph validation rejects forks/cycles/missing parents at startup.
@@ -136,3 +182,35 @@ borrow-boundary signatures carry local clippy annotations explaining canonical
 ownership; no crate-wide warning suppression exists. differences.md and all8
 uncertainty assessments distinguish implemented source-informed assumptions from
 confirmed behavior. Stage5 performs the two independent fresh whole-game passes.
+
+Modernization015 moves animation state into `presentation::AnimationPlayback`,
+owned canonically by ActorContact and copied into the transient ActorVisual for
+composition. Running/frozen clocks and explicit frame loop origins replace packed
+byte owners. Asset identities and lossless source observation projections remain
+boundary concerns. See `port/src/presentation/trace.md` for overflow and ordering
+contracts.
+
+Modernization016 decodes original dialogue bytes into immutable MessageProgram
+text actions at asset loading. Runtime executes Glyph/Blank/NextRow/Finish,
+retaining the single shared progression cursor and B03 panel owner. Control-byte
+meaning disappears from gameplay; tile IDs and encoded shared display submissions
+remain at presentation boundaries. See `port/src/dialogue/trace.md` and
+`modernize/dialogue-probe.py` for the source rules and bounded comparison recipe.
+
+Modernization017 gives World native tile regions, palette runs and clipped block
+columns. Game supplies these changes to Video without constructing upload headers
+or byte offsets. Video/presentation retains exact source framing only at the
+canonical prepared queue boundary, where cache/audio/runtime-composite aliases
+make those bytes observable before commit. There is no second semantic pending
+queue. See `port/src/world/trace.md`, `port/src/presentation/terrain.rs` and
+`port/src/game/video/terrain.rs` for geometry and source-boundary responsibilities.
+
+Modernization018 compiles primary and secondary audio sequences into immutable
+native actions in Catalog. Playback handles typed notes, controls, branches and
+modulation; source opcode/operand classification occurs at asset import. Private
+mixed source data remains for genuine header/preset/period reads and overlapping
+resource roles. The source boundary preserves observable resource-cursor/read
+provenance, including primary-only seed selection and skipped branch operands.
+File-authored overrides rebuild both programs before playback. Shared Driver,
+APU, channel aliases and sample clock ownership remain unchanged; see
+`port/src/audio/trace.md` for the source contract and bounded PCM comparison.

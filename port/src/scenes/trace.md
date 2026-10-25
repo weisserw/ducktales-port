@@ -244,3 +244,30 @@ Immutable initializer CPY operand19hex flips the third record, x5D, not first
 x44. The former trace/fixture confused decimal19 with hexadecimal19. Existing
 absolute-cursor test identity retained; native decoder unchanged. Prior fixture
 is checks/implementation/contract-corrections/B16-before-flip.rs.
+
+## Modernization iteration014: canonical scene actor behavior
+
+Scene actor Bounce/WalkIn/Delay/MoveToMark/Settle/Settled now retain a native
+SceneActorState in the canonical ActorControl payload. Each moving behavior owns
+its named bounce/pause/wait counter and explicit entry or bounce progress. The
+gameplay dispatcher matches native SceneHandler identities and never masks raw
+actor progress or dispatches integer handler literals. There is no side session
+or retained source-byte twin. Initial scene placement and the actual scene owner
+select this context explicitly because handler0..5 also name ordinary enemies.
+Legacy-family entry switches context losslessly through the same actor owner.
+
+Original B412..B507 instructions were reread. Native entry preserves same-call
+initialization, ascent Y-before-gravity, descent gravity-before-Y, low-byte X
+thresholds, X-before-Y movement, byte-count zero wraps and exact80/tick80 move
+entry reset with frame/other-local preservation. Settle4/5 still only chooses5.
+Existing HandlerContinuation retains rebuild -> composition -> palette/control
+completion boundaries. Counter exhaustion never adds an extra yield.
+
+Source projections retain arbitrary initialized progress values, unusual bounce
+progress, flags and the untouched other-local byte for shared partial writes and
+debug compatibility. Normal scene updates retain native variants without repeated
+source decoding. All previous expectations are unchanged; added source-backed
+contracts cover every initialized progress code and zero/one/wrapped counters,
+all state-byte roundtrips across scene/family handoff and noncanonical bounce
+ordering. No original-emulator complete-scene route or physical platform run is
+claimed by these focused contracts and the retained baseline route.

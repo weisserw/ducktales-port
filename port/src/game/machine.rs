@@ -321,7 +321,7 @@ impl Machine {
         self.enter_lands();
     }
     pub(super) fn observe_calls(&self) -> serde_json::Value {
-        self.tasks.observe()
+        self.tasks.observe(&self.services)
     }
     pub(super) fn pending_level(&self) -> Option<&str> {
         self.pending_level.as_deref()
@@ -496,6 +496,42 @@ mod tests {
             foreground: Foreground::default(),
             player: PlayerCall::default(),
         }
+    }
+    #[test]
+    fn countdown_owner_preserves_warning_submission_and_next_call_death() {
+        // E28C/E2E6: composition owns warning cadence; the countdown owner
+        // commits its sound and next-call death into canonical services/player.
+        let mut machine = fixture();
+        machine.core.status.countdown = [0, 3, 0].into();
+        machine.core.status.divider = 1;
+        machine.services.video.composition.clock = 0;
+        assert!(matches!(
+            machine.owner(Work::Countdown),
+            OwnerStep::Complete(())
+        ));
+        assert_eq!(machine.core.status.countdown.display_codes(), [0, 2, 9]);
+        assert_eq!(
+            machine.services.commands.drain(),
+            vec![crate::status::WARNING_SOUND]
+        );
+        machine.core.status.countdown = [0, 0, 1].into();
+        machine.core.status.divider = 1;
+        machine.core.progression.late_route = 0x80;
+        machine.owner(Work::Countdown);
+        assert_eq!(
+            machine.core.status.countdown.display_codes(),
+            crate::status::EXPIRED
+        );
+        assert_eq!(machine.core.player.action, crate::player::Action::Hold);
+        assert!(machine.services.commands.drain().is_empty());
+        machine.owner(Work::Countdown);
+        assert_eq!(machine.core.player.action, crate::player::Action::Death);
+        assert_eq!(machine.core.progression.late_route, 0);
+        assert_eq!(machine.core.status.divider, crate::status::COUNTDOWN_PERIOD);
+        assert_eq!(
+            super::super::observation::status_value(&machine.core.status)["countdown"],
+            serde_json::json!(crate::status::EXPIRED)
+        );
     }
     #[test]
     fn immediate_owner_requests_finish_before_the_one_actual_yield_and_resume_same_tick() {

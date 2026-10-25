@@ -283,3 +283,44 @@ is introduced. Actual Game wiring must supply the display owner and initial NMI
 producer provenance. Focused regressions cover adjacent-channel control, an actual
 D9 inline-target selector reaching0449, and FE's retained high mask nibble being
 discarded by the next frame's four logical shifts.
+
+## Modernization018: immutable native sequence programs
+
+Catalog compiles both instruction roles for every imported resource location.
+PrimaryAction/SecondaryAction name note, timing, control, repeat, preset,
+modulation and stop/reset actions. Note carries a key and Standard/Alternate
+duration class; period-table selection resolves its wrapped source selector at
+import. Secondary note periods are compiled as whole native values. Playback executes these typed instructions instead of decoding opcodes,
+note classes, encoded target words or fetching operand bytes.
+
+Overlapping entries are intentional: the same byte may be a primary instruction,
+secondary instruction, operand or genuine preset/period data. Private immutable
+mixed asset bytes therefore remain for table/header consumers; they are never
+used by the playback instruction decoder. Compiled programs are the canonical
+instruction owner. Explicit add/prepend asset operations rebuild both roles,
+including file-authored audio overrides; there is no publicly mutable fragment
+vector or per-frame decode/cache refresh.
+
+Source-boundary operations preserve resource cursor and actual read provenance.
+AudioReadPrimaryByte892B selects the OLD cursor low byte before increment; every
+operand can thus affect a later low-F reset. AudioReadSecondaryByte advances
+without selecting that seed. Native operands retain these actual read events,
+including wrapFFFF->0000. Repeat equality advances over its destination without
+reading it. BranchTarget's missing-low/high forms preserve that conditional bounds
+behavior and partial read cursor effects without rejecting unused/truncated data
+at import. Unsupported entries remain explicit faults, never guessed actions.
+Channel packed projections remain for canonical reset aliases; their arithmetic
+and shared modulation/synthesizer ownership are unchanged.
+
+Independent reread: AudioSecondaryDecode858C..AudioReadSecondaryByte, primary
+86FA..896A, actual inline targets and loop branches883C/862A. Two pre-conversion
+contracts skip unavailable loop destination bytes. Native program contracts cover
+both overlapping format roles, source override recompilation and complete16-bit
+cursor wrapping. Earlier register/state/seed/PCM expectations are unchanged.
+
+modernize/audio-probe.{rs,py} captures240 configured NTSC ticks for each original56
+header and two command/preemption cases:13920 complete driver/register/alias
+frames and11117672 shared-APU mono PCM samples at48kHz. External alias data is an
+explicit deterministic fixture, not a fabricated original Game state. This
+bounded comparison supplements actual Game route and source-backed cross-owner
+contracts; it does not claim full soundtrack, original-emulator or device QA.

@@ -124,7 +124,7 @@ impl Fixture {
         actors[0].position.world_x = PLAYER_X;
         actors[0].position.screen_y = ACTOR_Y;
         actors[SUBJECT] = ActorContact {
-            state: READY,
+            control: crate::actors::ActorControl::from_codes(READY, 0, 0, selector),
             render: VISIBLE,
             handler: selector,
             direction: 1,
@@ -150,15 +150,11 @@ impl Fixture {
                 words: [2, 4, 6, 8],
             },
             status: Status {
-                reward: [BLANK; 6],
-                total: [BLANK; 7],
+                reward: [BLANK; 6].into(),
+                total: [BLANK; 7].into(),
                 lives: 1,
-                health: Health {
-                    segments: [segment; 5],
-                    end: 0,
-                    alternating: 0,
-                },
-                countdown: [0; 3],
+                health: Health::from_overlay([segment; 5], 0, 0),
+                countdown: [0; 3].into(),
                 divider: 0,
                 dirty: 0,
                 ui_pending: 0,
@@ -234,11 +230,17 @@ impl Fixture {
         &mut self.actors[SUBJECT]
     }
     fn init(&mut self) {
-        self.actor_mut().state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            self.actor_mut().set_state_code(actor_value);
+        };
     }
     fn full(&mut self) {
         for a in &mut self.actors {
-            a.state = ACTIVE;
+            {
+                let actor_value = ACTIVE;
+                a.set_state_code(actor_value);
+            };
         }
     }
 }
@@ -405,7 +407,7 @@ fn direct_culling_preserves_identity_and_distinguishes_render_and_retry_writes()
         let mut f = Fixture::new(selector);
         f.actor_mut().render = FLIP_X;
         f.run();
-        assert_eq!(f.actor().state, 0);
+        assert_eq!(f.actor().state_code(), 0);
         assert_eq!(f.actor().spawn_identity, Some(IDENTITY));
         assert_eq!(
             f.actor().render,
@@ -428,7 +430,7 @@ fn jumpwalker_first_call_initializes_faces_and_uses_horizontal_probe_for_launch(
     f.init();
     f.facts(&[0, CONTACT]);
     f.run();
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().state_code(), MOVING);
     assert_eq!(f.actor().vertical_velocity, BOUNCE_HEIGHT);
     assert_eq!(f.actor().horizontal_magnitude, 0x0100);
     assert_eq!(f.actor().direction, 1);
@@ -447,7 +449,7 @@ fn jumpwalker_floor_contact_alone_cannot_launch_and_nonzero_velocity_blocks_wall
         f.actor_mut().vertical_velocity = v;
         f.facts(&bits);
         f.run();
-        assert_eq!(f.actor().state, READY);
+        assert_eq!(f.actor().state_code(), READY);
         assert_eq!(f.actor().vertical_velocity, v);
     }
 }
@@ -455,18 +457,27 @@ fn jumpwalker_floor_contact_alone_cannot_launch_and_nonzero_velocity_blocks_wall
 fn jumpwalker_apex_falls_same_call_but_nonnegative_rise_resets_animation() {
     for negative in [false, true] {
         let mut f = Fixture::new(JUMP_WALKER);
-        f.actor_mut().state = MOVING;
-        f.actor_mut().animation_frame = 4;
-        f.actor_mut().animation_tick = 5;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let animation_value = 4;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 5;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         f.world.post_velocity = Some(if negative { -1 } else { 1 });
         f.run();
-        assert_eq!(f.actor().animation_frame, 0);
-        assert_eq!(f.actor().animation_tick, 0);
+        assert_eq!(f.actor().playback.frame_code(), 0);
+        assert_eq!(f.actor().playback.tick_code(), 0);
         assert_eq!(f.world.calls[0], motion(Movement::Rise, 0x21, 2));
         assert_eq!(f.world.calls.len(), if negative { 3 } else { 2 });
         if negative {
             assert_eq!(f.world.calls[1], motion(Movement::Fall, 0x1e, 2));
-            assert_eq!(f.actor().state, READY);
+            assert_eq!(f.actor().state_code(), READY);
         }
     }
 }
@@ -480,18 +491,27 @@ fn bouncewalker_initialization_reads_preset_zero_and_reverses_only_on_horizontal
     assert_eq!(f.actor().horizontal_magnitude, 0x025a);
     assert_eq!(f.actor().direction, 2);
     assert_eq!(f.actor().vertical_velocity, 0);
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
 }
 #[test]
 fn bouncewalker_airborne_clocks_reset_before_horizontal_and_floor_keeps_clocks() {
     for bits in [0, CONTACT] {
         let mut f = Fixture::new(BOUNCE_WALKER);
-        f.actor_mut().animation_frame = 4;
-        f.actor_mut().animation_tick = 5;
+        {
+            let animation_value = 4;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = 5;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         f.facts(&[bits, 0]);
         f.run();
         assert_eq!(
-            (f.actor().animation_frame, f.actor().animation_tick),
+            (
+                f.actor().playback.frame_code(),
+                f.actor().playback.tick_code()
+            ),
             if bits == 0 { (0, 0) } else { (4, 5) }
         );
     }
@@ -499,9 +519,18 @@ fn bouncewalker_airborne_clocks_reset_before_horizontal_and_floor_keeps_clocks()
 #[test]
 fn thrower_animation_child_inherits_selected_fields_and_preserves_stale_child_fields() {
     let mut f = Fixture::new(THROWER);
-    f.actor_mut().state = THROWING;
-    f.actor_mut().animation_frame = 1;
-    f.actor_mut().local_state = THROW_DURATION;
+    {
+        let actor_value = THROWING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let animation_value = 1;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
+    {
+        let actor_value = THROW_DURATION;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actor_mut().position.screen_y = 4;
     f.actor_mut().render = VISIBLE | FLIP_X;
     f.actors[CHILD].direction = 0x55;
@@ -519,12 +548,12 @@ fn thrower_animation_child_inherits_selected_fields_and_preserves_stale_child_fi
         )
     );
     assert_eq!(
-        (c.state, c.render, c.position.world_x),
+        (c.state_code(), c.render, c.position.world_x),
         (THROWING, VISIBLE | FLIP_X, ACTOR_X)
     );
     assert_eq!(c.position.screen_y, 0xfc);
     assert_eq!(c.horizontal_magnitude, 0x0200);
-    assert_eq!((c.animation_tick, c.animation_frame), (0, 0));
+    assert_eq!((c.playback.tick_code(), c.playback.frame_code()), (0, 0));
     assert_eq!(
         (
             c.direction,
@@ -535,7 +564,7 @@ fn thrower_animation_child_inherits_selected_fields_and_preserves_stale_child_fi
         (0x55, 0x22, Some(9), 0x1234)
     );
     assert_eq!(
-        (f.actor().local_counter, f.actor().local_state),
+        (f.actor().local_counter_code(), f.actor().local_state_code()),
         (1, THROW_DURATION - 1)
     );
     assert_eq!(e.sounds, vec![THROW_SOUND]);
@@ -553,31 +582,56 @@ fn thrower_low_nibble_frame_gate_full_pool_retry_and_duplicate_latch() {
         if full {
             f.full();
         }
-        f.actor_mut().state = THROWING;
-        f.actor_mut().animation_frame = frame;
-        f.actor_mut().local_counter = counter;
-        f.actor_mut().local_state = 3;
+        {
+            let actor_value = THROWING;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let animation_value = frame;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        {
+            let actor_value = counter;
+            f.actor_mut().set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = 3;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         let e = f.run();
         assert!(e.spawned.is_empty());
         assert!(e.sounds.is_empty());
-        assert_eq!(f.actor().local_counter, counter);
-        assert_eq!(f.actor().local_state, 2);
+        assert_eq!(f.actor().local_counter_code(), counter);
+        assert_eq!(f.actor().local_state_code(), 2);
     }
 }
 #[test]
 fn thrower_countdown_zero_wrap_and_expiry_preserve_persistent_bits_and_child_latch() {
     for (old, new, phase, anim) in [(0, 0xff, 0xb3, 0x16), (1, 0, 0xb1, 0x14)] {
         let mut f = Fixture::new(THROWER);
-        f.actor_mut().state = 0xb3;
+        {
+            let actor_value = 0xb3;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().animation = 0x16;
-        f.actor_mut().local_counter = 1;
-        f.actor_mut().local_state = old;
+        {
+            let actor_value = 1;
+            f.actor_mut().set_local_counter_code(actor_value);
+        };
+        {
+            let actor_value = old;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.run();
         assert_eq!(
-            (f.actor().local_state, f.actor().state, f.actor().animation),
+            (
+                f.actor().local_state_code(),
+                f.actor().state_code(),
+                f.actor().animation
+            ),
             (new, phase, anim)
         );
-        assert_eq!(f.actor().local_counter, 1);
+        assert_eq!(f.actor().local_counter_code(), 1);
     }
 }
 #[test]
@@ -590,17 +644,17 @@ fn thrower_distance_gate_is_strict_and_writes_restart_metadata() {
         if starts {
             assert_eq!(
                 (
-                    f.actor().state,
+                    f.actor().state_code(),
                     f.actor().animation,
-                    f.actor().animation_frame,
-                    f.actor().animation_tick,
-                    f.actor().animation_restart,
-                    f.actor().local_state
+                    f.actor().playback.frame_code(),
+                    f.actor().playback.tick_code(),
+                    f.actor().playback.restart_code(),
+                    f.actor().local_state_code()
                 ),
                 (THROWING, 0x16, RESTART_FRAME, 0, 1, THROW_DURATION)
             );
         } else {
-            assert_eq!(f.actor().state, READY);
+            assert_eq!(f.actor().state_code(), READY);
         }
     }
 }
@@ -609,18 +663,24 @@ fn thrower_horizontal_wall_precedes_proximity_and_prior_child_disables_new_throw
     let mut f = Fixture::new(THROWER);
     f.facts(&[CONTACT, CONTACT]);
     f.run();
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().state_code(), MOVING);
     assert_eq!(f.actor().vertical_velocity, BOUNCE_HEIGHT);
     let mut f = Fixture::new(THROWER);
-    f.actor_mut().local_counter = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.facts(&[CONTACT, 0]);
     f.run();
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
 }
 #[test]
 fn thrower_rise_apex_falls_in_same_call_and_airborne_pose_resets_clocks() {
     let mut f = Fixture::new(THROWER);
-    f.actor_mut().state = MOVING;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.world.post_velocity = Some(-1);
     f.run();
     assert_eq!(
@@ -630,8 +690,8 @@ fn thrower_rise_apex_falls_in_same_call_and_airborne_pose_resets_clocks() {
     assert_eq!(
         (
             f.actor().animation,
-            f.actor().animation_frame,
-            f.actor().animation_tick
+            f.actor().playback.frame_code(),
+            f.actor().playback.tick_code()
         ),
         (0x15, 0, 0)
     );
@@ -661,7 +721,7 @@ fn projectile_uses_flip_motion_then_contact_but_only_motion_collision_removes() 
             ]
         );
         assert_eq!(f.player.action, Action::Damage);
-        assert_eq!(f.actor().state, if bits == 0 { READY } else { 0 });
+        assert_eq!(f.actor().state_code(), if bits == 0 { READY } else { 0 });
         assert_eq!(
             f.actor().spawn_identity,
             if bits == 0 { Some(IDENTITY) } else { None }
@@ -676,12 +736,18 @@ fn randompose_exact_frame_includes_compare_carry_and_mutates_only_third_random_w
     ] {
         let mut f = Fixture::new(RANDOM_POSE);
         f.random.words = words;
-        f.actor_mut().animation_frame = 0x0c;
+        {
+            let animation_value = 0x0c;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         let e = f.run();
         assert_eq!(f.random.words, [words[0], words[1], expected, words[3]]);
         assert_eq!(f.actor().animation, pose);
         assert_eq!(
-            (f.actor().animation_tick, f.actor().animation_frame),
+            (
+                f.actor().playback.tick_code(),
+                f.actor().playback.frame_code()
+            ),
             (0, 0)
         );
         assert_eq!(e.sounds, if sound { vec![0x2a] } else { vec![] });
@@ -696,12 +762,15 @@ fn randompose_neighbor_frames_skip_rng_and_full_world_comparison_handles_equalit
     ] {
         let mut f = Fixture::new(RANDOM_POSE);
         f.actor_mut().position.world_x = x;
-        f.actor_mut().animation_frame = 0x0b;
+        {
+            let animation_value = 0x0b;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         let old = f.random;
         f.run();
         assert_eq!(f.random, old);
         assert_eq!(f.actor().render & FLIP_X != 0, flip);
-        assert_eq!(f.actor().animation_frame, 0x0b);
+        assert_eq!(f.actor().playback.frame_code(), 0x0b);
     }
 }
 #[test]
@@ -713,12 +782,15 @@ fn proximityrise_support_gate_controls_cooldown_and_strict_horizontal_threshold(
         (CONTACT, 0x31, 0, 0, MOVING),
     ] {
         let mut f = Fixture::new(PROXIMITY_RISE);
-        f.actor_mut().local_state = timer;
+        {
+            let actor_value = timer;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.actors[0].position.world_x = ACTOR_X + distance;
         f.facts(&[support]);
         f.run();
-        assert_eq!(f.actor().local_state, want);
-        assert_eq!(f.actor().state, phase);
+        assert_eq!(f.actor().local_state_code(), want);
+        assert_eq!(f.actor().state_code(), phase);
         assert_eq!(f.world.calls, vec![motion(Movement::NegativeY, 0x27, 0)]);
     }
 }
@@ -726,14 +798,17 @@ fn proximityrise_support_gate_controls_cooldown_and_strict_horizontal_threshold(
 fn proximityrise_stop_boundaries_are_y_b0_or_vertical_distance_below_eighteen_hex() {
     for (y, dy, stops) in [(0xaf, 0x18, false), (0xaf, 0x17, true), (0xb0, 0x18, true)] {
         let mut f = Fixture::new(PROXIMITY_RISE);
-        f.actor_mut().state = MOVING;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().position.screen_y = y;
         f.actors[0].position.screen_y = y - dy;
         f.run();
         assert_eq!(f.world.calls, vec![Work::Integrate(Integration::PositiveY)]);
         assert_eq!(f.actor().vertical_velocity, 0x0300);
-        assert_eq!(f.actor().state, if stops { READY } else { MOVING });
-        assert_eq!(f.actor().local_state, if stops { 0x96 } else { 0 });
+        assert_eq!(f.actor().state_code(), if stops { READY } else { MOVING });
+        assert_eq!(f.actor().local_state_code(), if stops { 0x96 } else { 0 });
     }
 }
 #[test]
@@ -756,12 +831,15 @@ fn contactpose_opening_gate_and_animation_twelve_relative_y_return() {
         (0x0b, 0x14, ACTOR_Y - 1, 1),
     ] {
         let mut f = Fixture::new(CONTACT_POSE);
-        f.actor_mut().state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().animation = animation;
         f.actor_mut().position.screen_y = actor_y;
         f.actors[0].position.world_x = ACTOR_X + distance;
         f.run();
-        assert_eq!(f.actor().animation_frame, frame);
+        assert_eq!(f.actor().playback.frame_code(), frame);
         if animation == 0x12 && actor_y < ACTOR_Y {
             assert!(f.world.calls.is_empty());
         } else {
@@ -776,8 +854,14 @@ fn contactpose_opening_gate_and_animation_twelve_relative_y_return() {
 fn contactpose_frame_two_sound_precedes_permission_and_eight_pixel_attach_boundary() {
     for (distance, action) in [(7, Action::Protected), (8, Action::Damage)] {
         let mut f = Fixture::new(CONTACT_POSE);
-        f.actor_mut().state = ACTIVE;
-        f.actor_mut().animation_frame = 2;
+        {
+            let actor_value = ACTIVE;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let animation_value = 2;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         f.actor_mut().animation = 0x12;
         f.actors[0].position.world_x = ACTOR_X + distance;
         f.world.permission = true;
@@ -793,9 +877,9 @@ fn contactpose_frame_two_sound_precedes_permission_and_eight_pixel_attach_bounda
             assert_eq!(f.actors[0].vertical_velocity, 0);
             assert_eq!(
                 (
-                    f.actor().state,
-                    f.actor().animation_frame,
-                    f.actor().animation_tick
+                    f.actor().state_code(),
+                    f.actor().playback.frame_code(),
+                    f.actor().playback.tick_code()
                 ),
                 (READY, 2, FROZEN_TICK)
             );
@@ -805,22 +889,34 @@ fn contactpose_frame_two_sound_precedes_permission_and_eight_pixel_attach_bounda
 #[test]
 fn contactpose_denied_contact_never_attaches_even_when_geometrically_near() {
     let mut f = Fixture::new(CONTACT_POSE);
-    f.actor_mut().state = ACTIVE;
-    f.actor_mut().animation_frame = 1;
+    {
+        let actor_value = ACTIVE;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let animation_value = 1;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
     f.actors[0].position.world_x = ACTOR_X;
     f.player.special_mode = 1;
     f.world.contact_action = Some(Action::Damage);
     f.run();
     assert_eq!(f.player.action, Action::Damage);
     assert_eq!(f.player.protection, 0);
-    assert_eq!(f.actor().state, ACTIVE);
+    assert_eq!(f.actor().state_code(), ACTIVE);
 }
 #[test]
 fn contactpose_second_offset_wraps_and_uses_second_pose_without_erasing_queue() {
     let mut f = Fixture::new(CONTACT_POSE);
-    f.actor_mut().state = ACTIVE;
+    {
+        let actor_value = ACTIVE;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().animation = 0x14;
-    f.actor_mut().animation_frame = 1;
+    {
+        let animation_value = 1;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
     f.actor_mut().position.screen_y = 0xf0;
     f.actors[0].position.world_x = ACTOR_X;
     f.player.queued = Some(Action::TerrainPose);
@@ -835,8 +931,11 @@ fn contactpose_release_exact_protection_eight_and_zero_have_different_effects() 
     for protection in [9, 8, 0] {
         let mut f = Fixture::new(CONTACT_POSE);
         f.actor_mut().animation = 0x12;
-        f.actor_mut().animation_frame = 2;
-        f.actor_mut().animation_tick = FROZEN_TICK;
+        {
+            let animation_value = 2;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        f.actor_mut().playback.freeze_at_start();
         f.actor_mut().render = VISIBLE | FLIP_X | 3;
         f.actors[0].render = VISIBLE | 3;
         f.player.protection = protection;
@@ -846,15 +945,15 @@ fn contactpose_release_exact_protection_eight_and_zero_have_different_effects() 
                 assert_eq!(f.actor().render, (VISIBLE & 0xfc) ^ FLIP_X);
                 assert_eq!(f.actor().animation, 0x13);
                 assert_eq!(e.sounds, vec![0x1a]);
-                assert_eq!(f.actor().state, READY);
+                assert_eq!(f.actor().state_code(), READY);
             }
             0 => {
-                assert_eq!(f.actor().state, ACTIVE);
+                assert_eq!(f.actor().state_code(), ACTIVE);
                 assert_eq!(f.actor().animation, 0x11);
                 assert_eq!(f.actor().render, VISIBLE | 3);
             }
             _ => {
-                assert_eq!(f.actor().animation_frame, 2);
+                assert_eq!(f.actor().playback.frame_code(), 2);
                 assert!(e.sounds.is_empty());
             }
         }
@@ -865,17 +964,23 @@ fn waitingjumper_initial_wait_expires_without_same_call_start_then_exact_frame_t
     let mut f = Fixture::new(WAITING_JUMPER);
     f.init();
     f.run();
-    assert_eq!(f.actor().local_state, 0x77);
+    assert_eq!(f.actor().local_state_code(), 0x77);
     assert_eq!(f.actor().horizontal_magnitude, 0x0200);
     assert!(f.world.calls.is_empty());
     for (timer, frame, moves) in [(1, 3, false), (0, 2, false), (0, 3, true)] {
         let mut f = Fixture::new(WAITING_JUMPER);
-        f.actor_mut().local_state = timer;
-        f.actor_mut().animation_frame = frame;
+        {
+            let actor_value = timer;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = frame;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         f.run();
         assert_eq!(!f.world.calls.is_empty(), moves);
         if moves {
-            assert_eq!(f.actor().state, MOVING);
+            assert_eq!(f.actor().state_code(), MOVING);
             assert_eq!(f.actor().animation, 0x2d);
             assert_ne!(f.actor().profile & ACTIVE, 0);
             assert_eq!(f.world.calls[0], motion(Movement::Fall, 6, 2));
@@ -885,21 +990,36 @@ fn waitingjumper_initial_wait_expires_without_same_call_start_then_exact_frame_t
 #[test]
 fn waitingjumper_positive_counter_rises_then_stores_negative_apex_without_falling() {
     let mut f = Fixture::new(WAITING_JUMPER);
-    f.actor_mut().state = MOVING;
-    f.actor_mut().local_counter = 1;
-    f.actor_mut().animation_frame = 3;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
+    {
+        let animation_value = 3;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
     f.world.post_velocity = Some(-0x100);
     f.run();
     assert_eq!(f.world.calls, vec![motion(Movement::Rise, 9, 2)]);
-    assert_eq!(f.actor().local_counter, 0xff);
+    assert_eq!(f.actor().local_counter_code(), 0xff);
     assert_eq!(f.actor().vertical_velocity, 0);
-    assert_eq!(f.actor().animation_tick, 0);
+    assert_eq!(f.actor().playback.tick_code(), 0);
 }
 #[test]
 fn waitingjumper_falling_negative_counter_lands_in_wait_pose_before_horizontal_and_hit() {
     let mut f = Fixture::new(WAITING_JUMPER);
-    f.actor_mut().state = MOVING;
-    f.actor_mut().local_counter = 0xff;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 0xff;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.actor_mut().hit_marker = 1;
     f.facts(&[CONTACT]);
     f.run();
@@ -907,9 +1027,9 @@ fn waitingjumper_falling_negative_counter_lands_in_wait_pose_before_horizontal_a
     assert_eq!(
         (
             f.actor().animation,
-            f.actor().local_state,
-            f.actor().local_counter,
-            f.actor().state
+            f.actor().local_state_code(),
+            f.actor().local_counter_code(),
+            f.actor().state_code()
         ),
         (0x42, 0x1e, 0, READY)
     );
@@ -918,7 +1038,10 @@ fn waitingjumper_falling_negative_counter_lands_in_wait_pose_before_horizontal_a
 fn waitingjumper_no_ground_suppresses_hit_but_grounded_tick_zero_sounds_before_reaction() {
     for support in [0, CONTACT] {
         let mut f = Fixture::new(WAITING_JUMPER);
-        f.actor_mut().state = MOVING;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().hit_marker = 1;
         f.facts(&[support, 0]);
         let e = f.run();
@@ -934,18 +1057,24 @@ fn waitingjumper_no_ground_suppresses_hit_but_grounded_tick_zero_sounds_before_r
 #[test]
 fn waitingjumper_obstruction_invokes_live_handler_eight_transition_and_launches() {
     let mut f = Fixture::new(WAITING_JUMPER);
-    f.actor_mut().state = MOVING;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().profile = 0x91;
     f.facts(&[CONTACT, CONTACT]);
     f.world.facts[1].actor = Some(7);
-    f.actors[7].handler = 8;
+    {
+        let actor_value = 8;
+        f.actors[7].set_handler(actor_value);
+    };
     let e = f.run();
     assert!(f.world.calls.contains(&Work::LaunchTerrain(7)));
     assert_eq!(
         (
             f.actor().animation,
             f.actor().vertical_velocity,
-            f.actor().local_counter,
+            f.actor().local_counter_code(),
             f.actor().direction,
             f.actor().profile
         ),
@@ -967,7 +1096,7 @@ fn presetflight_only_animation_eightyfive_honors_hit_and_skips_distance_audio() 
         } else {
             assert!(f.world.calls.is_empty());
             assert!(e.sounds.is_empty());
-            assert_eq!(f.actor().state, ACTIVE);
+            assert_eq!(f.actor().state_code(), ACTIVE);
         }
     }
 }
@@ -996,7 +1125,7 @@ fn presetflight_vertical_approach_uses_unsigned_difference_and_transitions_next_
         f.actor_mut().position.screen_y = actor_y;
         f.actors[0].position.screen_y = player_y;
         f.run();
-        assert_eq!(f.actor().state, if next { MOVING } else { READY });
+        assert_eq!(f.actor().state_code(), if next { MOVING } else { READY });
         assert_eq!(
             f.world.calls.last(),
             Some(&Work::Integrate(Integration::PositiveY))
@@ -1012,14 +1141,20 @@ fn presetflight_sequence_counter_wrap_cycle_parity_and_late_hold_durations() {
         (13, 1, 8, 0, 2),
     ] {
         let mut f = Fixture::new(PRESET_FLIGHT);
-        f.actor_mut().state = THROWING;
-        f.actor_mut().local_counter = counter;
+        {
+            let actor_value = THROWING;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let actor_value = counter;
+            f.actor_mut().set_local_counter_code(actor_value);
+        };
         f.actor_mut().local_aux2 = cycle;
         f.spawn.vertical_presets[0] = 0x0100;
         f.spawn.horizontal_presets[0] = 0xff80;
         f.run();
-        assert_eq!(f.actor().local_state, timer - 1);
-        assert_eq!(f.actor().local_counter, next);
+        assert_eq!(f.actor().local_state_code(), timer - 1);
+        assert_eq!(f.actor().local_counter_code(), next);
         assert_eq!(f.actor().local_aux2, aux);
         assert_eq!(f.actor().horizontal_magnitude, 0x0080);
     }
@@ -1028,14 +1163,23 @@ fn presetflight_sequence_counter_wrap_cycle_parity_and_late_hold_durations() {
 fn presetflight_even_phase_holds_timer_until_separation_twenty_hex_and_adds_signed_y_directly() {
     for (dy, counts) in [(0x1f, false), (0x20, true)] {
         let mut f = Fixture::new(PRESET_FLIGHT);
-        f.actor_mut().state = MOVING;
-        f.actor_mut().local_state = 3;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let actor_value = 3;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.actor_mut().vertical_velocity = -0x0080;
         f.actor_mut().position.y_fraction = 0x40;
         f.actors[0].position.screen_y = ACTOR_Y + dy;
         f.run();
-        assert_eq!(f.actor().local_state, if counts { 2 } else { 3 });
-        assert_eq!(f.actor().state, if counts { THROWING } else { MOVING });
+        assert_eq!(f.actor().local_state_code(), if counts { 2 } else { 3 });
+        assert_eq!(
+            f.actor().state_code(),
+            if counts { THROWING } else { MOVING }
+        );
         assert_eq!(
             (f.actor().position.screen_y, f.actor().position.y_fraction),
             (ACTOR_Y - 1, 0xc0)
@@ -1048,7 +1192,7 @@ fn paired_init_reuses_highest_active_matching_animation_at_exact_world_x_ignorin
     f.init();
     for slot in [6, CHILD] {
         f.actors[slot] = ActorContact {
-            state: ACTIVE,
+            control: crate::actors::ActorControl::from_codes(ACTIVE, 0, 0, 0),
             animation: 0x1d,
             position: Position {
                 world_x: ACTOR_X,
@@ -1061,7 +1205,7 @@ fn paired_init_reuses_highest_active_matching_animation_at_exact_world_x_ignorin
     let e = f.run();
     assert_eq!(f.actor().local_aux2, CHILD as u8);
     assert!(e.spawned.is_empty());
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
     assert!(f.world.calls.is_empty());
 }
 #[test]
@@ -1077,7 +1221,7 @@ fn paired_init_allocates_companion_preserving_render_identity_and_full_pool_link
     assert_eq!(
         (
             f.actors[CHILD].handler,
-            f.actors[CHILD].state,
+            f.actors[CHILD].state_code(),
             f.actors[CHILD].animation,
             f.actors[CHILD].profile,
             f.actors[CHILD].position.screen_y
@@ -1093,18 +1237,21 @@ fn paired_init_allocates_companion_preserving_render_identity_and_full_pool_link
     f.init();
     f.run();
     assert_eq!(f.actor().local_aux2, 0);
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
 }
 #[test]
 fn paired_live_link_handler_nine_triggers_even_when_link_inactive_or_player_zero() {
     let mut f = Fixture::new(PAIRED_CONTROLLER);
     f.actor_mut().local_aux2 = 0;
-    f.actors[0].handler = 9;
+    {
+        let actor_value = 9;
+        f.actors[0].set_handler(actor_value);
+    };
     let e = f.run();
     assert_eq!(
         (
             f.actor().animation,
-            f.actor().local_state,
+            f.actor().local_state_code(),
             f.actor().profile
         ),
         (0x31, 0x3c, 0)
@@ -1117,10 +1264,13 @@ fn paired_reaction_wait_old_one_does_not_launch_until_following_zero_call() {
     for timer in [1, 0] {
         let mut f = Fixture::new(PAIRED_CONTROLLER);
         f.actor_mut().animation = 0x31;
-        f.actor_mut().local_state = timer;
+        {
+            let actor_value = timer;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.run();
         if timer == 1 {
-            assert_eq!(f.actor().local_state, 0);
+            assert_eq!(f.actor().local_state_code(), 0);
             assert!(f.world.calls.is_empty());
         } else {
             assert_eq!(f.actor().animation, 0x32);
@@ -1132,9 +1282,15 @@ fn paired_reaction_wait_old_one_does_not_launch_until_following_zero_call() {
 fn paired_all_eight_phases_update_eligible_companion_and_decrement_new_duration_same_call() {
     for phase in 0..8 {
         let mut f = Fixture::new(PAIRED_CONTROLLER);
-        f.actor_mut().local_counter = phase;
+        {
+            let actor_value = phase;
+            f.actor_mut().set_local_counter_code(actor_value);
+        };
         f.actor_mut().local_aux2 = 7;
-        f.actors[7].state = ACTIVE;
+        {
+            let actor_value = ACTIVE;
+            f.actors[7].set_state_code(actor_value);
+        };
         f.actors[7].animation = 0x1d;
         f.actors[7].render = VISIBLE | FLIP_X;
         let e = f.run();
@@ -1145,7 +1301,7 @@ fn paired_all_eight_phases_update_eligible_companion_and_decrement_new_duration_
             (VISIBLE | FLIP_X) & !FLIP_X | f.catalog.companion_animation_flips[i]
         );
         assert_eq!(
-            f.actor().local_state,
+            f.actor().local_state_code(),
             if phase & 1 == 0 {
                 PAIR_WALK_DURATION - 1
             } else {
@@ -1163,12 +1319,15 @@ fn paired_all_eight_phases_update_eligible_companion_and_decrement_new_duration_
 #[test]
 fn paired_random_phase_selection_includes_lsr_carry_without_mutating_global_random() {
     let mut f = Fixture::new(PAIRED_CONTROLLER);
-    f.actor_mut().local_counter = 3;
+    {
+        let actor_value = 3;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.actor_mut().local_aux2 = 7;
     f.random.words = [0, 9, 0, 8];
     let old = f.random;
     f.run();
-    assert_eq!(f.actor().local_counter, 4);
+    assert_eq!(f.actor().local_counter_code(), 4);
     assert_eq!(f.random, old);
     assert_eq!(f.actor().direction, 0);
 }
@@ -1176,13 +1335,22 @@ fn paired_random_phase_selection_includes_lsr_carry_without_mutating_global_rand
 fn paired_ineligible_link_is_not_reanimated_and_existing_countdown_does_not_advance_phase() {
     let mut f = Fixture::new(PAIRED_CONTROLLER);
     f.actor_mut().local_aux2 = 7;
-    f.actor_mut().local_state = 2;
-    f.actor_mut().local_counter = 5;
+    {
+        let actor_value = 2;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
+    {
+        let actor_value = 5;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.actors[7].animation = 0x62;
     let old = f.actors[7];
     f.run();
     assert_eq!(f.actors[7], old);
-    assert_eq!((f.actor().local_counter, f.actor().local_state), (5, 1));
+    assert_eq!(
+        (f.actor().local_counter_code(), f.actor().local_state_code()),
+        (5, 1)
+    );
 }
 #[test]
 fn ledgewalkers_initialize_distinct_speed_and_apply_both_ledge_and_wall_reversals() {
@@ -1248,12 +1416,12 @@ fn ambush_wait_strict_twelve_pixel_gate_and_pose_thirtynine_skips_contact() {
         f.actors[0].position.world_x = ACTOR_X + distance;
         f.run();
         assert!(f.world.calls.is_empty());
-        assert_eq!(f.actor().state, if starts { READY } else { ACTIVE });
+        assert_eq!(f.actor().state_code(), if starts { READY } else { ACTIVE });
         if starts {
             assert_eq!(
                 (
-                    f.actor().local_state,
-                    f.actor().local_counter,
+                    f.actor().local_state_code(),
+                    f.actor().local_counter_code(),
                     f.actor().vertical_velocity
                 ),
                 (0x1e, 0, 0x0280)
@@ -1264,17 +1432,23 @@ fn ambush_wait_strict_twelve_pixel_gate_and_pose_thirtynine_skips_contact() {
 #[test]
 fn ambush_phase_one_countdown_expiry_returns_before_terrain_and_exact_pose_tick_changes() {
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().local_state = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actor().animation, 0x3c);
     assert_eq!(f.world.calls, vec![Work::PlayerContact]);
     let mut f = Fixture::new(AMBUSH);
     f.actor_mut().animation = 0x3c;
-    f.actor_mut().animation_tick = 8;
+    {
+        let animation_value = 8;
+        f.actor_mut().playback.set_tick_code(animation_value);
+    };
     f.actors[0].position.screen_y = ACTOR_Y + 0x28;
     f.run();
     assert_eq!(f.actor().animation, 0x3b);
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
     assert_eq!(
         f.world.calls,
         vec![Work::PlayerContact, motion(Movement::PositiveY, 0x40, 1)]
@@ -1293,14 +1467,20 @@ fn ambush_phase_one_contact_or_wrapped_difference_below_twenty_eight_advances() 
         f.actors[0].position.screen_y = player_y;
         f.facts(&[bits]);
         f.run();
-        assert_eq!(f.actor().state, if advances { MOVING } else { READY });
+        assert_eq!(
+            f.actor().state_code(),
+            if advances { MOVING } else { READY }
+        );
     }
 }
 #[test]
 fn ambush_phase_two_and_three_share_preset_body_with_signed_words_and_directional_ranges() {
     for phase in [MOVING, THROWING] {
         let mut f = Fixture::new(AMBUSH);
-        f.actor_mut().state = phase;
+        {
+            let actor_value = phase;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().direction = 2;
         f.actors[0].position.world_x = ACTOR_X + 0x40;
         f.spawn.vertical_presets[0] = -0x0180;
@@ -1317,19 +1497,28 @@ fn ambush_phase_two_and_three_share_preset_body_with_signed_words_and_directiona
                 motion(Movement::NegativeX, 0x3d, 2)
             ]
         );
-        assert_eq!(f.actor().local_state, if phase == MOVING { 3 } else { 2 });
+        assert_eq!(
+            f.actor().local_state_code(),
+            if phase == MOVING { 3 } else { 2 }
+        );
     }
 }
 #[test]
 fn ambush_vertical_and_horizontal_gate_can_advance_two_phases_in_same_call() {
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = MOVING;
-    f.actor_mut().local_state = 3;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 3;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actors[0].position.screen_y = ACTOR_Y + 0x50;
     f.actors[0].position.world_x = ACTOR_X + 0x0b;
     let e = f.run();
-    assert_eq!(f.actor().state, ACTIVE | 4);
-    assert_eq!(f.actor().local_state, 2);
+    assert_eq!(f.actor().state_code(), ACTIVE | 4);
+    assert_eq!(f.actor().local_state_code(), 2);
     assert_eq!(f.actor().animation, 0x3c);
     assert_eq!(f.actor().vertical_velocity, 0x0280);
     assert_eq!(e.sounds, vec![0x32, 0x1f]);
@@ -1337,44 +1526,62 @@ fn ambush_vertical_and_horizontal_gate_can_advance_two_phases_in_same_call() {
 #[test]
 fn ambush_preset_counter_wrap_and_early_timer_holds_preserve_phase_two() {
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = MOVING;
-    f.actor_mut().local_counter = 13;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let actor_value = 13;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.actors[0].position.world_x = ACTOR_X + 0x40;
     f.actors[0].position.screen_y = ACTOR_Y + 0x4f;
     f.run();
-    assert_eq!(f.actor().local_counter, 0);
-    assert_eq!(f.actor().local_state, 3);
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().local_counter_code(), 0);
+    assert_eq!(f.actor().local_state_code(), 3);
+    assert_eq!(f.actor().state_code(), MOVING);
 }
 #[test]
 fn ambush_attack_fall_landing_protects_profile_and_rest_expiry_restores_phase_two() {
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = ACTIVE | 4;
+    {
+        let actor_value = ACTIVE | 4;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().animation = 0x3c;
-    f.actor_mut().animation_tick = 8;
+    {
+        let animation_value = 8;
+        f.actor_mut().playback.set_tick_code(animation_value);
+    };
     f.facts(&[CONTACT]);
     let e = f.run();
     assert_eq!(
         (
             f.actor().animation,
-            f.actor().local_state,
+            f.actor().local_state_code(),
             f.actor().profile
         ),
         (0x39, 0x78, ACTIVE)
     );
     assert_eq!(e.sounds, vec![0x20]);
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = 0xb4;
+    {
+        let actor_value = 0xb4;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().animation = 0x39;
     f.actor_mut().profile = 0x91;
-    f.actor_mut().local_state = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(
         (
-            f.actor().state,
+            f.actor().state_code(),
             f.actor().animation,
             f.actor().profile,
-            f.actor().local_counter
+            f.actor().local_counter_code()
         ),
         (0xb2, 0x3b, 0x11, 0)
     );
@@ -1383,17 +1590,26 @@ fn ambush_attack_fall_landing_protects_profile_and_rest_expiry_restores_phase_tw
 #[test]
 fn ambush_zero_rest_timer_wraps_and_unsupported_tick_eight_switches_to_five_c_pose() {
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = ACTIVE | 4;
+    {
+        let actor_value = ACTIVE | 4;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().animation = 0x39;
     f.run();
-    assert_eq!(f.actor().local_state, 0xff);
+    assert_eq!(f.actor().local_state_code(), 0xff);
     let mut f = Fixture::new(AMBUSH);
-    f.actor_mut().state = ACTIVE | 4;
+    {
+        let actor_value = ACTIVE | 4;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().animation = 0x3c;
-    f.actor_mut().animation_tick = 8;
+    {
+        let animation_value = 8;
+        f.actor_mut().playback.set_tick_code(animation_value);
+    };
     f.run();
     assert_eq!(f.actor().animation, 0x5c);
-    assert_eq!(f.actor().state, ACTIVE | 4);
+    assert_eq!(f.actor().state_code(), ACTIVE | 4);
 }
 #[test]
 fn eruption_profile_uses_old_y_and_proximity_gate_leaves_distant_actor_inactive() {
@@ -1404,7 +1620,7 @@ fn eruption_profile_uses_old_y_and_proximity_gate_leaves_distant_actor_inactive(
         f.actors[0].position.world_x = ACTOR_X + 0x20;
         f.run();
         assert_eq!(f.actor().profile, profile);
-        assert_eq!(f.actor().state, ACTIVE);
+        assert_eq!(f.actor().state_code(), ACTIVE);
         assert!(f.world.calls.is_empty());
     }
 }
@@ -1413,7 +1629,10 @@ fn eruption_activation_uses_every_local_selector_and_integrates_before_gravity()
     for selector in 0..3 {
         let mut f = Fixture::new(ERUPTION);
         f.init();
-        f.actor_mut().local_state = selector;
+        {
+            let actor_value = selector;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.actor_mut().position.screen_y = 1;
         f.actors[0].position.world_x = ACTOR_X + 0x1f;
         f.run();
@@ -1425,9 +1644,9 @@ fn eruption_activation_uses_every_local_selector_and_integrates_before_gravity()
         );
         assert_eq!(
             (
-                f.actor().state,
+                f.actor().state_code(),
                 f.actor().local_aux2,
-                f.actor().animation_tick
+                f.actor().playback.tick_code()
             ),
             (READY, 1, FROZEN_TICK)
         );
@@ -1447,7 +1666,7 @@ fn eruption_negative_apex_zeroes_velocity_and_selects_frame_one() {
     f.run();
     assert_eq!(f.actor().motion_flags, 1);
     assert_eq!(f.actor().vertical_velocity, 0);
-    assert_eq!(f.actor().animation_frame, 1);
+    assert_eq!(f.actor().playback.frame_code(), 1);
 }
 #[test]
 fn eruption_rise_event_changes_palette_and_sound_even_when_full_pool() {
@@ -1455,9 +1674,15 @@ fn eruption_rise_event_changes_palette_and_sound_even_when_full_pool() {
         let mut f = Fixture::new(ERUPTION);
         if full {
             f.full();
-            f.actor_mut().state = READY;
+            {
+                let actor_value = READY;
+                f.actor_mut().set_state_code(actor_value);
+            };
         }
-        f.actor_mut().local_state = 0;
+        {
+            let actor_value = 0;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.actor_mut().local_aux2 = 7;
         let e = f.run();
         assert_eq!(e.palette_pair, Some([0x19, 0x27]));
@@ -1468,7 +1693,7 @@ fn eruption_rise_event_changes_palette_and_sound_even_when_full_pool() {
             let c = f.actors[CHILD];
             assert_eq!(
                 (
-                    c.state,
+                    c.state_code(),
                     c.render,
                     c.handler,
                     c.animation,
@@ -1500,7 +1725,7 @@ fn eruption_fall_gravity_precedes_integration_y_f0_starts_pause_and_preserves_pr
         (
             f.actor().position.screen_y,
             f.actor().position.y_fraction,
-            f.actor().local_counter
+            f.actor().local_counter_code()
         ),
         (0, 0, 0x78)
     );
@@ -1509,14 +1734,23 @@ fn eruption_fall_gravity_precedes_integration_y_f0_starts_pause_and_preserves_pr
 fn eruption_events_can_fire_during_pause_but_expiry_skips_event_and_preserves_persistent_state() {
     for counter in [2, 1] {
         let mut f = Fixture::new(ERUPTION);
-        f.actor_mut().state = 0xb1;
+        {
+            let actor_value = 0xb1;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().motion_flags = 1;
-        f.actor_mut().local_counter = counter;
+        {
+            let actor_value = counter;
+            f.actor_mut().set_local_counter_code(actor_value);
+        };
         f.actor_mut().local_aux2 = 0x29;
         let e = f.run();
         assert!(f.world.calls.is_empty());
         assert_eq!(f.actor().local_aux2, 0x2a);
-        assert_eq!(f.actor().state, if counter == 1 { 0xb0 } else { 0xb1 });
+        assert_eq!(
+            f.actor().state_code(),
+            if counter == 1 { 0xb0 } else { 0xb1 }
+        );
         assert_eq!(
             e.palette_pair,
             if counter == 1 {
@@ -1530,7 +1764,10 @@ fn eruption_events_can_fire_during_pause_but_expiry_skips_event_and_preserves_pe
 #[test]
 fn eruption_zero_event_selector_and_aux_wrap_never_spuriously_emit_palette_event() {
     let mut f = Fixture::new(ERUPTION);
-    f.actor_mut().local_state = 2;
+    {
+        let actor_value = 2;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actor_mut().local_aux2 = 0xff;
     let e = f.run();
     assert_eq!(f.actor().local_aux2, 0);
@@ -1543,10 +1780,13 @@ fn repeatingjump_initial_or_two_preserves_velocity_and_landing_launches_exact_fr
     f.actor_mut().vertical_velocity = 0x0134;
     f.facts(&[CONTACT, 0]);
     let e = f.run();
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
     assert_eq!(f.actor().vertical_velocity, REPEAT_JUMP_SPEED);
     assert_eq!(
-        (f.actor().animation_tick, f.actor().animation_frame),
+        (
+            f.actor().playback.tick_code(),
+            f.actor().playback.frame_code()
+        ),
         (0, 0)
     );
     assert!(e.sounds.is_empty());
@@ -1562,11 +1802,14 @@ fn repeatingjump_initial_or_two_preserves_velocity_and_landing_launches_exact_fr
 #[test]
 fn repeatingjump_rise_freezes_nonzero_frame_and_apex_advances_without_fall_same_call() {
     let mut f = Fixture::new(REPEATING_JUMP);
-    f.actor_mut().animation_frame = 1;
+    {
+        let animation_value = 1;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
     f.world.post_velocity = Some(-1);
     f.run();
-    assert_eq!(f.actor().animation_tick, FROZEN_TICK);
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().playback.tick_code(), FROZEN_TICK);
+    assert_eq!(f.actor().state_code(), MOVING);
     assert_eq!(
         f.world.calls,
         vec![
@@ -1580,29 +1823,35 @@ fn repeatingjump_rise_freezes_nonzero_frame_and_apex_advances_without_fall_same_
 fn companionpatrol_activation_strict_fifty_and_clears_state_bit_ten_hex() {
     for distance in [0x4f, 0x50] {
         let mut f = Fixture::new(COMPANION_PATROL);
-        f.actor_mut().state = 0xb0;
+        {
+            let actor_value = 0xb0;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actors[0].position.world_x = ACTOR_X + distance;
         f.facts(&[CONTACT, 0]);
         f.run();
         if distance == 0x50 {
-            assert_eq!(f.actor().state, 0xb0);
+            assert_eq!(f.actor().state_code(), 0xb0);
             assert!(f.world.calls.is_empty());
         } else {
-            assert_eq!(f.actor().state, 0xa1);
+            assert_eq!(f.actor().state_code(), 0xa1);
             assert_eq!(f.actor().horizontal_magnitude, 0x0133);
-            assert_eq!(f.actor().local_state, 0x4f);
+            assert_eq!(f.actor().local_state_code(), 0x4f);
         }
     }
 }
 #[test]
 fn companionpatrol_support_tests_all_bits_and_adds_y_two_before_horizontal() {
     let mut f = Fixture::new(COMPANION_PATROL);
-    f.actor_mut().local_state = 3;
+    {
+        let actor_value = 3;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.facts(&[SECONDARY, 0]);
     f.run();
     assert_eq!(f.actor().position.screen_y, ACTOR_Y + 2);
-    assert_eq!(f.actor().state, READY);
-    assert_eq!(f.actor().local_state, 2);
+    assert_eq!(f.actor().state_code(), READY);
+    assert_eq!(f.actor().local_state_code(), 2);
     assert_eq!(
         f.world.calls,
         vec![
@@ -1621,18 +1870,24 @@ fn companionpatrol_floor_loss_wall_or_timer_expiry_launch_and_full_pool_keeps_pa
     ] {
         let mut f = Fixture::new(COMPANION_PATROL);
         f.full();
-        f.actor_mut().state = READY;
-        f.actor_mut().local_state = timer;
+        {
+            let actor_value = READY;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let actor_value = timer;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
         f.facts(&facts);
         let e = f.run();
         assert_eq!(
             (
-                f.actor().state,
+                f.actor().state_code(),
                 f.actor().direction,
-                f.actor().local_state,
+                f.actor().local_state_code(),
                 f.actor().vertical_velocity,
                 f.actor().animation,
-                f.actor().animation_tick
+                f.actor().playback.tick_code()
             ),
             (MOVING, 2, 0x50, BOUNCE_HEIGHT, 0x56, FROZEN_TICK)
         );
@@ -1643,7 +1898,10 @@ fn companionpatrol_floor_loss_wall_or_timer_expiry_launch_and_full_pool_keeps_pa
 #[test]
 fn companionpatrol_effect_child_copies_post_adjusted_parent_y_and_preserves_stale_identity() {
     let mut f = Fixture::new(COMPANION_PATROL);
-    f.actor_mut().local_state = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actors[CHILD].spawn_identity = Some(9);
     f.facts(&[CONTACT, 0]);
     let e = f.run();
@@ -1651,7 +1909,7 @@ fn companionpatrol_effect_child_copies_post_adjusted_parent_y_and_preserves_stal
     assert_eq!(e.spawned, vec![CHILD]);
     assert_eq!(
         (
-            c.state,
+            c.state_code(),
             c.render,
             c.animation,
             c.handler,
@@ -1665,14 +1923,20 @@ fn companionpatrol_effect_child_copies_post_adjusted_parent_y_and_preserves_stal
 #[test]
 fn companionpatrol_arc_apex_advances_frame_and_landing_returns_two_states_with_y_one() {
     let mut f = Fixture::new(COMPANION_PATROL);
-    f.actor_mut().state = MOVING;
-    f.actor_mut().animation_frame = 1;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
+    {
+        let animation_value = 1;
+        f.actor_mut().playback.set_frame_code(animation_value);
+    };
     f.world.post_velocity = Some(-1);
     f.run();
     assert_eq!(
         (
-            f.actor().state,
-            f.actor().animation_frame,
+            f.actor().state_code(),
+            f.actor().playback.frame_code(),
             f.actor().vertical_velocity
         ),
         (THROWING, 2, 0)
@@ -1682,12 +1946,15 @@ fn companionpatrol_arc_apex_advances_frame_and_landing_returns_two_states_with_y
         vec![Work::PlayerContact, motion(Movement::Rise, 0x2f, 1)]
     );
     let mut f = Fixture::new(COMPANION_PATROL);
-    f.actor_mut().state = THROWING;
+    {
+        let actor_value = THROWING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.facts(&[CONTACT]);
     f.run();
     assert_eq!(
         (
-            f.actor().state,
+            f.actor().state_code(),
             f.actor().animation,
             f.actor().position.screen_y
         ),
@@ -1704,8 +1971,8 @@ fn timedpatrol_first_interval_and_motion_before_reversal_differ_from_vertical_fl
         let mut f = Fixture::new(selector);
         f.init();
         f.run();
-        assert_eq!(f.actor().local_state, 0x15);
-        assert_eq!(f.actor().state, READY);
+        assert_eq!(f.actor().local_state_code(), 0x15);
+        assert_eq!(f.actor().state_code(), READY);
         assert_eq!(f.world.calls[0], Work::PlayerContact);
         assert_eq!(
             f.world.calls[1],
@@ -1723,11 +1990,14 @@ fn patrol_expiry_moves_old_direction_then_changes_direction_and_zero_timer_wraps
     for selector in [TIMED_PATROL, VERTICAL_PATROL] {
         for timer in [1, 0] {
             let mut f = Fixture::new(selector);
-            f.actor_mut().local_state = timer;
+            {
+                let actor_value = timer;
+                f.actor_mut().set_local_state_code(actor_value);
+            };
             f.run();
             assert_eq!(f.actor().direction, if timer == 1 { 2 } else { 1 });
             assert_eq!(
-                f.actor().local_state,
+                f.actor().local_state_code(),
                 if timer == 1 {
                     if selector == TIMED_PATROL { 0x20 } else { 0x2c }
                 } else {
@@ -1750,7 +2020,10 @@ fn verticalpatrol_does_not_resynchronize_flip_after_first_initialization() {
     let mut f = Fixture::new(VERTICAL_PATROL);
     f.actor_mut().direction = 2;
     f.actor_mut().render = VISIBLE | FLIP_X;
-    f.actor_mut().local_state = 2;
+    {
+        let actor_value = 2;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.run();
     assert_eq!(f.actor().render, VISIBLE | FLIP_X);
     assert_eq!(f.world.calls[1], Work::Integrate(Integration::PositiveY));
@@ -1760,12 +2033,15 @@ fn triggeredjump_distant_init_freezes_animation_and_clears_flip_without_initiali
     let mut f = Fixture::new(TRIGGERED_JUMP);
     f.init();
     f.actor_mut().render = VISIBLE | FLIP_X;
-    f.actor_mut().animation_tick = 7;
+    {
+        let animation_value = 7;
+        f.actor_mut().playback.set_tick_code(animation_value);
+    };
     f.actors[0].position.world_x = ACTOR_X + 0x32;
     f.run();
-    assert_eq!(f.actor().state, ACTIVE);
+    assert_eq!(f.actor().state_code(), ACTIVE);
     assert_eq!(f.actor().render, VISIBLE);
-    assert_eq!(f.actor().animation_tick, 0);
+    assert_eq!(f.actor().playback.tick_code(), 0);
     assert!(f.world.calls.is_empty());
 }
 #[test]
@@ -1774,7 +2050,7 @@ fn triggeredjump_initial_direction_one_means_negative_horizontal_and_clear_path_
     f.init();
     f.actors[0].position.world_x = ACTOR_X + 0x31;
     f.run();
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().state_code(), MOVING);
     assert_eq!(f.actor().vertical_velocity, PATROL_JUMP_SPEED);
     assert_eq!(f.actor().horizontal_magnitude, 0x0180);
     assert_eq!(
@@ -1788,28 +2064,34 @@ fn triggeredjump_wall_change_freezes_tick_and_keeps_patrol_phase() {
     f.facts(&[CONTACT]);
     f.actor_mut().render = VISIBLE | FLIP_X;
     f.run();
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
     assert_eq!(f.actor().direction, 2);
     assert_eq!(f.actor().render, VISIBLE);
-    assert_eq!(f.actor().animation_tick, 0);
+    assert_eq!(f.actor().playback.tick_code(), 0);
 }
 #[test]
 fn triggeredjump_rise_apex_and_landing_keep_source_phase_three_without_invented_patrol_reset() {
     let mut f = Fixture::new(TRIGGERED_JUMP);
-    f.actor_mut().state = MOVING;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.world.post_velocity = Some(-1);
     f.run();
-    assert_eq!(f.actor().state, THROWING);
+    assert_eq!(f.actor().state_code(), THROWING);
     assert_eq!(f.actor().vertical_velocity, 0);
     assert_eq!(
         f.world.calls,
         vec![Work::PlayerContact, motion(Movement::Rise, 0x53, 0)]
     );
     let mut f = Fixture::new(TRIGGERED_JUMP);
-    f.actor_mut().state = THROWING;
+    {
+        let actor_value = THROWING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.facts(&[CONTACT, 0]);
     let e = f.run();
-    assert_eq!(f.actor().state, THROWING);
+    assert_eq!(f.actor().state_code(), THROWING);
     assert_eq!(e.sounds, vec![0x27]);
     assert_eq!(
         f.world.calls,
@@ -1825,11 +2107,14 @@ fn leftwalker_initializes_and_moves_only_on_floor_with_sound_only_tick_zero() {
     for (floor, tick) in [(0, 0), (CONTACT, 0), (CONTACT, 1)] {
         let mut f = Fixture::new(LEFT_WALKER);
         f.init();
-        f.actor_mut().animation_tick = tick;
+        {
+            let animation_value = tick;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         f.facts(&[floor]);
         let e = f.run();
         assert_eq!(f.actor().horizontal_magnitude, 0x0180);
-        assert_eq!(f.actor().state, READY);
+        assert_eq!(f.actor().state_code(), READY);
         assert_eq!(
             f.world.calls[..2],
             [Work::PlayerContact, motion(Movement::Fall, 0x31, 2)]
@@ -1857,7 +2142,7 @@ fn approach_init_preserves_vertical_and_far_phase_only_moves_horizontally() {
     f.run();
     assert_eq!(f.actor().vertical_velocity, 0x1234);
     assert_eq!(f.actor().horizontal_magnitude, 0x01cc);
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
     assert_eq!(f.world.calls, vec![motion(Movement::PositiveX, 0x18, 2)]);
 }
 #[test]
@@ -1867,7 +2152,7 @@ fn approach_proximity_starts_downward_phase_and_contact_initializes_jump_pose() 
         f.actor_mut().horizontal_magnitude = 0x01cc;
         f.facts(&[contact]);
         let e = f.run();
-        assert_eq!(f.actor().state, MOVING);
+        assert_eq!(f.actor().state_code(), MOVING);
         assert_eq!(f.world.calls, vec![motion(Movement::PositiveY, 0x1e, 2)]);
         if contact == 0 {
             assert_eq!(f.actor().vertical_velocity, 0x01cc);
@@ -1894,14 +2179,20 @@ fn approach_motion_eight_waits_exact_frame_two_and_saves_horizontal_bits_across_
         (2, CONTACT, THROWING, 0),
     ] {
         let mut f = Fixture::new(APPROACH);
-        f.actor_mut().state = MOVING;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().motion_flags = 8;
         f.actor_mut().animation = 0x4d;
-        f.actor_mut().animation_frame = frame;
+        {
+            let animation_value = frame;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         f.world.post_velocity = Some(-1);
         f.facts(&[wall, 0]);
         f.run();
-        assert_eq!(f.actor().state, next_state);
+        assert_eq!(f.actor().state_code(), next_state);
         assert_eq!(f.actor().motion_flags, next_motion);
         if frame == 1 {
             assert!(f.world.calls.is_empty());
@@ -1915,7 +2206,7 @@ fn approach_motion_eight_waits_exact_frame_two_and_saves_horizontal_bits_across_
             );
             if wall == 0 {
                 assert_eq!(f.actor().vertical_velocity, 0);
-                assert_eq!(f.actor().animation_tick, FROZEN_TICK);
+                assert_eq!(f.actor().playback.tick_code(), FROZEN_TICK);
             } else {
                 assert_eq!(f.actor().vertical_velocity, 0x01cc);
                 assert_eq!(f.actor().animation, 0x4c);
@@ -1926,7 +2217,10 @@ fn approach_motion_eight_waits_exact_frame_two_and_saves_horizontal_bits_across_
 #[test]
 fn approach_non_four_d_pose_skips_frame_gate_but_nonnegative_rise_keeps_motion_eight() {
     let mut f = Fixture::new(APPROACH);
-    f.actor_mut().state = MOVING;
+    {
+        let actor_value = MOVING;
+        f.actor_mut().set_state_code(actor_value);
+    };
     f.actor_mut().motion_flags = 8;
     f.actor_mut().animation = 0x4c;
     f.actor_mut().direction = 2;
@@ -1950,26 +2244,41 @@ fn approach_falling_without_floor_moves_horizontal_but_landing_waits_for_pose_co
         (CONTACT, 0x4e, 0, 1, true),
     ] {
         let mut f = Fixture::new(APPROACH);
-        f.actor_mut().state = MOVING;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().motion_flags = 4;
         f.actor_mut().animation = animation;
-        f.actor_mut().animation_frame = frame;
-        f.actor_mut().animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         f.facts(&[floor, 0]);
         let e = f.run();
         assert_eq!(f.world.calls.len(), if waiting { 1 } else { 2 });
         if floor != 0 && animation != 0x4e {
-            assert_eq!((f.actor().animation, f.actor().animation_tick), (0x4e, 1));
+            assert_eq!(
+                (f.actor().animation, f.actor().playback.tick_code()),
+                (0x4e, 1)
+            );
             assert_eq!(e.sounds, vec![0x24]);
         }
-        assert_eq!(f.actor().state, MOVING);
+        assert_eq!(f.actor().state_code(), MOVING);
     }
 }
 #[test]
 fn approach_landing_facing_comparison_restores_old_direction_and_branches_on_temporary_result() {
     for (old, changed) in [(1, false), (2, true)] {
         let mut f = Fixture::new(APPROACH);
-        f.actor_mut().state = MOVING;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().motion_flags = 4;
         f.actor_mut().animation = 0x4e;
         f.actor_mut().direction = old;
@@ -1979,7 +2288,7 @@ fn approach_landing_facing_comparison_restores_old_direction_and_branches_on_tem
         if changed {
             assert_eq!(
                 (
-                    f.actor().state,
+                    f.actor().state_code(),
                     f.actor().motion_flags,
                     f.actor().animation,
                     f.actor().vertical_velocity,
@@ -1990,10 +2299,10 @@ fn approach_landing_facing_comparison_restores_old_direction_and_branches_on_tem
         } else {
             assert_eq!(
                 (
-                    f.actor().state,
+                    f.actor().state_code(),
                     f.actor().motion_flags,
                     f.actor().animation,
-                    f.actor().animation_frame,
+                    f.actor().playback.frame_code(),
                     f.actor().vertical_velocity
                 ),
                 (MOVING, 8, 0x4d, 2, PATROL_JUMP_SPEED)
@@ -2005,7 +2314,10 @@ fn approach_landing_facing_comparison_restores_old_direction_and_branches_on_tem
 fn approach_state_three_height_gate_is_strict_eighty_eight_and_contact_wins() {
     for (y, bits, advance) in [(0x88, 0, false), (0x87, 0, true), (0x88, CONTACT, true)] {
         let mut f = Fixture::new(APPROACH);
-        f.actor_mut().state = THROWING;
+        {
+            let actor_value = THROWING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().position.screen_y = y;
         f.facts(&[bits]);
         f.run();
@@ -2017,7 +2329,10 @@ fn approach_state_three_height_gate_is_strict_eighty_eight_and_contact_wins() {
 fn approach_state_three_horizontal_wall_requests_extra_upward_probe_without_gravity() {
     for wall in [0, CONTACT] {
         let mut f = Fixture::new(APPROACH);
-        f.actor_mut().state = THROWING;
+        {
+            let actor_value = THROWING;
+            f.actor_mut().set_state_code(actor_value);
+        };
         f.actor_mut().motion_flags = 1;
         f.facts(&[wall, 0]);
         f.run();
@@ -2038,29 +2353,35 @@ fn timedstealer_each_selector_loads_own_interval_and_pause_one_consumes_whole_ca
             f.actor().local_aux2,
             f.catalog.stealer_intervals[usize::from(selector - 0x30)]
         );
-        assert_eq!(f.actor().local_state, f.actor().local_aux2 - 1);
+        assert_eq!(f.actor().local_state_code(), f.actor().local_aux2 - 1);
         assert_eq!(f.actor().horizontal_magnitude, 0x0100);
     }
     let mut f = Fixture::new(FIRST_TIMED_STEALER);
-    f.actor_mut().local_counter = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_counter_code(actor_value);
+    };
     f.world.permission = true;
     f.run();
-    assert_eq!(f.actor().local_counter, 0);
+    assert_eq!(f.actor().local_counter_code(), 0);
     assert!(f.world.calls.is_empty());
     assert_eq!(f.status.dirty, 0);
 }
 #[test]
 fn timedstealer_contact_mutates_upper_three_digits_before_same_actor_timer_decrement() {
     let mut f = Fixture::new(FIRST_TIMED_STEALER);
-    f.actor_mut().local_state = 5;
+    {
+        let actor_value = 5;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actor_mut().local_aux2 = 4;
-    f.status.reward = [BLANK, 1, 0, 0, 0, 0];
+    f.status.reward = [BLANK, 1, 0, 0, 0, 0].into();
     f.world.permission = true;
     let e = f.run();
-    assert_eq!(f.status.reward, [BLANK, BLANK, 9, 0, 0, 0]);
+    assert_eq!(f.status.reward.display_codes(), [BLANK, BLANK, 9, 0, 0, 0]);
     assert_eq!(f.status.dirty, 1);
-    assert_eq!(f.actor().local_state, 5);
-    assert_eq!(f.actor().local_counter, 0);
+    assert_eq!(f.actor().local_state_code(), 5);
+    assert_eq!(f.actor().local_counter_code(), 0);
     assert_eq!(e.thefts, 1);
     assert_eq!(
         f.world.calls,
@@ -2070,20 +2391,26 @@ fn timedstealer_contact_mutates_upper_three_digits_before_same_actor_timer_decre
 #[test]
 fn timedstealer_repeated_permission_steals_repeatedly_and_underflow_still_delays_countdown() {
     let mut f = Fixture::new(FIRST_TIMED_STEALER);
-    f.actor_mut().local_state = 1;
-    f.status.reward = [BLANK; 6];
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
+    f.status.reward = [BLANK; 6].into();
     f.world.permission = true;
     f.run();
     f.run();
-    assert_eq!(f.status.reward, [BLANK; 6]);
+    assert_eq!(f.status.reward.display_codes(), [BLANK; 6]);
     assert_eq!(f.status.dirty, 2);
-    assert_eq!(f.actor().local_state, 1);
-    assert_eq!(f.actor().local_counter, 0);
+    assert_eq!(f.actor().local_state_code(), 1);
+    assert_eq!(f.actor().local_counter_code(), 0);
 }
 #[test]
 fn timedstealer_denied_contact_can_reverse_and_double_interval_with_byte_wrap() {
     let mut f = Fixture::new(SECOND_TIMED_STEALER);
-    f.actor_mut().local_state = 1;
+    {
+        let actor_value = 1;
+        f.actor_mut().set_local_state_code(actor_value);
+    };
     f.actor_mut().local_aux2 = 0x80;
     f.actor_mut().direction = 2;
     let e = f.run();
@@ -2094,8 +2421,8 @@ fn timedstealer_denied_contact_can_reverse_and_double_interval_with_byte_wrap() 
     assert_eq!(
         (
             f.actor().direction,
-            f.actor().local_counter,
-            f.actor().local_state
+            f.actor().local_counter_code(),
+            f.actor().local_state_code()
         ),
         (1, THIEF_PAUSE, 0)
     );
@@ -2110,18 +2437,18 @@ fn jumpingstealer_initialization_uses_named_selector_one_recipe_not_normal_walke
     f.geometry.velocity_presets = [0x025a, 0x07a9];
     f.run();
     assert_eq!(f.actor().horizontal_magnitude, 0x07a9);
-    assert_eq!(f.actor().local_state, 0);
+    assert_eq!(f.actor().local_state_code(), 0);
     assert_eq!(f.actor().direction, 1);
-    assert_eq!(f.actor().state, READY);
+    assert_eq!(f.actor().state_code(), READY);
 }
 #[test]
 fn jumpingstealer_permission_latches_same_actor_and_skips_further_contact_and_theft() {
     let mut f = Fixture::new(JUMPING_STEALER);
-    f.status.reward = [BLANK, 1, 0, 0, 0, 0];
+    f.status.reward = [BLANK, 1, 0, 0, 0, 0].into();
     f.world.permission = true;
     let first = f.run();
-    assert_eq!(f.actor().local_state, 1);
-    assert_eq!(f.status.reward, [BLANK, BLANK, 9, 0, 0, 0]);
+    assert_eq!(f.actor().local_state_code(), 1);
+    assert_eq!(f.status.reward.display_codes(), [BLANK, BLANK, 9, 0, 0, 0]);
     assert_eq!(first.thefts, 1);
     f.world.calls.clear();
     let second = f.run();
@@ -2135,10 +2462,10 @@ fn jumpingstealer_uses_horizontal_contact_for_jump_after_theft_without_direction
     f.world.permission = true;
     f.facts(&[0, CONTACT]);
     f.run();
-    assert_eq!(f.actor().state, MOVING);
+    assert_eq!(f.actor().state_code(), MOVING);
     assert_eq!(f.actor().vertical_velocity, BOUNCE_HEIGHT);
     assert_eq!(f.actor().direction, 1);
-    assert_eq!(f.actor().local_state, 1);
+    assert_eq!(f.actor().local_state_code(), 1);
     assert_eq!(
         f.world.calls,
         vec![
@@ -2152,20 +2479,35 @@ fn jumpingstealer_uses_horizontal_contact_for_jump_after_theft_without_direction
 fn jumpingstealer_nonnegative_rise_clears_clocks_and_apex_falls_same_call() {
     for negative in [false, true] {
         let mut f = Fixture::new(JUMPING_STEALER);
-        f.actor_mut().state = MOVING;
-        f.actor_mut().local_state = 1;
-        f.actor_mut().animation_tick = 7;
-        f.actor_mut().animation_frame = 2;
+        {
+            let actor_value = MOVING;
+            f.actor_mut().set_state_code(actor_value);
+        };
+        {
+            let actor_value = 1;
+            f.actor_mut().set_local_state_code(actor_value);
+        };
+        {
+            let animation_value = 7;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
+        {
+            let animation_value = 2;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
         f.world.post_velocity = Some(if negative { -1 } else { 1 });
         f.run();
         assert_eq!(f.world.calls[0], motion(Movement::Rise, 0x21, 2));
         assert_eq!(f.world.calls.len(), if negative { 3 } else { 2 });
         if negative {
             assert_eq!(f.world.calls[1], motion(Movement::Fall, 0x1e, 2));
-            assert_eq!(f.actor().state, READY);
+            assert_eq!(f.actor().state_code(), READY);
         }
         assert_eq!(
-            (f.actor().animation_tick, f.actor().animation_frame),
+            (
+                f.actor().playback.tick_code(),
+                f.actor().playback.frame_code()
+            ),
             (0, 0)
         );
     }
@@ -2189,7 +2531,10 @@ fn launcher_excluded_player_states_precede_all_visibility_hit_and_animation_work
         f.init();
         f.actor_mut().render = 0;
         f.actor_mut().hit_marker = 1;
-        f.actor_mut().animation_tick = 4;
+        {
+            let animation_value = 4;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         let old = f.actors;
         f.run();
         assert_eq!(f.actors, old);
@@ -2217,7 +2562,7 @@ fn launcher_permission_overrides_immediate_damage_and_keeps_queued_reaction_prot
         (LAUNCH_HORIZONTAL, LAUNCH_SPEED, 0)
     );
     assert_eq!(
-        (f.actor().state, f.actor().animation_tick),
+        (f.actor().state_code(), f.actor().playback.tick_code()),
         (READY, HELD_LAUNCH_TICKS)
     );
     assert_eq!(e.sounds, vec![0x28]);
@@ -2226,16 +2571,25 @@ fn launcher_permission_overrides_immediate_damage_and_keeps_queued_reaction_prot
 fn launcher_denied_contact_only_freezes_tick_and_used_actor_only_holds_finished_animation() {
     let mut f = Fixture::new(PLAYER_LAUNCHER);
     f.init();
-    f.actor_mut().animation_tick = 4;
+    {
+        let animation_value = 4;
+        f.actor_mut().playback.set_tick_code(animation_value);
+    };
     f.run();
-    assert_eq!(f.actor().animation_tick, 0);
-    assert_eq!(f.actor().state, ACTIVE);
+    assert_eq!(f.actor().playback.tick_code(), 0);
+    assert_eq!(f.actor().state_code(), ACTIVE);
     for (frame, tick, want) in [(0, 0, FROZEN_TICK), (1, 0, 0), (0, 1, 1)] {
         let mut f = Fixture::new(PLAYER_LAUNCHER);
-        f.actor_mut().animation_frame = frame;
-        f.actor_mut().animation_tick = tick;
+        {
+            let animation_value = frame;
+            f.actor_mut().playback.set_frame_code(animation_value);
+        };
+        {
+            let animation_value = tick;
+            f.actor_mut().playback.set_tick_code(animation_value);
+        };
         f.run();
-        assert_eq!(f.actor().animation_tick, want);
+        assert_eq!(f.actor().playback.tick_code(), want);
         assert!(f.world.calls.is_empty());
     }
 }
@@ -2249,10 +2603,10 @@ fn contactpose_release_animation_ff_wrap_falls_through_to_phase_decrement() {
     let e = f.run();
     assert_eq!(
         (
-            f.actor().state,
+            f.actor().state_code(),
             f.actor().animation,
-            f.actor().animation_frame,
-            f.actor().animation_tick
+            f.actor().playback.frame_code(),
+            f.actor().playback.tick_code()
         ),
         (ACTIVE, 0xff, 0, 0)
     );
@@ -2269,8 +2623,39 @@ fn proximity_invisible_hit_culls_before_hit_animation_and_shared_reaction() {
     f.actor_mut().animation = 0x55;
     let effects = f.run();
     assert_eq!(
-        (f.actor().state, f.actor().render, f.actor().animation),
+        (
+            f.actor().state_code(),
+            f.actor().render,
+            f.actor().animation
+        ),
         (0, 0x40, 0x55)
     );
     assert!(effects.work.is_empty());
+}
+
+#[test]
+fn ambush_tracking_vertical_gate_matches_all_byte_height_pairs() {
+    // 9885..989E subtracts playerY-actorY without borrow then compares its
+    // high nibble against50. Over byte heights this is exactly a gap >=80.
+    for actor_y in [0u8, 0x60, u8::MAX] {
+        for player_y in 0..=u8::MAX {
+            let mut f = Fixture::new(AMBUSH);
+            f.actor_mut().set_state_code(MOVING);
+            f.actor_mut().set_local_state_code(3);
+            f.actor_mut().position.screen_y = actor_y;
+            {
+                let animation_value = 1;
+                f.actor_mut().playback.set_tick_code(animation_value);
+            };
+            f.actors[0].position.screen_y = player_y;
+            f.actors[0].position.world_x = ACTOR_X + 0x40;
+            f.run();
+            let advances = player_y >= actor_y && (player_y - actor_y) & 0xf0 >= 0x50;
+            assert_eq!(
+                f.actor().state_code(),
+                if advances { THROWING } else { MOVING }
+            );
+            assert_eq!(f.actor().local_state_code(), if advances { 2 } else { 3 });
+        }
+    }
 }
