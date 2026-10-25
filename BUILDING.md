@@ -287,3 +287,12 @@ Only `web-dist/` is uploaded; reference trees, QA evidence and source are exclud
 Generated files remain ignored. A failed build does not deploy a replacement site.
 `run.py` finds the sibling ROMAtlas checkout by default; `ROMATLAS_ROOT` can
 override its Python toolkit location, but Cargo still needs the sibling layout.
+
+The Pages builder also installs the local `scripts/browser-gamepads.mjs` adapter.
+It accepts controllers without a browser standard mapping, preserves default
+left-stick controls, and exposes extra buttons/axes for rebinding. Settings
+capture reads every detected controller independently of player assignments and
+waits for initially held controls to be released. Raw device layouts vary; use
+Settings to map devices whose button ordering differs from the standard layout.
+Run `node scripts/test-browser-gamepads.mjs` after building to check the adapter
+and generated shell with simulated standard/raw controllers.

@@ -47,6 +47,8 @@ jobs:
           fi
       - name: Build static browser bundle
         run: python3 ducktales/scripts/build-pages.py
+      - name: Verify browser controller support
+        run: node ducktales/scripts/test-browser-gamepads.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
