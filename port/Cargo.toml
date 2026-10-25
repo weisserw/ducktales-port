@@ -15,7 +15,7 @@ web = ["dep:wasm-bindgen"]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-romatlas-port = { path = "/root/romatlas/crates/romatlas-port" }
+romatlas-port = { path = "../../romatlas/crates/romatlas-port" }
 anyhow = "1.0"
 serde_json = "1.0"
 wasm-bindgen = { version = "=0.2.129", optional = true }

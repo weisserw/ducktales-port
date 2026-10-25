@@ -257,3 +257,33 @@ synthetic browser tests are separate from game fidelity work.
 
 See README.md, EXTENSIONS.md and debug/api.md for shared Game controls, local
 asset delivery, original-only manifests and deterministic debug/checkpoint APIs.
+
+## GitHub Pages deployment
+
+`.github/workflows/pages.yml` builds and deploys the browser game on every push
+to `main`, or via Actions → Build and deploy browser port → Run workflow.
+In repository Settings → Pages, select **GitHub Actions** as the build source
+before the first deployment. The expected address is
+`https://weisserw.github.io/ducktales-port/`.
+
+The workflow checks out ROMAtlas at the exact revision named in the workflow,
+installs Rust 1.90.0 and wasm-bindgen 0.2.129, and builds with Cargo.lock.
+Both repositories must be siblings (`ducktales/` and `romatlas/`); Cargo uses
+that relative dependency path. Update the pinned toolkit revision deliberately
+when adopting shared runtime changes.
+
+To build the same static site locally with that layout:
+
+```sh
+python3 scripts/build-pages.py
+python3 -m http.server 8000 --directory web-dist
+```
+
+Unlike the development server bundle alone, this command adds `rom` and
+`config.json` to `web-dist/`, verifies the ROM against `workspace.json`, and
+makes the generated shell URLs relative for project subpaths. The published
+site includes the tracked `input/game.rom`, which browsers download at startup.
+Only `web-dist/` is uploaded; reference trees, QA evidence and source are excluded.
+Generated files remain ignored. A failed build does not deploy a replacement site.
+`run.py` finds the sibling ROMAtlas checkout by default; `ROMATLAS_ROOT` can
+override its Python toolkit location, but Cargo still needs the sibling layout.

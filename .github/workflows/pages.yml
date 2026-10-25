@@ -1,0 +1,69 @@
+name: Build and deploy browser port
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out game
+        uses: actions/checkout@v6
+        with:
+          path: ducktales
+      - name: Check out pinned ROMAtlas runtime and browser tools
+        uses: actions/checkout@v6
+        with:
+          repository: weisserw/romatlas
+          ref: 58f54a43c38770d3b45680c43dcddc78be07ccb9
+          path: romatlas
+      - name: Install Rust and Wasm target
+        run: |
+          rustup toolchain install 1.90.0 --profile minimal --target wasm32-unknown-unknown
+          rustup default 1.90.0
+      - name: Cache Rust build and binding tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            romatlas/tools/wasm-bindgen
+            ducktales/port/target
+          key: pages-${{ runner.os }}-rust-1.90.0-bindgen-0.2.129-${{ hashFiles('ducktales/port/Cargo.lock') }}
+      - name: Install matching Wasm bindings generator
+        shell: bash
+        run: |
+          if [[ ! -x romatlas/tools/wasm-bindgen/bin/wasm-bindgen ]] || [[ "$(romatlas/tools/wasm-bindgen/bin/wasm-bindgen --version)" != 'wasm-bindgen 0.2.129' ]]; then
+            cargo +1.90.0 install wasm-bindgen-cli --version 0.2.129 --locked --root "$GITHUB_WORKSPACE/romatlas/tools/wasm-bindgen"
+          fi
+      - name: Build static browser bundle
+        run: python3 ducktales/scripts/build-pages.py
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ducktales/web-dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v4

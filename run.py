@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import runpy, sys
+import os, runpy, sys
 from pathlib import Path
-toolkit = Path('/root/romatlas')
 workspace = Path(__file__).resolve().parent
+toolkit = Path(os.environ.get("ROMATLAS_ROOT", workspace.parent / "romatlas")).resolve()
 sys.path.insert(0, str(toolkit / "scripts"))
 if len(sys.argv) < 2:
     sys.argv.append("instructions")
