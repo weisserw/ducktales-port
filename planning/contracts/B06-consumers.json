@@ -1,0 +1,4217 @@
+{
+  "version": 1,
+  "area": "B06",
+  "source_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "primary_and_related_region_count": 91,
+  "assigned_unit_count": 104,
+  "note": "Independent actual source trace player/trace.md; this mechanical consumer cross-index does not prove semantics. Original IDs/ranges/dispositions unchanged. All17 targets traced; B14 damage body and selector10 delegated, B15 selectorF delegated. Source external writer families retain their separate required workers.",
+  "regions": [
+    {
+      "ledger_id": "region-335",
+      "offset": 123748,
+      "length": 8,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16599"
+      ],
+      "units": [
+        {
+          "id": "region-335/unit-0",
+          "label": "UpdatePlayerProtection",
+          "offset": 123748,
+          "length": 12,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-336",
+      "offset": 123756,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16611"
+      ],
+      "units": [
+        {
+          "id": "region-336/unit-0",
+          "label": "UpdatePlayerProtection",
+          "offset": 123748,
+          "length": 12,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-337",
+      "offset": 123760,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16619"
+      ],
+      "units": [
+        {
+          "id": "region-337/unit-0",
+          "label": "UpdatePlayerSpecialMode",
+          "offset": 123760,
+          "length": 39,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-338",
+      "offset": 123764,
+      "length": 35,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16629"
+      ],
+      "units": [
+        {
+          "id": "region-338/unit-0",
+          "label": "UpdatePlayerSpecialMode",
+          "offset": 123760,
+          "length": 39,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-339",
+      "offset": 123799,
+      "length": 15,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16653"
+      ],
+      "units": [
+        {
+          "id": "region-339/unit-0",
+          "label": "DispatchPlayerState",
+          "offset": 123799,
+          "length": 15,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-620",
+      "offset": 123814,
+      "length": 34,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16667"
+      ],
+      "units": [
+        {
+          "id": "region-620/unit-0",
+          "label": "PlayerStateHandlerPointers_1E3A6",
+          "offset": 123814,
+          "length": 34,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-340",
+      "offset": 123848,
+      "length": 16,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16673"
+      ],
+      "units": [
+        {
+          "id": "region-340/unit-0",
+          "label": "PlayerStandingEntry",
+          "offset": 123848,
+          "length": 19,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-341",
+      "offset": 123864,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16689"
+      ],
+      "units": [
+        {
+          "id": "region-341/unit-0",
+          "label": "PlayerStandingEntry",
+          "offset": 123848,
+          "length": 19,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-342",
+      "offset": 123867,
+      "length": 7,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16696"
+      ],
+      "units": [
+        {
+          "id": "region-342/unit-0",
+          "label": "PlayerStandingAction",
+          "offset": 123867,
+          "length": 33,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-343",
+      "offset": 123874,
+      "length": 26,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16707"
+      ],
+      "units": [
+        {
+          "id": "region-343/unit-0",
+          "label": "PlayerStandingAction",
+          "offset": 123867,
+          "length": 33,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-344",
+      "offset": 123900,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16724"
+      ],
+      "units": [
+        {
+          "id": "region-344/unit-0",
+          "label": "PlayerJumpEdge",
+          "offset": 123900,
+          "length": 25,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-345",
+      "offset": 123906,
+      "length": 19,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16735"
+      ],
+      "units": [
+        {
+          "id": "region-345/unit-0",
+          "label": "PlayerJumpEdge",
+          "offset": 123900,
+          "length": 25,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-346",
+      "offset": 123925,
+      "length": 13,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16748"
+      ],
+      "units": [
+        {
+          "id": "region-346/unit-0",
+          "label": "PlayerIdleAnimation",
+          "offset": 123925,
+          "length": 31,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-347",
+      "offset": 123938,
+      "length": 15,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16762"
+      ],
+      "units": [
+        {
+          "id": "region-347/unit-0",
+          "label": "PlayerIdleAnimation",
+          "offset": 123925,
+          "length": 31,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-348",
+      "offset": 123953,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16774"
+      ],
+      "units": [
+        {
+          "id": "region-348/unit-0",
+          "label": "PlayerIdleAnimation",
+          "offset": 123925,
+          "length": 31,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-349",
+      "offset": 123956,
+      "length": 39,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16781"
+      ],
+      "units": [
+        {
+          "id": "region-349/unit-0",
+          "label": "PlayerCrouchOrWalk",
+          "offset": 123956,
+          "length": 39,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-350",
+      "offset": 123995,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16808"
+      ],
+      "units": [
+        {
+          "id": "region-350/unit-0",
+          "label": "PlayerWalkCollisionGate",
+          "offset": 123995,
+          "length": 6,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1224",
+      "offset": 124001,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16819"
+      ],
+      "units": [
+        {
+          "id": "region-1224/unit-0",
+          "label": "PlayerMomentumAnimationDelay",
+          "offset": 124001,
+          "length": 24,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-351",
+      "offset": 124025,
+      "length": 25,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16838"
+      ],
+      "units": [
+        {
+          "id": "region-351/unit-0",
+          "label": "PlayerWalkAnimation",
+          "offset": 124025,
+          "length": 25,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-352",
+      "offset": 124050,
+      "length": 36,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16860"
+      ],
+      "units": [
+        {
+          "id": "region-352/unit-0",
+          "label": "PlayerHorizontalMotionMode",
+          "offset": 124050,
+          "length": 36,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-353",
+      "offset": 124086,
+      "length": 106,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16885"
+      ],
+      "units": [
+        {
+          "id": "region-353/unit-0",
+          "label": "PlayerMomentumDeceleration",
+          "offset": 124086,
+          "length": 106,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1225",
+      "offset": 124192,
+      "length": 17,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16945"
+      ],
+      "units": [
+        {
+          "id": "region-1225/unit-0",
+          "label": "SetPlayerFacingFromRightBit",
+          "offset": 124192,
+          "length": 17,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1299",
+      "offset": 124209,
+      "length": 8,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16961"
+      ],
+      "units": [
+        {
+          "id": "region-1299/unit-0",
+          "label": "CapturePlayerMomentumDirection",
+          "offset": 124209,
+          "length": 8,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-354",
+      "offset": 124217,
+      "length": 40,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:16973"
+      ],
+      "units": [
+        {
+          "id": "region-354/unit-0",
+          "label": "PlayerMomentumAcceleration",
+          "offset": 124217,
+          "length": 40,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-355",
+      "offset": 124257,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17000"
+      ],
+      "units": [
+        {
+          "id": "region-355/unit-0",
+          "label": "PlayerExternalHorizontalStep",
+          "offset": 124257,
+          "length": 39,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-356",
+      "offset": 124261,
+      "length": 35,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17010"
+      ],
+      "units": [
+        {
+          "id": "region-356/unit-0",
+          "label": "PlayerExternalHorizontalStep",
+          "offset": 124257,
+          "length": 39,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-357",
+      "offset": 124296,
+      "length": 47,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17031"
+      ],
+      "units": [
+        {
+          "id": "region-357/unit-0",
+          "label": "PlayerMovePositiveX",
+          "offset": 124296,
+          "length": 47,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-358",
+      "offset": 124343,
+      "length": 35,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17062"
+      ],
+      "units": [
+        {
+          "id": "region-358/unit-0",
+          "label": "ResolvePlayerHorizontalOverlap",
+          "offset": 124343,
+          "length": 35,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1226",
+      "offset": 124378,
+      "length": 38,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17087"
+      ],
+      "units": [
+        {
+          "id": "region-1226/unit-0",
+          "label": "PlayerPositiveXObjectPush",
+          "offset": 124378,
+          "length": 38,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-359",
+      "offset": 124416,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17112"
+      ],
+      "units": [
+        {
+          "id": "region-359/unit-0",
+          "label": "RecordActualPlayerDirection",
+          "offset": 124416,
+          "length": 24,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-360",
+      "offset": 124440,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17133"
+      ],
+      "units": [
+        {
+          "id": "region-360/unit-0",
+          "label": "ProbePlayerHorizontalTerrain",
+          "offset": 124440,
+          "length": 28,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-361",
+      "offset": 124449,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17146"
+      ],
+      "units": [
+        {
+          "id": "region-361/unit-0",
+          "label": "ProbePlayerHorizontalTerrain",
+          "offset": 124440,
+          "length": 28,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-362",
+      "offset": 124451,
+      "length": 17,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17153"
+      ],
+      "units": [
+        {
+          "id": "region-362/unit-0",
+          "label": "ProbePlayerHorizontalTerrain",
+          "offset": 124440,
+          "length": 28,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-363",
+      "offset": 124468,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17167"
+      ],
+      "units": [
+        {
+          "id": "region-363/unit-0",
+          "label": "AlignPlayerHorizontalTerrain",
+          "offset": 124468,
+          "length": 15,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1227",
+      "offset": 124477,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17179"
+      ],
+      "units": [
+        {
+          "id": "region-1227/unit-0",
+          "label": "PlayerHorizontalMotionJoin",
+          "offset": 124477,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-364",
+      "offset": 124480,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17188"
+      ],
+      "units": [
+        {
+          "id": "region-364/unit-0",
+          "label": "AlignPlayerHorizontalTerrain",
+          "offset": 124468,
+          "length": 15,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-365",
+      "offset": 124483,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17195"
+      ],
+      "units": [
+        {
+          "id": "region-365/unit-0",
+          "label": "ReturnPlayerHorizontalCollision",
+          "offset": 124483,
+          "length": 6,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1277",
+      "offset": 124489,
+      "length": 2,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17207"
+      ],
+      "units": [
+        {
+          "id": "region-1277/unit-0",
+          "label": "PlayerFacingBitValues",
+          "offset": 124489,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-366",
+      "offset": 124491,
+      "length": 14,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17214"
+      ],
+      "units": [
+        {
+          "id": "region-366/unit-0",
+          "label": "PlayerAirborneEntry",
+          "offset": 124491,
+          "length": 38,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-367",
+      "offset": 124505,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17228"
+      ],
+      "units": [
+        {
+          "id": "region-367/unit-0",
+          "label": "PlayerAirborneEntry",
+          "offset": 124491,
+          "length": 38,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-368",
+      "offset": 124529,
+      "length": 54,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17245"
+      ],
+      "units": [
+        {
+          "id": "region-368/unit-0",
+          "label": "PlayerLandingGate",
+          "offset": 124529,
+          "length": 54,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-369",
+      "offset": 124583,
+      "length": 7,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17280"
+      ],
+      "units": [
+        {
+          "id": "region-369/unit-0",
+          "label": "PlayerPogoHeightGate",
+          "offset": 124583,
+          "length": 7,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-370",
+      "offset": 124590,
+      "length": 80,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17291"
+      ],
+      "units": [
+        {
+          "id": "region-370/unit-0",
+          "label": "PlayerLandOrPogo",
+          "offset": 124590,
+          "length": 80,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-371",
+      "offset": 124670,
+      "length": 19,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17335"
+      ],
+      "units": [
+        {
+          "id": "region-371/unit-0",
+          "label": "PlayerLeaveSpecialAnimation",
+          "offset": 124670,
+          "length": 19,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-372",
+      "offset": 124689,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17351"
+      ],
+      "units": [
+        {
+          "id": "region-372/unit-0",
+          "label": "PlayerAirborneBoundaryChecks",
+          "offset": 124689,
+          "length": 24,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-373",
+      "offset": 124713,
+      "length": 37,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17371"
+      ],
+      "units": [
+        {
+          "id": "region-373/unit-0",
+          "label": "PlayerDescendRoom",
+          "offset": 124713,
+          "length": 37,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1278",
+      "offset": 124750,
+      "length": 2,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17400"
+      ],
+      "units": [
+        {
+          "id": "region-1278/unit-0",
+          "label": "PlayerClimbThresholds",
+          "offset": 124750,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-374",
+      "offset": 124752,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17407"
+      ],
+      "units": [
+        {
+          "id": "region-374/unit-0",
+          "label": "PlayerUpwardRoomProbe",
+          "offset": 124752,
+          "length": 19,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-375",
+      "offset": 124758,
+      "length": 13,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17418"
+      ],
+      "units": [
+        {
+          "id": "region-375/unit-0",
+          "label": "PlayerUpwardRoomProbe",
+          "offset": 124752,
+          "length": 19,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-862",
+      "offset": 124771,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17430"
+      ],
+      "units": [
+        {
+          "id": "region-862/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124771,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-863",
+      "offset": 124773,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17439"
+      ],
+      "units": [
+        {
+          "id": "region-863/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124773,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-864",
+      "offset": 124775,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17445"
+      ],
+      "units": [
+        {
+          "id": "region-864/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124775,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-865",
+      "offset": 124777,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17451"
+      ],
+      "units": [
+        {
+          "id": "region-865/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124777,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-866",
+      "offset": 124779,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17457"
+      ],
+      "units": [
+        {
+          "id": "region-866/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124779,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-867",
+      "offset": 124782,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17464"
+      ],
+      "units": [
+        {
+          "id": "region-867/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124782,
+          "length": 1,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-868",
+      "offset": 124783,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17470"
+      ],
+      "units": [
+        {
+          "id": "region-868/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124783,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-869",
+      "offset": 124786,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17476"
+      ],
+      "units": [
+        {
+          "id": "region-869/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124786,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-870",
+      "offset": 124788,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17482"
+      ],
+      "units": [
+        {
+          "id": "region-870/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124788,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-871",
+      "offset": 124790,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17488"
+      ],
+      "units": [
+        {
+          "id": "region-871/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124790,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-872",
+      "offset": 124792,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17494"
+      ],
+      "units": [
+        {
+          "id": "region-872/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124792,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-873",
+      "offset": 124794,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17500"
+      ],
+      "units": [
+        {
+          "id": "region-873/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124794,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-874",
+      "offset": 124796,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17506"
+      ],
+      "units": [
+        {
+          "id": "region-874/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124796,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-875",
+      "offset": 124798,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17512"
+      ],
+      "units": [
+        {
+          "id": "region-875/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124798,
+          "length": 1,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-876",
+      "offset": 124799,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17519"
+      ],
+      "units": [
+        {
+          "id": "region-876/unit-0",
+          "label": "FindPlayerClimbAlignment",
+          "offset": 124799,
+          "length": 2,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-376",
+      "offset": 124801,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17525"
+      ],
+      "units": [
+        {
+          "id": "region-376/unit-0",
+          "label": "PlayerUpwardProbeReturn",
+          "offset": 124801,
+          "length": 1,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1228",
+      "offset": 124802,
+      "length": 116,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17534"
+      ],
+      "units": [
+        {
+          "id": "region-1228/unit-0",
+          "label": "AlignPlayerToClimbCell",
+          "offset": 124802,
+          "length": 116,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1279",
+      "offset": 124918,
+      "length": 4,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17597"
+      ],
+      "units": [
+        {
+          "id": "region-1279/unit-0",
+          "label": "PlayerGridAlignmentOffsets",
+          "offset": 124918,
+          "length": 4,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-377",
+      "offset": 124922,
+      "length": 21,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17604"
+      ],
+      "units": [
+        {
+          "id": "region-377/unit-0",
+          "label": "PlayerForcedJumpInput",
+          "offset": 124922,
+          "length": 25,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-378",
+      "offset": 124943,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17623"
+      ],
+      "units": [
+        {
+          "id": "region-378/unit-0",
+          "label": "PlayerForcedJumpInput",
+          "offset": 124922,
+          "length": 25,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-379",
+      "offset": 124947,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17631"
+      ],
+      "units": [
+        {
+          "id": "region-379/unit-0",
+          "label": "PlayerForcedJumpContinue",
+          "offset": 124947,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1229",
+      "offset": 124950,
+      "length": 114,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17640"
+      ],
+      "units": [
+        {
+          "id": "region-1229/unit-0",
+          "label": "UpdatePlayerClimbing",
+          "offset": 124950,
+          "length": 25,
+          "area": "B06"
+        },
+        {
+          "id": "region-1229/unit-1",
+          "label": "MovePlayerAlongClimbSurface",
+          "offset": 124975,
+          "length": 78,
+          "area": "B06"
+        },
+        {
+          "id": "region-1229/unit-2",
+          "label": "LeavePlayerClimbState",
+          "offset": 125053,
+          "length": 11,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-380",
+      "offset": 125064,
+      "length": 80,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17708"
+      ],
+      "units": [
+        {
+          "id": "region-380/unit-0",
+          "label": "PlayerRoomTransition",
+          "offset": 125064,
+          "length": 80,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1230",
+      "offset": 125144,
+      "length": 26,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17759"
+      ],
+      "units": [
+        {
+          "id": "region-1230/unit-0",
+          "label": "CommitVerticalRoomTransition",
+          "offset": 125144,
+          "length": 26,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-381",
+      "offset": 125170,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17779"
+      ],
+      "units": [
+        {
+          "id": "region-381/unit-0",
+          "label": "PlayerRoomTransitionReturn",
+          "offset": 125170,
+          "length": 1,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1280",
+      "offset": 125171,
+      "length": 8,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17788"
+      ],
+      "units": [
+        {
+          "id": "region-1280/unit-0",
+          "label": "PlayerTransitionAdjustments",
+          "offset": 125171,
+          "length": 8,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1231",
+      "offset": 125179,
+      "length": 133,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17795"
+      ],
+      "units": [
+        {
+          "id": "region-1231/unit-0",
+          "label": "UpdatePlayerSwing",
+          "offset": 125179,
+          "length": 47,
+          "area": "B06"
+        },
+        {
+          "id": "region-1231/unit-1",
+          "label": "ResolvePlayerSwingImpact",
+          "offset": 125226,
+          "length": 62,
+          "area": "B06"
+        },
+        {
+          "id": "region-1231/unit-2",
+          "label": "FinishPlayerBlockedSwing",
+          "offset": 125288,
+          "length": 24,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-382",
+      "offset": 125312,
+      "length": 133,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17872"
+      ],
+      "units": [
+        {
+          "id": "region-382/unit-0",
+          "label": "PlayerVerticalPhysics",
+          "offset": 125312,
+          "length": 133,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-383",
+      "offset": 125445,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17943"
+      ],
+      "units": [
+        {
+          "id": "region-383/unit-0",
+          "label": "CorrectPlayerVerticalPenetration",
+          "offset": 125445,
+          "length": 9,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-384",
+      "offset": 125454,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17955"
+      ],
+      "units": [
+        {
+          "id": "region-384/unit-0",
+          "label": "CheckPlayerVerticalTerrainResult",
+          "offset": 125454,
+          "length": 9,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-385",
+      "offset": 125463,
+      "length": 14,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17967"
+      ],
+      "units": [
+        {
+          "id": "region-385/unit-0",
+          "label": "StopPlayerVerticalMotion",
+          "offset": 125463,
+          "length": 14,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-386",
+      "offset": 125477,
+      "length": 30,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:17980"
+      ],
+      "units": [
+        {
+          "id": "region-386/unit-0",
+          "label": "PlayerAirborneAnimationGate",
+          "offset": 125477,
+          "length": 30,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-387",
+      "offset": 125507,
+      "length": 8,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18003"
+      ],
+      "units": [
+        {
+          "id": "region-387/unit-0",
+          "label": "PlayerPreserveDirectionalPose",
+          "offset": 125507,
+          "length": 8,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-388",
+      "offset": 125515,
+      "length": 102,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18015"
+      ],
+      "units": [
+        {
+          "id": "region-388/unit-0",
+          "label": "SelectPlayerAirborneAnimation",
+          "offset": 125515,
+          "length": 35,
+          "area": "B06"
+        },
+        {
+          "id": "region-388/unit-1",
+          "label": "ProbePlayerVerticalTerrain",
+          "offset": 125550,
+          "length": 67,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-389",
+      "offset": 125617,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18078"
+      ],
+      "units": [
+        {
+          "id": "region-389/unit-0",
+          "label": "AlignPlayerUpperTerrain",
+          "offset": 125617,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-390",
+      "offset": 125620,
+      "length": 15,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18087"
+      ],
+      "units": [
+        {
+          "id": "region-390/unit-0",
+          "label": "RestorePlayerCollisionState",
+          "offset": 125620,
+          "length": 15,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1281",
+      "offset": 125635,
+      "length": 6,
+      "kind": "Data",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18104"
+      ],
+      "units": [
+        {
+          "id": "region-1281/unit-0",
+          "label": "PlayerVerticalMotionParameters",
+          "offset": 125635,
+          "length": 6,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1232",
+      "offset": 125641,
+      "length": 201,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18111"
+      ],
+      "units": [
+        {
+          "id": "region-1232/unit-0",
+          "label": "UpdatePlayerProtectedMotion",
+          "offset": 125641,
+          "length": 71,
+          "area": "B06"
+        },
+        {
+          "id": "region-1232/unit-1",
+          "label": "StartPlayerDamageArc",
+          "offset": 125712,
+          "length": 79,
+          "area": "B06"
+        },
+        {
+          "id": "region-1232/unit-2",
+          "label": "EnterPlayerDeathArc",
+          "offset": 125791,
+          "length": 15,
+          "area": "B06"
+        },
+        {
+          "id": "region-1232/unit-3",
+          "label": "ApplyDamageOverlayRule",
+          "offset": 125806,
+          "length": 36,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-391",
+      "offset": 125842,
+      "length": 33,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18226"
+      ],
+      "units": [
+        {
+          "id": "region-391/unit-0",
+          "label": "PlayerSnowLikePose",
+          "offset": 125842,
+          "length": 33,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-392",
+      "offset": 125875,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18249"
+      ],
+      "units": [
+        {
+          "id": "region-392/unit-0",
+          "label": "PlayerPoseJump",
+          "offset": 125875,
+          "length": 3,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-393",
+      "offset": 125878,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18258"
+      ],
+      "units": [
+        {
+          "id": "region-393/unit-0",
+          "label": "PlayerPoseReturn",
+          "offset": 125878,
+          "length": 1,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1233",
+      "offset": 125879,
+      "length": 350,
+      "kind": "Code",
+      "primary_area": "B06",
+      "related_areas": [
+        "B06"
+      ],
+      "source": [
+        "game.asm:18267"
+      ],
+      "units": [
+        {
+          "id": "region-1233/unit-0",
+          "label": "PlayerFallOutOfScreen",
+          "offset": 125879,
+          "length": 34,
+          "area": "B06"
+        },
+        {
+          "id": "region-1233/unit-1",
+          "label": "WaitForPlayerA",
+          "offset": 125913,
+          "length": 16,
+          "area": "B06"
+        },
+        {
+          "id": "region-1233/unit-2",
+          "label": "UpdatePlayerCarriedState",
+          "offset": 125929,
+          "length": 84,
+          "area": "B06"
+        },
+        {
+          "id": "region-1233/unit-3",
+          "label": "UpdatePlayerExternalLaunch",
+          "offset": 126013,
+          "length": 110,
+          "area": "B06"
+        },
+        {
+          "id": "region-1233/unit-4",
+          "label": "UpdatePlayerDeathTrajectory",
+          "offset": 126123,
+          "length": 100,
+          "area": "B06"
+        },
+        {
+          "id": "region-1233/unit-5",
+          "label": "HoldPlayerAnimation",
+          "offset": 126223,
+          "length": 6,
+          "area": "B06"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    }
+  ],
+  "assigned_units": [
+    {
+      "id": "region-335/unit-0",
+      "label": "UpdatePlayerProtection",
+      "offset": 123748,
+      "length": 12,
+      "area": "B06"
+    },
+    {
+      "id": "region-336/unit-0",
+      "label": "UpdatePlayerProtection",
+      "offset": 123748,
+      "length": 12,
+      "area": "B06"
+    },
+    {
+      "id": "region-337/unit-0",
+      "label": "UpdatePlayerSpecialMode",
+      "offset": 123760,
+      "length": 39,
+      "area": "B06"
+    },
+    {
+      "id": "region-338/unit-0",
+      "label": "UpdatePlayerSpecialMode",
+      "offset": 123760,
+      "length": 39,
+      "area": "B06"
+    },
+    {
+      "id": "region-339/unit-0",
+      "label": "DispatchPlayerState",
+      "offset": 123799,
+      "length": 15,
+      "area": "B06"
+    },
+    {
+      "id": "region-620/unit-0",
+      "label": "PlayerStateHandlerPointers_1E3A6",
+      "offset": 123814,
+      "length": 34,
+      "area": "B06"
+    },
+    {
+      "id": "region-340/unit-0",
+      "label": "PlayerStandingEntry",
+      "offset": 123848,
+      "length": 19,
+      "area": "B06"
+    },
+    {
+      "id": "region-341/unit-0",
+      "label": "PlayerStandingEntry",
+      "offset": 123848,
+      "length": 19,
+      "area": "B06"
+    },
+    {
+      "id": "region-342/unit-0",
+      "label": "PlayerStandingAction",
+      "offset": 123867,
+      "length": 33,
+      "area": "B06"
+    },
+    {
+      "id": "region-343/unit-0",
+      "label": "PlayerStandingAction",
+      "offset": 123867,
+      "length": 33,
+      "area": "B06"
+    },
+    {
+      "id": "region-344/unit-0",
+      "label": "PlayerJumpEdge",
+      "offset": 123900,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-345/unit-0",
+      "label": "PlayerJumpEdge",
+      "offset": 123900,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-346/unit-0",
+      "label": "PlayerIdleAnimation",
+      "offset": 123925,
+      "length": 31,
+      "area": "B06"
+    },
+    {
+      "id": "region-347/unit-0",
+      "label": "PlayerIdleAnimation",
+      "offset": 123925,
+      "length": 31,
+      "area": "B06"
+    },
+    {
+      "id": "region-348/unit-0",
+      "label": "PlayerIdleAnimation",
+      "offset": 123925,
+      "length": 31,
+      "area": "B06"
+    },
+    {
+      "id": "region-349/unit-0",
+      "label": "PlayerCrouchOrWalk",
+      "offset": 123956,
+      "length": 39,
+      "area": "B06"
+    },
+    {
+      "id": "region-350/unit-0",
+      "label": "PlayerWalkCollisionGate",
+      "offset": 123995,
+      "length": 6,
+      "area": "B06"
+    },
+    {
+      "id": "region-1224/unit-0",
+      "label": "PlayerMomentumAnimationDelay",
+      "offset": 124001,
+      "length": 24,
+      "area": "B06"
+    },
+    {
+      "id": "region-351/unit-0",
+      "label": "PlayerWalkAnimation",
+      "offset": 124025,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-352/unit-0",
+      "label": "PlayerHorizontalMotionMode",
+      "offset": 124050,
+      "length": 36,
+      "area": "B06"
+    },
+    {
+      "id": "region-353/unit-0",
+      "label": "PlayerMomentumDeceleration",
+      "offset": 124086,
+      "length": 106,
+      "area": "B06"
+    },
+    {
+      "id": "region-1225/unit-0",
+      "label": "SetPlayerFacingFromRightBit",
+      "offset": 124192,
+      "length": 17,
+      "area": "B06"
+    },
+    {
+      "id": "region-1299/unit-0",
+      "label": "CapturePlayerMomentumDirection",
+      "offset": 124209,
+      "length": 8,
+      "area": "B06"
+    },
+    {
+      "id": "region-354/unit-0",
+      "label": "PlayerMomentumAcceleration",
+      "offset": 124217,
+      "length": 40,
+      "area": "B06"
+    },
+    {
+      "id": "region-355/unit-0",
+      "label": "PlayerExternalHorizontalStep",
+      "offset": 124257,
+      "length": 39,
+      "area": "B06"
+    },
+    {
+      "id": "region-356/unit-0",
+      "label": "PlayerExternalHorizontalStep",
+      "offset": 124257,
+      "length": 39,
+      "area": "B06"
+    },
+    {
+      "id": "region-357/unit-0",
+      "label": "PlayerMovePositiveX",
+      "offset": 124296,
+      "length": 47,
+      "area": "B06"
+    },
+    {
+      "id": "region-358/unit-0",
+      "label": "ResolvePlayerHorizontalOverlap",
+      "offset": 124343,
+      "length": 35,
+      "area": "B06"
+    },
+    {
+      "id": "region-1226/unit-0",
+      "label": "PlayerPositiveXObjectPush",
+      "offset": 124378,
+      "length": 38,
+      "area": "B06"
+    },
+    {
+      "id": "region-359/unit-0",
+      "label": "RecordActualPlayerDirection",
+      "offset": 124416,
+      "length": 24,
+      "area": "B06"
+    },
+    {
+      "id": "region-360/unit-0",
+      "label": "ProbePlayerHorizontalTerrain",
+      "offset": 124440,
+      "length": 28,
+      "area": "B06"
+    },
+    {
+      "id": "region-361/unit-0",
+      "label": "ProbePlayerHorizontalTerrain",
+      "offset": 124440,
+      "length": 28,
+      "area": "B06"
+    },
+    {
+      "id": "region-362/unit-0",
+      "label": "ProbePlayerHorizontalTerrain",
+      "offset": 124440,
+      "length": 28,
+      "area": "B06"
+    },
+    {
+      "id": "region-363/unit-0",
+      "label": "AlignPlayerHorizontalTerrain",
+      "offset": 124468,
+      "length": 15,
+      "area": "B06"
+    },
+    {
+      "id": "region-1227/unit-0",
+      "label": "PlayerHorizontalMotionJoin",
+      "offset": 124477,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-364/unit-0",
+      "label": "AlignPlayerHorizontalTerrain",
+      "offset": 124468,
+      "length": 15,
+      "area": "B06"
+    },
+    {
+      "id": "region-365/unit-0",
+      "label": "ReturnPlayerHorizontalCollision",
+      "offset": 124483,
+      "length": 6,
+      "area": "B06"
+    },
+    {
+      "id": "region-1277/unit-0",
+      "label": "PlayerFacingBitValues",
+      "offset": 124489,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-366/unit-0",
+      "label": "PlayerAirborneEntry",
+      "offset": 124491,
+      "length": 38,
+      "area": "B06"
+    },
+    {
+      "id": "region-367/unit-0",
+      "label": "PlayerAirborneEntry",
+      "offset": 124491,
+      "length": 38,
+      "area": "B06"
+    },
+    {
+      "id": "region-368/unit-0",
+      "label": "PlayerLandingGate",
+      "offset": 124529,
+      "length": 54,
+      "area": "B06"
+    },
+    {
+      "id": "region-369/unit-0",
+      "label": "PlayerPogoHeightGate",
+      "offset": 124583,
+      "length": 7,
+      "area": "B06"
+    },
+    {
+      "id": "region-370/unit-0",
+      "label": "PlayerLandOrPogo",
+      "offset": 124590,
+      "length": 80,
+      "area": "B06"
+    },
+    {
+      "id": "region-371/unit-0",
+      "label": "PlayerLeaveSpecialAnimation",
+      "offset": 124670,
+      "length": 19,
+      "area": "B06"
+    },
+    {
+      "id": "region-372/unit-0",
+      "label": "PlayerAirborneBoundaryChecks",
+      "offset": 124689,
+      "length": 24,
+      "area": "B06"
+    },
+    {
+      "id": "region-373/unit-0",
+      "label": "PlayerDescendRoom",
+      "offset": 124713,
+      "length": 37,
+      "area": "B06"
+    },
+    {
+      "id": "region-1278/unit-0",
+      "label": "PlayerClimbThresholds",
+      "offset": 124750,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-374/unit-0",
+      "label": "PlayerUpwardRoomProbe",
+      "offset": 124752,
+      "length": 19,
+      "area": "B06"
+    },
+    {
+      "id": "region-375/unit-0",
+      "label": "PlayerUpwardRoomProbe",
+      "offset": 124752,
+      "length": 19,
+      "area": "B06"
+    },
+    {
+      "id": "region-862/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124771,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-863/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124773,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-864/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124775,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-865/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124777,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-866/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124779,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-867/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124782,
+      "length": 1,
+      "area": "B06"
+    },
+    {
+      "id": "region-868/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124783,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-869/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124786,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-870/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124788,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-871/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124790,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-872/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124792,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-873/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124794,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-874/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124796,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-875/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124798,
+      "length": 1,
+      "area": "B06"
+    },
+    {
+      "id": "region-876/unit-0",
+      "label": "FindPlayerClimbAlignment",
+      "offset": 124799,
+      "length": 2,
+      "area": "B06"
+    },
+    {
+      "id": "region-376/unit-0",
+      "label": "PlayerUpwardProbeReturn",
+      "offset": 124801,
+      "length": 1,
+      "area": "B06"
+    },
+    {
+      "id": "region-1228/unit-0",
+      "label": "AlignPlayerToClimbCell",
+      "offset": 124802,
+      "length": 116,
+      "area": "B06"
+    },
+    {
+      "id": "region-1279/unit-0",
+      "label": "PlayerGridAlignmentOffsets",
+      "offset": 124918,
+      "length": 4,
+      "area": "B06"
+    },
+    {
+      "id": "region-377/unit-0",
+      "label": "PlayerForcedJumpInput",
+      "offset": 124922,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-378/unit-0",
+      "label": "PlayerForcedJumpInput",
+      "offset": 124922,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-379/unit-0",
+      "label": "PlayerForcedJumpContinue",
+      "offset": 124947,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-1229/unit-0",
+      "label": "UpdatePlayerClimbing",
+      "offset": 124950,
+      "length": 25,
+      "area": "B06"
+    },
+    {
+      "id": "region-1229/unit-1",
+      "label": "MovePlayerAlongClimbSurface",
+      "offset": 124975,
+      "length": 78,
+      "area": "B06"
+    },
+    {
+      "id": "region-1229/unit-2",
+      "label": "LeavePlayerClimbState",
+      "offset": 125053,
+      "length": 11,
+      "area": "B06"
+    },
+    {
+      "id": "region-380/unit-0",
+      "label": "PlayerRoomTransition",
+      "offset": 125064,
+      "length": 80,
+      "area": "B06"
+    },
+    {
+      "id": "region-1230/unit-0",
+      "label": "CommitVerticalRoomTransition",
+      "offset": 125144,
+      "length": 26,
+      "area": "B06"
+    },
+    {
+      "id": "region-381/unit-0",
+      "label": "PlayerRoomTransitionReturn",
+      "offset": 125170,
+      "length": 1,
+      "area": "B06"
+    },
+    {
+      "id": "region-1280/unit-0",
+      "label": "PlayerTransitionAdjustments",
+      "offset": 125171,
+      "length": 8,
+      "area": "B06"
+    },
+    {
+      "id": "region-1231/unit-0",
+      "label": "UpdatePlayerSwing",
+      "offset": 125179,
+      "length": 47,
+      "area": "B06"
+    },
+    {
+      "id": "region-1231/unit-1",
+      "label": "ResolvePlayerSwingImpact",
+      "offset": 125226,
+      "length": 62,
+      "area": "B06"
+    },
+    {
+      "id": "region-1231/unit-2",
+      "label": "FinishPlayerBlockedSwing",
+      "offset": 125288,
+      "length": 24,
+      "area": "B06"
+    },
+    {
+      "id": "region-382/unit-0",
+      "label": "PlayerVerticalPhysics",
+      "offset": 125312,
+      "length": 133,
+      "area": "B06"
+    },
+    {
+      "id": "region-383/unit-0",
+      "label": "CorrectPlayerVerticalPenetration",
+      "offset": 125445,
+      "length": 9,
+      "area": "B06"
+    },
+    {
+      "id": "region-384/unit-0",
+      "label": "CheckPlayerVerticalTerrainResult",
+      "offset": 125454,
+      "length": 9,
+      "area": "B06"
+    },
+    {
+      "id": "region-385/unit-0",
+      "label": "StopPlayerVerticalMotion",
+      "offset": 125463,
+      "length": 14,
+      "area": "B06"
+    },
+    {
+      "id": "region-386/unit-0",
+      "label": "PlayerAirborneAnimationGate",
+      "offset": 125477,
+      "length": 30,
+      "area": "B06"
+    },
+    {
+      "id": "region-387/unit-0",
+      "label": "PlayerPreserveDirectionalPose",
+      "offset": 125507,
+      "length": 8,
+      "area": "B06"
+    },
+    {
+      "id": "region-388/unit-0",
+      "label": "SelectPlayerAirborneAnimation",
+      "offset": 125515,
+      "length": 35,
+      "area": "B06"
+    },
+    {
+      "id": "region-388/unit-1",
+      "label": "ProbePlayerVerticalTerrain",
+      "offset": 125550,
+      "length": 67,
+      "area": "B06"
+    },
+    {
+      "id": "region-389/unit-0",
+      "label": "AlignPlayerUpperTerrain",
+      "offset": 125617,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-390/unit-0",
+      "label": "RestorePlayerCollisionState",
+      "offset": 125620,
+      "length": 15,
+      "area": "B06"
+    },
+    {
+      "id": "region-1281/unit-0",
+      "label": "PlayerVerticalMotionParameters",
+      "offset": 125635,
+      "length": 6,
+      "area": "B06"
+    },
+    {
+      "id": "region-1232/unit-0",
+      "label": "UpdatePlayerProtectedMotion",
+      "offset": 125641,
+      "length": 71,
+      "area": "B06"
+    },
+    {
+      "id": "region-1232/unit-1",
+      "label": "StartPlayerDamageArc",
+      "offset": 125712,
+      "length": 79,
+      "area": "B06"
+    },
+    {
+      "id": "region-1232/unit-2",
+      "label": "EnterPlayerDeathArc",
+      "offset": 125791,
+      "length": 15,
+      "area": "B06"
+    },
+    {
+      "id": "region-1232/unit-3",
+      "label": "ApplyDamageOverlayRule",
+      "offset": 125806,
+      "length": 36,
+      "area": "B06"
+    },
+    {
+      "id": "region-391/unit-0",
+      "label": "PlayerSnowLikePose",
+      "offset": 125842,
+      "length": 33,
+      "area": "B06"
+    },
+    {
+      "id": "region-392/unit-0",
+      "label": "PlayerPoseJump",
+      "offset": 125875,
+      "length": 3,
+      "area": "B06"
+    },
+    {
+      "id": "region-393/unit-0",
+      "label": "PlayerPoseReturn",
+      "offset": 125878,
+      "length": 1,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-0",
+      "label": "PlayerFallOutOfScreen",
+      "offset": 125879,
+      "length": 34,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-1",
+      "label": "WaitForPlayerA",
+      "offset": 125913,
+      "length": 16,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-2",
+      "label": "UpdatePlayerCarriedState",
+      "offset": 125929,
+      "length": 84,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-3",
+      "label": "UpdatePlayerExternalLaunch",
+      "offset": 126013,
+      "length": 110,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-4",
+      "label": "UpdatePlayerDeathTrajectory",
+      "offset": 126123,
+      "length": 100,
+      "area": "B06"
+    },
+    {
+      "id": "region-1233/unit-5",
+      "label": "HoldPlayerAnimation",
+      "offset": 126223,
+      "length": 6,
+      "area": "B06"
+    }
+  ],
+  "player_routine_calls": [
+    {
+      "line": 14237,
+      "caller": "UpdateGameplaySimulation",
+      "operation": "jsr",
+      "target": "UpdatePlayerProtection"
+    },
+    {
+      "line": 16678,
+      "caller": "PlayerStandingEntry",
+      "operation": "jsr",
+      "target": "PlayerVerticalPhysics"
+    },
+    {
+      "line": 16681,
+      "caller": "PlayerStandingEntry",
+      "operation": "jmp",
+      "target": "PlayerHorizontalMotionMode"
+    },
+    {
+      "line": 16720,
+      "caller": "PlayerStandingAction_Continue_E3D2",
+      "operation": "jmp",
+      "target": "PlayerHorizontalMotionMode_Clear_E495"
+    },
+    {
+      "line": 16744,
+      "caller": "PlayerJumpEdge_InstallVelocity",
+      "operation": "jmp",
+      "target": "PlayerAirborneEntry"
+    },
+    {
+      "line": 16777,
+      "caller": "PlayerIdleAnimation_Continue_E421",
+      "operation": "jmp",
+      "target": "PlayerHorizontalMotionMode"
+    },
+    {
+      "line": 16804,
+      "caller": "PlayerCrouchOrWalk_Continue_E448",
+      "operation": "jsr",
+      "target": "PlayerHorizontalMotionMode"
+    },
+    {
+      "line": 16881,
+      "caller": "PlayerHorizontalMotionMode_Clear_E495",
+      "operation": "jmp",
+      "target": "PlayerExternalHorizontalStep"
+    },
+    {
+      "line": 16941,
+      "caller": "PlayerMomentumDeceleration_Continue_E50D",
+      "operation": "jsr",
+      "target": "PlayerMomentumAcceleration_Continue_E54A"
+    },
+    {
+      "line": 17079,
+      "caller": "ResolvePlayerHorizontalOverlap_Continue_E5AF",
+      "operation": "jmp",
+      "target": "RecordActualPlayerDirection"
+    },
+    {
+      "line": 17184,
+      "caller": "PlayerHorizontalMotionJoin",
+      "operation": "jmp",
+      "target": "ReturnPlayerHorizontalCollision"
+    },
+    {
+      "line": 17328,
+      "caller": "PlayerAirborneHorizontalMotion",
+      "operation": "jsr",
+      "target": "PlayerHorizontalMotionMode"
+    },
+    {
+      "line": 17356,
+      "caller": "PlayerAirborneBoundaryChecks",
+      "operation": "jsr",
+      "target": "PlayerUpwardRoomProbe"
+    },
+    {
+      "line": 17394,
+      "caller": "PlayerDescendRoom_Clear_E728",
+      "operation": "jmp",
+      "target": "PlayerRoomTransition"
+    },
+    {
+      "line": 17636,
+      "caller": "PlayerForcedJumpContinue",
+      "operation": "jmp",
+      "target": "PlayerAirborneEntry"
+    },
+    {
+      "line": 17897,
+      "caller": "PlayerVerticalPhysics_Continue_E99B",
+      "operation": "jsr",
+      "target": "ProbePlayerVerticalTerrain"
+    },
+    {
+      "line": 17960,
+      "caller": "CheckPlayerVerticalTerrainResult",
+      "operation": "jsr",
+      "target": "ProbePlayerVerticalTerrain"
+    },
+    {
+      "line": 17976,
+      "caller": "StopPlayerVerticalMotion",
+      "operation": "jmp",
+      "target": "PlayerVerticalPhysics"
+    },
+    {
+      "line": 18074,
+      "caller": "ProbePlayerVerticalTerrain_Continue_EA6F",
+      "operation": "jmp",
+      "target": "RestorePlayerCollisionState"
+    },
+    {
+      "line": 18128,
+      "caller": "UpdatePlayerProtectedMotion_Continue_EAC2",
+      "operation": "jsr",
+      "target": "ApplyDamageOverlayRule"
+    },
+    {
+      "line": 18133,
+      "caller": "UpdatePlayerProtectedMotion_Continue_EAD9",
+      "operation": "jsr",
+      "target": "PlayerVerticalPhysics"
+    },
+    {
+      "line": 18145,
+      "caller": "UpdatePlayerProtectedMotion_Continue_EAF4",
+      "operation": "jsr",
+      "target": "PlayerMovePositiveX_Continue_E593"
+    },
+    {
+      "line": 18167,
+      "caller": "StartPlayerDamageArc",
+      "operation": "jsr",
+      "target": "ApplyDamageOverlayRule"
+    },
+    {
+      "line": 18176,
+      "caller": "StartPlayerDamageArc_Continue_EB35",
+      "operation": "jsr",
+      "target": "PlayerVerticalPhysics"
+    },
+    {
+      "line": 18196,
+      "caller": "EnterPlayerDeathArc",
+      "operation": "jmp",
+      "target": "UpdatePlayerDeathTrajectory"
+    },
+    {
+      "line": 18254,
+      "caller": "PlayerPoseJump",
+      "operation": "jmp",
+      "target": "PlayerJumpEdge_InstallVelocity"
+    },
+    {
+      "line": 18272,
+      "caller": "PlayerFallOutOfScreen",
+      "operation": "jsr",
+      "target": "PlayerVerticalPhysics"
+    },
+    {
+      "line": 18276,
+      "caller": "PlayerFallOutOfScreen",
+      "operation": "jmp",
+      "target": "PlayerHorizontalMotionMode"
+    },
+    {
+      "line": 18324,
+      "caller": "UpdatePlayerCarriedState_Continue_EBEF",
+      "operation": "jmp",
+      "target": "PlayerJumpEdge_InstallVelocity"
+    },
+    {
+      "line": 18343,
+      "caller": "UpdatePlayerCarriedState_Continue_EC04",
+      "operation": "jmp",
+      "target": "StartPlayerDamageArc"
+    },
+    {
+      "line": 18356,
+      "caller": "UpdatePlayerExternalLaunch",
+      "operation": "jmp",
+      "target": "UpdatePlayerExternalLaunch_Continue_EC53"
+    },
+    {
+      "line": 18441,
+      "caller": "UpdatePlayerDeathTrajectory_Continue_ECE7",
+      "operation": "jmp",
+      "target": "PlayerFallOutOfScreen_Continue_EBB4"
+    },
+    {
+      "line": 18987,
+      "caller": "ApplyDialogueOutcome_Continue_EDCC",
+      "operation": "jmp",
+      "target": "PlayerFallOutOfScreen_Continue_EBB4"
+    },
+    {
+      "line": 21722,
+      "caller": "UpdateTimedDepartureSpawner",
+      "operation": "jmp",
+      "target": "PlayerFallOutOfScreen_Continue_EBB4"
+    }
+  ],
+  "shared_state_consumers": [
+    {
+      "line": 2318,
+      "enclosing_label": "ComposeObjectFlags",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 2319,
+      "enclosing_label": "ComposeObjectFlags",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "ora z:PlayerSpecialMode"
+    },
+    {
+      "line": 2348,
+      "enclosing_label": "ComposeOverlaySprites",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 2522,
+      "enclosing_label": "AdvanceObjectAnimation_Continue_813E",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 2551,
+      "enclosing_label": "AdvanceObjectAnimation_Continue_818B",
+      "symbol": "ObjectAnimationRestart",
+      "instruction": "lda a:ObjectAnimationRestart,x"
+    },
+    {
+      "line": 2962,
+      "enclosing_label": "Bank05_UpdateStatusStreams",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 3827,
+      "enclosing_label": "Bank06_ThrowerMove_Continue_8408",
+      "symbol": "ObjectAnimationRestart",
+      "instruction": "sta a:ObjectAnimationRestart,x"
+    },
+    {
+      "line": 4027,
+      "enclosing_label": "Bank06_PlayerContactAnimationActor",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 4082,
+      "enclosing_label": "Bank06_ContactActorPoseGate_Continue_85C0",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 4094,
+      "enclosing_label": "Bank06_AttachPlayerToActor",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 4096,
+      "enclosing_label": "Bank06_AttachPlayerToActor",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 4126,
+      "enclosing_label": "Bank06_ReleaseContactPose",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 4234,
+      "enclosing_label": "Bank06_StartTerrainObjectMotion_Continue_86B5",
+      "symbol": "PlayerPoseDirection",
+      "instruction": "lda z:PlayerPoseDirection"
+    },
+    {
+      "line": 4986,
+      "enclosing_label": "Actor8A59ContactGate",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 5107,
+      "enclosing_label": "Bank06_RewardTimedSpecialMode",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 5109,
+      "enclosing_label": "Bank06_RewardTimedSpecialMode",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "sta z:PlayerSpecialMode"
+    },
+    {
+      "line": 5111,
+      "enclosing_label": "Bank06_RewardTimedSpecialMode",
+      "symbol": "PlayerSpecialTicks",
+      "instruction": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "line": 5113,
+      "enclosing_label": "Bank06_RewardTimedSpecialMode",
+      "symbol": "PlayerSpecialTicksHi",
+      "instruction": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 5190,
+      "enclosing_label": "Bank06_EnterRewardDialogue_Continue_8BF3",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 5224,
+      "enclosing_label": "Bank06_CollectStageTreasure",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 5230,
+      "enclosing_label": "Bank06_CollectStageTreasure_Continue_8C40",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 5268,
+      "enclosing_label": "Actor8C45ContactEntry_Continue_8C50",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 6120,
+      "enclosing_label": "Bank06_IntegrateRideableMotion_Continue_9295",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 6133,
+      "enclosing_label": "Bank06_IntegrateRideableMotion_Continue_9295",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 7572,
+      "enclosing_label": "Bank06_PushActorAnimationEvent",
+      "symbol": "PlayerPoseDirection",
+      "instruction": "sta z:PlayerPoseDirection"
+    },
+    {
+      "line": 7798,
+      "enclosing_label": "Bank06_PlayerCarryingActor",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 7831,
+      "enclosing_label": "Bank06_PlayerCarryingActor_Continue_9F0E",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 7838,
+      "enclosing_label": "Bank06_PlayerCarryingActor_Continue_9F18",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 7999,
+      "enclosing_label": "Bank06_PlayerExternalMotionTrigger_Continue_A054",
+      "symbol": "PlayerExternalMotion",
+      "instruction": "inc z:PlayerExternalMotion"
+    },
+    {
+      "line": 9795,
+      "enclosing_label": "Bank06_PlayerLaunchContactActor",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 9808,
+      "enclosing_label": "Bank06_PlayerLaunchContactActor",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 12771,
+      "enclosing_label": "TerrainResponseDamagePlayer",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "lda z:PlayerSpecialMode"
+    },
+    {
+      "line": 12772,
+      "enclosing_label": "TerrainResponseDamagePlayer",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "ora z:PlayerProtectionTicks"
+    },
+    {
+      "line": 12785,
+      "enclosing_label": "TerrainResponseDamagePlayer_Continue_D18D",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState"
+    },
+    {
+      "line": 12804,
+      "enclosing_label": "TerrainPlayerPoseResponse",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState"
+    },
+    {
+      "line": 12819,
+      "enclosing_label": "TerrainResponsePlayerMomentum",
+      "symbol": "PlayerMomentumControl",
+      "instruction": "inc z:PlayerMomentumControl"
+    },
+    {
+      "line": 12830,
+      "enclosing_label": "TerrainResponseLowScreenExit",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState"
+    },
+    {
+      "line": 12927,
+      "enclosing_label": "FilterProtectedHorizontalContact",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 12964,
+      "enclosing_label": "ReportHorizontalActorContact",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "lda z:PlayerSpecialMode"
+    },
+    {
+      "line": 12967,
+      "enclosing_label": "ReportHorizontalActorContact",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 13065,
+      "enclosing_label": "NextVerticalContactCandidate_Continue_D2FB",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 13105,
+      "enclosing_label": "ReportVerticalActorContact",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "sta z:PlayerActorContactFlags"
+    },
+    {
+      "line": 13121,
+      "enclosing_label": "ApplyVerticalContactReaction",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "lda z:PlayerSpecialMode"
+    },
+    {
+      "line": 13124,
+      "enclosing_label": "ApplyVerticalContactReaction",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 13348,
+      "enclosing_label": "InitializeTitle",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 13851,
+      "enclosing_label": "InitializeStageRuntime_UploadBackground",
+      "symbol": "ObjectJumpVelocityFraction",
+      "instruction": "sta a:ObjectJumpVelocityFraction"
+    },
+    {
+      "line": 13853,
+      "enclosing_label": "InitializeStageRuntime_UploadBackground",
+      "symbol": "ObjectJumpVelocityInteger",
+      "instruction": "sta a:ObjectJumpVelocityInteger"
+    },
+    {
+      "line": 13875,
+      "enclosing_label": "InitializeStageRuntime_Continue_D829",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 13880,
+      "enclosing_label": "InitializeStageRuntime_Continue_D853",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState,x"
+    },
+    {
+      "line": 14182,
+      "enclosing_label": "GameplayPauseGate",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 14393,
+      "enclosing_label": "ComposeAndStreamGameplay",
+      "symbol": "QueuedPlayerState",
+      "instruction": "lda z:QueuedPlayerState"
+    },
+    {
+      "line": 14396,
+      "enclosing_label": "ComposeAndStreamGameplay",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sty z:QueuedPlayerState"
+    },
+    {
+      "line": 14399,
+      "enclosing_label": "ComposeAndStreamGameplay",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 14409,
+      "enclosing_label": "FilterQueuedPlayerReaction",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "ldy z:PlayerProtectionTicks"
+    },
+    {
+      "line": 14411,
+      "enclosing_label": "FilterQueuedPlayerReaction",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 14488,
+      "enclosing_label": "InitializeStageReloadState",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 14496,
+      "enclosing_label": "InitializeStageReloadState_Loop_DC73",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState,x"
+    },
+    {
+      "line": 14586,
+      "enclosing_label": "RestoreStageAudioAndCountdown_Continue_DD0C",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 14587,
+      "enclosing_label": "RestoreStageAudioAndCountdown_Continue_DD0C",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 14867,
+      "enclosing_label": "InitializeSpecialRoom",
+      "symbol": "PlayerMomentumControl",
+      "instruction": "sta z:PlayerMomentumControl"
+    },
+    {
+      "line": 14868,
+      "enclosing_label": "InitializeSpecialRoom",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 14894,
+      "enclosing_label": "InitializeSpecialRoom",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 16432,
+      "enclosing_label": "CountdownStateGate",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 16447,
+      "enclosing_label": "CountdownStateGate_Continue_E29D",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 16606,
+      "enclosing_label": "UpdatePlayerProtection",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 16615,
+      "enclosing_label": "UpdatePlayerProtection_Continue_E35C",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "dec z:PlayerProtectionTicks"
+    },
+    {
+      "line": 16624,
+      "enclosing_label": "UpdatePlayerSpecialMode",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "lda z:PlayerSpecialMode"
+    },
+    {
+      "line": 16638,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialTicks",
+      "instruction": "lda z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16641,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialTicks",
+      "instruction": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16642,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialTicksHi",
+      "instruction": "lda z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 16644,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialTicksHi",
+      "instruction": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 16645,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialTicks",
+      "instruction": "ora z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16647,
+      "enclosing_label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "sta z:PlayerSpecialMode"
+    },
+    {
+      "line": 16658,
+      "enclosing_label": "DispatchPlayerState",
+      "symbol": "PlayerState",
+      "instruction": "ldx z:PlayerState"
+    },
+    {
+      "line": 16679,
+      "enclosing_label": "PlayerStandingEntry",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 16719,
+      "enclosing_label": "PlayerStandingAction_Continue_E3D2",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 16738,
+      "enclosing_label": "PlayerJumpEdge_InstallVelocity",
+      "symbol": "ObjectJumpVelocityFraction",
+      "instruction": "lda a:ObjectJumpVelocityFraction"
+    },
+    {
+      "line": 16740,
+      "enclosing_label": "PlayerJumpEdge_InstallVelocity",
+      "symbol": "ObjectJumpVelocityInteger",
+      "instruction": "lda a:ObjectJumpVelocityInteger"
+    },
+    {
+      "line": 16743,
+      "enclosing_label": "PlayerJumpEdge_InstallVelocity",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 16770,
+      "enclosing_label": "PlayerIdleAnimation_Clear_E412",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 16798,
+      "enclosing_label": "PlayerCrouchOrWalk",
+      "symbol": "ObjectAnimationRestart",
+      "instruction": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 16800,
+      "enclosing_label": "PlayerCrouchOrWalk",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 16827,
+      "enclosing_label": "PlayerMomentumAnimationDelay",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "dec z:PlayerAnimationDelay"
+    },
+    {
+      "line": 16831,
+      "enclosing_label": "PlayerMomentumAnimationDelay",
+      "symbol": "PlayerPoseDirection",
+      "instruction": "sta z:PlayerPoseDirection"
+    },
+    {
+      "line": 16844,
+      "enclosing_label": "PlayerWalkAnimation",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 16870,
+      "enclosing_label": "PlayerHorizontalMotionMode",
+      "symbol": "PlayerMomentumControl",
+      "instruction": "lda z:PlayerMomentumControl"
+    },
+    {
+      "line": 16872,
+      "enclosing_label": "PlayerHorizontalMotionMode",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16876,
+      "enclosing_label": "PlayerHorizontalMotionMode_Clear_E495",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16891,
+      "enclosing_label": "PlayerMomentumDeceleration",
+      "symbol": "PlayerMomentumControl",
+      "instruction": "sta z:PlayerMomentumControl"
+    },
+    {
+      "line": 16892,
+      "enclosing_label": "PlayerMomentumDeceleration",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16897,
+      "enclosing_label": "PlayerMomentumDeceleration",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16918,
+      "enclosing_label": "PlayerMomentumDeceleration_Continue_E4B8",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16922,
+      "enclosing_label": "PlayerMomentumDeceleration_Continue_E4E4",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "cmp z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16939,
+      "enclosing_label": "PlayerMomentumDeceleration_Continue_E4E4",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16968,
+      "enclosing_label": "CapturePlayerMomentumDirection",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "line": 16993,
+      "enclosing_label": "PlayerMomentumAcceleration_Continue_E54A",
+      "symbol": "PlayerMomentumDirection",
+      "instruction": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "line": 17005,
+      "enclosing_label": "PlayerExternalHorizontalStep",
+      "symbol": "PlayerExternalMotion",
+      "instruction": "lda z:PlayerExternalMotion"
+    },
+    {
+      "line": 17014,
+      "enclosing_label": "PlayerExternalHorizontalStep_Clear_E555",
+      "symbol": "PlayerExternalMotion",
+      "instruction": "sta z:PlayerExternalMotion"
+    },
+    {
+      "line": 17220,
+      "enclosing_label": "PlayerAirborneEntry",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 17240,
+      "enclosing_label": "PlayerAirborneEntry_Continue_E649",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17259,
+      "enclosing_label": "PlayerLandingGate",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 17262,
+      "enclosing_label": "PlayerLandingGate",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "lda z:PlayerActorContactFlags"
+    },
+    {
+      "line": 17265,
+      "enclosing_label": "PlayerLandingGate",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 17307,
+      "enclosing_label": "PlayerLandOrPogo",
+      "symbol": "ObjectAnimationRestart",
+      "instruction": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 17311,
+      "enclosing_label": "PlayerLandOrPogo",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17323,
+      "enclosing_label": "PlayerOrdinaryLanding",
+      "symbol": "ObjectAnimationRestart",
+      "instruction": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 17326,
+      "enclosing_label": "PlayerLandOrPogo_Clear_E6E0",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17568,
+      "enclosing_label": "AlignPlayerToClimbCell_Continue_E795",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "cmp a:PlayerActorContactFlags,y"
+    },
+    {
+      "line": 17592,
+      "enclosing_label": "AlignPlayerToClimbCell_Continue_E7D4",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17610,
+      "enclosing_label": "PlayerForcedJumpInput",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 17627,
+      "enclosing_label": "PlayerForcedJumpInput_Continue_E7FF",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17646,
+      "enclosing_label": "UpdatePlayerClimbing",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 17701,
+      "enclosing_label": "LeavePlayerClimbState",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17721,
+      "enclosing_label": "PlayerRoomTransition",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17808,
+      "enclosing_label": "UpdatePlayerSwing",
+      "symbol": "PlayerPoseDirection",
+      "instruction": "and z:PlayerPoseDirection"
+    },
+    {
+      "line": 17815,
+      "enclosing_label": "UpdatePlayerSwing",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17819,
+      "enclosing_label": "UpdatePlayerSwing_Continue_E912",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17821,
+      "enclosing_label": "UpdatePlayerSwing_Continue_E912",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 17864,
+      "enclosing_label": "FinishPlayerBlockedSwing",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17866,
+      "enclosing_label": "FinishPlayerBlockedSwing",
+      "symbol": "PlayerAnimationDelay",
+      "instruction": "sta z:PlayerAnimationDelay"
+    },
+    {
+      "line": 17879,
+      "enclosing_label": "PlayerVerticalPhysics",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "stx z:PlayerActorContactFlags"
+    },
+    {
+      "line": 17907,
+      "enclosing_label": "PlayerVerticalPhysics_Continue_E9B0",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 17910,
+      "enclosing_label": "PlayerVerticalPhysics_Continue_E9B0",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 17915,
+      "enclosing_label": "PlayerRisingPhysics",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 17936,
+      "enclosing_label": "PlayerVerticalPhysics_Continue_E9DD",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "stx z:PlayerActorContactFlags"
+    },
+    {
+      "line": 17988,
+      "enclosing_label": "PlayerAirborneAnimationGate_EA1A",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 18010,
+      "enclosing_label": "PlayerPreserveDirectionalPose",
+      "symbol": "PlayerPoseDirection",
+      "instruction": "cmp z:PlayerPoseDirection"
+    },
+    {
+      "line": 18054,
+      "enclosing_label": "ProbePlayerVerticalTerrain_Continue_EA6F",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "lda z:PlayerActorContactFlags"
+    },
+    {
+      "line": 18093,
+      "enclosing_label": "RestorePlayerCollisionState",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "ora z:PlayerActorContactFlags"
+    },
+    {
+      "line": 18094,
+      "enclosing_label": "RestorePlayerCollisionState",
+      "symbol": "PlayerActorContactFlags",
+      "instruction": "sta z:PlayerActorContactFlags"
+    },
+    {
+      "line": 18116,
+      "enclosing_label": "UpdatePlayerProtectedMotion",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 18123,
+      "enclosing_label": "UpdatePlayerProtectedMotion_Continue_EAC2",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18153,
+      "enclosing_label": "StartPlayerDamageArc",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 18166,
+      "enclosing_label": "StartPlayerDamageArc",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "line": 18177,
+      "enclosing_label": "StartPlayerDamageArc_Continue_EB35",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 18183,
+      "enclosing_label": "StartPlayerDamageArc_Continue_EB35",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18192,
+      "enclosing_label": "EnterPlayerDeathArc",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18284,
+      "enclosing_label": "PlayerFallOutOfScreen_Continue_EBB4",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18285,
+      "enclosing_label": "PlayerFallOutOfScreen_Continue_EBB4",
+      "symbol": "QueuedPlayerState",
+      "instruction": "sta z:QueuedPlayerState"
+    },
+    {
+      "line": 18296,
+      "enclosing_label": "WaitForPlayerA",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18315,
+      "enclosing_label": "UpdatePlayerCarriedState_Continue_EBEF",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 18342,
+      "enclosing_label": "UpdatePlayerCarriedState_Continue_EC04",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18388,
+      "enclosing_label": "UpdatePlayerExternalLaunch_Continue_EC79",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 18759,
+      "enclosing_label": "WaitForDialogueInput_Continue_ED76",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 20546,
+      "enclosing_label": "PlayerOverlapSpecialMode",
+      "symbol": "PlayerSpecialMode",
+      "instruction": "lda z:PlayerSpecialMode"
+    },
+    {
+      "line": 20567,
+      "enclosing_label": "PlayerOverlapReaction",
+      "symbol": "PlayerProtectionTicks",
+      "instruction": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "line": 20570,
+      "enclosing_label": "PlayerOverlapReaction",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 21860,
+      "enclosing_label": "UpdatePlayerLiftActor",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 21873,
+      "enclosing_label": "UpdatePlayerLiftActor",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22529,
+      "enclosing_label": "FinalBossDefeatCountdown_Continue_FBE6",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22635,
+      "enclosing_label": "DialogueActorArc_Continue_FC6C",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22666,
+      "enclosing_label": "UpdateProgressionEscort",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22767,
+      "enclosing_label": "UpdateRightwardTransitionActor_Continue_FD77",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22792,
+      "enclosing_label": "UpdateFinalRaceGoal",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 22798,
+      "enclosing_label": "UpdateFinalRaceGoal",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22803,
+      "enclosing_label": "UpdateFinalRaceGoal_Continue_FDC8",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 22814,
+      "enclosing_label": "UpdateFinalRaceGoal_Continue_FDC8",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    },
+    {
+      "line": 22828,
+      "enclosing_label": "UpdateDialogueContactActor",
+      "symbol": "PlayerState",
+      "instruction": "lda z:PlayerState"
+    },
+    {
+      "line": 22847,
+      "enclosing_label": "UpdateDialogueContactActor_Continue_FE1B",
+      "symbol": "PlayerState",
+      "instruction": "sta z:PlayerState"
+    }
+  ],
+  "table_consumers": [
+    {
+      "name": "split dispatch",
+      "cpu": "E396/E3A7",
+      "physical_start": 123814,
+      "length": 34,
+      "consumer": "E387",
+      "extent": "17 entries both planes"
+    },
+    {
+      "name": "facing",
+      "physical_start": 124489,
+      "length": 2,
+      "consumer": "E51A held RIGHT"
+    },
+    {
+      "name": "column starts",
+      "physical_start": 124750,
+      "length": 2,
+      "consumer": "E731 previous scroll bit0"
+    },
+    {
+      "name": "climb offsets",
+      "physical_start": 124918,
+      "length": 4,
+      "consumer": "E75F X3..0"
+    },
+    {
+      "name": "transition overlap",
+      "physical_start": 125171,
+      "length": 8,
+      "consumer": "E89F/E8A3/E8B9/E8C2 X0 or2, offsets0/1/5/6"
+    },
+    {
+      "name": "vertical samples and thresholds",
+      "physical_start": 125635,
+      "length": 6,
+      "consumer": "EA81 index0/1; E9CC/E9D2 index0/2"
+    }
+  ]
+}

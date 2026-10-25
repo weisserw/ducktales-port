@@ -1,0 +1,17 @@
+/input/
+/reference/
+/research/
+/review/toolkit-before/
+/checks/
+/port/target/
+/web-dist/
+/debug/artifacts/
+*.gb
+*.gbc
+*.sms
+*.gg
+*.md.bin
+*.gen
+*.smd
+*.rom
+__pycache__/

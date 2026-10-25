@@ -1,0 +1,11 @@
+{
+  "version": 5,
+  "status": "agreed",
+  "policy": "initial_smoke_and_exact_frame_comparisons",
+  "scope": "initial_sanity",
+  "required_passes": 1,
+  "failure_rule": "fix_in_place_then_continue",
+  "restart_rule": "never_restart_continue_current_pass",
+  "resource_ceiling": null,
+  "resource_limit_outcome": "incomplete"
+}

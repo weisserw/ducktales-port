@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "format": "ducktales.terrain",
+  "palette": [
+    15,
+    17,
+    33,
+    49,
+    15,
+    17,
+    33,
+    49,
+    15,
+    17,
+    33,
+    49,
+    15,
+    17,
+    33,
+    49
+  ],
+  "tiles": [
+    {
+      "id": 1,
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "palette": 0,
+      "collision": 0
+    },
+    {
+      "id": 2,
+      "corners": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "palette": 0,
+      "collision": 1
+    }
+  ],
+  "blocks": [
+    {
+      "id": 1,
+      "quadrants": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "quadrants": [
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  ]
+}

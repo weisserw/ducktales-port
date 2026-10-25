@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "extension/levels",
+      "file": "levels.json"
+    },
+    {
+      "id": "example/rooms",
+      "file": "rooms.json"
+    },
+    {
+      "id": "example/terrain",
+      "file": "terrain.json"
+    },
+    {
+      "id": "example/spawns",
+      "file": "spawns.json"
+    },
+    {
+      "id": "example/graphics",
+      "file": "graphics.json"
+    },
+    {
+      "id": "example/audio",
+      "file": "audio.json"
+    }
+  ],
+  "order": []
+}

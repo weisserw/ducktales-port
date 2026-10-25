@@ -1,0 +1,2865 @@
+{
+  "reference_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "note": "Independent source cross-reference; planning region identities preserved. Mixed regions retain other owners; this is not an implementation disposition. No glyph payload copied.",
+  "regions": [
+    {
+      "ledger_id": "region-508",
+      "offset": 95632,
+      "length": 156,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:2955"
+      ],
+      "units": [
+        {
+          "id": "region-508/unit-0",
+          "label": "Bank05_UpdateStatusStreams",
+          "offset": 95632,
+          "length": 17,
+          "area": "B14"
+        },
+        {
+          "id": "region-508/unit-1",
+          "label": "Bank05_ExpandStatusStream",
+          "offset": 95649,
+          "length": 72,
+          "area": "B14"
+        },
+        {
+          "id": "region-508/unit-2",
+          "label": "Bank05_InsertStatusFragment",
+          "offset": 95721,
+          "length": 54,
+          "area": "B14"
+        },
+        {
+          "id": "region-508/unit-3",
+          "label": "Bank05_SubmitStatusRow",
+          "offset": 95775,
+          "length": 13,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-519",
+      "offset": 95788,
+      "length": 324,
+      "kind": "Data",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3057"
+      ],
+      "units": [
+        {
+          "id": "region-519/unit-0",
+          "label": "StatusStreamRecords_1762C",
+          "offset": 95788,
+          "length": 324,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-88",
+      "offset": 96272,
+      "length": 8,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3127"
+      ],
+      "units": [
+        {
+          "id": "region-88/unit-0",
+          "label": "SelectStatusMessage",
+          "offset": 96272,
+          "length": 28,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-89",
+      "offset": 96280,
+      "length": 20,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3139"
+      ],
+      "units": [
+        {
+          "id": "region-89/unit-0",
+          "label": "SelectStatusMessage",
+          "offset": 96272,
+          "length": 28,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-90",
+      "offset": 96300,
+      "length": 28,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3155"
+      ],
+      "units": [
+        {
+          "id": "region-90/unit-0",
+          "label": "BuildStatusUpload",
+          "offset": 96300,
+          "length": 33,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-91",
+      "offset": 96328,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3175"
+      ],
+      "units": [
+        {
+          "id": "region-91/unit-0",
+          "label": "BuildStatusUpload",
+          "offset": 96300,
+          "length": 33,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-92",
+      "offset": 96333,
+      "length": 47,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3184"
+      ],
+      "units": [
+        {
+          "id": "region-92/unit-0",
+          "label": "AppendStatusUpload",
+          "offset": 96333,
+          "length": 47,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-521",
+      "offset": 96380,
+      "length": 580,
+      "kind": "Data",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:3221"
+      ],
+      "units": [
+        {
+          "id": "region-521/unit-0",
+          "label": "StatusMessageRecords_1787C",
+          "offset": 96380,
+          "length": 580,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1208",
+      "offset": 121065,
+      "length": 20,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13927"
+      ],
+      "units": [
+        {
+          "id": "region-1208/unit-0",
+          "label": "TransferDisplayedValueToTotal",
+          "offset": 121065,
+          "length": 20,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-628",
+      "offset": 121085,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13943"
+      ],
+      "units": [
+        {
+          "id": "region-628/unit-0",
+          "label": "CheckTransferSourceDisplay",
+          "offset": 121085,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-629",
+      "offset": 121088,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13952"
+      ],
+      "units": [
+        {
+          "id": "region-629/unit-0",
+          "label": "CheckTransferSourceDisplay",
+          "offset": 121088,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-630",
+      "offset": 121090,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13958"
+      ],
+      "units": [
+        {
+          "id": "region-630/unit-0",
+          "label": "CheckTransferSourceDisplay",
+          "offset": 121090,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-631",
+      "offset": 121092,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13964"
+      ],
+      "units": [
+        {
+          "id": "region-631/unit-0",
+          "label": "CheckTransferSourceDisplay",
+          "offset": 121092,
+          "length": 1,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1209",
+      "offset": 121093,
+      "length": 213,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:13970"
+      ],
+      "units": [
+        {
+          "id": "region-1209/unit-0",
+          "label": "TransferValueDigitBatch",
+          "offset": 121137,
+          "length": 139,
+          "area": "B14"
+        },
+        {
+          "id": "region-1209/unit-1",
+          "label": "SubmitValueTransferBatch",
+          "offset": 121276,
+          "length": 18,
+          "area": "B14"
+        },
+        {
+          "id": "region-1209/unit-2",
+          "label": "WaitForAcknowledgeA",
+          "offset": 121294,
+          "length": 12,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-323",
+      "offset": 122492,
+      "length": 18,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:14703"
+      ],
+      "units": [
+        {
+          "id": "region-323/unit-0",
+          "label": "RefreshStatusWhenIdle",
+          "offset": 122492,
+          "length": 18,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1214",
+      "offset": 122510,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:14721"
+      ],
+      "units": [
+        {
+          "id": "region-1214/unit-0",
+          "label": "CountdownUpdateJoin",
+          "offset": 122510,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-324",
+      "offset": 122512,
+      "length": 35,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:14730"
+      ],
+      "units": [
+        {
+          "id": "region-324/unit-0",
+          "label": "QueueStatusDigits",
+          "offset": 122512,
+          "length": 35,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1215",
+      "offset": 122547,
+      "length": 68,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B13",
+        "B14"
+      ],
+      "source": [
+        "game.asm:14759"
+      ],
+      "units": [
+        {
+          "id": "region-1215/unit-0",
+          "label": "QueueStageUiWhenIdle",
+          "offset": 122547,
+          "length": 22,
+          "area": "B14"
+        },
+        {
+          "id": "region-1215/unit-1",
+          "label": "PlayGameOverAndReset",
+          "offset": 122569,
+          "length": 46,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-328",
+      "offset": 123548,
+      "length": 17,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16427"
+      ],
+      "units": [
+        {
+          "id": "region-328/unit-0",
+          "label": "CountdownStateGate",
+          "offset": 123548,
+          "length": 26,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-329",
+      "offset": 123565,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16443"
+      ],
+      "units": [
+        {
+          "id": "region-329/unit-0",
+          "label": "CountdownStateGate",
+          "offset": 123548,
+          "length": 26,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-330",
+      "offset": 123574,
+      "length": 49,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16454"
+      ],
+      "units": [
+        {
+          "id": "region-330/unit-0",
+          "label": "TickStageCountdown",
+          "offset": 123574,
+          "length": 49,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-331",
+      "offset": 123623,
+      "length": 15,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16489"
+      ],
+      "units": [
+        {
+          "id": "region-331/unit-0",
+          "label": "SetExpiredCountdownDisplay",
+          "offset": 123623,
+          "length": 15,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-332",
+      "offset": 123638,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16503"
+      ],
+      "units": [
+        {
+          "id": "region-332/unit-0",
+          "label": "CountdownWarning",
+          "offset": 123638,
+          "length": 23,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-333",
+      "offset": 123643,
+      "length": 18,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16513"
+      ],
+      "units": [
+        {
+          "id": "region-333/unit-0",
+          "label": "CountdownWarning",
+          "offset": 123638,
+          "length": 23,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-334",
+      "offset": 123661,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16527"
+      ],
+      "units": [
+        {
+          "id": "region-334/unit-0",
+          "label": "CountdownReturn",
+          "offset": 123661,
+          "length": 1,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1223",
+      "offset": 123662,
+      "length": 86,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:16536"
+      ],
+      "units": [
+        {
+          "id": "region-1223/unit-0",
+          "label": "ApplyOverlayValueCost",
+          "offset": 123662,
+          "length": 86,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1015",
+      "offset": 126834,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:19496"
+      ],
+      "units": [
+        {
+          "id": "region-1015/unit-0",
+          "label": "ConvertStageTimerToReward",
+          "offset": 126834,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1016",
+      "offset": 126836,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:19505"
+      ],
+      "units": [
+        {
+          "id": "region-1016/unit-0",
+          "label": "ConvertStageTimerToReward",
+          "offset": 126836,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1017",
+      "offset": 126838,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:19511"
+      ],
+      "units": [
+        {
+          "id": "region-1017/unit-0",
+          "label": "ConvertStageTimerToReward",
+          "offset": 126838,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1018",
+      "offset": 126840,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:19517"
+      ],
+      "units": [
+        {
+          "id": "region-1018/unit-0",
+          "label": "ConvertStageTimerToReward",
+          "offset": 126840,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1237",
+      "offset": 126843,
+      "length": 119,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:19523"
+      ],
+      "units": [
+        {
+          "id": "region-1237/unit-0",
+          "label": "DecrementTimerDisplay",
+          "offset": 126870,
+          "length": 30,
+          "area": "B14"
+        },
+        {
+          "id": "region-1237/unit-1",
+          "label": "AddConvertedTimerReward",
+          "offset": 126900,
+          "length": 54,
+          "area": "B14"
+        },
+        {
+          "id": "region-1237/unit-2",
+          "label": "FinishTimerConversion",
+          "offset": 126954,
+          "length": 8,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-446",
+      "offset": 129058,
+      "length": 16,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:21561"
+      ],
+      "units": [
+        {
+          "id": "region-446/unit-0",
+          "label": "ClearStatusOverlayFlags",
+          "offset": 129058,
+          "length": 16,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-447",
+      "offset": 129074,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:21580"
+      ],
+      "units": [
+        {
+          "id": "region-447/unit-0",
+          "label": "ApplyTitleOptionRule",
+          "offset": 129074,
+          "length": 6,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1253",
+      "offset": 129080,
+      "length": 22,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:21591"
+      ],
+      "units": [
+        {
+          "id": "region-1253/unit-0",
+          "label": "ApplyOptionRewardAnimation",
+          "offset": 129080,
+          "length": 22,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-448",
+      "offset": 129102,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:21610"
+      ],
+      "units": [
+        {
+          "id": "region-448/unit-0",
+          "label": "TitleOptionRuleReturn",
+          "offset": 129102,
+          "length": 1,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1254",
+      "offset": 129103,
+      "length": 433,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14",
+        "B16"
+      ],
+      "source": [
+        "game.asm:21619"
+      ],
+      "units": [
+        {
+          "id": "region-1254/unit-0",
+          "label": "SaturateRewardDigits",
+          "offset": 129103,
+          "length": 11,
+          "area": "B14"
+        },
+        {
+          "id": "region-1254/unit-1",
+          "label": "SaturateTotalDigits",
+          "offset": 129114,
+          "length": 11,
+          "area": "B14"
+        },
+        {
+          "id": "region-1254/unit-2",
+          "label": "RenderActorsAndReturnBankFour",
+          "offset": 129125,
+          "length": 20,
+          "area": "B16"
+        },
+        {
+          "id": "region-1254/unit-3",
+          "label": "UpdatePlayerLinkedDeparture",
+          "offset": 129145,
+          "length": 57,
+          "area": "B16"
+        },
+        {
+          "id": "region-1254/unit-4",
+          "label": "DepartureMovePlayerAndActor",
+          "offset": 129202,
+          "length": 80,
+          "area": "B16"
+        },
+        {
+          "id": "region-1254/unit-5",
+          "label": "UpdateTimedDepartureSpawner",
+          "offset": 129282,
+          "length": 82,
+          "area": "B16"
+        },
+        {
+          "id": "region-1254/unit-6",
+          "label": "DepartureSpawnerTravel",
+          "offset": 129364,
+          "length": 88,
+          "area": "B16"
+        },
+        {
+          "id": "region-1254/unit-7",
+          "label": "SpawnDepartureReward",
+          "offset": 129452,
+          "length": 84,
+          "area": "B16"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1189",
+      "offset": 131031,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23158"
+      ],
+      "units": [
+        {
+          "id": "region-1189/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131031,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1190",
+      "offset": 131033,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23167"
+      ],
+      "units": [
+        {
+          "id": "region-1190/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131033,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1191",
+      "offset": 131036,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23173"
+      ],
+      "units": [
+        {
+          "id": "region-1191/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131036,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1192",
+      "offset": 131038,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23179"
+      ],
+      "units": [
+        {
+          "id": "region-1192/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131038,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1193",
+      "offset": 131041,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23185"
+      ],
+      "units": [
+        {
+          "id": "region-1193/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131041,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1194",
+      "offset": 131043,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23191"
+      ],
+      "units": [
+        {
+          "id": "region-1194/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131043,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1195",
+      "offset": 131046,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23197"
+      ],
+      "units": [
+        {
+          "id": "region-1195/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131046,
+          "length": 2,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1196",
+      "offset": 131048,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23203"
+      ],
+      "units": [
+        {
+          "id": "region-1196/unit-0",
+          "label": "PrepareValueTransferDestinations",
+          "offset": 131048,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1197",
+      "offset": 131051,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B14"
+      ],
+      "source": [
+        "game.asm:23209"
+      ],
+      "units": [
+        {
+          "id": "region-1197/unit-0",
+          "label": "JoinDisplayValueTransfer",
+          "offset": 131051,
+          "length": 3,
+          "area": "B14"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    }
+  ],
+  "operand_and_label_consumers": [
+    {
+      "line": 710,
+      "label": "AudioVisitChannels_Continue_827B",
+      "instruction": "lda z:StatusStreamSelector"
+    },
+    {
+      "line": 2320,
+      "label": "ComposeObjectFlags",
+      "instruction": "beq ComposeOverlaySprites"
+    },
+    {
+      "line": 2337,
+      "label": "ComposeOverlaySprites",
+      "instruction": "ComposeOverlaySprites:"
+    },
+    {
+      "line": 2346,
+      "label": "ComposeOverlaySprites",
+      "instruction": "lda z:StatusStreamSelector"
+    },
+    {
+      "line": 2355,
+      "label": "ComposeOverlaySprites_Continue_8039",
+      "instruction": "ComposeOverlaySprites_Continue_8039:"
+    },
+    {
+      "line": 2356,
+      "label": "ComposeOverlaySprites_Continue_8039",
+      "instruction": "lda a:OverlaySprites,x"
+    },
+    {
+      "line": 2358,
+      "label": "ComposeOverlaySprites_Continue_8039",
+      "instruction": "beq ComposeOverlaySprites_Continue_8047"
+    },
+    {
+      "line": 2362,
+      "label": "ComposeOverlaySprites_Continue_8039",
+      "instruction": "bne ComposeOverlaySprites_Continue_8039"
+    },
+    {
+      "line": 2363,
+      "label": "ComposeOverlaySprites_Continue_8047",
+      "instruction": "ComposeOverlaySprites_Continue_8047:"
+    },
+    {
+      "line": 2365,
+      "label": "ComposeOverlaySprites_Continue_8049",
+      "instruction": "ComposeOverlaySprites_Continue_8049:"
+    },
+    {
+      "line": 2366,
+      "label": "ComposeOverlaySprites_Continue_8049",
+      "instruction": "lda a:TitleOverlaySprites,x"
+    },
+    {
+      "line": 2368,
+      "label": "ComposeOverlaySprites_Continue_8049",
+      "instruction": "beq ComposeOverlaySprites_Continue_8057"
+    },
+    {
+      "line": 2372,
+      "label": "ComposeOverlaySprites_Continue_8049",
+      "instruction": "bne ComposeOverlaySprites_Continue_8049"
+    },
+    {
+      "line": 2373,
+      "label": "ComposeOverlaySprites_Continue_8057",
+      "instruction": "ComposeOverlaySprites_Continue_8057:"
+    },
+    {
+      "line": 2375,
+      "label": "ComposeOverlaySprites_Continue_8059",
+      "instruction": "ComposeOverlaySprites_Continue_8059:"
+    },
+    {
+      "line": 2376,
+      "label": "ComposeOverlaySprites_Continue_8059",
+      "instruction": "lda a:TimerSpriteOverlay,x"
+    },
+    {
+      "line": 2378,
+      "label": "ComposeOverlaySprites_Continue_8059",
+      "instruction": "beq ComposeOverlaySprites_Continue_8067"
+    },
+    {
+      "line": 2382,
+      "label": "ComposeOverlaySprites_Continue_8059",
+      "instruction": "bne ComposeOverlaySprites_Continue_8059"
+    },
+    {
+      "line": 2383,
+      "label": "ComposeOverlaySprites_Continue_8067",
+      "instruction": "ComposeOverlaySprites_Continue_8067:"
+    },
+    {
+      "line": 2959,
+      "label": "Bank05_UpdateStatusStreams",
+      "instruction": "Bank05_UpdateStatusStreams:"
+    },
+    {
+      "line": 2961,
+      "label": "Bank05_UpdateStatusStreams",
+      "instruction": "jsr a:Bank05_ExpandStatusStream"
+    },
+    {
+      "line": 2964,
+      "label": "Bank05_UpdateStatusStreams",
+      "instruction": "bne Bank05_UpdateStatusStreams_Continue_B58F"
+    },
+    {
+      "line": 2966,
+      "label": "Bank05_UpdateStatusStreams",
+      "instruction": "bne Bank05_ExpandStatusStream"
+    },
+    {
+      "line": 2967,
+      "label": "Bank05_UpdateStatusStreams_Continue_B58F",
+      "instruction": "Bank05_UpdateStatusStreams_Continue_B58F:"
+    },
+    {
+      "line": 2968,
+      "label": "Bank05_UpdateStatusStreams_Continue_B58F",
+      "instruction": "ldy z:StatusStreamSelector"
+    },
+    {
+      "line": 2971,
+      "label": "Bank05_ExpandStatusStream",
+      "instruction": "Bank05_ExpandStatusStream:"
+    },
+    {
+      "line": 2978,
+      "label": "Bank05_ExpandStatusStream",
+      "instruction": "beq Bank05_SubmitStatusRow_Return_B61B"
+    },
+    {
+      "line": 2987,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "Bank05_ExpandStatusStream_Loop_B5B2:"
+    },
+    {
+      "line": 2990,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "beq Bank05_SubmitStatusRow"
+    },
+    {
+      "line": 2991,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "bpl Bank05_InsertStatusFragment_Continue_B608"
+    },
+    {
+      "line": 2994,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "bcc Bank05_InsertStatusFragment_Continue_B5F9"
+    },
+    {
+      "line": 2999,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "bcc Bank05_InsertStatusFragment"
+    },
+    {
+      "line": 3004,
+      "label": "Bank05_ExpandStatusStream_Loop_B5B2",
+      "instruction": "bne Bank05_ExpandStatusStream_Continue_B5D7"
+    },
+    {
+      "line": 3006,
+      "label": "Bank05_ExpandStatusStream_Continue_B5D7",
+      "instruction": "Bank05_ExpandStatusStream_Continue_B5D7:"
+    },
+    {
+      "line": 3010,
+      "label": "Bank05_InsertStatusFragment",
+      "instruction": "Bank05_InsertStatusFragment:"
+    },
+    {
+      "line": 3019,
+      "label": "Bank05_InsertStatusFragment_Loop_B5EA",
+      "instruction": "Bank05_InsertStatusFragment_Loop_B5EA:"
+    },
+    {
+      "line": 3025,
+      "label": "Bank05_InsertStatusFragment_Loop_B5EA",
+      "instruction": "bpl Bank05_InsertStatusFragment_Loop_B5EA"
+    },
+    {
+      "line": 3027,
+      "label": "Bank05_InsertStatusFragment_Loop_B5EA",
+      "instruction": "bne Bank05_InsertStatusFragment_Continue_B60C"
+    },
+    {
+      "line": 3028,
+      "label": "Bank05_InsertStatusFragment_Continue_B5F9",
+      "instruction": "Bank05_InsertStatusFragment_Continue_B5F9:"
+    },
+    {
+      "line": 3032,
+      "label": "Bank05_InsertStatusFragment_Loop_B5FE",
+      "instruction": "Bank05_InsertStatusFragment_Loop_B5FE:"
+    },
+    {
+      "line": 3036,
+      "label": "Bank05_InsertStatusFragment_Loop_B5FE",
+      "instruction": "bpl Bank05_InsertStatusFragment_Loop_B5FE"
+    },
+    {
+      "line": 3037,
+      "label": "Bank05_InsertStatusFragment_Loop_B5FE",
+      "instruction": "bmi Bank05_InsertStatusFragment_Continue_B60C"
+    },
+    {
+      "line": 3038,
+      "label": "Bank05_InsertStatusFragment_Continue_B608",
+      "instruction": "Bank05_InsertStatusFragment_Continue_B608:"
+    },
+    {
+      "line": 3041,
+      "label": "Bank05_InsertStatusFragment_Continue_B60C",
+      "instruction": "Bank05_InsertStatusFragment_Continue_B60C:"
+    },
+    {
+      "line": 3043,
+      "label": "Bank05_InsertStatusFragment_Continue_B60C",
+      "instruction": "bne Bank05_ExpandStatusStream_Loop_B5B2"
+    },
+    {
+      "line": 3046,
+      "label": "Bank05_SubmitStatusRow",
+      "instruction": "Bank05_SubmitStatusRow:"
+    },
+    {
+      "line": 3052,
+      "label": "Bank05_SubmitStatusRow_Return_B61B",
+      "instruction": "Bank05_SubmitStatusRow_Return_B61B:"
+    },
+    {
+      "line": 3059,
+      "label": "StatusStreamRecords_1762CBytes",
+      "instruction": "StatusStreamRecords_1762CBytes:"
+    },
+    {
+      "line": 3131,
+      "label": "SelectStatusMessage",
+      "instruction": "SelectStatusMessage:"
+    },
+    {
+      "line": 3133,
+      "label": "SelectStatusMessage",
+      "instruction": "bne SelectStatusMessage_Clear_B80E"
+    },
+    {
+      "line": 3135,
+      "label": "SelectStatusMessage",
+      "instruction": "beq BuildStatusUpload"
+    },
+    {
+      "line": 3141,
+      "label": "SelectStatusMessage_Advance_B808",
+      "instruction": "SelectStatusMessage_Advance_B808:"
+    },
+    {
+      "line": 3144,
+      "label": "SelectStatusMessage_Advance_B808",
+      "instruction": "beq SelectStatusMessage_Clear_B80E"
+    },
+    {
+      "line": 3146,
+      "label": "SelectStatusMessage_Clear_B80E",
+      "instruction": "SelectStatusMessage_Clear_B80E:"
+    },
+    {
+      "line": 3159,
+      "label": "BuildStatusUpload",
+      "instruction": "BuildStatusUpload:"
+    },
+    {
+      "line": 3160,
+      "label": "BuildStatusUpload",
+      "instruction": "ldy a:StatusMessageOffsets,x"
+    },
+    {
+      "line": 3162,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "BuildStatusUpload_NextRecord:"
+    },
+    {
+      "line": 3163,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "lda a:StatusMessageRecords,y"
+    },
+    {
+      "line": 3165,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "bmi AppendStatusUpload_Request"
+    },
+    {
+      "line": 3166,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "lda a:StatusMessageRecordsLow,y"
+    },
+    {
+      "line": 3170,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "lda a:StatusMessageRecordsSelector,y"
+    },
+    {
+      "line": 3171,
+      "label": "BuildStatusUpload_NextRecord",
+      "instruction": "bne AppendStatusUpload"
+    },
+    {
+      "line": 3177,
+      "label": "BuildStatusUpload_Continue_B838",
+      "instruction": "BuildStatusUpload_Continue_B838:"
+    },
+    {
+      "line": 3188,
+      "label": "AppendStatusUpload",
+      "instruction": "AppendStatusUpload:"
+    },
+    {
+      "line": 3190,
+      "label": "AppendStatusUpload",
+      "instruction": "lda a:StatusPayloadPointerLow,x"
+    },
+    {
+      "line": 3192,
+      "label": "AppendStatusUpload",
+      "instruction": "lda a:StatusPayloadPointerHigh,x"
+    },
+    {
+      "line": 3200,
+      "label": "AppendStatusUpload_CopyByte",
+      "instruction": "AppendStatusUpload_CopyByte:"
+    },
+    {
+      "line": 3206,
+      "label": "AppendStatusUpload_CopyByte",
+      "instruction": "bpl AppendStatusUpload_CopyByte"
+    },
+    {
+      "line": 3214,
+      "label": "AppendStatusUpload_CopyByte",
+      "instruction": "bne BuildStatusUpload_NextRecord"
+    },
+    {
+      "line": 3215,
+      "label": "AppendStatusUpload_Request",
+      "instruction": "AppendStatusUpload_Request:"
+    },
+    {
+      "line": 3223,
+      "label": "StatusMessageRecords_1787CBytes",
+      "instruction": "StatusMessageRecords_1787CBytes:"
+    },
+    {
+      "line": 3267,
+      "label": "WriteScreenExtraBytes",
+      "instruction": "lda a:$0329,x"
+    },
+    {
+      "line": 3713,
+      "label": "Bank06_ProjectileThrower_Continue_833B",
+      "instruction": "bne Bank06_FinishThrowCountdown"
+    },
+    {
+      "line": 3719,
+      "label": "Bank06_ThrowOnAnimationFrame",
+      "instruction": "beq Bank06_FinishThrowCountdown"
+    },
+    {
+      "line": 3721,
+      "label": "Bank06_ThrowOnAnimationFrame",
+      "instruction": "bcs Bank06_FinishThrowCountdown"
+    },
+    {
+      "line": 3752,
+      "label": "Bank06_FinishThrowCountdown",
+      "instruction": "Bank06_FinishThrowCountdown:"
+    },
+    {
+      "line": 3754,
+      "label": "Bank06_FinishThrowCountdown",
+      "instruction": "bne Bank06_FinishThrowCountdown_Return_83BA"
+    },
+    {
+      "line": 3763,
+      "label": "Bank06_FinishThrowCountdown_Return_83BA",
+      "instruction": "Bank06_FinishThrowCountdown_Return_83BA:"
+    },
+    {
+      "line": 5039,
+      "label": "Bank06_CollectSpecialAnimation_Continue_8B40",
+      "instruction": "lda a:$034c"
+    },
+    {
+      "line": 5042,
+      "label": "Bank06_CollectSpecialAnimation_Continue_8B40",
+      "instruction": "lda a:$0350"
+    },
+    {
+      "line": 5046,
+      "label": "Bank06_CollectSpecialAnimation_Continue_8B4E",
+      "instruction": "sta a:OverlaySprites,y"
+    },
+    {
+      "line": 5048,
+      "label": "Bank06_CollectSpecialAnimation_Continue_8B4E",
+      "instruction": "sta a:$0344,y"
+    },
+    {
+      "line": 5085,
+      "label": "Bank06_RewardExtraDigit",
+      "instruction": "sty z:AlternatingDamageLatch"
+    },
+    {
+      "line": 5087,
+      "label": "Bank06_RewardExtraDigit_Loop_8B86",
+      "instruction": "lda a:OverlaySprites,y"
+    },
+    {
+      "line": 5089,
+      "label": "Bank06_RewardExtraDigit_Loop_8B86",
+      "instruction": "lda a:$0342,y"
+    },
+    {
+      "line": 5098,
+      "label": "Bank06_RewardExtraDigit_Continue_8B96",
+      "instruction": "sta a:$0342,y"
+    },
+    {
+      "line": 5102,
+      "label": "Bank06_RewardExtraDigit_Continue_8B9C",
+      "instruction": "jmp a:ClearStatusOverlayFlags"
+    },
+    {
+      "line": 5111,
+      "label": "Bank06_RewardTimedSpecialMode",
+      "instruction": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "line": 5113,
+      "label": "Bank06_RewardTimedSpecialMode",
+      "instruction": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 5118,
+      "label": "Bank06_RewardLifeCounter",
+      "instruction": "lda a:LivesCounter"
+    },
+    {
+      "line": 5121,
+      "label": "Bank06_RewardLifeCounter",
+      "instruction": "inc a:LivesCounter"
+    },
+    {
+      "line": 5136,
+      "label": "Bank06_RewardLifeCounter_Loop_8BC0",
+      "instruction": "adc a:StatusDigitCodes,y"
+    },
+    {
+      "line": 5137,
+      "label": "Bank06_RewardLifeCounter_Loop_8BC0",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 5139,
+      "label": "Bank06_RewardLifeCounter_Loop_8BC0",
+      "instruction": "beq RequestStatusRefresh"
+    },
+    {
+      "line": 5142,
+      "label": "Bank06_RewardLifeCounter_Loop_8BC0",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 5145,
+      "label": "AddRewardDigit_Continue_8BD1",
+      "instruction": "bcc RequestStatusRefresh"
+    },
+    {
+      "line": 5155,
+      "label": "Bank06_CarryRewardDigit",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 5159,
+      "label": "Bank06_CarryRewardDigit",
+      "instruction": "bcc RequestStatusRefresh"
+    },
+    {
+      "line": 5168,
+      "label": "RequestStatusRefresh",
+      "instruction": "RequestStatusRefresh:"
+    },
+    {
+      "line": 5169,
+      "label": "RequestStatusRefresh",
+      "instruction": "inc z:StatusDisplayDirty"
+    },
+    {
+      "line": 5267,
+      "label": "Actor8C45ContactEntry_Continue_8C50",
+      "instruction": "bne ActorReactionCountdown"
+    },
+    {
+      "line": 5297,
+      "label": "ActorReactionCountdown",
+      "instruction": "ActorReactionCountdown:"
+    },
+    {
+      "line": 5308,
+      "label": "ActorReactionCountdown_Continue_8C77",
+      "instruction": "ActorReactionCountdown_Continue_8C77:"
+    },
+    {
+      "line": 9623,
+      "label": "Bank06_TimedRewardStealingPatrol_Continue_AC8F",
+      "instruction": "jsr a:Bank06_SubtractStatusUnit"
+    },
+    {
+      "line": 9702,
+      "label": "Bank06_JumpingRewardStealer_Continue_AD23",
+      "instruction": "jsr a:Bank06_SubtractStatusUnit"
+    },
+    {
+      "line": 9737,
+      "label": "Bank06_SubtractStatusUnit",
+      "instruction": "Bank06_SubtractStatusUnit:"
+    },
+    {
+      "line": 9743,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD75",
+      "instruction": "Bank06_SubtractStatusUnit_Loop_AD75:"
+    },
+    {
+      "line": 9744,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD75",
+      "instruction": "lda a:StatusDigitCodes,y"
+    },
+    {
+      "line": 9747,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD75",
+      "instruction": "bne Bank06_SubtractStatusUnit_Continue_AD7F"
+    },
+    {
+      "line": 9749,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD7F",
+      "instruction": "Bank06_SubtractStatusUnit_Continue_AD7F:"
+    },
+    {
+      "line": 9752,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD7F",
+      "instruction": "bcs Bank06_SubtractStatusUnit_Continue_AD87"
+    },
+    {
+      "line": 9755,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD87",
+      "instruction": "Bank06_SubtractStatusUnit_Continue_AD87:"
+    },
+    {
+      "line": 9756,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD87",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 9760,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD87",
+      "instruction": "bpl Bank06_SubtractStatusUnit_Loop_AD75"
+    },
+    {
+      "line": 9761,
+      "label": "Bank06_SubtractStatusUnit_Continue_AD87",
+      "instruction": "bcc Bank06_SubtractStatusUnit_Continue_ADAC"
+    },
+    {
+      "line": 9763,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD95",
+      "instruction": "Bank06_SubtractStatusUnit_Loop_AD95:"
+    },
+    {
+      "line": 9764,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD95",
+      "instruction": "lda a:StatusDigitCodes,y"
+    },
+    {
+      "line": 9766,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD95",
+      "instruction": "beq Bank06_SubtractStatusUnit_Continue_ADA5"
+    },
+    {
+      "line": 9768,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD95",
+      "instruction": "bne Bank06_SubtractStatusUnit_Continue_ADB6"
+    },
+    {
+      "line": 9770,
+      "label": "Bank06_SubtractStatusUnit_Loop_AD95",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 9771,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADA5",
+      "instruction": "Bank06_SubtractStatusUnit_Continue_ADA5:"
+    },
+    {
+      "line": 9774,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADA5",
+      "instruction": "bne Bank06_SubtractStatusUnit_Loop_AD95"
+    },
+    {
+      "line": 9775,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADA5",
+      "instruction": "beq Bank06_SubtractStatusUnit_Continue_ADB6"
+    },
+    {
+      "line": 9776,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADAC",
+      "instruction": "Bank06_SubtractStatusUnit_Continue_ADAC:"
+    },
+    {
+      "line": 9779,
+      "label": "Bank06_SubtractStatusUnit_Loop_ADB0",
+      "instruction": "Bank06_SubtractStatusUnit_Loop_ADB0:"
+    },
+    {
+      "line": 9780,
+      "label": "Bank06_SubtractStatusUnit_Loop_ADB0",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 9782,
+      "label": "Bank06_SubtractStatusUnit_Loop_ADB0",
+      "instruction": "bpl Bank06_SubtractStatusUnit_Loop_ADB0"
+    },
+    {
+      "line": 9783,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADB6",
+      "instruction": "Bank06_SubtractStatusUnit_Continue_ADB6:"
+    },
+    {
+      "line": 9784,
+      "label": "Bank06_SubtractStatusUnit_Continue_ADB6",
+      "instruction": "inc z:StatusDisplayDirty"
+    },
+    {
+      "line": 12040,
+      "label": "SetNeighborColumnUploadAddresses",
+      "instruction": "sta a:$0413"
+    },
+    {
+      "line": 12061,
+      "label": "SetNeighborColumnUploadAddresses",
+      "instruction": "sta a:$0415"
+    },
+    {
+      "line": 12666,
+      "label": "ReplicateBurstRows_Loop_D0C1",
+      "instruction": "sta a:$0415,y"
+    },
+    {
+      "line": 12670,
+      "label": "ReplicateBurstRows_Loop_D0DC",
+      "instruction": "sta a:$0410,y"
+    },
+    {
+      "line": 13342,
+      "label": "InitializeTitle",
+      "instruction": "jsr a:CopyTitleOverlay"
+    },
+    {
+      "line": 13416,
+      "label": "PrepareTitleActors_Continue_D593",
+      "instruction": "lda a:TitleOverlayTemplate,y"
+    },
+    {
+      "line": 13417,
+      "label": "PrepareTitleActors_Continue_D593",
+      "instruction": "sta a:TitleOverlaySprites,y"
+    },
+    {
+      "line": 13499,
+      "label": "CopyTitleOverlay",
+      "instruction": "CopyTitleOverlay:"
+    },
+    {
+      "line": 13501,
+      "label": "CopyTitleOverlay_Continue_D60C",
+      "instruction": "CopyTitleOverlay_Continue_D60C:"
+    },
+    {
+      "line": 13505,
+      "label": "CopyTitleOverlay_Continue_D60C",
+      "instruction": "bpl CopyTitleOverlay_Continue_D60C"
+    },
+    {
+      "line": 13507,
+      "label": "CopyTitleOverlay_Continue_D617",
+      "instruction": "CopyTitleOverlay_Continue_D617:"
+    },
+    {
+      "line": 13508,
+      "label": "CopyTitleOverlay_Continue_D617",
+      "instruction": "lda a:OverlayTemplate,y"
+    },
+    {
+      "line": 13509,
+      "label": "CopyTitleOverlay_Continue_D617",
+      "instruction": "sta a:OverlaySprites,y"
+    },
+    {
+      "line": 13511,
+      "label": "CopyTitleOverlay_Continue_D617",
+      "instruction": "bpl CopyTitleOverlay_Continue_D617"
+    },
+    {
+      "line": 13885,
+      "label": "InitializeStageRuntime_Continue_D85A",
+      "instruction": "lda a:StatusTemplate,y"
+    },
+    {
+      "line": 13886,
+      "label": "InitializeStageRuntime_Continue_D85A",
+      "instruction": "sta a:StatusUploadTemplate,y"
+    },
+    {
+      "line": 13889,
+      "label": "InitializeStageRuntime_Continue_D85A",
+      "instruction": "jsr a:ClearStatusOverlayFlags"
+    },
+    {
+      "line": 13892,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "lda a:TimerOverlayTemplate,y"
+    },
+    {
+      "line": 13893,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "sta a:TimerSpriteOverlay,y"
+    },
+    {
+      "line": 13899,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "lda a:StageCountdownTilePairs,x"
+    },
+    {
+      "line": 13900,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "sta a:CountdownHundredsTile"
+    },
+    {
+      "line": 13901,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "lda a:StageCountdownTilePairsLow,x"
+    },
+    {
+      "line": 13902,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "sta a:CountdownTensTile"
+    },
+    {
+      "line": 13904,
+      "label": "InitializeStageRuntime_Continue_D868",
+      "instruction": "sta z:CountdownDivider"
+    },
+    {
+      "line": 13948,
+      "label": "CheckTransferSourceDisplay",
+      "instruction": "lda a:$0329"
+    },
+    {
+      "line": 13973,
+      "label": "CheckTransferSourceDisplay_Continue_D8F5",
+      "instruction": "ldx a:$0332"
+    },
+    {
+      "line": 13977,
+      "label": "CheckTransferSourceDisplay_Loop_D8FD",
+      "instruction": "lda a:$0333,y"
+    },
+    {
+      "line": 13982,
+      "label": "CheckTransferSourceDisplay_Loop_D8FD",
+      "instruction": "ldx a:$0322"
+    },
+    {
+      "line": 13986,
+      "label": "CheckTransferSourceDisplay_Loop_D90F",
+      "instruction": "lda a:$0323,y"
+    },
+    {
+      "line": 14003,
+      "label": "TransferValueDigitBatch_Loop_D928",
+      "instruction": "lda a:$0410,x"
+    },
+    {
+      "line": 14015,
+      "label": "TransferValueDigitBatch_Continue_D93A",
+      "instruction": "sta a:$0410,x"
+    },
+    {
+      "line": 14022,
+      "label": "TransferValueDigitBatch_Loop_D946",
+      "instruction": "lda a:$0410,x"
+    },
+    {
+      "line": 14028,
+      "label": "TransferValueDigitBatch_Loop_D946",
+      "instruction": "sta a:$0410,x"
+    },
+    {
+      "line": 14054,
+      "label": "TransferValueDigitBatch_Continue_D978",
+      "instruction": "sta a:$0334,x"
+    },
+    {
+      "line": 14060,
+      "label": "TransferValueDigitBatch_Continue_D978",
+      "instruction": "sta a:$0339"
+    },
+    {
+      "line": 14062,
+      "label": "TransferValueDigitBatch_Continue_D978",
+      "instruction": "sta a:$033a"
+    },
+    {
+      "line": 14071,
+      "label": "TransferValueDigitBatch_Continue_D99E",
+      "instruction": "lda a:$0415"
+    },
+    {
+      "line": 14145,
+      "label": "StagePaletteAndOverlayData",
+      "instruction": "StagePaletteAndOverlayData:"
+    },
+    {
+      "line": 14203,
+      "label": "GameplayAlternateStatusFrame",
+      "instruction": "GameplayAlternateStatusFrame:"
+    },
+    {
+      "line": 14204,
+      "label": "GameplayAlternateStatusFrame",
+      "instruction": "lda z:StatusStreamSelector"
+    },
+    {
+      "line": 14206,
+      "label": "GameplayAlternateStatusFrame",
+      "instruction": "sta z:StatusStreamSelector"
+    },
+    {
+      "line": 14220,
+      "label": "GameplayGlobalGate",
+      "instruction": "lda z:StatusStreamSelector"
+    },
+    {
+      "line": 14243,
+      "label": "UpdateGameplaySimulation",
+      "instruction": "jsr a:CountdownStateGate"
+    },
+    {
+      "line": 14308,
+      "label": "GameplayDeferredEffect",
+      "instruction": "bpl GameplayStatusRefresh"
+    },
+    {
+      "line": 14323,
+      "label": "GameplayStatusRefresh",
+      "instruction": "GameplayStatusRefresh:"
+    },
+    {
+      "line": 14324,
+      "label": "GameplayStatusRefresh",
+      "instruction": "lda z:StatusDisplayDirty"
+    },
+    {
+      "line": 14331,
+      "label": "GameplayStatusRefresh_Continue_DBB4",
+      "instruction": "GameplayStatusRefresh_Continue_DBB4:"
+    },
+    {
+      "line": 14332,
+      "label": "GameplayStatusRefresh_Continue_DBB4",
+      "instruction": "jsr a:RefreshStatusWhenIdle"
+    },
+    {
+      "line": 14478,
+      "label": "ReloadStageFromTransitionRequest_Continue_DC49",
+      "instruction": "lda a:LivesCounter"
+    },
+    {
+      "line": 14529,
+      "label": "SelectReloadBackgroundContext_Continue_DCA5",
+      "instruction": "dec a:LivesCounter"
+    },
+    {
+      "line": 14530,
+      "label": "SelectReloadBackgroundContext_Continue_DCA5",
+      "instruction": "jsr a:ClearStatusOverlayFlags"
+    },
+    {
+      "line": 14557,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "RestoreStageAudioAndCountdown:"
+    },
+    {
+      "line": 14560,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "bmi RestoreStageAudioAndCountdown_Continue_DD09"
+    },
+    {
+      "line": 14563,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "bne RestoreStageAudioAndCountdown_Continue_DD0C"
+    },
+    {
+      "line": 14568,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "lda a:StageCountdownTilePairs,y"
+    },
+    {
+      "line": 14569,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "sta a:CountdownHundredsTile"
+    },
+    {
+      "line": 14570,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "lda a:StageCountdownTilePairsLow,y"
+    },
+    {
+      "line": 14571,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "sta a:CountdownTensTile"
+    },
+    {
+      "line": 14573,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "sta a:CountdownUnitsTile"
+    },
+    {
+      "line": 14575,
+      "label": "RestoreStageAudioAndCountdown",
+      "instruction": "sta z:CountdownDivider"
+    },
+    {
+      "line": 14577,
+      "label": "RestoreStageAudioAndCountdown_Continue_DD09",
+      "instruction": "RestoreStageAudioAndCountdown_Continue_DD09:"
+    },
+    {
+      "line": 14579,
+      "label": "RestoreStageAudioAndCountdown_Continue_DD0C",
+      "instruction": "RestoreStageAudioAndCountdown_Continue_DD0C:"
+    },
+    {
+      "line": 14707,
+      "label": "RefreshStatusWhenIdle",
+      "instruction": "RefreshStatusWhenIdle:"
+    },
+    {
+      "line": 14709,
+      "label": "RefreshStatusWhenIdle",
+      "instruction": "bne QueueStatusDigits_Return_DEA2"
+    },
+    {
+      "line": 14711,
+      "label": "RefreshStatusWhenIdle_Continue_DE72",
+      "instruction": "RefreshStatusWhenIdle_Continue_DE72:"
+    },
+    {
+      "line": 14712,
+      "label": "RefreshStatusWhenIdle_Continue_DE72",
+      "instruction": "lda a:StatusDigitCodes,y"
+    },
+    {
+      "line": 14714,
+      "label": "RefreshStatusWhenIdle_Continue_DE72",
+      "instruction": "bcc QueueStatusDigits"
+    },
+    {
+      "line": 14717,
+      "label": "RefreshStatusWhenIdle_Continue_DE72",
+      "instruction": "bne RefreshStatusWhenIdle_Continue_DE72"
+    },
+    {
+      "line": 14725,
+      "label": "CountdownUpdateJoin",
+      "instruction": "CountdownUpdateJoin:"
+    },
+    {
+      "line": 14726,
+      "label": "CountdownUpdateJoin",
+      "instruction": "beq CountdownUpdateJoin_Continue_DE91"
+    },
+    {
+      "line": 14734,
+      "label": "QueueStatusDigits",
+      "instruction": "QueueStatusDigits:"
+    },
+    {
+      "line": 14735,
+      "label": "QueueStatusDigits",
+      "instruction": "lda a:StatusDigitCodes,y"
+    },
+    {
+      "line": 14737,
+      "label": "QueueStatusDigits",
+      "instruction": "bne QueueStatusDigits_Advance_DE8C"
+    },
+    {
+      "line": 14739,
+      "label": "QueueStatusDigits",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 14740,
+      "label": "QueueStatusDigits_Advance_DE8C",
+      "instruction": "QueueStatusDigits_Advance_DE8C:"
+    },
+    {
+      "line": 14743,
+      "label": "QueueStatusDigits_Advance_DE8C",
+      "instruction": "bne QueueStatusDigits"
+    },
+    {
+      "line": 14744,
+      "label": "CountdownUpdateJoin_Continue_DE91",
+      "instruction": "CountdownUpdateJoin_Continue_DE91:"
+    },
+    {
+      "line": 14746,
+      "label": "QueueStatusDigits_Continue_DE93",
+      "instruction": "QueueStatusDigits_Continue_DE93:"
+    },
+    {
+      "line": 14747,
+      "label": "QueueStatusDigits_Continue_DE93",
+      "instruction": "lda a:StatusUploadTemplate,y"
+    },
+    {
+      "line": 14750,
+      "label": "QueueStatusDigits_Continue_DE93",
+      "instruction": "bpl QueueStatusDigits_Continue_DE93"
+    },
+    {
+      "line": 14753,
+      "label": "QueueStatusDigits_Continue_DE93",
+      "instruction": "sta z:StatusDisplayDirty"
+    },
+    {
+      "line": 14754,
+      "label": "QueueStatusDigits_Return_DEA2",
+      "instruction": "QueueStatusDigits_Return_DEA2:"
+    },
+    {
+      "line": 14784,
+      "label": "PlayGameOverAndReset_Loop_DEC0",
+      "instruction": "lda a:GameOverOverlayDataAddress,y"
+    },
+    {
+      "line": 14785,
+      "label": "PlayGameOverAndReset_Loop_DEC0",
+      "instruction": "sta a:TimerSpriteOverlay,y"
+    },
+    {
+      "line": 14807,
+      "label": "GameOverOverlayData",
+      "instruction": "GameOverOverlayData:"
+    },
+    {
+      "line": 15919,
+      "label": "UpdateEndingSequence",
+      "instruction": "lda a:$0334"
+    },
+    {
+      "line": 15934,
+      "label": "UpdateEndingSequence_Continue_E1DC",
+      "instruction": "lda a:$033a"
+    },
+    {
+      "line": 16431,
+      "label": "CountdownStateGate",
+      "instruction": "CountdownStateGate:"
+    },
+    {
+      "line": 16437,
+      "label": "CountdownStateGate",
+      "instruction": "lda a:CountdownHundredsTile"
+    },
+    {
+      "line": 16439,
+      "label": "CountdownStateGate",
+      "instruction": "bne TickStageCountdown"
+    },
+    {
+      "line": 16445,
+      "label": "CountdownStateGate_Continue_E29D",
+      "instruction": "CountdownStateGate_Continue_E29D:"
+    },
+    {
+      "line": 16458,
+      "label": "TickStageCountdown",
+      "instruction": "TickStageCountdown:"
+    },
+    {
+      "line": 16459,
+      "label": "TickStageCountdown",
+      "instruction": "dec z:CountdownDivider"
+    },
+    {
+      "line": 16460,
+      "label": "TickStageCountdown",
+      "instruction": "bne CountdownWarning"
+    },
+    {
+      "line": 16462,
+      "label": "TickStageCountdown",
+      "instruction": "sta z:CountdownDivider"
+    },
+    {
+      "line": 16467,
+      "label": "TickStageCountdown_Continue_E2B5",
+      "instruction": "TickStageCountdown_Continue_E2B5:"
+    },
+    {
+      "line": 16468,
+      "label": "TickStageCountdown_Continue_E2B5",
+      "instruction": "lda a:CountdownHundredsTile,x"
+    },
+    {
+      "line": 16470,
+      "label": "TickStageCountdown_Continue_E2B5",
+      "instruction": "bcs TickStageCountdown_Continue_E2BF"
+    },
+    {
+      "line": 16473,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "TickStageCountdown_Continue_E2BF:"
+    },
+    {
+      "line": 16474,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "sta a:CountdownHundredsTile,x"
+    },
+    {
+      "line": 16481,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "bpl TickStageCountdown_Continue_E2B5"
+    },
+    {
+      "line": 16482,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "lda a:CountdownHundredsTile"
+    },
+    {
+      "line": 16483,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "ora a:CountdownTensTile"
+    },
+    {
+      "line": 16484,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "ora a:CountdownUnitsTile"
+    },
+    {
+      "line": 16485,
+      "label": "TickStageCountdown_Continue_E2BF",
+      "instruction": "bne CountdownWarning"
+    },
+    {
+      "line": 16493,
+      "label": "SetExpiredCountdownDisplay",
+      "instruction": "SetExpiredCountdownDisplay:"
+    },
+    {
+      "line": 16495,
+      "label": "SetExpiredCountdownDisplay",
+      "instruction": "sta a:CountdownHundredsTile"
+    },
+    {
+      "line": 16497,
+      "label": "SetExpiredCountdownDisplay",
+      "instruction": "sta a:CountdownTensTile"
+    },
+    {
+      "line": 16499,
+      "label": "SetExpiredCountdownDisplay",
+      "instruction": "sta a:CountdownUnitsTile"
+    },
+    {
+      "line": 16507,
+      "label": "CountdownWarning",
+      "instruction": "CountdownWarning:"
+    },
+    {
+      "line": 16508,
+      "label": "CountdownWarning",
+      "instruction": "lda a:CountdownHundredsTile"
+    },
+    {
+      "line": 16509,
+      "label": "CountdownWarning",
+      "instruction": "bne CountdownReturn"
+    },
+    {
+      "line": 16515,
+      "label": "CountdownWarning_Continue_E2EB",
+      "instruction": "CountdownWarning_Continue_E2EB:"
+    },
+    {
+      "line": 16516,
+      "label": "CountdownWarning_Continue_E2EB",
+      "instruction": "lda a:CountdownTensTile"
+    },
+    {
+      "line": 16518,
+      "label": "CountdownWarning_Continue_E2EB",
+      "instruction": "bcs CountdownReturn"
+    },
+    {
+      "line": 16521,
+      "label": "CountdownWarning_Continue_E2EB",
+      "instruction": "bne CountdownReturn"
+    },
+    {
+      "line": 16531,
+      "label": "CountdownReturn",
+      "instruction": "CountdownReturn:"
+    },
+    {
+      "line": 16540,
+      "label": "ApplyOverlayValueCost",
+      "instruction": "ApplyOverlayValueCost:"
+    },
+    {
+      "line": 16542,
+      "label": "ApplyOverlayValueCost_Loop_E300",
+      "instruction": "ApplyOverlayValueCost_Loop_E300:"
+    },
+    {
+      "line": 16543,
+      "label": "ApplyOverlayValueCost_Loop_E300",
+      "instruction": "lda a:OverlaySprites,x"
+    },
+    {
+      "line": 16544,
+      "label": "ApplyOverlayValueCost_Loop_E300",
+      "instruction": "bmi ApplyOverlayValueCost_Continue_E30B"
+    },
+    {
+      "line": 16549,
+      "label": "ApplyOverlayValueCost_Loop_E300",
+      "instruction": "bne ApplyOverlayValueCost_Loop_E300"
+    },
+    {
+      "line": 16550,
+      "label": "ApplyOverlayValueCost_Continue_E30B",
+      "instruction": "ApplyOverlayValueCost_Continue_E30B:"
+    },
+    {
+      "line": 16551,
+      "label": "ApplyOverlayValueCost_Continue_E30B",
+      "instruction": "lda a:$033e,x"
+    },
+    {
+      "line": 16552,
+      "label": "ApplyOverlayValueCost_Continue_E30B",
+      "instruction": "beq ApplyOverlayValueCost_Return_E353"
+    },
+    {
+      "line": 16557,
+      "label": "ApplyOverlayValueCost_Loop_E317",
+      "instruction": "ApplyOverlayValueCost_Loop_E317:"
+    },
+    {
+      "line": 16558,
+      "label": "ApplyOverlayValueCost_Loop_E317",
+      "instruction": "lda a:$0334,x"
+    },
+    {
+      "line": 16561,
+      "label": "ApplyOverlayValueCost_Loop_E317",
+      "instruction": "bne ApplyOverlayValueCost_Continue_E321"
+    },
+    {
+      "line": 16563,
+      "label": "ApplyOverlayValueCost_Continue_E321",
+      "instruction": "ApplyOverlayValueCost_Continue_E321:"
+    },
+    {
+      "line": 16566,
+      "label": "ApplyOverlayValueCost_Continue_E321",
+      "instruction": "bcs ApplyOverlayValueCost_Continue_E329"
+    },
+    {
+      "line": 16569,
+      "label": "ApplyOverlayValueCost_Continue_E329",
+      "instruction": "ApplyOverlayValueCost_Continue_E329:"
+    },
+    {
+      "line": 16574,
+      "label": "ApplyOverlayValueCost_Continue_E329",
+      "instruction": "bpl ApplyOverlayValueCost_Loop_E317"
+    },
+    {
+      "line": 16575,
+      "label": "ApplyOverlayValueCost_Continue_E329",
+      "instruction": "bcc ApplyOverlayValueCost_Return_E353"
+    },
+    {
+      "line": 16577,
+      "label": "ApplyOverlayValueCost_Loop_E336",
+      "instruction": "ApplyOverlayValueCost_Loop_E336:"
+    },
+    {
+      "line": 16579,
+      "label": "ApplyOverlayValueCost_Loop_E336",
+      "instruction": "sta a:$0334,x"
+    },
+    {
+      "line": 16581,
+      "label": "ApplyOverlayValueCost_Loop_E336",
+      "instruction": "bpl ApplyOverlayValueCost_Loop_E336"
+    },
+    {
+      "line": 16583,
+      "label": "ApplyOverlayValueCost_Loop_E33F",
+      "instruction": "ApplyOverlayValueCost_Loop_E33F:"
+    },
+    {
+      "line": 16584,
+      "label": "ApplyOverlayValueCost_Loop_E33F",
+      "instruction": "lda a:$0334,x"
+    },
+    {
+      "line": 16585,
+      "label": "ApplyOverlayValueCost_Loop_E33F",
+      "instruction": "bne ApplyOverlayValueCost_Continue_E34E"
+    },
+    {
+      "line": 16587,
+      "label": "ApplyOverlayValueCost_Loop_E33F",
+      "instruction": "sta a:$0334,x"
+    },
+    {
+      "line": 16590,
+      "label": "ApplyOverlayValueCost_Loop_E33F",
+      "instruction": "bne ApplyOverlayValueCost_Loop_E33F"
+    },
+    {
+      "line": 16591,
+      "label": "ApplyOverlayValueCost_Continue_E34E",
+      "instruction": "ApplyOverlayValueCost_Continue_E34E:"
+    },
+    {
+      "line": 16592,
+      "label": "ApplyOverlayValueCost_Continue_E34E",
+      "instruction": "jsr a:ClearStatusOverlayFlags"
+    },
+    {
+      "line": 16594,
+      "label": "ApplyOverlayValueCost_Return_E353",
+      "instruction": "ApplyOverlayValueCost_Return_E353:"
+    },
+    {
+      "line": 16638,
+      "label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "instruction": "lda z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16641,
+      "label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "instruction": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16642,
+      "label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "instruction": "lda z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 16644,
+      "label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "instruction": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "line": 16645,
+      "label": "UpdatePlayerSpecialMode_Continue_E36F",
+      "instruction": "ora z:PlayerSpecialTicks"
+    },
+    {
+      "line": 16692,
+      "label": "PlayerStandingEntry_Continue_E3C8",
+      "instruction": "jsr a:ApplyOverlayValueCost"
+    },
+    {
+      "line": 18128,
+      "label": "UpdatePlayerProtectedMotion_Continue_EAC2",
+      "instruction": "jsr a:ApplyDamageOverlayRule"
+    },
+    {
+      "line": 18129,
+      "label": "UpdatePlayerProtectedMotion_Continue_EAC2",
+      "instruction": "lda a:$0342"
+    },
+    {
+      "line": 18167,
+      "label": "StartPlayerDamageArc",
+      "instruction": "jsr a:ApplyDamageOverlayRule"
+    },
+    {
+      "line": 18168,
+      "label": "StartPlayerDamageArc",
+      "instruction": "lda a:$0342"
+    },
+    {
+      "line": 18199,
+      "label": "ApplyDamageOverlayRule",
+      "instruction": "ApplyDamageOverlayRule:"
+    },
+    {
+      "line": 18201,
+      "label": "ApplyDamageOverlayRule",
+      "instruction": "bne ApplyDamageOverlayRule_Continue_EB6A"
+    },
+    {
+      "line": 18202,
+      "label": "ApplyDamageOverlayRule",
+      "instruction": "inc z:AlternatingDamageLatch"
+    },
+    {
+      "line": 18203,
+      "label": "ApplyDamageOverlayRule",
+      "instruction": "lda z:AlternatingDamageLatch"
+    },
+    {
+      "line": 18205,
+      "label": "ApplyDamageOverlayRule",
+      "instruction": "bne ApplyDamageOverlayRule_Return_EB81"
+    },
+    {
+      "line": 18206,
+      "label": "ApplyDamageOverlayRule_Continue_EB6A",
+      "instruction": "ApplyDamageOverlayRule_Continue_EB6A:"
+    },
+    {
+      "line": 18208,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "ApplyDamageOverlayRule_Loop_EB6C:"
+    },
+    {
+      "line": 18209,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "lda a:OverlaySprites,y"
+    },
+    {
+      "line": 18210,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "bmi ApplyDamageOverlayRule_Continue_EB7C"
+    },
+    {
+      "line": 18211,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "lda a:$0342,y"
+    },
+    {
+      "line": 18212,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "bne ApplyDamageOverlayRule_Continue_EB7C"
+    },
+    {
+      "line": 18217,
+      "label": "ApplyDamageOverlayRule_Loop_EB6C",
+      "instruction": "bne ApplyDamageOverlayRule_Loop_EB6C"
+    },
+    {
+      "line": 18218,
+      "label": "ApplyDamageOverlayRule_Continue_EB7C",
+      "instruction": "ApplyDamageOverlayRule_Continue_EB7C:"
+    },
+    {
+      "line": 18220,
+      "label": "ApplyDamageOverlayRule_Continue_EB7C",
+      "instruction": "sta a:$033e,y"
+    },
+    {
+      "line": 18221,
+      "label": "ApplyDamageOverlayRule_Return_EB81",
+      "instruction": "ApplyDamageOverlayRule_Return_EB81:"
+    },
+    {
+      "line": 18287,
+      "label": "PlayerFallOutOfScreen_Continue_EBB4",
+      "instruction": "sta z:AlternatingDamageLatch"
+    },
+    {
+      "line": 18558,
+      "label": "RunPlayerDialogue_Loop_ED22",
+      "instruction": "stx a:$0413"
+    },
+    {
+      "line": 18627,
+      "label": "PrepareDialogueComposition",
+      "instruction": "jsr a:Bank05_UpdateStatusStreams"
+    },
+    {
+      "line": 18777,
+      "label": "WaitForDialogueInput_Continue_ED76",
+      "instruction": "jsr a:Bank05_UpdateStatusStreams"
+    },
+    {
+      "line": 18856,
+      "label": "WaitForDialogueInput_Loop_ED99",
+      "instruction": "stx a:$0413"
+    },
+    {
+      "line": 19045,
+      "label": "DialoguePaidActorReward_Loop_EE2F",
+      "instruction": "lda a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19066,
+      "label": "DialoguePaidActorReward_Loop_EE50",
+      "instruction": "sta a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19071,
+      "label": "DialoguePaidActorReward_Loop_EE5A",
+      "instruction": "lda a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19074,
+      "label": "DialoguePaidActorReward_Loop_EE5A",
+      "instruction": "sta a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19079,
+      "label": "DialoguePaidActorReward_Continue_EE69",
+      "instruction": "inc z:StatusDisplayDirty"
+    },
+    {
+      "line": 19533,
+      "label": "ConvertStageTimerToReward_Continue_EF70",
+      "instruction": "sta a:CountdownUnitsTile"
+    },
+    {
+      "line": 19534,
+      "label": "ConvertStageTimerToReward_Continue_EF70",
+      "instruction": "lda a:CountdownHundredsTile"
+    },
+    {
+      "line": 19535,
+      "label": "ConvertStageTimerToReward_Continue_EF70",
+      "instruction": "ora a:CountdownTensTile"
+    },
+    {
+      "line": 19545,
+      "label": "DecrementTimerDisplay_Loop_EF8D",
+      "instruction": "lda a:CountdownHundredsTile,x"
+    },
+    {
+      "line": 19551,
+      "label": "DecrementTimerDisplay_Continue_EF97",
+      "instruction": "sta a:CountdownHundredsTile,x"
+    },
+    {
+      "line": 19567,
+      "label": "AddConvertedTimerReward_Loop_EFAB",
+      "instruction": "lda a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19582,
+      "label": "AddConvertedTimerReward_Continue_EFC3",
+      "instruction": "sta a:StatusDigitCodes,x"
+    },
+    {
+      "line": 19592,
+      "label": "AddConvertedTimerReward_Continue_EFD2",
+      "instruction": "inc z:StatusDisplayDirty"
+    },
+    {
+      "line": 21565,
+      "label": "ClearStatusOverlayFlags",
+      "instruction": "ClearStatusOverlayFlags:"
+    },
+    {
+      "line": 21568,
+      "label": "ClearStatusOverlayFlags",
+      "instruction": "sta z:AlternatingDamageLatch"
+    },
+    {
+      "line": 21569,
+      "label": "ClearStatusOverlayFlags_Continue_F818",
+      "instruction": "ClearStatusOverlayFlags_Continue_F818:"
+    },
+    {
+      "line": 21570,
+      "label": "ClearStatusOverlayFlags_Continue_F818",
+      "instruction": "sta a:$0342,y"
+    },
+    {
+      "line": 21575,
+      "label": "ClearStatusOverlayFlags_Continue_F818",
+      "instruction": "bpl ClearStatusOverlayFlags_Continue_F818"
+    },
+    {
+      "line": 21627,
+      "label": "SaturateRewardDigits_Loop_F843",
+      "instruction": "sta a:StatusDigitCodes,y"
+    },
+    {
+      "line": 21637,
+      "label": "SaturateTotalDigits_Loop_F84E",
+      "instruction": "sta a:$0334,y"
+    },
+    {
+      "line": 21657,
+      "label": "UpdatePlayerLinkedDeparture",
+      "instruction": "sta z:CountdownDivider"
+    },
+    {
+      "line": 21693,
+      "label": "DepartureMovePlayerAndActor",
+      "instruction": "lda a:$0326"
+    },
+    {
+      "line": 22425,
+      "label": "FinalBossDefeatCountdown",
+      "instruction": "FinalBossDefeatCountdown:"
+    },
+    {
+      "line": 22438,
+      "label": "FinalBossDefeatCountdown",
+      "instruction": "bne FinalBossDefeatCountdown_Continue_FBE6"
+    },
+    {
+      "line": 22450,
+      "label": "FinalBossDefeatCountdown",
+      "instruction": "beq FinalBossDefeatCountdown_Return_FBFE"
+    },
+    {
+      "line": 22468,
+      "label": "FinalBossDefeatCountdown",
+      "instruction": "bne FinalBossDefeatCountdown_Return_FBFE"
+    },
+    {
+      "line": 22498,
+      "label": "FinalBossDefeatCountdown_Continue_FBE6",
+      "instruction": "FinalBossDefeatCountdown_Continue_FBE6:"
+    },
+    {
+      "line": 22505,
+      "label": "FinalBossDefeatCountdown_Continue_FBE6",
+      "instruction": "bne FinalBossDefeatCountdown_Continue_FBFB"
+    },
+    {
+      "line": 22559,
+      "label": "FinalBossDefeatCountdown_Continue_FBFB",
+      "instruction": "FinalBossDefeatCountdown_Continue_FBFB:"
+    },
+    {
+      "line": 22566,
+      "label": "FinalBossDefeatCountdown_Return_FBFE",
+      "instruction": "FinalBossDefeatCountdown_Return_FBFE:"
+    },
+    {
+      "line": 22819,
+      "label": "FinalGoalEndingDelay",
+      "instruction": "sta z:CountdownDivider"
+    }
+  ]
+}

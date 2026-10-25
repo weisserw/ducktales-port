@@ -1,0 +1,3919 @@
+{
+  "area": "B12",
+  "source_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "regions": [
+    {
+      "ledger_id": "region-278",
+      "offset": 120038,
+      "length": 94,
+      "kind": "Code",
+      "primary_area": "B05",
+      "related_areas": [
+        "B05",
+        "B12"
+      ],
+      "source": [
+        "game.asm:13319"
+      ],
+      "units": [
+        {
+          "id": "region-278/unit-0",
+          "label": "SnapActorPositiveY",
+          "offset": 120038,
+          "length": 16,
+          "area": "B05"
+        },
+        {
+          "id": "region-278/unit-1",
+          "label": "InitializeTitle",
+          "offset": 120054,
+          "length": 78,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-279",
+      "offset": 120132,
+      "length": 111,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13371"
+      ],
+      "units": [
+        {
+          "id": "region-279/unit-0",
+          "label": "PrepareTitleActors",
+          "offset": 120132,
+          "length": 111,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-280",
+      "offset": 120243,
+      "length": 12,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13426"
+      ],
+      "units": [
+        {
+          "id": "region-280/unit-0",
+          "label": "TitleInputLoop",
+          "offset": 120243,
+          "length": 12,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-281",
+      "offset": 120255,
+      "length": 31,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13440"
+      ],
+      "units": [
+        {
+          "id": "region-281/unit-0",
+          "label": "ChangeTitleOption",
+          "offset": 120255,
+          "length": 31,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-282",
+      "offset": 120286,
+      "length": 83,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13464"
+      ],
+      "units": [
+        {
+          "id": "region-282/unit-0",
+          "label": "UpdateTitleFrame",
+          "offset": 120286,
+          "length": 60,
+          "area": "B12"
+        },
+        {
+          "id": "region-282/unit-1",
+          "label": "CopyTitleOverlay",
+          "offset": 120346,
+          "length": 23,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1269",
+      "offset": 120369,
+      "length": 15,
+      "kind": "Data",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13516"
+      ],
+      "units": [
+        {
+          "id": "region-1269/unit-0",
+          "label": "StageBoundaryPositionData",
+          "offset": 120369,
+          "length": 15,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-283",
+      "offset": 120384,
+      "length": 26,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13523"
+      ],
+      "units": [
+        {
+          "id": "region-283/unit-0",
+          "label": "InitializeLandSelect",
+          "offset": 120384,
+          "length": 26,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-284",
+      "offset": 120410,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13542"
+      ],
+      "units": [
+        {
+          "id": "region-284/unit-0",
+          "label": "LoadLandSelectLayout",
+          "offset": 120410,
+          "length": 6,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-285",
+      "offset": 120416,
+      "length": 84,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13552"
+      ],
+      "units": [
+        {
+          "id": "region-285/unit-0",
+          "label": "CreateLandSelectActors",
+          "offset": 120416,
+          "length": 84,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-286",
+      "offset": 120500,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13597"
+      ],
+      "units": [
+        {
+          "id": "region-286/unit-0",
+          "label": "LandSelectAlternateState",
+          "offset": 120500,
+          "length": 34,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1206",
+      "offset": 120505,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13607"
+      ],
+      "units": [
+        {
+          "id": "region-1206/unit-0",
+          "label": "StageSelectCompletionPresentation",
+          "offset": 120505,
+          "length": 24,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-287",
+      "offset": 120529,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13625"
+      ],
+      "units": [
+        {
+          "id": "region-287/unit-0",
+          "label": "LandSelectAlternateState",
+          "offset": 120500,
+          "length": 34,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1207",
+      "offset": 120534,
+      "length": 41,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13633"
+      ],
+      "units": [
+        {
+          "id": "region-1207/unit-0",
+          "label": "PlayAllStagesCompletionScene",
+          "offset": 120534,
+          "length": 41,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-288",
+      "offset": 120575,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13658"
+      ],
+      "units": [
+        {
+          "id": "region-288/unit-0",
+          "label": "FindAvailableLand",
+          "offset": 120575,
+          "length": 12,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-289",
+      "offset": 120584,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13671"
+      ],
+      "units": [
+        {
+          "id": "region-289/unit-0",
+          "label": "FindAvailableLand",
+          "offset": 120575,
+          "length": 12,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-290",
+      "offset": 120587,
+      "length": 71,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13679"
+      ],
+      "units": [
+        {
+          "id": "region-290/unit-0",
+          "label": "PositionLandSelection",
+          "offset": 120587,
+          "length": 71,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-291",
+      "offset": 120658,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13720"
+      ],
+      "units": [
+        {
+          "id": "region-291/unit-0",
+          "label": "WrapLandSelection",
+          "offset": 120658,
+          "length": 4,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-292",
+      "offset": 120662,
+      "length": 10,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13730"
+      ],
+      "units": [
+        {
+          "id": "region-292/unit-0",
+          "label": "SkipCompletedLand",
+          "offset": 120662,
+          "length": 15,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-293",
+      "offset": 120672,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13743"
+      ],
+      "units": [
+        {
+          "id": "region-293/unit-0",
+          "label": "SkipCompletedLand",
+          "offset": 120662,
+          "length": 15,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-294",
+      "offset": 120677,
+      "length": 124,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13751"
+      ],
+      "units": [
+        {
+          "id": "region-294/unit-0",
+          "label": "LandSelectLoopAndConfirm",
+          "offset": 120677,
+          "length": 124,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-295",
+      "offset": 120801,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13809"
+      ],
+      "units": [
+        {
+          "id": "region-295/unit-0",
+          "label": "BuildSelectedStageColumns",
+          "offset": 120801,
+          "length": 3,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1270",
+      "offset": 121014,
+      "length": 51,
+      "kind": "Data",
+      "primary_area": "B12",
+      "related_areas": [
+        "B12"
+      ],
+      "source": [
+        "game.asm:13920"
+      ],
+      "units": [
+        {
+          "id": "region-1270/unit-0",
+          "label": "StageProgressionParameterData",
+          "offset": 121014,
+          "length": 51,
+          "area": "B12"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    }
+  ],
+  "units": [
+    {
+      "id": "region-278/unit-1",
+      "label": "InitializeTitle",
+      "offset": 120054,
+      "length": 78,
+      "area": "B12"
+    },
+    {
+      "id": "region-279/unit-0",
+      "label": "PrepareTitleActors",
+      "offset": 120132,
+      "length": 111,
+      "area": "B12"
+    },
+    {
+      "id": "region-280/unit-0",
+      "label": "TitleInputLoop",
+      "offset": 120243,
+      "length": 12,
+      "area": "B12"
+    },
+    {
+      "id": "region-281/unit-0",
+      "label": "ChangeTitleOption",
+      "offset": 120255,
+      "length": 31,
+      "area": "B12"
+    },
+    {
+      "id": "region-282/unit-0",
+      "label": "UpdateTitleFrame",
+      "offset": 120286,
+      "length": 60,
+      "area": "B12"
+    },
+    {
+      "id": "region-282/unit-1",
+      "label": "CopyTitleOverlay",
+      "offset": 120346,
+      "length": 23,
+      "area": "B12"
+    },
+    {
+      "id": "region-1269/unit-0",
+      "label": "StageBoundaryPositionData",
+      "offset": 120369,
+      "length": 15,
+      "area": "B12"
+    },
+    {
+      "id": "region-283/unit-0",
+      "label": "InitializeLandSelect",
+      "offset": 120384,
+      "length": 26,
+      "area": "B12"
+    },
+    {
+      "id": "region-284/unit-0",
+      "label": "LoadLandSelectLayout",
+      "offset": 120410,
+      "length": 6,
+      "area": "B12"
+    },
+    {
+      "id": "region-285/unit-0",
+      "label": "CreateLandSelectActors",
+      "offset": 120416,
+      "length": 84,
+      "area": "B12"
+    },
+    {
+      "id": "region-286/unit-0",
+      "label": "LandSelectAlternateState",
+      "offset": 120500,
+      "length": 34,
+      "area": "B12"
+    },
+    {
+      "id": "region-1206/unit-0",
+      "label": "StageSelectCompletionPresentation",
+      "offset": 120505,
+      "length": 24,
+      "area": "B12"
+    },
+    {
+      "id": "region-287/unit-0",
+      "label": "LandSelectAlternateState",
+      "offset": 120500,
+      "length": 34,
+      "area": "B12"
+    },
+    {
+      "id": "region-1207/unit-0",
+      "label": "PlayAllStagesCompletionScene",
+      "offset": 120534,
+      "length": 41,
+      "area": "B12"
+    },
+    {
+      "id": "region-288/unit-0",
+      "label": "FindAvailableLand",
+      "offset": 120575,
+      "length": 12,
+      "area": "B12"
+    },
+    {
+      "id": "region-289/unit-0",
+      "label": "FindAvailableLand",
+      "offset": 120575,
+      "length": 12,
+      "area": "B12"
+    },
+    {
+      "id": "region-290/unit-0",
+      "label": "PositionLandSelection",
+      "offset": 120587,
+      "length": 71,
+      "area": "B12"
+    },
+    {
+      "id": "region-291/unit-0",
+      "label": "WrapLandSelection",
+      "offset": 120658,
+      "length": 4,
+      "area": "B12"
+    },
+    {
+      "id": "region-292/unit-0",
+      "label": "SkipCompletedLand",
+      "offset": 120662,
+      "length": 15,
+      "area": "B12"
+    },
+    {
+      "id": "region-293/unit-0",
+      "label": "SkipCompletedLand",
+      "offset": 120662,
+      "length": 15,
+      "area": "B12"
+    },
+    {
+      "id": "region-294/unit-0",
+      "label": "LandSelectLoopAndConfirm",
+      "offset": 120677,
+      "length": 124,
+      "area": "B12"
+    },
+    {
+      "id": "region-295/unit-0",
+      "label": "BuildSelectedStageColumns",
+      "offset": 120801,
+      "length": 3,
+      "area": "B12"
+    },
+    {
+      "id": "region-1270/unit-0",
+      "label": "StageProgressionParameterData",
+      "offset": 121014,
+      "length": 51,
+      "area": "B12"
+    }
+  ],
+  "selection_labels": [
+    "BuildSelectedStageColumns",
+    "ChangeTitleOption",
+    "ChangeTitleOption_Continue_D5C0",
+    "CopyTitleOverlay",
+    "CopyTitleOverlay_Continue_D60C",
+    "CopyTitleOverlay_Continue_D617",
+    "CreateLandSelectActors",
+    "CreateLandSelectActors_Continue_D657",
+    "FindAvailableLand",
+    "FindAvailableLand_Advance_D6F8",
+    "FindAvailableLand_Continue_D6F1",
+    "InitializeLandSelect",
+    "InitializeTitle",
+    "LandSelectAlternateState",
+    "LandSelectAlternateState_Continue_D6C1",
+    "LandSelectLoopAndConfirm",
+    "LandSelectLoopAndConfirm_CheckA",
+    "LandSelectLoopAndConfirm_Frame",
+    "LandSelectLoopAndConfirm_Input",
+    "LandSelectLoopAndConfirm_NextLand",
+    "LoadLandSelectLayout",
+    "PlayAllStagesCompletionScene",
+    "PlayAllStagesCompletionScene_Continue_D6E4",
+    "PositionLandSelection",
+    "PrepareTitleActors",
+    "PrepareTitleActors_Continue_D545",
+    "PrepareTitleActors_Continue_D593",
+    "SkipCompletedLand",
+    "SkipCompletedLand_Continue_D750",
+    "SnapActorPositiveY",
+    "StageBoundaryPositionData",
+    "StageProgressionParameterData",
+    "StageSelectCompletionPresentation",
+    "TitleInputLoop",
+    "TitleInputLoop_Confirm",
+    "UpdateTitleFrame",
+    "UpdateTitleFrame_Continue_D5FB",
+    "UpdateTitleFrame_D5CE",
+    "UpdateTitleFrame_D5D7",
+    "WrapLandSelection"
+  ],
+  "label_references": [
+    {
+      "line": 13323,
+      "source": "SnapActorPositiveY:"
+    },
+    {
+      "line": 13334,
+      "source": "InitializeTitle:"
+    },
+    {
+      "line": 13342,
+      "source": "    jsr a:CopyTitleOverlay"
+    },
+    {
+      "line": 13375,
+      "source": "PrepareTitleActors:"
+    },
+    {
+      "line": 13383,
+      "source": "PrepareTitleActors_Continue_D545:"
+    },
+    {
+      "line": 13401,
+      "source": "    bpl PrepareTitleActors_Continue_D545"
+    },
+    {
+      "line": 13415,
+      "source": "PrepareTitleActors_Continue_D593:"
+    },
+    {
+      "line": 13419,
+      "source": "    bpl PrepareTitleActors_Continue_D593"
+    },
+    {
+      "line": 13430,
+      "source": "TitleInputLoop:"
+    },
+    {
+      "line": 13433,
+      "source": "    bne TitleInputLoop_Confirm"
+    },
+    {
+      "line": 13436,
+      "source": "    beq UpdateTitleFrame_D5CE"
+    },
+    {
+      "line": 13444,
+      "source": "ChangeTitleOption:"
+    },
+    {
+      "line": 13451,
+      "source": "    bcc ChangeTitleOption_Continue_D5C0"
+    },
+    {
+      "line": 13454,
+      "source": "ChangeTitleOption_Continue_D5C0:"
+    },
+    {
+      "line": 13468,
+      "source": "UpdateTitleFrame_D5CE:"
+    },
+    {
+      "line": 13469,
+      "source": "    jsr a:UpdateTitleFrame_D5D7"
+    },
+    {
+      "line": 13470,
+      "source": "    jmp a:TitleInputLoop"
+    },
+    {
+      "line": 13471,
+      "source": "TitleInputLoop_Confirm:"
+    },
+    {
+      "line": 13472,
+      "source": "    jmp a:InitializeLandSelect"
+    },
+    {
+      "line": 13473,
+      "source": "UpdateTitleFrame_D5D7:"
+    },
+    {
+      "line": 13475,
+      "source": "    bne UpdateTitleFrame_Continue_D5FB"
+    },
+    {
+      "line": 13478,
+      "source": "    bne UpdateTitleFrame_Continue_D5FB"
+    },
+    {
+      "line": 13483,
+      "source": "    bne UpdateTitleFrame_Continue_D5FB"
+    },
+    {
+      "line": 13490,
+      "source": "UpdateTitleFrame_Continue_D5FB:"
+    },
+    {
+      "line": 13499,
+      "source": "CopyTitleOverlay:"
+    },
+    {
+      "line": 13501,
+      "source": "CopyTitleOverlay_Continue_D60C:"
+    },
+    {
+      "line": 13505,
+      "source": "    bpl CopyTitleOverlay_Continue_D60C"
+    },
+    {
+      "line": 13507,
+      "source": "CopyTitleOverlay_Continue_D617:"
+    },
+    {
+      "line": 13511,
+      "source": "    bpl CopyTitleOverlay_Continue_D617"
+    },
+    {
+      "line": 13517,
+      "source": "StageBoundaryPositionData:"
+    },
+    {
+      "line": 13527,
+      "source": "InitializeLandSelect:"
+    },
+    {
+      "line": 13546,
+      "source": "LoadLandSelectLayout:"
+    },
+    {
+      "line": 13556,
+      "source": "CreateLandSelectActors:"
+    },
+    {
+      "line": 13561,
+      "source": "CreateLandSelectActors_Continue_D657:"
+    },
+    {
+      "line": 13581,
+      "source": "    bpl CreateLandSelectActors_Continue_D657"
+    },
+    {
+      "line": 13591,
+      "source": "    bne LandSelectAlternateState_Continue_D6C1"
+    },
+    {
+      "line": 13593,
+      "source": "    beq FindAvailableLand"
+    },
+    {
+      "line": 13601,
+      "source": "LandSelectAlternateState:"
+    },
+    {
+      "line": 13611,
+      "source": "StageSelectCompletionPresentation:"
+    },
+    {
+      "line": 13619,
+      "source": "    bne PlayAllStagesCompletionScene_Continue_D6E4"
+    },
+    {
+      "line": 13627,
+      "source": "LandSelectAlternateState_Continue_D6C1:"
+    },
+    {
+      "line": 13637,
+      "source": "PlayAllStagesCompletionScene:"
+    },
+    {
+      "line": 13650,
+      "source": "PlayAllStagesCompletionScene_Continue_D6E4:"
+    },
+    {
+      "line": 13662,
+      "source": "FindAvailableLand:"
+    },
+    {
+      "line": 13664,
+      "source": "FindAvailableLand_Continue_D6F1:"
+    },
+    {
+      "line": 13667,
+      "source": "    beq PositionLandSelection"
+    },
+    {
+      "line": 13673,
+      "source": "FindAvailableLand_Advance_D6F8:"
+    },
+    {
+      "line": 13675,
+      "source": "    bne FindAvailableLand_Continue_D6F1"
+    },
+    {
+      "line": 13683,
+      "source": "PositionLandSelection:"
+    },
+    {
+      "line": 13703,
+      "source": "LandSelectLoopAndConfirm_Input:"
+    },
+    {
+      "line": 13706,
+      "source": "    beq LandSelectLoopAndConfirm_CheckA"
+    },
+    {
+      "line": 13708,
+      "source": "LandSelectLoopAndConfirm_NextLand:"
+    },
+    {
+      "line": 13716,
+      "source": "    bcc SkipCompletedLand"
+    },
+    {
+      "line": 13724,
+      "source": "WrapLandSelection:"
+    },
+    {
+      "line": 13734,
+      "source": "SkipCompletedLand:"
+    },
+    {
+      "line": 13739,
+      "source": "    beq LandSelectLoopAndConfirm"
+    },
+    {
+      "line": 13745,
+      "source": "SkipCompletedLand_Continue_D750:"
+    },
+    {
+      "line": 13747,
+      "source": "    jmp a:LandSelectLoopAndConfirm_NextLand"
+    },
+    {
+      "line": 13755,
+      "source": "LandSelectLoopAndConfirm:"
+    },
+    {
+      "line": 13774,
+      "source": "LandSelectLoopAndConfirm_Frame:"
+    },
+    {
+      "line": 13780,
+      "source": "    jmp a:LandSelectLoopAndConfirm_Input"
+    },
+    {
+      "line": 13781,
+      "source": "LandSelectLoopAndConfirm_CheckA:"
+    },
+    {
+      "line": 13784,
+      "source": "    beq LandSelectLoopAndConfirm_Frame"
+    },
+    {
+      "line": 13813,
+      "source": "BuildSelectedStageColumns:"
+    },
+    {
+      "line": 13921,
+      "source": "StageProgressionParameterData:"
+    },
+    {
+      "line": 14298,
+      "source": "    jmp a:InitializeLandSelect"
+    },
+    {
+      "line": 14849,
+      "source": "    jmp a:InitializeLandSelect"
+    },
+    {
+      "line": 18073,
+      "source": "    jsr a:SnapActorPositiveY"
+    },
+    {
+      "line": 19982,
+      "source": "    jsr a:SnapActorPositiveY"
+    },
+    {
+      "line": 20020,
+      "source": "    jsr a:SnapActorPositiveY"
+    }
+  ],
+  "state_symbols": [
+    "StageProgressBits",
+    "StageIndex",
+    "TitleOption",
+    "CompositionTick",
+    "CompletionActorLatch",
+    "SceneCompletionSignal",
+    "LateStageRoute",
+    "ControllerPressed",
+    "ControllerHeld",
+    "ObjectAnimation",
+    "ObjectAnimationTick",
+    "ObjectAnimationFrame",
+    "RandomState",
+    "PrimaryUploadPending"
+  ],
+  "state_references": [
+    {
+      "line": 2173,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 2175,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2188,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2219,
+      "source": "    sta a:ObjectAnimation+8"
+    },
+    {
+      "line": 2230,
+      "source": "    sta a:ObjectAnimationTick+8"
+    },
+    {
+      "line": 2231,
+      "source": "    sta a:ObjectAnimationFrame+8"
+    },
+    {
+      "line": 2259,
+      "source": "    lda a:ObjectAnimation+8"
+    },
+    {
+      "line": 2269,
+      "source": "    inc a:ObjectAnimation+8"
+    },
+    {
+      "line": 2270,
+      "source": "    lda a:ObjectAnimation+8"
+    },
+    {
+      "line": 2294,
+      "source": "    sta z:CompletionActorLatch"
+    },
+    {
+      "line": 2388,
+      "source": "    inc z:CompositionTick"
+    },
+    {
+      "line": 2389,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 2447,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 2496,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 2517,
+      "source": "    ldy a:ObjectAnimation,x"
+    },
+    {
+      "line": 2525,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2528,
+      "source": "    inc a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2533,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2534,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2536,
+      "source": "    inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2545,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2548,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2553,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2557,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2762,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 2769,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2770,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2890,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 3048,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 3074,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 3132,
+      "source": "    ldx z:CompletionActorLatch"
+    },
+    {
+      "line": 3134,
+      "source": "    lda z:SceneCompletionSignal"
+    },
+    {
+      "line": 3180,
+      "source": "    adc z:StageIndex"
+    },
+    {
+      "line": 3216,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 3434,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 3438,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3440,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3441,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3495,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3561,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3562,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3613,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3632,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3633,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3717,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3723,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 3724,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 3732,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 3756,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3757,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3759,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3788,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3790,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3791,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3795,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3823,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3825,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3829,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3891,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3899,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3910,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 3916,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3923,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3924,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3967,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4048,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4051,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4055,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4064,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4068,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4073,
+      "source": "    ldy a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4090,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4092,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4098,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4118,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 4119,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 4121,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 4136,
+      "source": "    inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 4142,
+      "source": "    dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 4146,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4147,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4172,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4196,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 4198,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 4217,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 4220,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4236,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4296,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4400,
+      "source": "    lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 4420,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4463,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4496,
+      "source": "    ldy a:ObjectAnimation,x"
+    },
+    {
+      "line": 4510,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4577,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4634,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4636,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4746,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 4805,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4808,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 4810,
+      "source": "    adc z:StageIndex"
+    },
+    {
+      "line": 4825,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4826,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4834,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4853,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4884,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4895,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4897,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4901,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4904,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4905,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4963,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5016,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5033,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5180,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5213,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5218,
+      "source": "    ora z:StageProgressBits"
+    },
+    {
+      "line": 5219,
+      "source": "    sta z:StageProgressBits"
+    },
+    {
+      "line": 5220,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5323,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5326,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5343,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5346,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5348,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5352,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5363,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5364,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5366,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5407,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5443,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 5445,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 5456,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 5470,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5483,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5484,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5492,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5501,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5515,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5538,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 5542,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5576,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5578,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5581,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 5593,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5599,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5600,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5634,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 5716,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 5719,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 5728,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5730,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5731,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5741,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 5755,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5760,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5762,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5766,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5769,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5770,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5844,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 5955,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6034,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6066,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6129,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 6135,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 6137,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 6138,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 6184,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6195,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6199,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6208,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6210,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6227,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6231,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6276,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6277,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6280,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6296,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6312,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6314,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6315,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6341,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6360,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6487,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6493,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6522,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6524,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6526,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6541,
+      "source": "    lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 6548,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 6576,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6578,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6579,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6584,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 6610,
+      "source": "    lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 6653,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 6654,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 6657,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 6734,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6769,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6771,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6772,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6775,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6778,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6781,
+      "source": "    dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 6783,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6784,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6807,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6809,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6810,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6876,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6901,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6903,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6904,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6914,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6919,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6923,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6925,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6926,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6935,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6937,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6938,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6954,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6956,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6957,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7015,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7017,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7034,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7113,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 7115,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 7116,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 7160,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7163,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7182,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7183,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7217,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7315,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7317,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7319,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7342,
+      "source": "    inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7376,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7377,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7379,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7418,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 7419,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 7423,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 7446,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7461,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7462,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7506,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7514,
+      "source": "    inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 7517,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7518,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7563,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7568,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7585,
+      "source": "    dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 7587,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7588,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7800,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7802,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 7804,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7805,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 7806,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7807,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 7847,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7889,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7909,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7963,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8083,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8084,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8086,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8127,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8133,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8135,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8137,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8139,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8140,
+      "source": "    ora a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8150,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8152,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8154,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8162,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8163,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8165,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8182,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8185,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8195,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8342,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8345,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8348,
+      "source": "    dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 8350,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8351,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8366,
+      "source": "    inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 8371,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 8381,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8382,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 8383,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8384,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 8508,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8515,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8517,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8518,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8528,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8531,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8533,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8537,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8539,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8540,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8541,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 8663,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8665,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8666,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8680,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8683,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8685,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8689,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8691,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8692,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8703,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8715,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8731,
+      "source": "    sta a:ObjectAnimationTick+8,y"
+    },
+    {
+      "line": 8732,
+      "source": "    sta a:ObjectAnimationFrame+8,y"
+    },
+    {
+      "line": 8734,
+      "source": "    sta a:ObjectAnimation+8,y"
+    },
+    {
+      "line": 8857,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 8859,
+      "source": "    sta z:RandomState"
+    },
+    {
+      "line": 8873,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 8934,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8937,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8939,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8943,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8945,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8946,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8993,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 9002,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9004,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9005,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9033,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 9036,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9038,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9042,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9044,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9045,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9103,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9105,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9106,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9176,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9177,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9202,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9205,
+      "source": "    inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9211,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9215,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9227,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9231,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9239,
+      "source": "    cmp a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9241,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9244,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9249,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9262,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9284,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9286,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9287,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9295,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 9298,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9300,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9304,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9306,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9308,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 9321,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9322,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 9348,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9350,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9351,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9428,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9454,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9455,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9457,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9458,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 9482,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9558,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9560,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9561,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9694,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9695,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9804,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9811,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9825,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9826,
+      "source": "    ora a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9829,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9846,
+      "source": "    ldx z:StageIndex"
+    },
+    {
+      "line": 10126,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10133,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 10134,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 10140,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 10143,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10168,
+      "source": "    lda z:LateStageRoute"
+    },
+    {
+      "line": 10170,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 10191,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10200,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 10203,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 10219,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 10262,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 10364,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10372,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 10373,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 10434,
+      "source": "    lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 10475,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 10599,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 10701,
+      "source": "    rol z:ControllerPressed"
+    },
+    {
+      "line": 10712,
+      "source": "    ora z:ControllerPressed"
+    },
+    {
+      "line": 10713,
+      "source": "    sta z:ControllerPressed"
+    },
+    {
+      "line": 10719,
+      "source": "    lda z:ControllerPressed,x"
+    },
+    {
+      "line": 10721,
+      "source": "    eor z:ControllerHeld,x"
+    },
+    {
+      "line": 10722,
+      "source": "    and z:ControllerPressed,x"
+    },
+    {
+      "line": 10723,
+      "source": "    sta z:ControllerPressed,x"
+    },
+    {
+      "line": 10724,
+      "source": "    sty z:ControllerHeld,x"
+    },
+    {
+      "line": 10731,
+      "source": "    lda z:ControllerPressed,x"
+    },
+    {
+      "line": 10735,
+      "source": "    lda z:ControllerPressed,x"
+    },
+    {
+      "line": 10745,
+      "source": "    lda z:ControllerPressed,x"
+    },
+    {
+      "line": 10747,
+      "source": "    sta z:ControllerPressed,x"
+    },
+    {
+      "line": 10949,
+      "source": "    lda z:RandomState,x"
+    },
+    {
+      "line": 10959,
+      "source": "    ror z:RandomState,x"
+    },
+    {
+      "line": 11050,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 11068,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 11171,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11185,
+      "source": "    ldx z:StageIndex"
+    },
+    {
+      "line": 11221,
+      "source": "    ldx z:StageIndex"
+    },
+    {
+      "line": 11293,
+      "source": "    ldx z:StageIndex"
+    },
+    {
+      "line": 11474,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11501,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 11562,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 11648,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11679,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 11943,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 12109,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 12204,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 12474,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 12513,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 12516,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 12537,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 12541,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 12547,
+      "source": "    sta z:LateStageRoute"
+    },
+    {
+      "line": 12553,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 12593,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 12683,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 12774,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 12800,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 12877,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 13033,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 13098,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 13341,
+      "source": "    sta z:RandomState"
+    },
+    {
+      "line": 13388,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 13394,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13395,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 13422,
+      "source": "    sta z:TitleOption"
+    },
+    {
+      "line": 13431,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 13434,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 13447,
+      "source": "    lda z:TitleOption"
+    },
+    {
+      "line": 13455,
+      "source": "    sta z:TitleOption"
+    },
+    {
+      "line": 13474,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13476,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 13480,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 13481,
+      "source": "    ldx z:CompositionTick"
+    },
+    {
+      "line": 13484,
+      "source": "    sta z:CompositionTick"
+    },
+    {
+      "line": 13485,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 13487,
+      "source": "    sta z:RandomState"
+    },
+    {
+      "line": 13489,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13534,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 13537,
+      "source": "    stx z:StageIndex"
+    },
+    {
+      "line": 13558,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 13567,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 13573,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13574,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 13575,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13590,
+      "source": "    lda z:CompletionActorLatch"
+    },
+    {
+      "line": 13592,
+      "source": "    lda z:SceneCompletionSignal"
+    },
+    {
+      "line": 13616,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 13647,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 13648,
+      "source": "    inc z:LateStageRoute"
+    },
+    {
+      "line": 13665,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 13684,
+      "source": "    sty z:StageIndex"
+    },
+    {
+      "line": 13690,
+      "source": "    sta a:ObjectAnimation+2"
+    },
+    {
+      "line": 13691,
+      "source": "    sta a:ObjectAnimation+4"
+    },
+    {
+      "line": 13704,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 13712,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 13735,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 13737,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 13761,
+      "source": "    sta a:ObjectAnimation+2"
+    },
+    {
+      "line": 13762,
+      "source": "    sta a:ObjectAnimation+4"
+    },
+    {
+      "line": 13768,
+      "source": "    sta a:ObjectAnimationFrame+2"
+    },
+    {
+      "line": 13769,
+      "source": "    sta a:ObjectAnimationTick+2"
+    },
+    {
+      "line": 13770,
+      "source": "    sta a:ObjectAnimationFrame+4"
+    },
+    {
+      "line": 13771,
+      "source": "    sta a:ObjectAnimationTick+4"
+    },
+    {
+      "line": 13782,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 13804,
+      "source": "    ldx z:StageIndex"
+    },
+    {
+      "line": 13846,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 13847,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13848,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 13864,
+      "source": "    sty z:PrimaryUploadPending"
+    },
+    {
+      "line": 13876,
+      "source": "    sta z:SceneCompletionSignal"
+    },
+    {
+      "line": 13896,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 14080,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14087,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14092,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 14105,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 14185,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 14244,
+      "source": "    lda z:SceneCompletionSignal"
+    },
+    {
+      "line": 14288,
+      "source": "    stx z:StageIndex"
+    },
+    {
+      "line": 14420,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 14508,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 14520,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 14526,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 14527,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 14528,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 14543,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 14564,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 14617,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 14708,
+      "source": "    lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 14751,
+      "source": "    sty z:PrimaryUploadPending"
+    },
+    {
+      "line": 14764,
+      "source": "    lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 14774,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14902,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 14917,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 14918,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 15027,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 15057,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 15142,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 15160,
+      "source": "    sta z:StageIndex"
+    },
+    {
+      "line": 15634,
+      "source": "    adc z:TitleOption"
+    },
+    {
+      "line": 15877,
+      "source": "    stx z:StageIndex"
+    },
+    {
+      "line": 15895,
+      "source": "    lda z:StageProgressBits"
+    },
+    {
+      "line": 16449,
+      "source": "    sta z:LateStageRoute"
+    },
+    {
+      "line": 16519,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 16648,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 16683,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 16701,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16710,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 16714,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 16716,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16717,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16729,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 16753,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 16756,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16766,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 16767,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16768,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16788,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16792,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 16794,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16796,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16824,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16829,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 16833,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 16846,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16850,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 16853,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16854,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16865,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 16894,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 16900,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 16950,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 16966,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17015,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17036,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17222,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 17231,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 17235,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17237,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17238,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17256,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 17268,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17272,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17303,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17305,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17309,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17317,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17319,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17321,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17329,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 17344,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17346,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17347,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17393,
+      "source": "    sta z:ControllerHeld"
+    },
+    {
+      "line": 17412,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17587,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17589,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17590,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17611,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17615,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17617,
+      "source": "    sta z:ControllerHeld"
+    },
+    {
+      "line": 17647,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17650,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 17653,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17655,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17661,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17663,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17713,
+      "source": "    lda z:LateStageRoute"
+    },
+    {
+      "line": 17729,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17801,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 17804,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17807,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17811,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17813,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17814,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17825,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17827,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17843,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17844,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17848,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 17857,
+      "source": "    lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17859,
+      "source": "    lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17926,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17993,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 17997,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 18008,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 18021,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18023,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18024,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18028,
+      "source": "    cmp a:ObjectAnimation"
+    },
+    {
+      "line": 18030,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18032,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18034,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18135,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18162,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18163,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18186,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18200,
+      "source": "    lda z:TitleOption"
+    },
+    {
+      "line": 18232,
+      "source": "    cmp a:ObjectAnimation"
+    },
+    {
+      "line": 18234,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18236,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18237,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18243,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 18278,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 18292,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 18299,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18309,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 18318,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 18321,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 18395,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18397,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18398,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18407,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18409,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 18450,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18564,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 18690,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 18741,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 18862,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 18880,
+      "source": "    sta z:ControllerPressed"
+    },
+    {
+      "line": 18997,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 19003,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 19004,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 19015,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 19018,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 19036,
+      "source": "    lda z:ControllerPressed"
+    },
+    {
+      "line": 19107,
+      "source": "    stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 19334,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19390,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19466,
+      "source": "    sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19528,
+      "source": "    lda z:CompositionTick"
+    },
+    {
+      "line": 19532,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 19599,
+      "source": "    inc z:SceneCompletionSignal"
+    },
+    {
+      "line": 19637,
+      "source": "    lda z:ControllerHeld"
+    },
+    {
+      "line": 20203,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 20496,
+      "source": "    lda a:ObjectAnimation"
+    },
+    {
+      "line": 20601,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 20608,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 20666,
+      "source": "    sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 20667,
+      "source": "    sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 20683,
+      "source": "    sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 20694,
+      "source": "    lda z:StageIndex"
+    },
+    {
+      "line": 20984,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 21075,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 21081,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 21135,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21362,
+      "source": "    lda z:TitleOption"
+    },
+    {
+      "line": 21585,
+      "source": "    lda z:TitleOption"
+    },
+    {
+      "line": 21596,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 21602,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21606,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21656,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 21714,
+      "source": "    inc z:SceneCompletionSignal"
+    },
+    {
+      "line": 21777,
+      "source": "    sta a:ObjectAnimation+3"
+    },
+    {
+      "line": 21786,
+      "source": "    sta a:ObjectAnimationTick+3"
+    },
+    {
+      "line": 21787,
+      "source": "    sta a:ObjectAnimationFrame+3"
+    },
+    {
+      "line": 21815,
+      "source": "    sta a:ObjectAnimation+8,y"
+    },
+    {
+      "line": 21819,
+      "source": "    sta a:ObjectAnimationTick+8,y"
+    },
+    {
+      "line": 21820,
+      "source": "    sta a:ObjectAnimationFrame+8,y"
+    },
+    {
+      "line": 21832,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 21865,
+      "source": "    sta a:ObjectAnimation"
+    },
+    {
+      "line": 21867,
+      "source": "    sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 21876,
+      "source": "    sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 21884,
+      "source": "    inc z:SceneCompletionSignal"
+    },
+    {
+      "line": 21925,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21937,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 21943,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 21992,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22085,
+      "source": "    lda z:RandomState"
+    },
+    {
+      "line": 22087,
+      "source": "    sta z:RandomState"
+    },
+    {
+      "line": 22131,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22137,
+      "source": "    sta a:ObjectAnimationTick+14"
+    },
+    {
+      "line": 22138,
+      "source": "    sta a:ObjectAnimationFrame+14"
+    },
+    {
+      "line": 22144,
+      "source": "    sta a:ObjectAnimation+14"
+    },
+    {
+      "line": 22172,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22444,
+      "source": "    lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22456,
+      "source": "    lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22649,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22703,
+      "source": "    sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 22712,
+      "source": "    sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22713,
+      "source": "    sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22838,
+      "source": "    lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 22841,
+      "source": "    ldy z:StageIndex"
+    },
+    {
+      "line": 22879,
+      "source": "    and z:StageIndex"
+    }
+  ],
+  "consumer_closure": [
+    "B01 reset/task0 entry/resume/controller/read/yield/NMI",
+    "B02 CHR5/6 and selected source selector; original named catalogs",
+    "B03 composition/palette/fades/screens/status upload pending",
+    "B04 whole ring and two initial column builds",
+    "B10 actual clearing semantics and canonical actor pool",
+    "B13 stage presentation/progress/run mode/late routes",
+    "B14 option rules and value transfer",
+    "B16 scene script variant/completion actor",
+    "B18 current-stage enqueue and ring commit"
+  ],
+  "entry_checks": {
+    "title": {
+      "cpu": "D4E6",
+      "physical": "1D4F6",
+      "first_instruction": "LDX #BF",
+      "preceding_region_start_is_not_entry": "D4D6/1D4E6"
+    },
+    "confirmation": {
+      "cpu": "D79B",
+      "physical": "1D7AB",
+      "first_instruction": "JSR C282 FadeOutPalette"
+    }
+  },
+  "limit": "Static whole-area index plus independent trace; not runtime fidelity evidence. Original ledger identities preserved."
+}

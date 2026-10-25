@@ -1,0 +1,7507 @@
+{
+  "source_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "area_units": [
+    {
+      "id": "region-76/unit-0",
+      "label": "ComposeObjectFlags",
+      "offset": 81936,
+      "length": 22,
+      "area": "B03"
+    },
+    {
+      "id": "region-77/unit-0",
+      "label": "ComposeObjectFlags",
+      "offset": 81936,
+      "length": 22,
+      "area": "B03"
+    },
+    {
+      "id": "region-78/unit-0",
+      "label": "ComposeOverlaySprites",
+      "offset": 81958,
+      "length": 83,
+      "area": "B03"
+    },
+    {
+      "id": "region-78/unit-1",
+      "label": "ComposeObjects",
+      "offset": 82041,
+      "length": 85,
+      "area": "B03"
+    },
+    {
+      "id": "region-78/unit-2",
+      "label": "CullAndProjectObject",
+      "offset": 82126,
+      "length": 116,
+      "area": "B03"
+    },
+    {
+      "id": "region-79/unit-0",
+      "label": "CullAndProjectObject",
+      "offset": 82126,
+      "length": 116,
+      "area": "B03"
+    },
+    {
+      "id": "region-80/unit-0",
+      "label": "AdvanceObjectAnimation",
+      "offset": 82242,
+      "length": 97,
+      "area": "B03"
+    },
+    {
+      "id": "region-80/unit-1",
+      "label": "PrepareCompositeSprite",
+      "offset": 82339,
+      "length": 78,
+      "area": "B03"
+    },
+    {
+      "id": "region-80/unit-2",
+      "label": "EmitSpritePieces",
+      "offset": 82417,
+      "length": 82,
+      "area": "B03"
+    },
+    {
+      "id": "region-81/unit-0",
+      "label": "EmitSpritePieces",
+      "offset": 82417,
+      "length": 82,
+      "area": "B03"
+    },
+    {
+      "id": "region-82/unit-0",
+      "label": "EmitSpritePieces",
+      "offset": 82417,
+      "length": 82,
+      "area": "B03"
+    },
+    {
+      "id": "region-83/unit-0",
+      "label": "HideRejectedSpritePiece",
+      "offset": 82499,
+      "length": 8,
+      "area": "B03"
+    },
+    {
+      "id": "region-84/unit-0",
+      "label": "HideRejectedSpritePiece",
+      "offset": 82499,
+      "length": 8,
+      "area": "B03"
+    },
+    {
+      "id": "region-509/unit-0",
+      "label": "CompositeSpriteFrameRecords_1424B",
+      "offset": 82507,
+      "length": 5190,
+      "area": "B03"
+    },
+    {
+      "id": "region-510/unit-0",
+      "label": "CompositeSpriteFramePointers_15691",
+      "offset": 87697,
+      "length": 496,
+      "area": "B03"
+    },
+    {
+      "id": "region-511/unit-0",
+      "label": "SpritePieceCoordinateStreams_15881",
+      "offset": 88193,
+      "length": 5488,
+      "area": "B03"
+    },
+    {
+      "id": "region-512/unit-0",
+      "label": "SpritePieceCoordinatePointers_16DF1",
+      "offset": 93681,
+      "length": 448,
+      "area": "B03"
+    },
+    {
+      "id": "region-513/unit-0",
+      "label": "CountedAnimationSequences_16FB1",
+      "offset": 94129,
+      "length": 550,
+      "area": "B03"
+    },
+    {
+      "id": "region-514/unit-0",
+      "label": "AnimationPointerFragment_171D7",
+      "offset": 94679,
+      "length": 161,
+      "area": "B03"
+    },
+    {
+      "id": "region-468/unit-0",
+      "label": "GenericData_17278",
+      "offset": 94840,
+      "length": 68,
+      "area": "B03"
+    },
+    {
+      "id": "region-469/unit-0",
+      "label": "GenericData_172BC",
+      "offset": 94908,
+      "length": 57,
+      "area": "B03"
+    },
+    {
+      "id": "region-515/unit-0",
+      "label": "AnimationPointerFragment_172F5",
+      "offset": 94965,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-516/unit-0",
+      "label": "BoundedData_172F7",
+      "offset": 94967,
+      "length": 25,
+      "area": "B03"
+    },
+    {
+      "id": "region-470/unit-0",
+      "label": "GenericData_17310",
+      "offset": 94992,
+      "length": 128,
+      "area": "B03"
+    },
+    {
+      "id": "region-93/unit-0",
+      "label": "WriteScreenScript",
+      "offset": 96960,
+      "length": 56,
+      "area": "B03"
+    },
+    {
+      "id": "region-94/unit-0",
+      "label": "WriteScreenExtraBytes",
+      "offset": 97016,
+      "length": 11,
+      "area": "B03"
+    },
+    {
+      "id": "region-95/unit-0",
+      "label": "ScreenScriptNextByte",
+      "offset": 97027,
+      "length": 7,
+      "area": "B03"
+    },
+    {
+      "id": "region-522/unit-0",
+      "label": "ScreenScriptRecords_17B0A",
+      "offset": 97034,
+      "length": 1252,
+      "area": "B03"
+    },
+    {
+      "id": "region-472/unit-0",
+      "label": "GenericData_17FEE",
+      "offset": 98286,
+      "length": 34,
+      "area": "B03"
+    },
+    {
+      "id": "region-212/unit-1",
+      "label": "FlushPrimaryPpuQueue",
+      "offset": 115017,
+      "length": 37,
+      "area": "B03"
+    },
+    {
+      "id": "region-213/unit-0",
+      "label": "FlushSecondaryPpuQueue",
+      "offset": 115054,
+      "length": 37,
+      "area": "B03"
+    },
+    {
+      "id": "region-1292/unit-0",
+      "label": "DisablePpuNmiAndSelectBaseTables",
+      "offset": 115091,
+      "length": 10,
+      "area": "B03"
+    },
+    {
+      "id": "region-1292/unit-1",
+      "label": "EnablePpuNmi",
+      "offset": 115101,
+      "length": 10,
+      "area": "B03"
+    },
+    {
+      "id": "region-214/unit-0",
+      "label": "DisableRendering",
+      "offset": 115111,
+      "length": 10,
+      "area": "B03"
+    },
+    {
+      "id": "region-214/unit-1",
+      "label": "EnableRendering",
+      "offset": 115121,
+      "length": 10,
+      "area": "B03"
+    },
+    {
+      "id": "region-214/unit-2",
+      "label": "ReadControllers",
+      "offset": 115131,
+      "length": 62,
+      "area": "B03"
+    },
+    {
+      "id": "region-218/unit-0",
+      "label": "FillPpuPages",
+      "offset": 115253,
+      "length": 42,
+      "area": "B03"
+    },
+    {
+      "id": "region-1293/unit-0",
+      "label": "FillPagesBackward",
+      "offset": 115295,
+      "length": 24,
+      "area": "B03"
+    },
+    {
+      "id": "region-219/unit-0",
+      "label": "HideOamSprites",
+      "offset": 115319,
+      "length": 18,
+      "area": "B03"
+    },
+    {
+      "id": "region-219/unit-1",
+      "label": "FadeInPalette",
+      "offset": 115337,
+      "length": 9,
+      "area": "B03"
+    },
+    {
+      "id": "region-219/unit-2",
+      "label": "FadeOutPalette",
+      "offset": 115346,
+      "length": 70,
+      "area": "B03"
+    },
+    {
+      "id": "region-1056/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128893,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1057/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128896,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1058/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128898,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1059/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128901,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1060/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128903,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1061/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128905,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1062/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128907,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1063/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128909,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1064/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128911,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1065/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128914,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1066/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128917,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1067/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128920,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1068/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128922,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1069/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128925,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1070/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128928,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1071/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128931,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1072/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128933,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1073/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128935,
+      "length": 1,
+      "area": "B03"
+    },
+    {
+      "id": "region-1074/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128936,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1075/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128938,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1076/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128941,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1077/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128944,
+      "length": 3,
+      "area": "B03"
+    },
+    {
+      "id": "region-1078/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128947,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1079/unit-0",
+      "label": "LoadScenePalettes",
+      "offset": 128949,
+      "length": 2,
+      "area": "B03"
+    },
+    {
+      "id": "region-1251/unit-0",
+      "label": "OverrideSceneOptionPalette",
+      "offset": 128951,
+      "length": 22,
+      "area": "B03"
+    },
+    {
+      "id": "region-1080/unit-0",
+      "label": "OverrideSceneOptionPalette",
+      "offset": 128973,
+      "length": 1,
+      "area": "B03"
+    }
+  ],
+  "independent_symbol_consumers": [
+    {
+      "line": 2169,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2171,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2173,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 2175,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2181,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 2188,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2219,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+8"
+    },
+    {
+      "line": 2222,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+8"
+    },
+    {
+      "line": 2223,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+8"
+    },
+    {
+      "line": 2225,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+8"
+    },
+    {
+      "line": 2230,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+8"
+    },
+    {
+      "line": 2231,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+8"
+    },
+    {
+      "line": 2259,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation+8"
+    },
+    {
+      "line": 2267,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags+8"
+    },
+    {
+      "line": 2269,
+      "symbol": "ObjectAnimation",
+      "source": "inc a:ObjectAnimation+8"
+    },
+    {
+      "line": 2270,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation+8"
+    },
+    {
+      "line": 2274,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+8"
+    },
+    {
+      "line": 2282,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 2287,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 2315,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 2317,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 2327,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 2329,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 2339,
+      "symbol": "OamCursor",
+      "source": "sty z:OamCursor"
+    },
+    {
+      "line": 2351,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 2359,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,y"
+    },
+    {
+      "line": 2369,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,y"
+    },
+    {
+      "line": 2379,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,y"
+    },
+    {
+      "line": 2384,
+      "symbol": "OamCursor",
+      "source": "sty z:OamCursor"
+    },
+    {
+      "line": 2388,
+      "symbol": "CompositionTick",
+      "source": "inc z:CompositionTick"
+    },
+    {
+      "line": 2389,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 2395,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2397,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2409,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2417,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2419,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2430,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2437,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2443,
+      "symbol": "ObjectScreenX",
+      "source": "sta a:ObjectScreenX,x"
+    },
+    {
+      "line": 2447,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 2450,
+      "symbol": "ObjectScreenX",
+      "source": "lda a:ObjectScreenX,x"
+    },
+    {
+      "line": 2460,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2461,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2467,
+      "symbol": "ObjectScreenX",
+      "source": "sta a:ObjectScreenX,x"
+    },
+    {
+      "line": 2468,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2470,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2473,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2475,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2476,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2482,
+      "symbol": "ObjectScreenX",
+      "source": "sta a:ObjectScreenX,x"
+    },
+    {
+      "line": 2483,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2485,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2487,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2496,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 2510,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2517,
+      "symbol": "ObjectAnimation",
+      "source": "ldy a:ObjectAnimation,x"
+    },
+    {
+      "line": 2518,
+      "symbol": "AnimationPointerLow",
+      "source": "lda a:AnimationPointerLow,y"
+    },
+    {
+      "line": 2520,
+      "symbol": "AnimationPointerHigh",
+      "source": "lda a:AnimationPointerHigh,y"
+    },
+    {
+      "line": 2525,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2528,
+      "symbol": "ObjectAnimationTick",
+      "source": "inc a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2533,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2534,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2536,
+      "symbol": "ObjectAnimationFrame",
+      "source": "inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2540,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2545,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2548,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2551,
+      "symbol": "ObjectAnimationRestart",
+      "source": "lda a:ObjectAnimationRestart,x"
+    },
+    {
+      "line": 2553,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2557,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2564,
+      "symbol": "FramePointerLow",
+      "source": "lda a:FramePointerLow,y"
+    },
+    {
+      "line": 2566,
+      "symbol": "FramePointerHigh",
+      "source": "lda a:FramePointerHigh,y"
+    },
+    {
+      "line": 2568,
+      "symbol": "ObjectScreenX",
+      "source": "lda a:ObjectScreenX,x"
+    },
+    {
+      "line": 2570,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 2580,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2589,
+      "symbol": "PieceOffsetPointerLow",
+      "source": "lda a:PieceOffsetPointerLow,x"
+    },
+    {
+      "line": 2593,
+      "symbol": "PieceOffsetPointerHigh",
+      "source": "lda a:PieceOffsetPointerHigh,x"
+    },
+    {
+      "line": 2596,
+      "symbol": "OamCursor",
+      "source": "ldx z:OamCursor"
+    },
+    {
+      "line": 2607,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,x"
+    },
+    {
+      "line": 2631,
+      "symbol": "OamBuffer",
+      "source": "lda a:OamBuffer,x"
+    },
+    {
+      "line": 2655,
+      "symbol": "OamCursor",
+      "source": "stx z:OamCursor"
+    },
+    {
+      "line": 2678,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,x"
+    },
+    {
+      "line": 2762,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 2764,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 2769,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 2770,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 2772,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 2774,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2778,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 2813,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 2822,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 2824,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 2834,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 2842,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 2849,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags"
+    },
+    {
+      "line": 2856,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 2863,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 2876,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 2880,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 2889,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 2890,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 2898,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 2909,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 2916,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 2930,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 2931,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 2933,
+      "symbol": "PpuCtrlShadow",
+      "source": "sta z:PpuCtrlShadow"
+    },
+    {
+      "line": 2979,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 3048,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 3148,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 3149,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+2"
+    },
+    {
+      "line": 3150,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+3"
+    },
+    {
+      "line": 3151,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+4"
+    },
+    {
+      "line": 3164,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 3216,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 3232,
+      "symbol": "ScreenScriptPointerLow",
+      "source": "lda a:ScreenScriptPointerLow,x"
+    },
+    {
+      "line": 3234,
+      "symbol": "ScreenScriptPointerHigh",
+      "source": "lda a:ScreenScriptPointerHigh,x"
+    },
+    {
+      "line": 3311,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3354,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 3366,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3372,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 3387,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3391,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 3434,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 3438,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3440,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3441,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3484,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3495,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3508,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3514,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3519,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3541,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3561,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3562,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3565,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3580,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3613,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3616,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3621,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3632,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3633,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3688,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3697,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3704,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3708,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3717,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3723,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 3724,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 3727,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3728,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 3729,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3730,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 3732,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 3741,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 3744,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 3756,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3757,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3759,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3760,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3762,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3775,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3788,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3790,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3791,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3795,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3808,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3823,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3825,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3827,
+      "symbol": "ObjectAnimationRestart",
+      "source": "sta a:ObjectAnimationRestart,x"
+    },
+    {
+      "line": 3829,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3830,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3833,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3840,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3850,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3866,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3867,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3891,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3899,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3916,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3923,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 3924,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 3939,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3941,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3951,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3953,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3958,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 3961,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3967,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 3970,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3974,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3976,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 3994,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4012,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 4020,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4030,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4033,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4041,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4048,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4051,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4055,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4058,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 4059,
+      "symbol": "ObjectScreenY",
+      "source": "cmp a:ObjectScreenY"
+    },
+    {
+      "line": 4064,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4068,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4073,
+      "symbol": "ObjectAnimationFrame",
+      "source": "ldy a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4088,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4090,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4092,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4098,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4103,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 4106,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 4118,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 4119,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 4121,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 4130,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 4133,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4136,
+      "symbol": "ObjectAnimation",
+      "source": "inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 4139,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4141,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4142,
+      "symbol": "ObjectAnimation",
+      "source": "dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 4143,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4146,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4147,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4164,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4172,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4178,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4196,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 4198,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 4217,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 4220,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4226,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4229,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4231,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4236,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4240,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4243,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4271,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4285,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4287,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4296,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4321,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4400,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 4420,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4463,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4488,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4490,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4496,
+      "symbol": "ObjectAnimation",
+      "source": "ldy a:ObjectAnimation,x"
+    },
+    {
+      "line": 4509,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4510,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4513,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4515,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4517,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4522,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 4523,
+      "symbol": "ObjectScreenY",
+      "source": "cmp a:ObjectScreenY"
+    },
+    {
+      "line": 4542,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4577,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4581,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4584,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4602,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4611,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4620,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4634,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4636,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4638,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4640,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4667,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4671,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4727,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4774,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,y"
+    },
+    {
+      "line": 4775,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 4805,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4820,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4822,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4825,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4826,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4834,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4843,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4853,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4857,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4876,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4884,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4895,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4897,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4901,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 4904,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 4905,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 4912,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4927,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4939,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4956,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 4963,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 4973,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 4975,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5003,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5015,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5016,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5213,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5220,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5240,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5249,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5265,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5287,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5298,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5309,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5311,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5323,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5326,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5327,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5343,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5346,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5348,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5352,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5363,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5364,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5366,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5374,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5419,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 5435,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5438,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5443,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 5445,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 5456,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 5475,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5478,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 5483,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5484,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5486,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5488,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5492,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5501,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5527,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5529,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5538,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 5542,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5545,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5547,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY"
+    },
+    {
+      "line": 5570,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5573,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5576,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5578,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5588,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5590,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 5593,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5599,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5600,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5611,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5614,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5617,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5627,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5634,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 5668,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5713,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5716,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 5719,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 5726,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5728,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5730,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5731,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5733,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5736,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 5741,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 5744,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5746,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY"
+    },
+    {
+      "line": 5755,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 5760,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5762,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5766,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 5769,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 5770,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5789,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5798,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5857,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5865,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5868,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5887,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 5889,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 5891,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 5894,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5900,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5913,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5915,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5925,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5955,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 5964,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5973,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5976,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 5983,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 5985,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6021,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6023,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 6034,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6057,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6064,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6066,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6101,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6103,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 6135,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 6137,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 6138,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 6140,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6141,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 6162,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6165,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6177,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6184,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6195,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6199,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6208,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6210,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6214,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6227,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6231,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6276,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6277,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6280,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6283,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6296,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6312,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6314,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6315,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6341,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6348,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6351,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6352,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6357,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6360,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6371,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6384,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6386,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6389,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6392,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6394,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY"
+    },
+    {
+      "line": 6398,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6445,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6448,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 6450,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 6454,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6462,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6464,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 6487,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6493,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6499,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6509,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6522,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6524,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6526,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6539,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 6541,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 6548,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 6549,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 6552,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 6561,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6564,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6576,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6578,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6579,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6608,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 6610,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,y"
+    },
+    {
+      "line": 6630,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 6642,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6645,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 6651,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 6653,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 6654,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 6657,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 6679,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6689,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6726,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6734,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6739,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6753,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6769,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6771,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6772,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6775,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6778,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6781,
+      "symbol": "ObjectAnimation",
+      "source": "dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 6783,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6784,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6792,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 6794,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 6798,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6803,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6805,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 6807,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6809,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6810,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6876,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6881,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6884,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 6886,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 6891,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6901,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6903,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6904,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6905,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6914,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 6919,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6923,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6925,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6926,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6935,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6937,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6938,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6954,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 6956,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 6957,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 6959,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6962,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 6988,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 6995,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7008,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 7015,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7017,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7018,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7034,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7051,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 7056,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 7071,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7073,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7094,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 7097,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 7104,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 7105,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 7107,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 7113,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 7115,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 7116,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 7134,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7143,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7151,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7153,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7157,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7160,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7163,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7172,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7180,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7182,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7183,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7217,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7235,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7252,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7255,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7260,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7271,
+      "symbol": "ObjectScreenY",
+      "source": "inc a:ObjectScreenY,x"
+    },
+    {
+      "line": 7272,
+      "symbol": "ObjectScreenY",
+      "source": "inc a:ObjectScreenY,x"
+    },
+    {
+      "line": 7309,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7315,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7317,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7319,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7327,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7342,
+      "symbol": "ObjectAnimationFrame",
+      "source": "inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7354,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7376,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7377,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7379,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7380,
+      "symbol": "ObjectScreenY",
+      "source": "inc a:ObjectScreenY,x"
+    },
+    {
+      "line": 7381,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7382,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7395,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 7415,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 7416,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 7418,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 7419,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 7423,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 7424,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 7427,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 7441,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7446,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7458,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7461,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7462,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7476,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7480,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7506,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7513,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7514,
+      "symbol": "ObjectAnimation",
+      "source": "inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 7517,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7518,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7540,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7542,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7563,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7568,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7584,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7585,
+      "symbol": "ObjectAnimation",
+      "source": "dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 7587,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7588,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7611,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7622,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7674,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7682,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7690,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7692,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7696,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7698,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7721,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7729,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7742,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7744,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7762,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7764,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7792,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7800,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 7802,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 7804,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7805,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 7806,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 7807,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 7808,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7839,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 7842,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 7847,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7856,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7872,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7875,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7889,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7890,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7892,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 7895,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7906,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7909,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7945,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7954,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7963,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 7971,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 7981,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8010,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 8031,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8040,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8042,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8068,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8083,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8084,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8086,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8127,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8133,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8135,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8137,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8139,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8140,
+      "symbol": "ObjectAnimationTick",
+      "source": "ora a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8150,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8152,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8154,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8159,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8162,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8163,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8165,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8182,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8185,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8195,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8246,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8323,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8332,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8342,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8345,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8348,
+      "symbol": "ObjectAnimation",
+      "source": "dec a:ObjectAnimation,x"
+    },
+    {
+      "line": 8350,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8351,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8358,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 8366,
+      "symbol": "ObjectAnimation",
+      "source": "inc a:ObjectAnimation,x"
+    },
+    {
+      "line": 8368,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 8369,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,y"
+    },
+    {
+      "line": 8371,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 8376,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8379,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 8381,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8382,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 8383,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8384,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 8428,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8438,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8456,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8473,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8476,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8480,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8481,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 8494,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8508,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8513,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8515,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8517,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8518,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8528,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8531,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8533,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8537,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8539,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8540,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8552,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8572,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8613,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8615,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 8638,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8663,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8665,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8666,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8667,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8672,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 8675,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 8680,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8683,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8685,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8689,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8691,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8692,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8703,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8706,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8708,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8715,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8728,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+8,y"
+    },
+    {
+      "line": 8729,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+8,y"
+    },
+    {
+      "line": 8731,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+8,y"
+    },
+    {
+      "line": 8732,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+8,y"
+    },
+    {
+      "line": 8734,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+8,y"
+    },
+    {
+      "line": 8735,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 8736,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+8,y"
+    },
+    {
+      "line": 8790,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8800,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 8802,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 8805,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8810,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 8821,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8828,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8835,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8856,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8865,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 8867,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 8873,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 8877,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 8880,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 8931,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8934,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 8937,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8939,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8943,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 8945,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 8946,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 8959,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 8964,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8966,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 8992,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9002,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9004,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9005,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9033,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 9036,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9038,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9042,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9044,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9045,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9103,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9105,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9106,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9107,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9109,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9123,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 9126,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 9171,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9176,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9177,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9182,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9192,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9202,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9205,
+      "symbol": "ObjectAnimationFrame",
+      "source": "inc a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9211,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9215,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9227,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9231,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9239,
+      "symbol": "ObjectAnimationFrame",
+      "source": "cmp a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9241,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9244,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9249,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9262,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9282,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9284,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9286,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9287,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9295,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 9298,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9300,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9304,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9306,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9321,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9322,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 9343,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 9345,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9346,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9348,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9350,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9351,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9373,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9401,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9402,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9415,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9424,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9428,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9439,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9442,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9447,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9450,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9454,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9455,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9457,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9482,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9556,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9558,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 9560,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9561,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9584,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9601,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9611,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9613,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9617,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9619,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9651,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 9660,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9669,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9673,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9681,
+      "symbol": "ObjectStateFlags",
+      "source": "dec a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9694,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9695,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9704,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9713,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9800,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9804,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9809,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 9811,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9825,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 9826,
+      "symbol": "ObjectAnimationFrame",
+      "source": "ora a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 9829,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 10079,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10099,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 10122,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10123,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 10126,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10133,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 10134,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 10135,
+      "symbol": "SplitTransitionControl",
+      "source": "lda z:SplitTransitionControl"
+    },
+    {
+      "line": 10137,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10140,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 10143,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10147,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10187,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10189,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10191,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10219,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 10224,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10331,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 10347,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 10360,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 10361,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 10364,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 10372,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 10373,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 10409,
+      "symbol": "SplitSpriteY",
+      "source": "lda z:SplitSpriteY"
+    },
+    {
+      "line": 10410,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer"
+    },
+    {
+      "line": 10418,
+      "symbol": "DisplaySuspendDepth",
+      "source": "lda z:DisplaySuspendDepth"
+    },
+    {
+      "line": 10422,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10434,
+      "symbol": "PrimaryUploadPending",
+      "source": "lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 10438,
+      "symbol": "SecondaryUploadPending",
+      "source": "lda z:SecondaryUploadPending"
+    },
+    {
+      "line": 10442,
+      "symbol": "PaletteUploadPending",
+      "source": "lda z:PaletteUploadPending"
+    },
+    {
+      "line": 10445,
+      "symbol": "PaletteUploadPending",
+      "source": "stx z:PaletteUploadPending"
+    },
+    {
+      "line": 10452,
+      "symbol": "ActivePalette",
+      "source": "lda a:ActivePalette,x"
+    },
+    {
+      "line": 10464,
+      "symbol": "UiScrollX",
+      "source": "lda z:UiScrollX"
+    },
+    {
+      "line": 10466,
+      "symbol": "UiScrollY",
+      "source": "lda z:UiScrollY"
+    },
+    {
+      "line": 10468,
+      "symbol": "PpuMaskShadow",
+      "source": "lda z:PpuMaskShadow"
+    },
+    {
+      "line": 10472,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 10478,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10483,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10506,
+      "symbol": "DisplaySuspendDepth",
+      "source": "lda z:DisplaySuspendDepth"
+    },
+    {
+      "line": 10517,
+      "symbol": "SplitTransitionControl",
+      "source": "lda z:SplitTransitionControl"
+    },
+    {
+      "line": 10528,
+      "symbol": "SplitPpuHigh",
+      "source": "lda z:SplitPpuHigh"
+    },
+    {
+      "line": 10530,
+      "symbol": "SplitPpuLow",
+      "source": "lda z:SplitPpuLow"
+    },
+    {
+      "line": 10560,
+      "symbol": "PlayfieldScrollY",
+      "source": "lda z:PlayfieldScrollY"
+    },
+    {
+      "line": 10599,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 10601,
+      "symbol": "PrimaryPpuQueue",
+      "source": "lda a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 10628,
+      "symbol": "SecondaryUploadPending",
+      "source": "stx z:SecondaryUploadPending"
+    },
+    {
+      "line": 10630,
+      "symbol": "SecondaryPpuQueue",
+      "source": "lda a:SecondaryPpuQueue,x"
+    },
+    {
+      "line": 10656,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10658,
+      "symbol": "PpuCtrlShadow",
+      "source": "sta z:PpuCtrlShadow"
+    },
+    {
+      "line": 10664,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10666,
+      "symbol": "PpuCtrlShadow",
+      "source": "sta z:PpuCtrlShadow"
+    },
+    {
+      "line": 10677,
+      "symbol": "DisplaySuspendDepth",
+      "source": "inc z:DisplaySuspendDepth"
+    },
+    {
+      "line": 10679,
+      "symbol": "PpuMaskShadow",
+      "source": "sta z:PpuMaskShadow"
+    },
+    {
+      "line": 10685,
+      "symbol": "DisplaySuspendDepth",
+      "source": "dec z:DisplaySuspendDepth"
+    },
+    {
+      "line": 10687,
+      "symbol": "PpuMaskShadow",
+      "source": "sta z:PpuMaskShadow"
+    },
+    {
+      "line": 10764,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 10852,
+      "symbol": "OamBuffer",
+      "source": "sta a:OamBuffer,x"
+    },
+    {
+      "line": 10879,
+      "symbol": "BasePalette",
+      "source": "lda a:BasePalette,y"
+    },
+    {
+      "line": 10880,
+      "symbol": "ActivePalette",
+      "source": "sta a:ActivePalette,y"
+    },
+    {
+      "line": 10885,
+      "symbol": "ActivePalette",
+      "source": "lda a:ActivePalette,y"
+    },
+    {
+      "line": 10891,
+      "symbol": "ActivePalette",
+      "source": "sta a:ActivePalette,y"
+    },
+    {
+      "line": 10894,
+      "symbol": "PaletteUploadPending",
+      "source": "sty z:PaletteUploadPending"
+    },
+    {
+      "line": 10967,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 11143,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 11161,
+      "symbol": "DisplaySuspendDepth",
+      "source": "ldy z:DisplaySuspendDepth"
+    },
+    {
+      "line": 11171,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11463,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 11472,
+      "symbol": "DisplaySuspendDepth",
+      "source": "ldy z:DisplaySuspendDepth"
+    },
+    {
+      "line": 11474,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11520,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 11521,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+7,y"
+    },
+    {
+      "line": 11522,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+14,y"
+    },
+    {
+      "line": 11523,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+21,y"
+    },
+    {
+      "line": 11531,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+8,y"
+    },
+    {
+      "line": 11533,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+15,y"
+    },
+    {
+      "line": 11535,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+22,y"
+    },
+    {
+      "line": 11538,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+9,y"
+    },
+    {
+      "line": 11539,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+16,y"
+    },
+    {
+      "line": 11540,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+23,y"
+    },
+    {
+      "line": 11555,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+4,y"
+    },
+    {
+      "line": 11557,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+10,y"
+    },
+    {
+      "line": 11559,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+11,y"
+    },
+    {
+      "line": 11575,
+      "symbol": "PrimaryPpuQueue",
+      "source": "lda a:PrimaryPpuQueue+14,y"
+    },
+    {
+      "line": 11576,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 11603,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 11645,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue+4,y"
+    },
+    {
+      "line": 11646,
+      "symbol": "DisplaySuspendDepth",
+      "source": "ldy z:DisplaySuspendDepth"
+    },
+    {
+      "line": 11648,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 11685,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 11702,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 11705,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 11715,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 11716,
+      "symbol": "SplitPpuHigh",
+      "source": "lda z:SplitPpuHigh"
+    },
+    {
+      "line": 11719,
+      "symbol": "SplitPpuHigh",
+      "source": "sta z:SplitPpuHigh"
+    },
+    {
+      "line": 11722,
+      "symbol": "SplitPpuLow",
+      "source": "lda z:SplitPpuLow"
+    },
+    {
+      "line": 11725,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 11726,
+      "symbol": "SplitPpuHigh",
+      "source": "lda z:SplitPpuHigh"
+    },
+    {
+      "line": 11728,
+      "symbol": "SplitPpuHigh",
+      "source": "sta z:SplitPpuHigh"
+    },
+    {
+      "line": 11729,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 11732,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 11775,
+      "symbol": "SplitTransitionControl",
+      "source": "sty z:SplitTransitionControl"
+    },
+    {
+      "line": 11777,
+      "symbol": "PaletteUploadPending",
+      "source": "sty z:PaletteUploadPending"
+    },
+    {
+      "line": 11921,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 11943,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 12039,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 12097,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 12109,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 12202,
+      "symbol": "SplitTransitionControl",
+      "source": "lda z:SplitTransitionControl"
+    },
+    {
+      "line": 12598,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 12621,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 12663,
+      "symbol": "PrimaryPpuQueue",
+      "source": "lda a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 12683,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 12712,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12714,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12762,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12764,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12774,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 12800,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 12826,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 12836,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12838,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12839,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12860,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12866,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 12868,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 12877,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 12996,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 12998,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 13022,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 13024,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 13033,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 13098,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 13177,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 13303,
+      "symbol": "ObjectScreenY",
+      "source": "adc a:ObjectScreenY,x"
+    },
+    {
+      "line": 13309,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 13327,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 13330,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 13337,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 13352,
+      "symbol": "UiScrollX",
+      "source": "sta z:UiScrollX"
+    },
+    {
+      "line": 13353,
+      "symbol": "UiScrollY",
+      "source": "sta z:UiScrollY"
+    },
+    {
+      "line": 13385,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 13386,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 13388,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 13390,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 13394,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13395,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 13474,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13476,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 13480,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 13481,
+      "symbol": "CompositionTick",
+      "source": "ldx z:CompositionTick"
+    },
+    {
+      "line": 13484,
+      "symbol": "CompositionTick",
+      "source": "sta z:CompositionTick"
+    },
+    {
+      "line": 13489,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13563,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 13565,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 13567,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 13569,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 13573,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13574,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 13575,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 13686,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 13690,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+2"
+    },
+    {
+      "line": 13691,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+4"
+    },
+    {
+      "line": 13693,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+3"
+    },
+    {
+      "line": 13697,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 13698,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+2"
+    },
+    {
+      "line": 13699,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+4"
+    },
+    {
+      "line": 13700,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+3"
+    },
+    {
+      "line": 13702,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+3"
+    },
+    {
+      "line": 13757,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 13761,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+2"
+    },
+    {
+      "line": 13762,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+4"
+    },
+    {
+      "line": 13764,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+3"
+    },
+    {
+      "line": 13768,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+2"
+    },
+    {
+      "line": 13769,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+2"
+    },
+    {
+      "line": 13770,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+4"
+    },
+    {
+      "line": 13771,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+4"
+    },
+    {
+      "line": 13792,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+1"
+    },
+    {
+      "line": 13834,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 13837,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 13839,
+      "symbol": "SplitPpuHigh",
+      "source": "sta z:SplitPpuHigh"
+    },
+    {
+      "line": 13841,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 13842,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 13844,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 13846,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 13847,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 13848,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 13861,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 13864,
+      "symbol": "PrimaryUploadPending",
+      "source": "sty z:PrimaryUploadPending"
+    },
+    {
+      "line": 13868,
+      "symbol": "SplitSpriteY",
+      "source": "sta z:SplitSpriteY"
+    },
+    {
+      "line": 13905,
+      "symbol": "ObjectStateFlags",
+      "source": "sty a:ObjectStateFlags+1"
+    },
+    {
+      "line": 13906,
+      "symbol": "ObjectRenderFlags",
+      "source": "sty a:ObjectRenderFlags+1"
+    },
+    {
+      "line": 13910,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+1"
+    },
+    {
+      "line": 13933,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 14080,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14087,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14131,
+      "symbol": "ActivePalette",
+      "source": "sta a:ActivePalette,y"
+    },
+    {
+      "line": 14132,
+      "symbol": "BasePalette",
+      "source": "sta a:BasePalette,y"
+    },
+    {
+      "line": 14445,
+      "symbol": "SecondaryUploadPending",
+      "source": "sta z:SecondaryUploadPending"
+    },
+    {
+      "line": 14499,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 14501,
+      "symbol": "SplitPpuLow",
+      "source": "sta z:SplitPpuLow"
+    },
+    {
+      "line": 14526,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 14527,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 14528,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 14584,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 14617,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 14657,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 14708,
+      "symbol": "PrimaryUploadPending",
+      "source": "lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 14748,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,y"
+    },
+    {
+      "line": 14751,
+      "symbol": "PrimaryUploadPending",
+      "source": "sty z:PrimaryUploadPending"
+    },
+    {
+      "line": 14764,
+      "symbol": "PrimaryUploadPending",
+      "source": "lda z:PrimaryUploadPending"
+    },
+    {
+      "line": 14771,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 14774,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 14863,
+      "symbol": "SplitTransitionControl",
+      "source": "sta z:SplitTransitionControl"
+    },
+    {
+      "line": 14902,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 14908,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 14914,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 14915,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 14917,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 14918,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 15232,
+      "symbol": "PaletteUploadPending",
+      "source": "sta z:PaletteUploadPending"
+    },
+    {
+      "line": 15253,
+      "symbol": "PpuCtrlShadow",
+      "source": "lda z:PpuCtrlShadow"
+    },
+    {
+      "line": 15265,
+      "symbol": "PpuCtrlShadow",
+      "source": "sta z:PpuCtrlShadow"
+    },
+    {
+      "line": 15325,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 15331,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+1"
+    },
+    {
+      "line": 15758,
+      "symbol": "SplitSpriteY",
+      "source": "sta z:SplitSpriteY"
+    },
+    {
+      "line": 16093,
+      "symbol": "OamBuffer",
+      "source": "inc a:OamBuffer"
+    },
+    {
+      "line": 16099,
+      "symbol": "OamBuffer",
+      "source": "lda a:OamBuffer"
+    },
+    {
+      "line": 16187,
+      "symbol": "PpuCtrlShadow",
+      "source": "ora z:PpuCtrlShadow"
+    },
+    {
+      "line": 16199,
+      "symbol": "OamBuffer",
+      "source": "lda a:OamBuffer"
+    },
+    {
+      "line": 16235,
+      "symbol": "OamBuffer",
+      "source": "lda a:OamBuffer"
+    },
+    {
+      "line": 16519,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 16701,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16714,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 16716,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16717,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16756,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16766,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 16767,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16768,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16788,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16792,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 16794,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16796,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16798,
+      "symbol": "ObjectAnimationRestart",
+      "source": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 16824,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16833,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 16846,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16850,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 16853,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 16854,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 16865,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 16953,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 16956,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 17054,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 17056,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 17092,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 17094,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 17222,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 17235,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17237,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17238,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17256,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 17285,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17303,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17305,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17307,
+      "symbol": "ObjectAnimationRestart",
+      "source": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 17309,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17317,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17319,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17321,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17323,
+      "symbol": "ObjectAnimationRestart",
+      "source": "sta a:ObjectAnimationRestart"
+    },
+    {
+      "line": 17329,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 17344,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17346,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17347,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17363,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17573,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17576,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 17579,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17584,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 17587,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17589,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17590,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17653,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17655,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17661,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17663,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17681,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17693,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17715,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17755,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 17771,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 17773,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 17801,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 17804,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17811,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17813,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17814,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17825,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17827,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17843,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 17844,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17848,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 17857,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick"
+    },
+    {
+      "line": 17859,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame"
+    },
+    {
+      "line": 17887,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17892,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17895,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 17932,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17948,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 17951,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 17997,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 18021,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18023,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18024,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18028,
+      "symbol": "ObjectAnimation",
+      "source": "cmp a:ObjectAnimation"
+    },
+    {
+      "line": 18030,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18032,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18034,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18043,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY"
+    },
+    {
+      "line": 18050,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 18099,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 18135,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18136,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 18140,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 18142,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 18146,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 18148,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 18162,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18163,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18186,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18193,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 18195,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 18232,
+      "symbol": "ObjectAnimation",
+      "source": "cmp a:ObjectAnimation"
+    },
+    {
+      "line": 18234,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18236,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18237,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18238,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 18241,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 18273,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 18286,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 18299,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18308,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 18313,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 18326,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 18337,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 18340,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 18352,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags"
+    },
+    {
+      "line": 18358,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 18395,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18397,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18398,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18403,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags"
+    },
+    {
+      "line": 18407,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 18409,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 18420,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags"
+    },
+    {
+      "line": 18438,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 18450,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 18503,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 18564,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 18801,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    },
+    {
+      "line": 18862,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 18993,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 18997,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 18999,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 19003,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 19004,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 19083,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 19085,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 19087,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 19107,
+      "symbol": "PrimaryUploadPending",
+      "source": "stx z:PrimaryUploadPending"
+    },
+    {
+      "line": 19169,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 19334,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19379,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 19385,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue,x"
+    },
+    {
+      "line": 19390,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19466,
+      "symbol": "PrimaryUploadPending",
+      "source": "sta z:PrimaryUploadPending"
+    },
+    {
+      "line": 19528,
+      "symbol": "CompositionTick",
+      "source": "lda z:CompositionTick"
+    },
+    {
+      "line": 19532,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 19826,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 19828,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 19896,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 19898,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 19946,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 19955,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 20030,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20033,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 20091,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20094,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 20155,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20157,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 20166,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20168,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 20185,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20187,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 20213,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+1,x"
+    },
+    {
+      "line": 20214,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+1,x"
+    },
+    {
+      "line": 20230,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags+14,x"
+    },
+    {
+      "line": 20232,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+14,x"
+    },
+    {
+      "line": 20301,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20320,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20330,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 20332,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20342,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 20399,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20418,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20428,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 20430,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20456,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 20483,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20488,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 20490,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 20496,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation"
+    },
+    {
+      "line": 20601,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 20649,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,y"
+    },
+    {
+      "line": 20656,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,y"
+    },
+    {
+      "line": 20666,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,y"
+    },
+    {
+      "line": 20667,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,y"
+    },
+    {
+      "line": 20673,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 20674,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,y"
+    },
+    {
+      "line": 20683,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,y"
+    },
+    {
+      "line": 20734,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+12,x"
+    },
+    {
+      "line": 20737,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+7,x"
+    },
+    {
+      "line": 20758,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue,x"
+    },
+    {
+      "line": 20759,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+5,x"
+    },
+    {
+      "line": 20761,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+10,x"
+    },
+    {
+      "line": 20783,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+6,x"
+    },
+    {
+      "line": 20797,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+11,x"
+    },
+    {
+      "line": 20810,
+      "symbol": "SecondaryPpuQueue",
+      "source": "lda a:SecondaryPpuQueue+13,x"
+    },
+    {
+      "line": 20861,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+13,x"
+    },
+    {
+      "line": 20863,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+14,x"
+    },
+    {
+      "line": 20894,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+4,x"
+    },
+    {
+      "line": 20896,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+8,x"
+    },
+    {
+      "line": 20898,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+9,x"
+    },
+    {
+      "line": 20900,
+      "symbol": "SecondaryPpuQueue",
+      "source": "sta a:SecondaryPpuQueue+13,x"
+    },
+    {
+      "line": 20962,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20964,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20971,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20973,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 20984,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 21033,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 21075,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 21081,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 21111,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21123,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 21135,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21214,
+      "symbol": "ScenePaletteBackgroundEnd",
+      "source": "lda a:ScenePaletteBackgroundEnd,y"
+    },
+    {
+      "line": 21226,
+      "symbol": "ScenePaletteSpriteEnd",
+      "source": "lda a:ScenePaletteSpriteEnd,y"
+    },
+    {
+      "line": 21269,
+      "symbol": "ActivePalette",
+      "source": "sta a:ActivePalette,y"
+    },
+    {
+      "line": 21275,
+      "symbol": "BasePalette",
+      "source": "sta a:BasePalette,y"
+    },
+    {
+      "line": 21329,
+      "symbol": "ActivePalette",
+      "source": "lda a:ActivePalette"
+    },
+    {
+      "line": 21392,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21424,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY"
+    },
+    {
+      "line": 21426,
+      "symbol": "ObjectScreenY",
+      "source": "sbc a:ObjectScreenY,x"
+    },
+    {
+      "line": 21596,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 21602,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21606,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21656,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 21658,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21666,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21668,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21673,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 21674,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 21708,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21720,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 21724,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21736,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21744,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21751,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 21754,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21772,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21774,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+3"
+    },
+    {
+      "line": 21775,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+3"
+    },
+    {
+      "line": 21777,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+3"
+    },
+    {
+      "line": 21781,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+3"
+    },
+    {
+      "line": 21786,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+3"
+    },
+    {
+      "line": 21787,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+3"
+    },
+    {
+      "line": 21793,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 21797,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21805,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags+8,y"
+    },
+    {
+      "line": 21812,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+8,y"
+    },
+    {
+      "line": 21813,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+8,y"
+    },
+    {
+      "line": 21815,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+8,y"
+    },
+    {
+      "line": 21819,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+8,y"
+    },
+    {
+      "line": 21820,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+8,y"
+    },
+    {
+      "line": 21822,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 21823,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+8,y"
+    },
+    {
+      "line": 21855,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21863,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21865,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation"
+    },
+    {
+      "line": 21867,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame"
+    },
+    {
+      "line": 21876,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick"
+    },
+    {
+      "line": 21877,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 21880,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 21881,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY"
+    },
+    {
+      "line": 21925,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 21937,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 21943,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 21961,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 21992,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 21998,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22022,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 22052,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22094,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22096,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22097,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22099,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22104,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22107,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22127,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22129,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22131,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22135,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY+14"
+    },
+    {
+      "line": 22137,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick+14"
+    },
+    {
+      "line": 22138,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame+14"
+    },
+    {
+      "line": 22141,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags+14"
+    },
+    {
+      "line": 22142,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags+14"
+    },
+    {
+      "line": 22144,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation+14"
+    },
+    {
+      "line": 22168,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22170,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22172,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22180,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22182,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22201,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22225,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,x"
+    },
+    {
+      "line": 22249,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22375,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22377,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22387,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22399,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22411,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 22426,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22444,
+      "symbol": "ObjectAnimationFrame",
+      "source": "lda a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22456,
+      "symbol": "ObjectAnimationTick",
+      "source": "lda a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22480,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22517,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22576,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22590,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22593,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22608,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22649,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22654,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22671,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22673,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22674,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22686,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22690,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22692,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22696,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22703,
+      "symbol": "ObjectAnimation",
+      "source": "sta a:ObjectAnimation,x"
+    },
+    {
+      "line": 22705,
+      "symbol": "ObjectScreenY",
+      "source": "lda a:ObjectScreenY,y"
+    },
+    {
+      "line": 22706,
+      "symbol": "ObjectScreenY",
+      "source": "sta a:ObjectScreenY,x"
+    },
+    {
+      "line": 22712,
+      "symbol": "ObjectAnimationFrame",
+      "source": "sta a:ObjectAnimationFrame,x"
+    },
+    {
+      "line": 22713,
+      "symbol": "ObjectAnimationTick",
+      "source": "sta a:ObjectAnimationTick,x"
+    },
+    {
+      "line": 22715,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22716,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22727,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22736,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22738,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags,x"
+    },
+    {
+      "line": 22746,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22751,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22766,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22781,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22791,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22806,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22833,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22838,
+      "symbol": "ObjectAnimation",
+      "source": "lda a:ObjectAnimation,x"
+    },
+    {
+      "line": 22848,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22856,
+      "symbol": "ObjectStateFlags",
+      "source": "sta a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22885,
+      "symbol": "ObjectRenderFlags",
+      "source": "lda a:ObjectRenderFlags"
+    },
+    {
+      "line": 22887,
+      "symbol": "ObjectRenderFlags",
+      "source": "sta a:ObjectRenderFlags"
+    },
+    {
+      "line": 22893,
+      "symbol": "ObjectStateFlags",
+      "source": "lda a:ObjectStateFlags,x"
+    },
+    {
+      "line": 22901,
+      "symbol": "ObjectStateFlags",
+      "source": "inc a:ObjectStateFlags,x"
+    },
+    {
+      "line": 23006,
+      "symbol": "PpuCtrlShadow",
+      "source": "sta z:PpuCtrlShadow"
+    },
+    {
+      "line": 23169,
+      "symbol": "PrimaryPpuQueue",
+      "source": "sta a:PrimaryPpuQueue"
+    }
+  ],
+  "note": "All matched readers/writers and exact area units; numeric aliases require adjacent trace. Data payload not stored."
+}

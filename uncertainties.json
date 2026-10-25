@@ -1,0 +1,313 @@
+{
+  "version": 1,
+  "rom_sha256": "97d472f7b2c1088448d1644155b2650a546bad887b3cba571e16d7986824c169",
+  "entries": [
+    {
+      "id": "source-unknown-00c522",
+      "offset": 50466,
+      "length": 2,
+      "source_region_ids": [
+        "unknown-00c522"
+      ],
+      "impact": "none",
+      "status": "excluded",
+      "summary": "Assessed source-informed no-impact exclusion, not confirmed padding: no established entry or ROM-data consumer reaches isolated A9 07 after source inline-target/header/stream/preset/period and CHR review. All established native audio paths are implemented; no fabricated execution is added.",
+      "consumers": [
+        "B18 source consumer review; no established live consumer",
+        "B02 mixed graphics review: actual CHR spansE910..F110, not C522"
+      ],
+      "ledger_ids": [
+        "unknown-00c522"
+      ],
+      "evidence": [
+        "port/src/audio/trace.md",
+        "planning/contracts/B18-consumers.json",
+        "checks/contracts/B18/static-consumers.py",
+        "checks/contracts/B18/static-consumers.log",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/contracts/B18/static-consumers.log",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation_limits": "The intended original role remains unknown. Bounded source-consumer absence is not a formal proof for malformed/out-of-domain commands; frozen classification and original identities/ranges are unchanged.",
+      "assessment": "source_informed_assumption"
+    },
+    {
+      "id": "B01-frame-boundary-integration",
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented atomic interrupt-before-foreground host policy. Machine services internal requests without an interrupt, yields only at actual owner waits, and preserves busy loops with NMI/audio but no task0 sampling. Committed/prepared presentation and source input-sampling return are distinct.",
+      "consumers": [
+        "B03 presentation",
+        "B12 title",
+        "B13 progression",
+        "B18 audio",
+        "Game::tick composition"
+      ],
+      "evidence": [
+        "port/src/runtime/trace.md",
+        "port/src/runtime/contracts.rs",
+        "port/src/presentation/trace.md",
+        "port/src/presentation/contracts.rs",
+        "port/src/progression/trace.md",
+        "port/src/progression/contracts.rs",
+        "planning/contracts/B13-consumers.json",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/game-machine-real-yield-cadence.log",
+        "checks/implementation/game-authored-shared-integration-fixed.log"
+      ],
+      "validation_limits": "Source reset warm-up polling is omitted before first playable tick. Raster timing is deterministic native approximation; whole-game fidelity remains stage5 QA.",
+      "offset": 114704,
+      "length": 226,
+      "source_region_ids": [
+        "region-208"
+      ],
+      "ledger_ids": [
+        "region-208"
+      ],
+      "assessment": "implemented_with_source_and_focused_tests"
+    },
+    {
+      "id": "B02-extension-format-validation",
+      "offset": 115582,
+      "length": 190,
+      "source_region_ids": [
+        "region-4"
+      ],
+      "ledger_ids": [
+        "region-4"
+      ],
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented transactional authored-file codecs/finite named successor graphs and immutable original-based views. Actual room/terrain/CHR/spawn/audio consumers, frontend manifest delivery, original-only/source-template examples, reload and chain restoration are covered. No added selector menu or fixed level-count cap.",
+      "consumers": [
+        "B02 catalog/format loaders",
+        "B04 terrain/layout decoder",
+        "B10 spawn loader",
+        "B16 scene context",
+        "B17 ending",
+        "B18 audio programs",
+        "desktop/browser startup"
+      ],
+      "evidence": [
+        "port/src/assets/trace.md",
+        "port/src/assets/contracts.rs",
+        "planning/contracts/B02-consumers.json",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/game-authored-source-template-integration.log",
+        "checks/implementation/game-delivered-extension-manifests.log",
+        "EXTENSIONS.md"
+      ],
+      "validation_limits": "Authored JSON formats are native design, not recovered source formats. Source rule profiles remain0..4 and original global progress bits persist across chains. Examples are not balance/playthrough-certified.",
+      "assessment": "implemented_with_source_and_focused_tests"
+    },
+    {
+      "id": "B04-discarded-bottom-staging",
+      "offset": 118007,
+      "length": 79,
+      "source_region_ids": [
+        "region-245"
+      ],
+      "ledger_ids": [
+        "region-245"
+      ],
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented source-informed ordinary-caller retained lower8 staging policy on transposed bottom rows; canonical staging is shared with audio low-F reads. Width bounds precede staging writes, and composed asymmetric-ring/cache alias regressions validate ordering.",
+      "consumers": [
+        "B04 expansion/stream/vertical row staging",
+        "B03 trimmed tile upload"
+      ],
+      "evidence": [
+        "port/src/world/trace.md",
+        "port/src/world/contracts.rs::last_attribute_row_omits_bottom_quadrant_properties_and_upload_discards_stale_tiles",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/game-video-alias-staging.log",
+        "checks/implementation/game-camera-same-call-batch.log",
+        "port/src/game/video.rs",
+        "differences.md"
+      ],
+      "validation_limits": "Unusual Scratch03 residue from an unestablished caller remains an explicitly assessed fidelity assumption. No CPU scratch/memory emulator or whole-ROM reachability claim is introduced.",
+      "assessment": "source_informed_assumption"
+    },
+    {
+      "id": "B14-runtime-frame-author",
+      "offset": 87697,
+      "length": 8,
+      "source_region_ids": [
+        "region-510"
+      ],
+      "ledger_ids": [
+        "region-510"
+      ],
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented actual scene/completion/status runtime composite producers into canonical secondary prefix borrowed with terrain-attribute overlap. Primary messages crossing0440 alias that same storage. Animation/frame decode validates referenced extents at startup and composition commits state cleanup before later live slots.",
+      "consumers": [
+        "B03 composite selectors0..3",
+        "B16 scenes",
+        "stage4 composition"
+      ],
+      "evidence": [
+        "port/src/status/trace.md",
+        "planning/contracts/B14-consumers.json",
+        "port/src/presentation/trace.md",
+        "planning/contracts/B03.md",
+        "port/src/scenes/trace.md",
+        "port/src/scenes/contracts.rs",
+        "planning/contracts/B16-consumers.json",
+        "port/src/finale/trace.md",
+        "planning/contracts/B17-consumers.json",
+        "planning/contracts/B17.md",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/scenes-shared-cache.log",
+        "checks/implementation/game-video-alias-staging.log",
+        "port/src/game/simulation.rs"
+      ],
+      "validation_limits": "Source consumers and native composed tests establish the implemented ownership model; no formal all-ROM reachability proof is claimed. Deliberate raw malformed pointer domains remain bounded.",
+      "assessment": "implemented_with_source_and_focused_tests"
+    },
+    {
+      "id": "B11-first-slot-random-increment",
+      "offset": 121724,
+      "length": 22,
+      "source_region_ids": [
+        "region-304"
+      ],
+      "ledger_ids": [
+        "region-304"
+      ],
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented complete B06 and B15 return provenance through PlayerCall into B13 first live actor/RNG: actual controller filter return, named source comparisons/snap/gravity/payment operations and actual accepted/dropped sound submissions. Nonlocal vertical return bypasses actor tail and enters DBE4.",
+      "consumers": [
+        "B06 player-return arithmetic result",
+        "B10 first-slot dispatch",
+        "B11 Impact and Center local random sums",
+        "B13 simulation composition"
+      ],
+      "evidence": [
+        "reference/source/game.asm:14236",
+        "reference/source/game.asm:23222",
+        "port/src/actors/bosses/trace.md",
+        "port/src/actors/bosses/contracts.rs::impact_shake_expiry_selects_all_eight_delays_and_preserves_caller_specific_increment",
+        "port/src/actors/bosses/contracts.rs::center_ground_random_selection_uses_incoming_increment_then_first_addition_carry",
+        "port/src/progression/trace.md",
+        "port/src/progression/contracts.rs",
+        "planning/contracts/B13-consumers.json",
+        "port/src/dialogue/trace.md",
+        "planning/contracts/B15-consumers.json",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/game-player-real-return-regressions.log",
+        "checks/implementation/game-dialogue-call-regressions.log",
+        "checks/implementation/progression-vertical-nonlocal-return.log"
+      ],
+      "validation_limits": "Call-local named facts replace processor carry; no global flag, defaultfalse or CPU state exists. Source-proven contract corrections are preserved with prior fixtures/traces. Whole-route fidelity awaits QA.",
+      "B15_source_findings": "Dialogue ordinary finalCMP0B: messagesbelow0B returnZero;0D/0E/10/11 One; race0B,03 and0F One. Paid0A rejectionOne,underfundedZero,success depends zero normalization scan (firstdigitnonzero/all6exhaust One,partialscan Zero). LifeLoss uses finalADC carry. Reveal delegates burst\u2192particles\u2192audio: fresh producer byteCMP88 returnsOne for88/FF,Zero for<88. Retain semantic fact at actual call, including across owner yields; pending B06 adapter still must expose it. Full derivation in dialogue/trace.md, no defaultfalse/CPUflagstore.",
+      "assessment": "implemented_with_source_and_focused_tests"
+    },
+    {
+      "id": "B12-available-land-entry-precondition",
+      "offset": 120575,
+      "length": 83,
+      "source_region_ids": [
+        "region-288"
+      ],
+      "ledger_ids": [
+        "region-288"
+      ],
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented full byte scan/navigation and raw selectors5/6/7/21 using validated adjacent original data consumers, byte-wrapped parameters and native layout/CHR/spawn projections. FF scanning/stalled skip behavior is retained; no invented five-land cap.",
+      "consumers": [
+        "B12 first_available_selector/position_land",
+        "B13 gameplay progression/selection entry",
+        "B14 timer completion",
+        "B16 completion-actor latch"
+      ],
+      "evidence": [
+        "reference/source/game.asm:13590",
+        "reference/source/game.asm:13662",
+        "reference/source/game.asm:13734",
+        "port/src/selection/trace.md",
+        "port/src/selection/contracts.rs",
+        "port/src/progression/trace.md",
+        "port/src/progression/contracts.rs",
+        "planning/contracts/B13-consumers.json",
+        "port/src/dialogue/trace.md",
+        "port/src/dialogue/contracts.rs",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/raw-stage-consumers.log",
+        "checks/implementation/raw-stage-graphics-fixed.log",
+        "port/src/selection/mod.rs",
+        "port/src/game/content.rs"
+      ],
+      "validation_limits": "Source-informed raw-domain fallback preserves established consumer arithmetic; out-of-domain pointers requiring non-ROM storage retain explicit unsupported classification. No formal all-malformed-path or natural reachability proof is claimed.",
+      "B15_source_findings": "Whole actor2F contact sets boundary80 for selector4/incomplete lowfive; message03 increments full A4 if sourceA3bit02clear, including7F\u219280 andFF\u219200. All18 message seenplanes and sameframe live-slot effects retain producer ordering; no new natural reachability proof or five-choice cap.",
+      "assessment": "source_informed_assumption"
+    },
+    {
+      "id": "B18-secondary-reset-seed",
+      "impact": "behavior",
+      "status": "resolved",
+      "summary": "Implemented actual producer-tagged AudioTemp selector with reset-zero provenance and no-command cross-frame inheritance. Low-F reset can read adjacent canonical audio-channel/preset/gap/staging/primary/secondary fields through borrowed interrupt/frame callbacks; no shadow RAM or default19.",
+      "consumers": [
+        "AudioSecondaryDecode8599..85A6",
+        "AudioResetKeepingPeriod",
+        "AudioResetEnvelopeState8514..8533",
+        "B18 Driver::secondary_step/frame and ResetLevel"
+      ],
+      "evidence": [
+        "port/src/audio/trace.md",
+        "planning/contracts/B18-consumers.json",
+        "port/src/audio/contracts.rs::nondefault_derived_reset_seed_is_used_instead_of_inventing_secondary_control",
+        "differences.md",
+        "architecture.md",
+        "checks/implementation/stage4-check-passed.json"
+      ],
+      "validation": [
+        "checks/implementation/audio-command-restore-provenance-fixed.log",
+        "checks/implementation/audio-expanded.log",
+        "port/src/game/video.rs",
+        "port/src/audio/mod.rs"
+      ],
+      "validation_limits": "Named gap reset/writer policy and ordinary staging residue are source-informed where caller lifetime is incomplete; exact consumed bytes are observable. Original hardware analog synthesis differs natively; stage5 compares runtime behavior.",
+      "assessment": "implemented_with_source_and_focused_tests",
+      "offset": 50468,
+      "length": 175,
+      "ledger_ids": [
+        "region-60"
+      ],
+      "source_region_ids": [
+        "region-60"
+      ]
+    }
+  ]
+}

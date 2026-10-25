@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "format": "ducktales.spawns",
+  "templates": [
+    {
+      "original_template": 80
+    }
+  ],
+  "rows": [
+    [
+      {
+        "x": 192,
+        "y": 128,
+        "template": 0
+      }
+    ]
+  ]
+}

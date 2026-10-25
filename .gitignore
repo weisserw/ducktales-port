@@ -1,0 +1,12 @@
+/input/
+/reference/
+/research/
+/review/toolkit-before/
+/checks/
+/port/target/
+/web-dist/
+/debug/artifacts/
+__pycache__/
+
+# Local paired setup snapshots; never distribute original-game state.
+debug/cache/

@@ -1,0 +1,6210 @@
+{
+  "reference_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "note": "Whole related regions and their preserved units. Independently traced semantic closure in port/src/progression/trace.md. Symbol references are navigation, not fidelity proof; all ledger implementation dispositions remain pending.",
+  "regions": [
+    {
+      "ledger_id": "region-257",
+      "offset": 118691,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12469"
+      ],
+      "units": [
+        {
+          "id": "region-257/unit-0",
+          "label": "CheckStageBoundary",
+          "offset": 118691,
+          "length": 9,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-258",
+      "offset": 118700,
+      "length": 24,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12481"
+      ],
+      "units": [
+        {
+          "id": "region-258/unit-0",
+          "label": "CheckStageBoundaryX",
+          "offset": 118700,
+          "length": 24,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-259",
+      "offset": 118724,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12499"
+      ],
+      "units": [
+        {
+          "id": "region-259/unit-0",
+          "label": "NoStageTransition",
+          "offset": 118724,
+          "length": 1,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-260",
+      "offset": 118725,
+      "length": 31,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12508"
+      ],
+      "units": [
+        {
+          "id": "region-260/unit-0",
+          "label": "TriggerStageBoundary",
+          "offset": 118725,
+          "length": 31,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1201",
+      "offset": 118756,
+      "length": 121,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12532"
+      ],
+      "units": [
+        {
+          "id": "region-1201/unit-0",
+          "label": "EnterLateStageHorizontalTransition",
+          "offset": 118756,
+          "length": 32,
+          "area": "B13"
+        },
+        {
+          "id": "region-1201/unit-1",
+          "label": "LateStageTransitionTick",
+          "offset": 118788,
+          "length": 89,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-619",
+      "offset": 118877,
+      "length": 27,
+      "kind": "Data",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:12603"
+      ],
+      "units": [
+        {
+          "id": "region-619/unit-0",
+          "label": "StageTransitionParameters_1D05D",
+          "offset": 118877,
+          "length": 27,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-296",
+      "offset": 120804,
+      "length": 210,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:13818"
+      ],
+      "units": [
+        {
+          "id": "region-296/unit-0",
+          "label": "InitializeStageRuntime",
+          "offset": 120804,
+          "length": 210,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-297",
+      "offset": 121306,
+      "length": 70,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14100"
+      ],
+      "units": [
+        {
+          "id": "region-297/unit-0",
+          "label": "LoadStagePresentation",
+          "offset": 121306,
+          "length": 70,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1271",
+      "offset": 121376,
+      "length": 294,
+      "kind": "Data",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14144"
+      ],
+      "units": [
+        {
+          "id": "region-1271/unit-0",
+          "label": "StagePaletteAndOverlayData",
+          "offset": 121376,
+          "length": 294,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-298",
+      "offset": 121670,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14151"
+      ],
+      "units": [
+        {
+          "id": "region-298/unit-0",
+          "label": "GameplayLoopEntry",
+          "offset": 121670,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-299",
+      "offset": 121674,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14161"
+      ],
+      "units": [
+        {
+          "id": "region-299/unit-0",
+          "label": "GameplayLoopEntry",
+          "offset": 121670,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-632",
+      "offset": 121677,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14168"
+      ],
+      "units": [
+        {
+          "id": "region-632/unit-0",
+          "label": "GameplayLoopTransitionJoin",
+          "offset": 121677,
+          "length": 3,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-300",
+      "offset": 121680,
+      "length": 12,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14177"
+      ],
+      "units": [
+        {
+          "id": "region-300/unit-0",
+          "label": "GameplayPauseGate",
+          "offset": 121680,
+          "length": 17,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-301",
+      "offset": 121692,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14191"
+      ],
+      "units": [
+        {
+          "id": "region-301/unit-0",
+          "label": "GameplayPauseGate",
+          "offset": 121680,
+          "length": 17,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1210",
+      "offset": 121697,
+      "length": 20,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14199"
+      ],
+      "units": [
+        {
+          "id": "region-1210/unit-0",
+          "label": "GameplayAlternateStatusFrame",
+          "offset": 121697,
+          "length": 20,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-302",
+      "offset": 121717,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14215"
+      ],
+      "units": [
+        {
+          "id": "region-302/unit-0",
+          "label": "GameplayGlobalGate",
+          "offset": 121717,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-303",
+      "offset": 121721,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14225"
+      ],
+      "units": [
+        {
+          "id": "region-303/unit-0",
+          "label": "GameplayGlobalGate",
+          "offset": 121717,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-304",
+      "offset": 121724,
+      "length": 22,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14232"
+      ],
+      "units": [
+        {
+          "id": "region-304/unit-0",
+          "label": "UpdateGameplaySimulation",
+          "offset": 121724,
+          "length": 25,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-305",
+      "offset": 121746,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14249"
+      ],
+      "units": [
+        {
+          "id": "region-305/unit-0",
+          "label": "UpdateGameplaySimulation",
+          "offset": 121724,
+          "length": 25,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-306",
+      "offset": 121749,
+      "length": 14,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14256"
+      ],
+      "units": [
+        {
+          "id": "region-306/unit-0",
+          "label": "CheckGameplayTransitions",
+          "offset": 121749,
+          "length": 14,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-307",
+      "offset": 121763,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14270"
+      ],
+      "units": [
+        {
+          "id": "region-307/unit-0",
+          "label": "ApplyGameplayTransition",
+          "offset": 121763,
+          "length": 22,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1211",
+      "offset": 121768,
+      "length": 10,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14280"
+      ],
+      "units": [
+        {
+          "id": "region-1211/unit-0",
+          "label": "RequestStageOneRestart",
+          "offset": 121768,
+          "length": 10,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-308",
+      "offset": 121778,
+      "length": 7,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14293"
+      ],
+      "units": [
+        {
+          "id": "region-308/unit-0",
+          "label": "ApplyGameplayTransition",
+          "offset": 121763,
+          "length": 22,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-309",
+      "offset": 121785,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14302"
+      ],
+      "units": [
+        {
+          "id": "region-309/unit-0",
+          "label": "GameplayDeferredEffect",
+          "offset": 121785,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-310",
+      "offset": 121789,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14312"
+      ],
+      "units": [
+        {
+          "id": "region-310/unit-0",
+          "label": "GameplayDeferredEffect",
+          "offset": 121785,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-311",
+      "offset": 121792,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14319"
+      ],
+      "units": [
+        {
+          "id": "region-311/unit-0",
+          "label": "GameplayStatusRefresh",
+          "offset": 121792,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-312",
+      "offset": 121796,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14329"
+      ],
+      "units": [
+        {
+          "id": "region-312/unit-0",
+          "label": "GameplayStatusRefresh",
+          "offset": 121792,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-313",
+      "offset": 121799,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14336"
+      ],
+      "units": [
+        {
+          "id": "region-313/unit-0",
+          "label": "GameplaySecondaryEffect",
+          "offset": 121799,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-314",
+      "offset": 121803,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14346"
+      ],
+      "units": [
+        {
+          "id": "region-314/unit-0",
+          "label": "GameplaySecondaryEffect",
+          "offset": 121799,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-315",
+      "offset": 121806,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14353"
+      ],
+      "units": [
+        {
+          "id": "region-315/unit-0",
+          "label": "GameplayAlternateTransition",
+          "offset": 121806,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-316",
+      "offset": 121810,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14363"
+      ],
+      "units": [
+        {
+          "id": "region-316/unit-0",
+          "label": "GameplayAlternateTransition",
+          "offset": 121806,
+          "length": 7,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-317",
+      "offset": 121813,
+      "length": 57,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14370"
+      ],
+      "units": [
+        {
+          "id": "region-317/unit-0",
+          "label": "ComposeAndStreamGameplay",
+          "offset": 121813,
+          "length": 57,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-318",
+      "offset": 121870,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14404"
+      ],
+      "units": [
+        {
+          "id": "region-318/unit-0",
+          "label": "FilterQueuedPlayerReaction",
+          "offset": 121870,
+          "length": 6,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-319",
+      "offset": 121876,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14415"
+      ],
+      "units": [
+        {
+          "id": "region-319/unit-0",
+          "label": "CheckLateStagePosition",
+          "offset": 121876,
+          "length": 21,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-320",
+      "offset": 121885,
+      "length": 12,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14427"
+      ],
+      "units": [
+        {
+          "id": "region-320/unit-0",
+          "label": "CheckLateStagePosition",
+          "offset": 121876,
+          "length": 21,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-321",
+      "offset": 121897,
+      "length": 19,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14438"
+      ],
+      "units": [
+        {
+          "id": "region-321/unit-0",
+          "label": "FinishGameplayFrame",
+          "offset": 121897,
+          "length": 19,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1272",
+      "offset": 121916,
+      "length": 18,
+      "kind": "Data",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14455"
+      ],
+      "units": [
+        {
+          "id": "region-1272/unit-0",
+          "label": "RoomTransitionComparisonData",
+          "offset": 121916,
+          "length": 18,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1212",
+      "offset": 121934,
+      "length": 241,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14462"
+      ],
+      "units": [
+        {
+          "id": "region-1212/unit-0",
+          "label": "ReloadStageFromTransitionRequest",
+          "offset": 121934,
+          "length": 35,
+          "area": "B13"
+        },
+        {
+          "id": "region-1212/unit-1",
+          "label": "InitializeStageReloadState",
+          "offset": 121969,
+          "length": 38,
+          "area": "B13"
+        },
+        {
+          "id": "region-1212/unit-2",
+          "label": "SelectReloadBackgroundContext",
+          "offset": 122007,
+          "length": 47,
+          "area": "B13"
+        },
+        {
+          "id": "region-1212/unit-3",
+          "label": "WaitForReloadBackground",
+          "offset": 122054,
+          "length": 44,
+          "area": "B13"
+        },
+        {
+          "id": "region-1212/unit-4",
+          "label": "RestoreStageAudioAndCountdown",
+          "offset": 122098,
+          "length": 65,
+          "area": "B13"
+        },
+        {
+          "id": "region-1212/unit-5",
+          "label": "SelectReloadFadeDuration",
+          "offset": 122163,
+          "length": 12,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-322",
+      "offset": 122175,
+      "length": 30,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14603"
+      ],
+      "units": [
+        {
+          "id": "region-322/unit-0",
+          "label": "WaitWithSpriteComposition",
+          "offset": 122175,
+          "length": 30,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1213",
+      "offset": 122205,
+      "length": 116,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14625"
+      ],
+      "units": [
+        {
+          "id": "region-1213/unit-0",
+          "label": "ReloadFadeReturn",
+          "offset": 122205,
+          "length": 1,
+          "area": "B13"
+        },
+        {
+          "id": "region-1213/unit-1",
+          "label": "LoadCheckpointInitialization",
+          "offset": 122206,
+          "length": 74,
+          "area": "B13"
+        },
+        {
+          "id": "region-1213/unit-2",
+          "label": "BuildCheckpointTerrainColumns",
+          "offset": 122280,
+          "length": 41,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1273",
+      "offset": 122321,
+      "length": 171,
+      "kind": "Data",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14696"
+      ],
+      "units": [
+        {
+          "id": "region-1273/unit-0",
+          "label": "CheckpointInitializationRecords",
+          "offset": 122321,
+          "length": 171,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1215",
+      "offset": 122547,
+      "length": 68,
+      "kind": "Code",
+      "primary_area": "B14",
+      "related_areas": [
+        "B13",
+        "B14"
+      ],
+      "source": [
+        "game.asm:14759"
+      ],
+      "units": [
+        {
+          "id": "region-1215/unit-0",
+          "label": "QueueStageUiWhenIdle",
+          "offset": 122547,
+          "length": 22,
+          "area": "B14"
+        },
+        {
+          "id": "region-1215/unit-1",
+          "label": "PlayGameOverAndReset",
+          "offset": 122569,
+          "length": 46,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1274",
+      "offset": 122615,
+      "length": 33,
+      "kind": "Data",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14806"
+      ],
+      "units": [
+        {
+          "id": "region-1274/unit-0",
+          "label": "GameOverOverlayData",
+          "offset": 122615,
+          "length": 33,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-325",
+      "offset": 122648,
+      "length": 14,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14813"
+      ],
+      "units": [
+        {
+          "id": "region-325/unit-0",
+          "label": "BeginSelectionTransition",
+          "offset": 122648,
+          "length": 14,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-1216",
+      "offset": 122662,
+      "length": 14,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14829"
+      ],
+      "units": [
+        {
+          "id": "region-1216/unit-0",
+          "label": "SpecialRoomDelayFrame",
+          "offset": 122662,
+          "length": 14,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    },
+    {
+      "ledger_id": "region-326",
+      "offset": 122676,
+      "length": 3,
+      "kind": "Code",
+      "primary_area": "B13",
+      "related_areas": [
+        "B13"
+      ],
+      "source": [
+        "game.asm:14844"
+      ],
+      "units": [
+        {
+          "id": "region-326/unit-0",
+          "label": "ReturnToLandSelect",
+          "offset": 122676,
+          "length": 3,
+          "area": "B13"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending"
+    }
+  ],
+  "label_references": [
+    {
+      "line": 12473,
+      "label": "CheckStageBoundary",
+      "text": "CheckStageBoundary:"
+    },
+    {
+      "line": 12477,
+      "label": "NoStageTransition",
+      "text": "bne NoStageTransition"
+    },
+    {
+      "line": 12485,
+      "label": "CheckStageBoundaryX",
+      "text": "CheckStageBoundaryX:"
+    },
+    {
+      "line": 12495,
+      "label": "TriggerStageBoundary",
+      "text": "beq TriggerStageBoundary"
+    },
+    {
+      "line": 12503,
+      "label": "NoStageTransition",
+      "text": "NoStageTransition:"
+    },
+    {
+      "line": 12512,
+      "label": "TriggerStageBoundary",
+      "text": "TriggerStageBoundary:"
+    },
+    {
+      "line": 12536,
+      "label": "EnterLateStageHorizontalTransition",
+      "text": "EnterLateStageHorizontalTransition:"
+    },
+    {
+      "line": 12558,
+      "label": "LateStageTransitionTick",
+      "text": "LateStageTransitionTick:"
+    },
+    {
+      "line": 12588,
+      "label": "LateStageTransitionTick",
+      "text": "jmp a:LateStageTransitionTick"
+    },
+    {
+      "line": 13547,
+      "label": "LoadStagePresentation",
+      "text": "jsr a:LoadStagePresentation"
+    },
+    {
+      "line": 13797,
+      "label": "LoadStagePresentation",
+      "text": "jsr a:LoadStagePresentation"
+    },
+    {
+      "line": 13822,
+      "label": "InitializeStageRuntime",
+      "text": "InitializeStageRuntime:"
+    },
+    {
+      "line": 13916,
+      "label": "GameplayLoopEntry",
+      "text": "jmp a:GameplayLoopEntry"
+    },
+    {
+      "line": 14104,
+      "label": "LoadStagePresentation",
+      "text": "LoadStagePresentation:"
+    },
+    {
+      "line": 14145,
+      "label": "StagePaletteAndOverlayData",
+      "text": "StagePaletteAndOverlayData:"
+    },
+    {
+      "line": 14155,
+      "label": "GameplayLoopEntry",
+      "text": "GameplayLoopEntry:"
+    },
+    {
+      "line": 14157,
+      "label": "GameplayPauseGate",
+      "text": "beq GameplayPauseGate"
+    },
+    {
+      "line": 14172,
+      "label": "GameplayLoopTransitionJoin",
+      "text": "GameplayLoopTransitionJoin:"
+    },
+    {
+      "line": 14173,
+      "label": "ComposeAndStreamGameplay",
+      "text": "jmp a:ComposeAndStreamGameplay"
+    },
+    {
+      "line": 14181,
+      "label": "GameplayPauseGate",
+      "text": "GameplayPauseGate:"
+    },
+    {
+      "line": 14184,
+      "label": "UpdateGameplaySimulation",
+      "text": "beq UpdateGameplaySimulation"
+    },
+    {
+      "line": 14187,
+      "label": "GameplayGlobalGate",
+      "text": "beq GameplayGlobalGate"
+    },
+    {
+      "line": 14203,
+      "label": "GameplayAlternateStatusFrame",
+      "text": "GameplayAlternateStatusFrame:"
+    },
+    {
+      "line": 14219,
+      "label": "GameplayGlobalGate",
+      "text": "GameplayGlobalGate:"
+    },
+    {
+      "line": 14221,
+      "label": "UpdateGameplaySimulation",
+      "text": "beq UpdateGameplaySimulation"
+    },
+    {
+      "line": 14228,
+      "label": "CheckLateStagePosition",
+      "text": "jmp a:CheckLateStagePosition"
+    },
+    {
+      "line": 14236,
+      "label": "UpdateGameplaySimulation",
+      "text": "UpdateGameplaySimulation:"
+    },
+    {
+      "line": 14239,
+      "label": "GameplayDeferredEffect",
+      "text": "bne GameplayDeferredEffect"
+    },
+    {
+      "line": 14245,
+      "label": "CheckGameplayTransitions",
+      "text": "beq CheckGameplayTransitions"
+    },
+    {
+      "line": 14252,
+      "label": "BeginSelectionTransition",
+      "text": "jmp a:BeginSelectionTransition"
+    },
+    {
+      "line": 14260,
+      "label": "CheckGameplayTransitions",
+      "text": "CheckGameplayTransitions:"
+    },
+    {
+      "line": 14262,
+      "label": "GameplayDeferredEffect",
+      "text": "bmi GameplayDeferredEffect"
+    },
+    {
+      "line": 14264,
+      "label": "CheckStageBoundary",
+      "text": "jsr a:CheckStageBoundary"
+    },
+    {
+      "line": 14266,
+      "label": "GameplayDeferredEffect",
+      "text": "beq GameplayDeferredEffect"
+    },
+    {
+      "line": 14274,
+      "label": "ApplyGameplayTransition",
+      "text": "ApplyGameplayTransition:"
+    },
+    {
+      "line": 14284,
+      "label": "RequestStageOneRestart",
+      "text": "RequestStageOneRestart:"
+    },
+    {
+      "line": 14306,
+      "label": "GameplayDeferredEffect",
+      "text": "GameplayDeferredEffect:"
+    },
+    {
+      "line": 14308,
+      "label": "GameplayStatusRefresh",
+      "text": "bpl GameplayStatusRefresh"
+    },
+    {
+      "line": 14315,
+      "label": "ReloadStageFromTransitionRequest",
+      "text": "jsr a:ReloadStageFromTransitionRequest"
+    },
+    {
+      "line": 14323,
+      "label": "GameplayStatusRefresh",
+      "text": "GameplayStatusRefresh:"
+    },
+    {
+      "line": 14325,
+      "label": "GameplaySecondaryEffect",
+      "text": "beq GameplaySecondaryEffect"
+    },
+    {
+      "line": 14340,
+      "label": "GameplaySecondaryEffect",
+      "text": "GameplaySecondaryEffect:"
+    },
+    {
+      "line": 14342,
+      "label": "GameplayAlternateTransition",
+      "text": "beq GameplayAlternateTransition"
+    },
+    {
+      "line": 14349,
+      "label": "QueueStageUiWhenIdle",
+      "text": "jsr a:QueueStageUiWhenIdle"
+    },
+    {
+      "line": 14357,
+      "label": "GameplayAlternateTransition",
+      "text": "GameplayAlternateTransition:"
+    },
+    {
+      "line": 14359,
+      "label": "ComposeAndStreamGameplay",
+      "text": "bpl ComposeAndStreamGameplay"
+    },
+    {
+      "line": 14374,
+      "label": "ComposeAndStreamGameplay",
+      "text": "ComposeAndStreamGameplay:"
+    },
+    {
+      "line": 14394,
+      "label": "CheckLateStagePosition",
+      "text": "beq CheckLateStagePosition"
+    },
+    {
+      "line": 14398,
+      "label": "FilterQueuedPlayerReaction",
+      "text": "beq FilterQueuedPlayerReaction"
+    },
+    {
+      "line": 14400,
+      "label": "CheckLateStagePosition",
+      "text": "bne CheckLateStagePosition"
+    },
+    {
+      "line": 14408,
+      "label": "FilterQueuedPlayerReaction",
+      "text": "FilterQueuedPlayerReaction:"
+    },
+    {
+      "line": 14410,
+      "label": "CheckLateStagePosition",
+      "text": "bne CheckLateStagePosition"
+    },
+    {
+      "line": 14419,
+      "label": "CheckLateStagePosition",
+      "text": "CheckLateStagePosition:"
+    },
+    {
+      "line": 14423,
+      "label": "FinishGameplayFrame",
+      "text": "bne FinishGameplayFrame"
+    },
+    {
+      "line": 14432,
+      "label": "FinishGameplayFrame",
+      "text": "bne FinishGameplayFrame"
+    },
+    {
+      "line": 14442,
+      "label": "FinishGameplayFrame",
+      "text": "FinishGameplayFrame:"
+    },
+    {
+      "line": 14451,
+      "label": "GameplayLoopEntry",
+      "text": "jmp a:GameplayLoopEntry"
+    },
+    {
+      "line": 14456,
+      "label": "RoomTransitionComparisonData",
+      "text": "RoomTransitionComparisonData:"
+    },
+    {
+      "line": 14466,
+      "label": "ReloadStageFromTransitionRequest",
+      "text": "ReloadStageFromTransitionRequest:"
+    },
+    {
+      "line": 14471,
+      "label": "BeginSelectionTransition",
+      "text": "jmp a:BeginSelectionTransition"
+    },
+    {
+      "line": 14479,
+      "label": "InitializeStageReloadState",
+      "text": "bne InitializeStageReloadState"
+    },
+    {
+      "line": 14480,
+      "label": "PlayGameOverAndReset",
+      "text": "jmp a:PlayGameOverAndReset"
+    },
+    {
+      "line": 14486,
+      "label": "InitializeStageReloadState",
+      "text": "InitializeStageReloadState:"
+    },
+    {
+      "line": 14489,
+      "label": "SelectReloadFadeDuration",
+      "text": "jsr a:SelectReloadFadeDuration"
+    },
+    {
+      "line": 14503,
+      "label": "LoadCheckpointInitialization",
+      "text": "jsr a:LoadCheckpointInitialization"
+    },
+    {
+      "line": 14507,
+      "label": "SelectReloadBackgroundContext",
+      "text": "SelectReloadBackgroundContext:"
+    },
+    {
+      "line": 14516,
+      "label": "WaitForReloadBackground",
+      "text": "bne WaitForReloadBackground"
+    },
+    {
+      "line": 14523,
+      "label": "WaitForReloadBackground",
+      "text": "bne WaitForReloadBackground"
+    },
+    {
+      "line": 14533,
+      "label": "WaitForReloadBackground",
+      "text": "WaitForReloadBackground:"
+    },
+    {
+      "line": 14557,
+      "label": "RestoreStageAudioAndCountdown",
+      "text": "RestoreStageAudioAndCountdown:"
+    },
+    {
+      "line": 14585,
+      "label": "SelectReloadFadeDuration",
+      "text": "jsr a:SelectReloadFadeDuration"
+    },
+    {
+      "line": 14592,
+      "label": "SelectReloadFadeDuration",
+      "text": "SelectReloadFadeDuration:"
+    },
+    {
+      "line": 14597,
+      "label": "WaitWithSpriteComposition",
+      "text": "bne WaitWithSpriteComposition"
+    },
+    {
+      "line": 14607,
+      "label": "WaitWithSpriteComposition",
+      "text": "WaitWithSpriteComposition:"
+    },
+    {
+      "line": 14621,
+      "label": "WaitWithSpriteComposition",
+      "text": "bne WaitWithSpriteComposition"
+    },
+    {
+      "line": 14629,
+      "label": "ReloadFadeReturn",
+      "text": "ReloadFadeReturn:"
+    },
+    {
+      "line": 14633,
+      "label": "LoadCheckpointInitialization",
+      "text": "LoadCheckpointInitialization:"
+    },
+    {
+      "line": 14670,
+      "label": "BuildCheckpointTerrainColumns",
+      "text": "BuildCheckpointTerrainColumns:"
+    },
+    {
+      "line": 14687,
+      "label": "BuildCheckpointTerrainColumns",
+      "text": "bne BuildCheckpointTerrainColumns"
+    },
+    {
+      "line": 14690,
+      "label": "BuildCheckpointTerrainColumns",
+      "text": "jmp a:BuildCheckpointTerrainColumns"
+    },
+    {
+      "line": 14697,
+      "label": "CheckpointInitializationRecords",
+      "text": "CheckpointInitializationRecords:"
+    },
+    {
+      "line": 14763,
+      "label": "QueueStageUiWhenIdle",
+      "text": "QueueStageUiWhenIdle:"
+    },
+    {
+      "line": 14779,
+      "label": "PlayGameOverAndReset",
+      "text": "PlayGameOverAndReset:"
+    },
+    {
+      "line": 14807,
+      "label": "GameOverOverlayData",
+      "text": "GameOverOverlayData:"
+    },
+    {
+      "line": 14817,
+      "label": "BeginSelectionTransition",
+      "text": "BeginSelectionTransition:"
+    },
+    {
+      "line": 14819,
+      "label": "ReturnToLandSelect",
+      "text": "bne ReturnToLandSelect"
+    },
+    {
+      "line": 14833,
+      "label": "SpecialRoomDelayFrame",
+      "text": "SpecialRoomDelayFrame:"
+    },
+    {
+      "line": 14848,
+      "label": "ReturnToLandSelect",
+      "text": "ReturnToLandSelect:"
+    }
+  ],
+  "state_references": [
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 3074,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 3180,
+      "text": "adc z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 4808,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 4810,
+      "text": "adc z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5033,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5180,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5407,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5470,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5515,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 5581,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 9846,
+      "text": "ldx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 10200,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 10262,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 10475,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11050,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11068,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11185,
+      "text": "ldx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11221,
+      "text": "ldx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11293,
+      "text": "ldx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11501,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 11562,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12204,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12474,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12513,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12537,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12553,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 12593,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13534,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13537,
+      "text": "stx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13558,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13647,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13684,
+      "text": "sty z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13712,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13735,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13804,
+      "text": "ldx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 13896,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14105,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14288,
+      "text": "stx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14420,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14508,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14520,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14543,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 14564,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 15027,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 15057,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 15142,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 15160,
+      "text": "sta z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 15877,
+      "text": "stx z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 16648,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 18278,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 19018,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 20203,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 20608,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 20694,
+      "text": "lda z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 22841,
+      "text": "ldy z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageIndex",
+      "line": 22879,
+      "text": "and z:StageIndex"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 5218,
+      "text": "ora z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 5219,
+      "text": "sta z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 5844,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 10170,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 10203,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 12516,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 12541,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 13616,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 13665,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 13737,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageProgressBits",
+      "line": 15895,
+      "text": "lda z:StageProgressBits"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageRoute",
+      "line": 10168,
+      "text": "lda z:LateStageRoute"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageRoute",
+      "line": 12547,
+      "text": "sta z:LateStageRoute"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageRoute",
+      "line": 13648,
+      "text": "inc z:LateStageRoute"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageRoute",
+      "line": 16449,
+      "text": "sta z:LateStageRoute"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageRoute",
+      "line": 17713,
+      "text": "lda z:LateStageRoute"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 5405,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 10156,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 10257,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 12597,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 13873,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 14261,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 14493,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 14522,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 14559,
+      "text": "ldy z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 14862,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 15214,
+      "text": "sta z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 19711,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "LateStageMode",
+      "line": 19749,
+      "text": "lda z:LateStageMode"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 3134,
+      "text": "lda z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 13592,
+      "text": "lda z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 13876,
+      "text": "sta z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 14244,
+      "text": "lda z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 19599,
+      "text": "inc z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 21714,
+      "text": "inc z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "SceneCompletionSignal",
+      "line": 21884,
+      "text": "inc z:SceneCompletionSignal"
+    },
+    {
+      "owner": "Progression",
+      "field": "CompletionActorLatch",
+      "line": 2294,
+      "text": "sta z:CompletionActorLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "CompletionActorLatch",
+      "line": 3132,
+      "text": "ldx z:CompletionActorLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "CompletionActorLatch",
+      "line": 13590,
+      "text": "lda z:CompletionActorLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 2344,
+      "text": "lda z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 14156,
+      "text": "lda z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 14381,
+      "text": "lda z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 15817,
+      "text": "lda z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 15835,
+      "text": "sta z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "EndingSequenceLatch",
+      "line": 22822,
+      "text": "inc z:EndingSequenceLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "RaceIntroLatch",
+      "line": 10540,
+      "text": "lda z:RaceIntroLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "RaceIntroLatch",
+      "line": 14383,
+      "text": "lda z:RaceIntroLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "RaceIntroLatch",
+      "line": 18973,
+      "text": "sta z:RaceIntroLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "RaceIntroLatch",
+      "line": 22535,
+      "text": "inc z:RaceIntroLatch"
+    },
+    {
+      "owner": "Progression",
+      "field": "LifeLossVariant",
+      "line": 14434,
+      "text": "sta z:LifeLossVariant"
+    },
+    {
+      "owner": "Progression",
+      "field": "LifeLossVariant",
+      "line": 18281,
+      "text": "adc z:LifeLossVariant"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 5840,
+      "text": "sta z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14307,
+      "text": "lda z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14473,
+      "text": "lda z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14512,
+      "text": "lda z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14588,
+      "text": "sta z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14593,
+      "text": "lda z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 14634,
+      "text": "lda z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "StageReloadRequest",
+      "line": 18282,
+      "text": "sta z:StageReloadRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 3143,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14358,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14469,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14818,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14877,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14879,
+      "text": "sta z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14886,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 14892,
+      "text": "ldx z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 19023,
+      "text": "sta z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 19609,
+      "text": "lda z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "SpecialRoomRequest",
+      "line": 21677,
+      "text": "sta z:SpecialRoomRequest"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 2342,
+      "text": "lda z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 14238,
+      "text": "lda z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 18582,
+      "text": "sta z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 18721,
+      "text": "lda z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 19190,
+      "text": "ldy z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 19244,
+      "text": "inc z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 19367,
+      "text": "inc z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "DialogueTextCursor",
+      "line": 19478,
+      "text": "sta z:DialogueTextCursor"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 710,
+      "text": "lda z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 2346,
+      "text": "lda z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 2968,
+      "text": "ldy z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 14204,
+      "text": "lda z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 14206,
+      "text": "sta z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "StatusStreamSelector",
+      "line": 14220,
+      "text": "lda z:StatusStreamSelector"
+    },
+    {
+      "owner": "Progression",
+      "field": "BossHitPoints",
+      "line": 10167,
+      "text": "sta z:BossHitPoints"
+    },
+    {
+      "owner": "Progression",
+      "field": "BossHitPoints",
+      "line": 20948,
+      "text": "dec z:BossHitPoints"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 5852,
+      "text": "sta z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 12523,
+      "text": "sta z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 14265,
+      "text": "lda z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 14286,
+      "text": "stx z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 14297,
+      "text": "sta z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a4",
+      "line": 19030,
+      "text": "inc z:$a4"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a7",
+      "line": 5209,
+      "text": "sta z:$a7"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a7",
+      "line": 8850,
+      "text": "inc z:$a7"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a7",
+      "line": 8868,
+      "text": "sta z:$a7"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a7",
+      "line": 14468,
+      "text": "sta z:$a7"
+    },
+    {
+      "owner": "Progression",
+      "field": "$a7",
+      "line": 17275,
+      "text": "lda z:$a7"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 12785,
+      "text": "sta z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 12804,
+      "text": "sta z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 12830,
+      "text": "sta z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 13880,
+      "text": "sta z:QueuedPlayerState,x"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 14393,
+      "text": "lda z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 14396,
+      "text": "sty z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 14496,
+      "text": "sta z:QueuedPlayerState,x"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "QueuedPlayerState",
+      "line": 18285,
+      "text": "sta z:QueuedPlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 2318,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 4094,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 4126,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 5107,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 5268,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 12772,
+      "text": "ora z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 12927,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 13065,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 13348,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 14409,
+      "text": "ldy z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 14488,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 14586,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 16606,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 16615,
+      "text": "dec z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 18116,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 18153,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 18166,
+      "text": "sta z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 18177,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerProtectionTicks",
+      "line": 20567,
+      "text": "lda z:PlayerProtectionTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumControl",
+      "line": 12819,
+      "text": "inc z:PlayerMomentumControl"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumControl",
+      "line": 14867,
+      "text": "sta z:PlayerMomentumControl"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumControl",
+      "line": 16870,
+      "text": "lda z:PlayerMomentumControl"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumControl",
+      "line": 16891,
+      "text": "sta z:PlayerMomentumControl"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 14868,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16872,
+      "text": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16876,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16892,
+      "text": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16897,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16918,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16922,
+      "text": "cmp z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16939,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16968,
+      "text": "sta z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerMomentumDirection",
+      "line": 16993,
+      "text": "lda z:PlayerMomentumDirection"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerExternalMotion",
+      "line": 7999,
+      "text": "inc z:PlayerExternalMotion"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerExternalMotion",
+      "line": 17005,
+      "text": "lda z:PlayerExternalMotion"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerExternalMotion",
+      "line": 17014,
+      "text": "sta z:PlayerExternalMotion"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 2319,
+      "text": "ora z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 5109,
+      "text": "sta z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 12771,
+      "text": "lda z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 12964,
+      "text": "lda z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 13121,
+      "text": "lda z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 16624,
+      "text": "lda z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 16647,
+      "text": "sta z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialMode",
+      "line": 20546,
+      "text": "lda z:PlayerSpecialMode"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicks",
+      "line": 5111,
+      "text": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicks",
+      "line": 16638,
+      "text": "lda z:PlayerSpecialTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicks",
+      "line": 16641,
+      "text": "sta z:PlayerSpecialTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicks",
+      "line": 16645,
+      "text": "ora z:PlayerSpecialTicks"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicksHi",
+      "line": 5113,
+      "text": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicksHi",
+      "line": 16642,
+      "text": "lda z:PlayerSpecialTicksHi"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerSpecialTicksHi",
+      "line": 16644,
+      "text": "sta z:PlayerSpecialTicksHi"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 2348,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 2522,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 2962,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 4027,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 4082,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 4096,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 4986,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 5190,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 5224,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 5230,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 6120,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 6133,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 7798,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 7831,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 7838,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 9795,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 9808,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 12967,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 13124,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 13875,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 14182,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 14399,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 14411,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 14587,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 14894,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16432,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16447,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16658,
+      "text": "ldx z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16668,
+      "text": "; Seventeen player-state handler pointers, split into low and high byte planes at $E396/$E3A7. PlayerState selects both planes; the first handler at $E3B8 independently bounds their end."
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16679,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16719,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 16743,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17240,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17259,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17265,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17311,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17326,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17592,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17627,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17701,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17721,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17815,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17819,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17864,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17907,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17910,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17915,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 17988,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18123,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18183,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18192,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18284,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18296,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18315,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18342,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18388,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 18759,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 20570,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 21860,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 21873,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22529,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22635,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22666,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22767,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22792,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22798,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22803,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22814,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22828,
+      "text": "lda z:PlayerState"
+    },
+    {
+      "owner": "B06 Player",
+      "field": "PlayerState",
+      "line": 22847,
+      "text": "sta z:PlayerState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 2442,
+      "text": "sbc z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 9328,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 9378,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 9929,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 10271,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 10558,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 11323,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 12562,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 12565,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 12577,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 12579,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 13355,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 13835,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 14388,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 14645,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 17380,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 17386,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 17724,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19622,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19625,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19628,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19635,
+      "text": "sbc z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19662,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19683,
+      "text": "sbc z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19732,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19759,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19775,
+      "text": "sta z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 19788,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraX",
+      "line": 22667,
+      "text": "lda z:CameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 2445,
+      "text": "sbc z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 9889,
+      "text": "cmp z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 9933,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 10275,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 10562,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 11071,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 11076,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 11950,
+      "text": "cpx z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 11962,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 12566,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 12568,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 13354,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 14120,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 14647,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 14666,
+      "text": "ora z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 15015,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 15782,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 17382,
+      "text": "inc z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 17726,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19623,
+      "text": "ora z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19629,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19631,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19663,
+      "text": "ora z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19778,
+      "text": "sta z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 19793,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 21039,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraXHi",
+      "line": 22669,
+      "text": "lda z:CameraXHi"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 11219,
+      "text": "lda z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 11291,
+      "text": "lda z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 11852,
+      "text": "ldy z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 11952,
+      "text": "ldy z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 11964,
+      "text": "ldy z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 14118,
+      "text": "sta z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 14667,
+      "text": "sta z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 14988,
+      "text": "sta z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 17383,
+      "text": "inc z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 17739,
+      "text": "adc z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 17764,
+      "text": "sty z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 19780,
+      "text": "sta z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraRoomIndex",
+      "line": 19797,
+      "text": "lda z:CameraRoomIndex"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 9882,
+      "text": "ldy z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 10265,
+      "text": "adc z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 11053,
+      "text": "adc z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 11188,
+      "text": "adc z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12356,
+      "text": "ldy z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12475,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12539,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12546,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12550,
+      "text": "sty z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 12591,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 13181,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 13183,
+      "text": "cmp z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14126,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14421,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14510,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14518,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14541,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 14643,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 15039,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 15184,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 17376,
+      "text": "ldy z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 17748,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 17753,
+      "text": "sta z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 20206,
+      "text": "lda z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CurrentRoomRow",
+      "line": 22363,
+      "text": "cmp z:CurrentRoomRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 11325,
+      "text": "sbc z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 11348,
+      "text": "lda z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 11365,
+      "text": "lda z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 12580,
+      "text": "sta z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 13877,
+      "text": "sta z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "PreviousCameraX",
+      "line": 14389,
+      "text": "sta z:PreviousCameraX"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 11344,
+      "text": "sta z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 11351,
+      "text": "adc z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 11369,
+      "text": "adc z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 12582,
+      "text": "sta z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 14391,
+      "text": "sta z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 19687,
+      "text": "sta z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "CameraDisplacement",
+      "line": 19790,
+      "text": "adc z:CameraDisplacement"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 4223,
+      "text": "lda z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 4225,
+      "text": "inc z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 4274,
+      "text": "lda z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 4493,
+      "text": "lda z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 14392,
+      "text": "sta z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainChangedThisFrame",
+      "line": 20700,
+      "text": "inc z:TerrainChangedThisFrame"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 2749,
+      "text": "; Scene index TerrainRoomCursor selects an offset into three-byte animation/Y/X records. $FF skips to the next actor; a value below $10 terminates and becomes the scene handler selector. Initialize render and state flags before updating all actors."
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 2751,
+      "text": "ldx z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11220,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11226,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11235,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11246,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11249,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11264,
+      "text": "inc z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11265,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11292,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11433,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11436,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11445,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 11656,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 12219,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 12251,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 14651,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 14675,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 14688,
+      "text": "inc z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 14982,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15295,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15380,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15404,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15473,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15497,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15552,
+      "text": "ldx z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15680,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15692,
+      "text": "ldy z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15722,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15959,
+      "text": "sty z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15977,
+      "text": "inc z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 15983,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 16007,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 16117,
+      "text": "ldx z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 16223,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 16376,
+      "text": "lda z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 16401,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 17743,
+      "text": "adc z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomCursor",
+      "line": 17766,
+      "text": "sta z:TerrainRoomCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11224,
+      "text": "ldy z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11251,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11267,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11429,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11432,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11504,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11515,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11565,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11611,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11660,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11688,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11767,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11859,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 11993,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 12294,
+      "text": "lda z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 14122,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 14653,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 14689,
+      "text": "inc z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 15000,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 15289,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainRoomInRow",
+      "line": 15527,
+      "text": "sta z:TerrainRoomInRow"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11245,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11259,
+      "text": "inc z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11260,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11262,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11274,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11296,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11303,
+      "text": "inc z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11304,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11414,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11419,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11507,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11512,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11524,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11568,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11686,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11691,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11769,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11808,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11823,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11828,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11837,
+      "text": "ldy z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11845,
+      "text": "dec z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11904,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11909,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11913,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11969,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11972,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11979,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11981,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11995,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 11998,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12001,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12027,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12030,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12068,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12126,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12132,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12139,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 12257,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 14655,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 14683,
+      "text": "inc z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 14684,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 14686,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 14964,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15066,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15114,
+      "text": "inc z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15283,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15449,
+      "text": "inc z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15455,
+      "text": "lda z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 15509,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainColumnCursor",
+      "line": 17391,
+      "text": "sta z:TerrainColumnCursor"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 12150,
+      "text": "lda z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 12400,
+      "text": "lda z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 12616,
+      "text": "lda z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 14116,
+      "text": "sta z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 14874,
+      "text": "sta z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 15392,
+      "text": "sta z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 15521,
+      "text": "sta z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "TerrainBank16K",
+      "line": 20880,
+      "text": "lda z:TerrainBank16K"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11034,
+      "text": "lda z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11089,
+      "text": "inc z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11099,
+      "text": "lda z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11102,
+      "text": "inc z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11157,
+      "text": "dec z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11184,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 11694,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 12555,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 13824,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 13827,
+      "text": "lda z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 14535,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 14538,
+      "text": "lda z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 14970,
+      "text": "sta z:BackgroundUploadState"
+    },
+    {
+      "owner": "B04 World",
+      "field": "BackgroundUploadState",
+      "line": 15166,
+      "text": "lda z:BackgroundUploadState"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "LivesCounter",
+      "line": 5118,
+      "text": "lda a:LivesCounter"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "LivesCounter",
+      "line": 5121,
+      "text": "inc a:LivesCounter"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "LivesCounter",
+      "line": 14478,
+      "text": "lda a:LivesCounter"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "LivesCounter",
+      "line": 14529,
+      "text": "dec a:LivesCounter"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 5169,
+      "text": "inc z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 9784,
+      "text": "inc z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 14324,
+      "text": "lda z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 14753,
+      "text": "sta z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 19079,
+      "text": "inc z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "StatusDisplayDirty",
+      "line": 19592,
+      "text": "inc z:StatusDisplayDirty"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 13904,
+      "text": "sta z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 14575,
+      "text": "sta z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 16459,
+      "text": "dec z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 16462,
+      "text": "sta z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 21657,
+      "text": "sta z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownDivider",
+      "line": 22819,
+      "text": "sta z:CountdownDivider"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 13900,
+      "text": "sta a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 14569,
+      "text": "sta a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16437,
+      "text": "lda a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16468,
+      "text": "lda a:CountdownHundredsTile,x"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16474,
+      "text": "sta a:CountdownHundredsTile,x"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16482,
+      "text": "lda a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16495,
+      "text": "sta a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 16508,
+      "text": "lda a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 19534,
+      "text": "lda a:CountdownHundredsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 19545,
+      "text": "lda a:CountdownHundredsTile,x"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownHundredsTile",
+      "line": 19551,
+      "text": "sta a:CountdownHundredsTile,x"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 13902,
+      "text": "sta a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 14571,
+      "text": "sta a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 16483,
+      "text": "ora a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 16497,
+      "text": "sta a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 16516,
+      "text": "lda a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownTensTile",
+      "line": 19535,
+      "text": "ora a:CountdownTensTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownUnitsTile",
+      "line": 14573,
+      "text": "sta a:CountdownUnitsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownUnitsTile",
+      "line": 16484,
+      "text": "ora a:CountdownUnitsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownUnitsTile",
+      "line": 16499,
+      "text": "sta a:CountdownUnitsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "CountdownUnitsTile",
+      "line": 19533,
+      "text": "sta a:CountdownUnitsTile"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "$ab",
+      "line": 14341,
+      "text": "lda z:$ab"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "$ab",
+      "line": 14767,
+      "text": "sta z:$ab"
+    },
+    {
+      "owner": "B14 Status",
+      "field": "$ab",
+      "line": 16593,
+      "text": "inc z:$ab"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 10428,
+      "text": "lda z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14375,
+      "text": "inc z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14380,
+      "text": "dec z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14609,
+      "text": "inc z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14614,
+      "text": "dec z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14791,
+      "text": "inc z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14796,
+      "text": "dec z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14823,
+      "text": "inc z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "OamDmaGuard",
+      "line": 14835,
+      "text": "dec z:OamDmaGuard"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 10407,
+      "text": "lda z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 10470,
+      "text": "lda z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 10508,
+      "text": "lda z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 10846,
+      "text": "ldx z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 13347,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 13530,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 13787,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 13870,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 14553,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 14860,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 14934,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 15277,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 15770,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 16060,
+      "text": "lda z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "GameplayDisplayMode",
+      "line": 16078,
+      "text": "sta z:GameplayDisplayMode"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 8800,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 8867,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 8877,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 10135,
+      "text": "lda z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 10517,
+      "text": "lda z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 11685,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 11775,
+      "text": "sty z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 12202,
+      "text": "lda z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 13834,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 14499,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitTransitionControl",
+      "line": 14863,
+      "text": "sta z:SplitTransitionControl"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 8802,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 8865,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 8880,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 10530,
+      "text": "lda z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 11715,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 11722,
+      "text": "lda z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 11725,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 13837,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuLow",
+      "line": 14501,
+      "text": "sta z:SplitPpuLow"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 10528,
+      "text": "lda z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 11716,
+      "text": "lda z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 11719,
+      "text": "sta z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 11726,
+      "text": "lda z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 11728,
+      "text": "sta z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitPpuHigh",
+      "line": 13839,
+      "text": "sta z:SplitPpuHigh"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitSpriteY",
+      "line": 10409,
+      "text": "lda z:SplitSpriteY"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitSpriteY",
+      "line": 13868,
+      "text": "sta z:SplitSpriteY"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SplitSpriteY",
+      "line": 15758,
+      "text": "sta z:SplitSpriteY"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 3048,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 3216,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 10434,
+      "text": "lda z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 10599,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 11171,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 11474,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 11648,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 11943,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 12109,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 12683,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 13864,
+      "text": "sty z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14080,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14087,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14708,
+      "text": "lda z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14751,
+      "text": "sty z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14764,
+      "text": "lda z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 14774,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 18564,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 18862,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 19107,
+      "text": "stx z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 19334,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 19390,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PrimaryUploadPending",
+      "line": 19466,
+      "text": "sta z:PrimaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 14443,
+      "text": "lda z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 14447,
+      "text": "sta z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20614,
+      "text": "lda z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20617,
+      "text": "sta z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20701,
+      "text": "lda z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20704,
+      "text": "sta z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20732,
+      "text": "ldx z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20809,
+      "text": "ldx z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20860,
+      "text": "ldx z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryQueueCursor",
+      "line": 20890,
+      "text": "ldx z:SecondaryQueueCursor"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryUploadPending",
+      "line": 10438,
+      "text": "lda z:SecondaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryUploadPending",
+      "line": 10628,
+      "text": "stx z:SecondaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "SecondaryUploadPending",
+      "line": 14445,
+      "text": "sta z:SecondaryUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 2282,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 2287,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 2930,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 5419,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 7094,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 10442,
+      "text": "lda z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 10445,
+      "text": "stx z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 10894,
+      "text": "sty z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 11777,
+      "text": "sty z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 12598,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B03 Presentation",
+      "field": "PaletteUploadPending",
+      "line": 15232,
+      "text": "sta z:PaletteUploadPending"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 3498,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 3694,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 5970,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 6354,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 7140,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 7449,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 8021,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 9657,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 10259,
+      "text": "lda z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 10301,
+      "text": "dec z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 10385,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 13874,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 14492,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 14861,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 17770,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 19960,
+      "text": "cmp z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpecialSpawnControl",
+      "line": 19963,
+      "text": "sta z:SpecialSpawnControl"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 9908,
+      "text": "sty z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 9981,
+      "text": "ldy z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 9994,
+      "text": "dec z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 9995,
+      "text": "lda z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 9999,
+      "text": "ldy z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 10000,
+      "text": "sty z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 10011,
+      "text": "ldy z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 10021,
+      "text": "inc z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnUpperCursor",
+      "line": 14864,
+      "text": "sta z:SpawnUpperCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 9909,
+      "text": "sty z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 9950,
+      "text": "ldy z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 9971,
+      "text": "dec z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 10024,
+      "text": "ldy z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 10037,
+      "text": "sty z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnLowerCursor",
+      "line": 14865,
+      "text": "sta z:SpawnLowerCursor"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnRoomStart",
+      "line": 9884,
+      "text": "sta z:SpawnRoomStart"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnRoomStart",
+      "line": 9951,
+      "text": "cpy z:SpawnRoomStart"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnRoomStart",
+      "line": 9982,
+      "text": "cpy z:SpawnRoomStart"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnRoomStart",
+      "line": 9996,
+      "text": "cmp z:SpawnRoomStart"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "SpawnRoomStart",
+      "line": 14866,
+      "text": "sta z:SpawnRoomStart"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 11345,
+      "text": "lda z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 11386,
+      "text": "lda z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 12527,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 12559,
+      "text": "lda z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 14545,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 17043,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 17552,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 17563,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 18305,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 18368,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 19666,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 19676,
+      "text": "lda z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 19680,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 19698,
+      "text": "sta z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "ScrollDirection",
+      "line": 19785,
+      "text": "lda z:ScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 11272,
+      "text": "sta z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 11387,
+      "text": "cmp z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 11398,
+      "text": "sta z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 11411,
+      "text": "lda z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 14546,
+      "text": "sta z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B10 actors",
+      "field": "PreviousScrollDirection",
+      "line": 17387,
+      "text": "lda z:PreviousScrollDirection"
+    },
+    {
+      "owner": "B15 dialogue",
+      "field": "DialogueActorSlot",
+      "line": 18991,
+      "text": "ldx z:DialogueActorSlot"
+    },
+    {
+      "owner": "B15 dialogue",
+      "field": "DialogueActorSlot",
+      "line": 19080,
+      "text": "ldx z:DialogueActorSlot"
+    },
+    {
+      "owner": "B15 dialogue",
+      "field": "DialogueActorSlot",
+      "line": 22641,
+      "text": "stx z:DialogueActorSlot"
+    },
+    {
+      "owner": "B15 dialogue",
+      "field": "DialogueActorSlot",
+      "line": 22851,
+      "text": "stx z:DialogueActorSlot"
+    },
+    {
+      "owner": "B16 scenes",
+      "field": "DepartureSignal",
+      "line": 19620,
+      "text": "lda z:DepartureSignal"
+    },
+    {
+      "owner": "B16 scenes",
+      "field": "DepartureSignal",
+      "line": 21756,
+      "text": "sta z:DepartureSignal"
+    }
+  ],
+  "actual_entry_rom_checks": [
+    {
+      "label": "CheckStageBoundary",
+      "bank": 7,
+      "cpu_address": "0xcf93",
+      "physical_offset": "0x1cfa3",
+      "first_bytes": "a4f6a5"
+    },
+    {
+      "label": "TriggerStageBoundary",
+      "bank": 7,
+      "cpu_address": "0xcfb5",
+      "physical_offset": "0x1cfc5",
+      "first_bytes": "a5f6c9"
+    },
+    {
+      "label": "EnterLateStageHorizontalTransition",
+      "bank": 7,
+      "cpu_address": "0xcfd4",
+      "physical_offset": "0x1cfe4",
+      "first_bytes": "a5f648"
+    },
+    {
+      "label": "InitializeStageRuntime",
+      "bank": 7,
+      "cpu_address": "0xd7d4",
+      "physical_offset": "0x1d7e4",
+      "first_bytes": "a90085"
+    },
+    {
+      "label": "LoadStagePresentation",
+      "bank": 7,
+      "cpu_address": "0xd9ca",
+      "physical_offset": "0x1d9da",
+      "first_bytes": "a5f648"
+    },
+    {
+      "label": "GameplayLoopEntry",
+      "bank": 7,
+      "cpu_address": "0xdb36",
+      "physical_offset": "0x1db46",
+      "first_bytes": "a5acf0"
+    },
+    {
+      "label": "GameplayPauseGate",
+      "bank": 7,
+      "cpu_address": "0xdb40",
+      "physical_offset": "0x1db50",
+      "first_bytes": "a539c9"
+    },
+    {
+      "label": "UpdateGameplaySimulation",
+      "bank": 7,
+      "cpu_address": "0xdb6c",
+      "physical_offset": "0x1db7c",
+      "first_bytes": "2054e3"
+    },
+    {
+      "label": "ComposeAndStreamGameplay",
+      "bank": 7,
+      "cpu_address": "0xdbc5",
+      "physical_offset": "0x1dbd5",
+      "first_bytes": "e69820"
+    },
+    {
+      "label": "FinishGameplayFrame",
+      "bank": 7,
+      "cpu_address": "0xdc19",
+      "physical_offset": "0x1dc29",
+      "first_bytes": "a55cf0"
+    },
+    {
+      "label": "ReloadStageFromTransitionRequest",
+      "bank": 7,
+      "cpu_address": "0xdc3e",
+      "physical_offset": "0x1dc4e",
+      "first_bytes": "a90085"
+    },
+    {
+      "label": "LoadCheckpointInitialization",
+      "bank": 7,
+      "cpu_address": "0xdd4e",
+      "physical_offset": "0x1dd5e",
+      "first_bytes": "a57e29"
+    },
+    {
+      "label": "WaitWithSpriteComposition",
+      "bank": 7,
+      "cpu_address": "0xdd2f",
+      "physical_offset": "0x1dd3f",
+      "first_bytes": "48e698"
+    },
+    {
+      "label": "PlayGameOverAndReset",
+      "bank": 7,
+      "cpu_address": "0xdeb9",
+      "physical_offset": "0x1dec9",
+      "first_bytes": "a90920"
+    },
+    {
+      "label": "BeginSelectionTransition",
+      "bank": 7,
+      "cpu_address": "0xdf08",
+      "physical_offset": "0x1df18",
+      "first_bytes": "a578d0"
+    },
+    {
+      "label": "D79B complete confirmation caller",
+      "bank": 7,
+      "cpu_address": "0xd79b",
+      "physical_offset": "0x1d7ab",
+      "first_bytes": "2082c2"
+    },
+    {
+      "label": "DD52 special checkpoint caller",
+      "bank": 7,
+      "cpu_address": "0xdd52",
+      "physical_offset": "0x1dd62",
+      "first_bytes": "85000a"
+    }
+  ],
+  "consumer_closure": [
+    {
+      "range": "CF93..D04C",
+      "owner": "B13",
+      "consumers": [
+        "B04 camera boundary",
+        "B10 clear actors",
+        "B03 background/composition",
+        "B01 yields",
+        "B18 stageaudio6"
+      ],
+      "trace": "trace.md Boundary"
+    },
+    {
+      "range": "D79B..D8A5/D9CA..DA0F",
+      "owner": "B12/B13",
+      "consumers": [
+        "B12 complete confirmation/two terrain builds",
+        "B04 upload/initial context",
+        "B10 tables/window/suppression",
+        "B06 defaults/control resets",
+        "B14 status/health/timer",
+        "B03 palettes/UI/enable/fade"
+      ],
+      "trace": "trace.md Initial presentation/runtime"
+    },
+    {
+      "range": "DB36..DC2B",
+      "owner": "B13",
+      "consumers": [
+        "B01 sampling/continuation/RNG",
+        "B06 player",
+        "B10 live dispatch/spawn",
+        "B14 countdown/status/UI",
+        "B04 camera/boundary/cache",
+        "B03 guarded composition",
+        "B16 specialroom",
+        "B17 ending/race"
+      ],
+      "trace": "trace.md Foreground"
+    },
+    {
+      "range": "DC3E..DDC0",
+      "owner": "B13",
+      "consumers": [
+        "B16 specialmode selection",
+        "B14 lives/audio/countdown",
+        "B04 checkpoint terrain/upload",
+        "B10 window/spawn",
+        "B06 protection/control retention",
+        "B03 guardedwait/fades"
+      ],
+      "trace": "trace.md Reload and Checkpoints"
+    },
+    {
+      "range": "DEB9..DF26",
+      "owner": "B13",
+      "consumers": [
+        "B03 gameover overlay/guarded composition",
+        "B01 yield/reset",
+        "B12 land selection",
+        "B18 stageaudio9"
+      ],
+      "trace": "trace.md Game over"
+    },
+    {
+      "range": "producer closure",
+      "owner": "B08/B15/B16/B17/B13",
+      "consumers": [
+        "8C13 treasure progress OR",
+        "9065 contact reload/A4",
+        "EE19 choice A4",
+        "EFD9 timer completion",
+        "F84F/F8C..departures",
+        "FC..finalgoal"
+      ],
+      "trace": "trace.md Full producer/consumer closure"
+    }
+  ]
+}

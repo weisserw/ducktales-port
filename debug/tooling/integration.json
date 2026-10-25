@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "ready",
+  "adapter": "sanity_adapter.py",
+  "original_fidelity_sanity": {
+    "enabled": true,
+    "reason": "User-requested fresh faithful-port QA cycle; design and execute new initial sanity tests"
+  },
+  "suites": {
+    "initial": [
+      "fidelity-title",
+      "fidelity-amazon-motion"
+    ]
+  },
+  "tests": [
+    {
+      "id": "fidelity-title",
+      "kind": "original-fidelity-sanity",
+      "expectations": {
+        "original-fidelity": "Title artwork/options match the original; right changes NORMAL to DIFFICULT; active title tune retains melody and voices."
+      },
+      "review": [
+        "Compare title artwork, glyphs, option marker and colors.",
+        "Review music waveform/spectrum and selected rendered audio for missing voices or corruption."
+      ]
+    },
+    {
+      "id": "fidelity-amazon-motion",
+      "kind": "original-fidelity-sanity",
+      "expectations": {
+        "original-fidelity": "Amazon scenery, HUD and player animation remain coherent as the camera scrolls; characteristic stage music is present."
+      },
+      "review": [
+        "Compare entry terrain/HUD and traversal scenery/player pose, accounting for semantic alignment.",
+        "Review stage music against original for recognizable note/rhythm and active channels."
+      ]
+    }
+  ],
+  "revision": "fresh-semantic-landmarks-v1"
+}

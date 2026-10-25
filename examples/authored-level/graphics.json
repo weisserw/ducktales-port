@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "format": "ducktales.graphics",
+  "copies": [
+    {
+      "destination": 16,
+      "bytes": [
+        85,
+        85,
+        85,
+        85,
+        85,
+        85,
+        85,
+        85,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

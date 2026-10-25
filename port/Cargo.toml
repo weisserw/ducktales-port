@@ -1,0 +1,21 @@
+[package]
+name = "ducktales-port"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+
+[workspace]
+
+[features]
+default = []
+desktop = ["romatlas-port/desktop"]
+web = ["dep:wasm-bindgen"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+romatlas-port = { path = "/root/romatlas/crates/romatlas-port" }
+anyhow = "1.0"
+serde_json = "1.0"
+wasm-bindgen = { version = "=0.2.129", optional = true }

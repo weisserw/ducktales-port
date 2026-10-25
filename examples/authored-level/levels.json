@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "resources": [
+    {
+      "id": "example/rooms",
+      "kind": "rooms"
+    },
+    {
+      "id": "example/terrain",
+      "kind": "terrain"
+    },
+    {
+      "id": "example/spawns",
+      "kind": "spawns"
+    },
+    {
+      "id": "example/graphics",
+      "kind": "graphics"
+    },
+    {
+      "id": "example/audio",
+      "kind": "audio"
+    }
+  ],
+  "levels": [
+    {
+      "id": "example/room",
+      "rooms": "example/rooms",
+      "terrain": "example/terrain",
+      "spawns": "example/spawns",
+      "graphics": [
+        "example/graphics"
+      ],
+      "audio": [
+        "example/audio"
+      ]
+    }
+  ]
+}

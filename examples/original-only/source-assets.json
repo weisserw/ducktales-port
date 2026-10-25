@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "extension/levels",
+      "file": "levels.json"
+    }
+  ],
+  "order": []
+}

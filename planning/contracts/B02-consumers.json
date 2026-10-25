@@ -1,0 +1,3861 @@
+{
+  "source_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "note": "Source-derived descriptor spans and arithmetic-based terrain/room bounds. Not executable fidelity evidence or a claim of absence of every audio access; B18 owns audio stream reachability. Code/table ranges require adjacent trace rather than overlap.",
+  "regions": [
+    {
+      "ledger_id": "region-5",
+      "offset": 16,
+      "end": 2064,
+      "labels": [
+        "ChrTiles_00010"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 0,
+          "record": 0,
+          "descriptor_offset": 115582,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 1,
+          "record": 0,
+          "descriptor_offset": 115595,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 2,
+          "record": 0,
+          "descriptor_offset": 115608,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 3,
+          "record": 0,
+          "descriptor_offset": 115621,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 4,
+          "record": 0,
+          "descriptor_offset": 115634,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 0,
+          "descriptor_offset": 115647,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 0,
+          "descriptor_offset": 115712,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 0,
+          "descriptor_offset": 115712,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 0,
+          "descriptor_offset": 115737,
+          "offset": 16,
+          "end": 2064,
+          "destination": 0,
+          "intersection": [
+            16,
+            2064
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-20",
+      "offset": 2064,
+      "end": 2832,
+      "labels": [
+        "AssetData_00810"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 1,
+          "record": 2,
+          "descriptor_offset": 116154,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 2,
+          "record": 3,
+          "descriptor_offset": 116167,
+          "offset": 2064,
+          "end": 2576,
+          "destination": 3584,
+          "intersection": [
+            2064,
+            2576
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 3,
+          "descriptor_offset": 116298,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 15,
+          "record": 3,
+          "descriptor_offset": 116324,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 4,
+          "descriptor_offset": 116446,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 3,
+          "descriptor_offset": 116298,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 31,
+          "record": 3,
+          "descriptor_offset": 116324,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2576,
+            2832
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-6",
+      "offset": 2832,
+      "end": 3088,
+      "labels": [
+        "ChrTiles_00B10"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 7,
+          "descriptor_offset": 115668,
+          "offset": 2832,
+          "end": 3088,
+          "destination": 3840,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 1,
+          "record": 2,
+          "descriptor_offset": 116154,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 3,
+          "descriptor_offset": 116298,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 15,
+          "record": 3,
+          "descriptor_offset": 116324,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 20,
+          "record": 3,
+          "descriptor_offset": 116377,
+          "offset": 2832,
+          "end": 3088,
+          "destination": 3840,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 21,
+          "record": 1,
+          "descriptor_offset": 116384,
+          "offset": 2832,
+          "end": 3088,
+          "destination": 3840,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 22,
+          "record": 3,
+          "descriptor_offset": 116397,
+          "offset": 2832,
+          "end": 3088,
+          "destination": 3840,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 4,
+          "descriptor_offset": 116446,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 3,
+          "descriptor_offset": 116298,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 31,
+          "record": 3,
+          "descriptor_offset": 116324,
+          "offset": 2576,
+          "end": 3088,
+          "destination": 3584,
+          "intersection": [
+            2832,
+            3088
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-21",
+      "offset": 3088,
+      "end": 3856,
+      "labels": [
+        "AssetData_00C10"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 2,
+          "record": 1,
+          "descriptor_offset": 116161,
+          "offset": 3600,
+          "end": 4112,
+          "destination": 2560,
+          "intersection": [
+            3600,
+            3856
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 2,
+          "record": 2,
+          "descriptor_offset": 116164,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 3,
+          "record": 0,
+          "descriptor_offset": 116171,
+          "offset": 3600,
+          "end": 4112,
+          "destination": 2560,
+          "intersection": [
+            3600,
+            3856
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 3,
+          "record": 1,
+          "descriptor_offset": 116174,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 7,
+          "record": 2,
+          "descriptor_offset": 116220,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 11,
+          "record": 2,
+          "descriptor_offset": 116260,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 3,
+          "descriptor_offset": 116279,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 3,
+          "descriptor_offset": 116279,
+          "offset": 3088,
+          "end": 3600,
+          "destination": 3072,
+          "intersection": [
+            3088,
+            3600
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-7",
+      "offset": 3856,
+      "end": 4112,
+      "labels": [
+        "ChrTiles_00F10"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 6,
+          "descriptor_offset": 115665,
+          "offset": 3856,
+          "end": 4112,
+          "destination": 3584,
+          "intersection": [
+            3856,
+            4112
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 2,
+          "record": 1,
+          "descriptor_offset": 116161,
+          "offset": 3600,
+          "end": 4112,
+          "destination": 2560,
+          "intersection": [
+            3856,
+            4112
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 3,
+          "record": 0,
+          "descriptor_offset": 116171,
+          "offset": 3600,
+          "end": 4112,
+          "destination": 2560,
+          "intersection": [
+            3856,
+            4112
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 7,
+          "record": 1,
+          "descriptor_offset": 116217,
+          "offset": 3856,
+          "end": 4112,
+          "destination": 2816,
+          "intersection": [
+            3856,
+            4112
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 23,
+          "record": 2,
+          "descriptor_offset": 116407,
+          "offset": 3856,
+          "end": 4112,
+          "destination": 3584,
+          "intersection": [
+            3856,
+            4112
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-22",
+      "offset": 4112,
+      "end": 5136,
+      "labels": [
+        "AssetData_01010"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 1,
+          "record": 1,
+          "descriptor_offset": 116151,
+          "offset": 4112,
+          "end": 5136,
+          "destination": 2560,
+          "intersection": [
+            4112,
+            5136
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 14,
+          "record": 1,
+          "descriptor_offset": 116305,
+          "offset": 4880,
+          "end": 5136,
+          "destination": 3328,
+          "intersection": [
+            4880,
+            5136
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 30,
+          "record": 1,
+          "descriptor_offset": 116305,
+          "offset": 4880,
+          "end": 5136,
+          "destination": 3328,
+          "intersection": [
+            4880,
+            5136
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-8",
+      "offset": 5136,
+      "end": 6416,
+      "labels": [
+        "ChrTiles_01410"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 0,
+          "record": 1,
+          "descriptor_offset": 115585,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 1,
+          "record": 1,
+          "descriptor_offset": 115598,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 2,
+          "record": 1,
+          "descriptor_offset": 115611,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 4,
+          "record": 1,
+          "descriptor_offset": 115637,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 2,
+          "descriptor_offset": 115653,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 1,
+          "descriptor_offset": 115715,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 2,
+          "descriptor_offset": 115718,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 5,
+          "descriptor_offset": 115727,
+          "offset": 5392,
+          "end": 5904,
+          "destination": 3584,
+          "intersection": [
+            5392,
+            5904
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 1,
+          "descriptor_offset": 115715,
+          "offset": 5904,
+          "end": 6160,
+          "destination": 2048,
+          "intersection": [
+            5904,
+            6160
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 2,
+          "descriptor_offset": 115718,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 5,
+          "descriptor_offset": 115727,
+          "offset": 5392,
+          "end": 5904,
+          "destination": 3584,
+          "intersection": [
+            5392,
+            5904
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 1,
+          "record": 0,
+          "descriptor_offset": 116148,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 2,
+          "record": 0,
+          "descriptor_offset": 116158,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 3,
+          "record": 2,
+          "descriptor_offset": 116177,
+          "offset": 5392,
+          "end": 5904,
+          "destination": 3584,
+          "intersection": [
+            5392,
+            5904
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 4,
+          "record": 0,
+          "descriptor_offset": 116181,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 0,
+          "descriptor_offset": 116185,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 6,
+          "record": 0,
+          "descriptor_offset": 116201,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 8,
+          "record": 0,
+          "descriptor_offset": 116230,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 10,
+          "record": 0,
+          "descriptor_offset": 116247,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 0,
+          "descriptor_offset": 116270,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 0,
+          "descriptor_offset": 116289,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 15,
+          "record": 0,
+          "descriptor_offset": 116315,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 17,
+          "record": 0,
+          "descriptor_offset": 116335,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 0,
+          "descriptor_offset": 116342,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 0,
+          "descriptor_offset": 116434,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 0,
+          "descriptor_offset": 116270,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 0,
+          "descriptor_offset": 116289,
+          "offset": 6160,
+          "end": 6416,
+          "destination": 2304,
+          "intersection": [
+            6160,
+            6416
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 31,
+          "record": 0,
+          "descriptor_offset": 116315,
+          "offset": 5136,
+          "end": 5392,
+          "destination": 2304,
+          "intersection": [
+            5136,
+            5392
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-23",
+      "offset": 6416,
+      "end": 7440,
+      "labels": [
+        "AssetData_01910"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 2,
+          "descriptor_offset": 116191,
+          "offset": 7184,
+          "end": 7696,
+          "destination": 3072,
+          "intersection": [
+            7184,
+            7440
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 6,
+          "record": 2,
+          "descriptor_offset": 116207,
+          "offset": 6416,
+          "end": 7184,
+          "destination": 3072,
+          "intersection": [
+            6416,
+            7184
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-9",
+      "offset": 7440,
+      "end": 8464,
+      "labels": [
+        "ChrTiles_01D10"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 1,
+          "descriptor_offset": 115650,
+          "offset": 7952,
+          "end": 8208,
+          "destination": 2048,
+          "intersection": [
+            7952,
+            8208
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 3,
+          "descriptor_offset": 115656,
+          "offset": 7440,
+          "end": 7952,
+          "destination": 2560,
+          "intersection": [
+            7440,
+            7952
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 1,
+          "descriptor_offset": 115678,
+          "offset": 8208,
+          "end": 8464,
+          "destination": 2304,
+          "intersection": [
+            8208,
+            8464
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 10,
+          "record": 0,
+          "descriptor_offset": 115765,
+          "offset": 7952,
+          "end": 8208,
+          "destination": 2048,
+          "intersection": [
+            7952,
+            8208
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 1,
+          "descriptor_offset": 116188,
+          "offset": 7696,
+          "end": 8208,
+          "destination": 2560,
+          "intersection": [
+            7696,
+            8208
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 2,
+          "descriptor_offset": 116191,
+          "offset": 7184,
+          "end": 7696,
+          "destination": 3072,
+          "intersection": [
+            7440,
+            7696
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 6,
+          "record": 1,
+          "descriptor_offset": 116204,
+          "offset": 7696,
+          "end": 8208,
+          "destination": 2560,
+          "intersection": [
+            7696,
+            8208
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 11,
+          "record": 0,
+          "descriptor_offset": 116254,
+          "offset": 7440,
+          "end": 7696,
+          "destination": 2560,
+          "intersection": [
+            7440,
+            7696
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 16,
+          "record": 0,
+          "descriptor_offset": 116328,
+          "offset": 8208,
+          "end": 8464,
+          "destination": 2304,
+          "intersection": [
+            8208,
+            8464
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-24",
+      "offset": 8464,
+      "end": 9232,
+      "labels": [
+        "AssetData_02110"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 6,
+          "record": 3,
+          "descriptor_offset": 116210,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 7,
+          "record": 0,
+          "descriptor_offset": 116214,
+          "offset": 8720,
+          "end": 8976,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            8976
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 8,
+          "record": 1,
+          "descriptor_offset": 116233,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            9232
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 1,
+          "descriptor_offset": 116240,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            9232
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 10,
+          "record": 1,
+          "descriptor_offset": 116250,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            9232
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 1,
+          "descriptor_offset": 116273,
+          "offset": 8720,
+          "end": 8976,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            8976
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 5,
+          "descriptor_offset": 116285,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 14,
+          "record": 3,
+          "descriptor_offset": 116311,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 16,
+          "record": 1,
+          "descriptor_offset": 116331,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 1,
+          "descriptor_offset": 116273,
+          "offset": 8720,
+          "end": 8976,
+          "destination": 2560,
+          "intersection": [
+            8720,
+            8976
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 5,
+          "descriptor_offset": 116285,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 30,
+          "record": 3,
+          "descriptor_offset": 116311,
+          "offset": 8464,
+          "end": 8720,
+          "destination": 3840,
+          "intersection": [
+            8464,
+            8720
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-10",
+      "offset": 9232,
+      "end": 9488,
+      "labels": [
+        "ChrTiles_02410"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 3,
+          "descriptor_offset": 115746,
+          "offset": 9232,
+          "end": 9488,
+          "destination": 2816,
+          "intersection": [
+            9232,
+            9488
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 8,
+          "record": 1,
+          "descriptor_offset": 116233,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9232,
+            9488
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 1,
+          "descriptor_offset": 116240,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9232,
+            9488
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 10,
+          "record": 1,
+          "descriptor_offset": 116250,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9232,
+            9488
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-25",
+      "offset": 9488,
+      "end": 9744,
+      "labels": [
+        "AssetData_02510"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 8,
+          "record": 1,
+          "descriptor_offset": 116233,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9488,
+            9744
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 1,
+          "descriptor_offset": 116240,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9488,
+            9744
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 10,
+          "record": 1,
+          "descriptor_offset": 116250,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9488,
+            9744
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-11",
+      "offset": 9744,
+      "end": 10256,
+      "labels": [
+        "ChrTiles_02610"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 4,
+          "descriptor_offset": 115749,
+          "offset": 9744,
+          "end": 10256,
+          "destination": 3072,
+          "intersection": [
+            9744,
+            10256
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 7,
+          "record": 3,
+          "descriptor_offset": 116223,
+          "offset": 10000,
+          "end": 10256,
+          "destination": 3584,
+          "intersection": [
+            10000,
+            10256
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 8,
+          "record": 1,
+          "descriptor_offset": 116233,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9744,
+            10000
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 1,
+          "descriptor_offset": 116240,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9744,
+            10000
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 10,
+          "record": 1,
+          "descriptor_offset": 116250,
+          "offset": 8720,
+          "end": 10000,
+          "destination": 2560,
+          "intersection": [
+            9744,
+            10000
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 4,
+          "descriptor_offset": 116282,
+          "offset": 10000,
+          "end": 10256,
+          "destination": 3584,
+          "intersection": [
+            10000,
+            10256
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 14,
+          "record": 2,
+          "descriptor_offset": 116308,
+          "offset": 10000,
+          "end": 10256,
+          "destination": 3584,
+          "intersection": [
+            10000,
+            10256
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 4,
+          "descriptor_offset": 116282,
+          "offset": 10000,
+          "end": 10256,
+          "destination": 3584,
+          "intersection": [
+            10000,
+            10256
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 30,
+          "record": 2,
+          "descriptor_offset": 116308,
+          "offset": 10000,
+          "end": 10256,
+          "destination": 3584,
+          "intersection": [
+            10000,
+            10256
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-26",
+      "offset": 10256,
+      "end": 10512,
+      "labels": [
+        "AssetData_02810"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 11,
+          "record": 1,
+          "descriptor_offset": 116257,
+          "offset": 10256,
+          "end": 10512,
+          "destination": 2816,
+          "intersection": [
+            10256,
+            10512
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 12,
+          "record": 2,
+          "descriptor_offset": 116276,
+          "offset": 10256,
+          "end": 10512,
+          "destination": 2816,
+          "intersection": [
+            10256,
+            10512
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 28,
+          "record": 2,
+          "descriptor_offset": 116276,
+          "offset": 10256,
+          "end": 10512,
+          "destination": 2816,
+          "intersection": [
+            10256,
+            10512
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-12",
+      "offset": 10512,
+      "end": 10768,
+      "labels": [
+        "ChrTiles_02910"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 2,
+          "descriptor_offset": 115743,
+          "offset": 10512,
+          "end": 10768,
+          "destination": 2560,
+          "intersection": [
+            10512,
+            10768
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 11,
+          "record": 4,
+          "descriptor_offset": 116266,
+          "offset": 10512,
+          "end": 10768,
+          "destination": 3840,
+          "intersection": [
+            10512,
+            10768
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 15,
+          "record": 2,
+          "descriptor_offset": 116321,
+          "offset": 10512,
+          "end": 10768,
+          "destination": 3328,
+          "intersection": [
+            10512,
+            10768
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 31,
+          "record": 2,
+          "descriptor_offset": 116321,
+          "offset": 10512,
+          "end": 10768,
+          "destination": 3328,
+          "intersection": [
+            10512,
+            10768
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-27",
+      "offset": 10768,
+      "end": 11536,
+      "labels": [
+        "AssetData_02A10"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 4,
+          "descriptor_offset": 116197,
+          "offset": 10768,
+          "end": 11024,
+          "destination": 3840,
+          "intersection": [
+            10768,
+            11024
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 7,
+          "record": 4,
+          "descriptor_offset": 116226,
+          "offset": 10768,
+          "end": 11024,
+          "destination": 3840,
+          "intersection": [
+            10768,
+            11024
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 2,
+          "descriptor_offset": 116243,
+          "offset": 10768,
+          "end": 11024,
+          "destination": 3840,
+          "intersection": [
+            10768,
+            11024
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 1,
+          "descriptor_offset": 116292,
+          "offset": 11024,
+          "end": 11792,
+          "destination": 2560,
+          "intersection": [
+            11024,
+            11536
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 14,
+          "record": 0,
+          "descriptor_offset": 116302,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11280,
+            11536
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 19,
+          "record": 2,
+          "descriptor_offset": 116364,
+          "offset": 10768,
+          "end": 11024,
+          "destination": 3840,
+          "intersection": [
+            10768,
+            11024
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 2,
+          "descriptor_offset": 116440,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11280,
+            11536
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 1,
+          "descriptor_offset": 116292,
+          "offset": 11024,
+          "end": 11792,
+          "destination": 2560,
+          "intersection": [
+            11024,
+            11536
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 30,
+          "record": 0,
+          "descriptor_offset": 116302,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11280,
+            11536
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-13",
+      "offset": 11536,
+      "end": 12304,
+      "labels": [
+        "ChrTiles_02D10"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 3,
+          "record": 1,
+          "descriptor_offset": 115624,
+          "offset": 12048,
+          "end": 12304,
+          "destination": 2048,
+          "intersection": [
+            12048,
+            12304
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 1,
+          "descriptor_offset": 115740,
+          "offset": 11536,
+          "end": 12048,
+          "destination": 2048,
+          "intersection": [
+            11536,
+            12048
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 1,
+          "descriptor_offset": 116292,
+          "offset": 11024,
+          "end": 11792,
+          "destination": 2560,
+          "intersection": [
+            11536,
+            11792
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 14,
+          "record": 0,
+          "descriptor_offset": 116302,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11536,
+            11792
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 2,
+          "descriptor_offset": 116440,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11536,
+            11792
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 1,
+          "descriptor_offset": 116292,
+          "offset": 11024,
+          "end": 11792,
+          "destination": 2560,
+          "intersection": [
+            11536,
+            11792
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 30,
+          "record": 0,
+          "descriptor_offset": 116302,
+          "offset": 11280,
+          "end": 11792,
+          "destination": 2816,
+          "intersection": [
+            11536,
+            11792
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-28",
+      "offset": 12304,
+      "end": 13584,
+      "labels": [
+        "AssetData_03010"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 15,
+          "record": 1,
+          "descriptor_offset": 116318,
+          "offset": 12304,
+          "end": 13072,
+          "destination": 2560,
+          "intersection": [
+            12304,
+            13072
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 17,
+          "record": 1,
+          "descriptor_offset": 116338,
+          "offset": 13072,
+          "end": 14352,
+          "destination": 2560,
+          "intersection": [
+            13072,
+            13584
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 1,
+          "descriptor_offset": 116345,
+          "offset": 13072,
+          "end": 13840,
+          "destination": 2560,
+          "intersection": [
+            13072,
+            13584
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 31,
+          "record": 1,
+          "descriptor_offset": 116318,
+          "offset": 12304,
+          "end": 13072,
+          "destination": 2560,
+          "intersection": [
+            12304,
+            13072
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 0,
+          "offset": 13072,
+          "end": 16400,
+          "intersection": [
+            13072,
+            13584
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-14",
+      "offset": 13584,
+      "end": 13840,
+      "labels": [
+        "ChrTiles_03510"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 5,
+          "descriptor_offset": 115752,
+          "offset": 13584,
+          "end": 13840,
+          "destination": 3584,
+          "intersection": [
+            13584,
+            13840
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 5,
+          "record": 3,
+          "descriptor_offset": 116194,
+          "offset": 13584,
+          "end": 13840,
+          "destination": 3584,
+          "intersection": [
+            13584,
+            13840
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 17,
+          "record": 1,
+          "descriptor_offset": 116338,
+          "offset": 13072,
+          "end": 14352,
+          "destination": 2560,
+          "intersection": [
+            13584,
+            13840
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 1,
+          "descriptor_offset": 116345,
+          "offset": 13072,
+          "end": 13840,
+          "destination": 2560,
+          "intersection": [
+            13584,
+            13840
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 19,
+          "record": 1,
+          "descriptor_offset": 116361,
+          "offset": 13584,
+          "end": 14352,
+          "destination": 3072,
+          "intersection": [
+            13584,
+            13840
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 0,
+          "offset": 13072,
+          "end": 16400,
+          "intersection": [
+            13584,
+            13840
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-29",
+      "offset": 13840,
+      "end": 15888,
+      "labels": [
+        "AssetData_03610"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 9,
+          "record": 0,
+          "descriptor_offset": 116237,
+          "offset": 15120,
+          "end": 15376,
+          "destination": 2304,
+          "intersection": [
+            15120,
+            15376
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 13,
+          "record": 2,
+          "descriptor_offset": 116295,
+          "offset": 14864,
+          "end": 15120,
+          "destination": 3328,
+          "intersection": [
+            14864,
+            15120
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 17,
+          "record": 1,
+          "descriptor_offset": 116338,
+          "offset": 13072,
+          "end": 14352,
+          "destination": 2560,
+          "intersection": [
+            13840,
+            14352
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 3,
+          "descriptor_offset": 116351,
+          "offset": 14096,
+          "end": 14352,
+          "destination": 3584,
+          "intersection": [
+            14096,
+            14352
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 19,
+          "record": 0,
+          "descriptor_offset": 116358,
+          "offset": 15120,
+          "end": 15376,
+          "destination": 2304,
+          "intersection": [
+            15120,
+            15376
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 19,
+          "record": 1,
+          "descriptor_offset": 116361,
+          "offset": 13584,
+          "end": 14352,
+          "destination": 3072,
+          "intersection": [
+            13840,
+            14352
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 21,
+          "record": 0,
+          "descriptor_offset": 116381,
+          "offset": 15376,
+          "end": 15888,
+          "destination": 2560,
+          "intersection": [
+            15376,
+            15888
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 23,
+          "record": 1,
+          "descriptor_offset": 116404,
+          "offset": 14864,
+          "end": 15120,
+          "destination": 3328,
+          "intersection": [
+            14864,
+            15120
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 24,
+          "record": 0,
+          "descriptor_offset": 116411,
+          "offset": 14352,
+          "end": 15120,
+          "destination": 2560,
+          "intersection": [
+            14352,
+            15120
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 24,
+          "record": 2,
+          "descriptor_offset": 116417,
+          "offset": 15632,
+          "end": 15888,
+          "destination": 3584,
+          "intersection": [
+            15632,
+            15888
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 3,
+          "descriptor_offset": 116443,
+          "offset": 14864,
+          "end": 15120,
+          "destination": 3328,
+          "intersection": [
+            14864,
+            15120
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 29,
+          "record": 2,
+          "descriptor_offset": 116295,
+          "offset": 14864,
+          "end": 15120,
+          "destination": 3328,
+          "intersection": [
+            14864,
+            15120
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 0,
+          "offset": 13072,
+          "end": 16400,
+          "intersection": [
+            13840,
+            15888
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-15",
+      "offset": 15888,
+      "end": 16144,
+      "labels": [
+        "ChrTiles_03E10"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 5,
+          "descriptor_offset": 115662,
+          "offset": 15888,
+          "end": 16144,
+          "destination": 3328,
+          "intersection": [
+            15888,
+            16144
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 25,
+          "record": 1,
+          "descriptor_offset": 116427,
+          "offset": 15888,
+          "end": 16144,
+          "destination": 3328,
+          "intersection": [
+            15888,
+            16144
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 26,
+          "record": 1,
+          "descriptor_offset": 116437,
+          "offset": 15888,
+          "end": 16144,
+          "destination": 2560,
+          "intersection": [
+            15888,
+            16144
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 0,
+          "offset": 13072,
+          "end": 16400,
+          "intersection": [
+            15888,
+            16144
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-30",
+      "offset": 16144,
+      "end": 16400,
+      "labels": [
+        "AssetData_03F10"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 22,
+          "record": 0,
+          "descriptor_offset": 116388,
+          "offset": 16144,
+          "end": 16400,
+          "destination": 2560,
+          "intersection": [
+            16144,
+            16400
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 24,
+          "record": 3,
+          "descriptor_offset": 116420,
+          "offset": 16144,
+          "end": 16400,
+          "destination": 3840,
+          "intersection": [
+            16144,
+            16400
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 0,
+          "offset": 13072,
+          "end": 16400,
+          "intersection": [
+            16144,
+            16400
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-16",
+      "offset": 16400,
+      "end": 28688,
+      "labels": [
+        "ChrTiles_04010"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 0,
+          "record": 2,
+          "descriptor_offset": 115588,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 0,
+          "record": 3,
+          "descriptor_offset": 115591,
+          "offset": 20496,
+          "end": 23824,
+          "destination": 4864,
+          "intersection": [
+            20496,
+            23824
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 1,
+          "record": 2,
+          "descriptor_offset": 115601,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 1,
+          "record": 3,
+          "descriptor_offset": 115604,
+          "offset": 23824,
+          "end": 27152,
+          "destination": 4864,
+          "intersection": [
+            23824,
+            27152
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 2,
+          "record": 2,
+          "descriptor_offset": 115614,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 3,
+          "record": 2,
+          "descriptor_offset": 115627,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 4,
+          "record": 2,
+          "descriptor_offset": 115640,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 8,
+          "descriptor_offset": 115671,
+          "offset": 16400,
+          "end": 20496,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            20496
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 3,
+          "descriptor_offset": 115684,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 4,
+          "descriptor_offset": 115687,
+          "offset": 20752,
+          "end": 21008,
+          "destination": 4864,
+          "intersection": [
+            20752,
+            21008
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 6,
+          "descriptor_offset": 115730,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 6,
+          "descriptor_offset": 115730,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 6,
+          "descriptor_offset": 115755,
+          "offset": 16400,
+          "end": 17168,
+          "destination": 4096,
+          "intersection": [
+            16400,
+            17168
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 7,
+          "descriptor_offset": 115758,
+          "offset": 27152,
+          "end": 28688,
+          "destination": 4864,
+          "intersection": [
+            27152,
+            28688
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-31",
+      "offset": 28688,
+      "end": 32784,
+      "labels": [
+        "AssetData_07010"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 23,
+          "record": 0,
+          "descriptor_offset": 116401,
+          "offset": 28688,
+          "end": 29456,
+          "destination": 2560,
+          "intersection": [
+            28688,
+            29456
+          ]
+        },
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 1,
+          "offset": 29456,
+          "end": 32784,
+          "intersection": [
+            29456,
+            32784
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-17",
+      "offset": 32784,
+      "end": 45328,
+      "labels": [
+        "ChrTiles_08010"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 2,
+          "record": 3,
+          "descriptor_offset": 115617,
+          "offset": 32784,
+          "end": 36112,
+          "destination": 4864,
+          "intersection": [
+            32784,
+            36112
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 3,
+          "record": 3,
+          "descriptor_offset": 115630,
+          "offset": 36112,
+          "end": 39440,
+          "destination": 4864,
+          "intersection": [
+            36112,
+            39440
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 4,
+          "record": 3,
+          "descriptor_offset": 115643,
+          "offset": 39440,
+          "end": 42768,
+          "destination": 4864,
+          "intersection": [
+            39440,
+            42768
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 5,
+          "descriptor_offset": 115690,
+          "offset": 44048,
+          "end": 44304,
+          "destination": 5120,
+          "intersection": [
+            44048,
+            44304
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 6,
+          "descriptor_offset": 115693,
+          "offset": 40976,
+          "end": 41232,
+          "destination": 5376,
+          "intersection": [
+            40976,
+            41232
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 7,
+          "descriptor_offset": 115696,
+          "offset": 44304,
+          "end": 44560,
+          "destination": 5632,
+          "intersection": [
+            44304,
+            44560
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 8,
+          "descriptor_offset": 115699,
+          "offset": 35600,
+          "end": 36112,
+          "destination": 5888,
+          "intersection": [
+            35600,
+            36112
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 9,
+          "descriptor_offset": 115702,
+          "offset": 44560,
+          "end": 45072,
+          "destination": 6400,
+          "intersection": [
+            44560,
+            45072
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 10,
+          "descriptor_offset": 115705,
+          "offset": 35344,
+          "end": 35600,
+          "destination": 6912,
+          "intersection": [
+            35344,
+            35600
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 11,
+          "descriptor_offset": 115708,
+          "offset": 36368,
+          "end": 36624,
+          "destination": 7168,
+          "intersection": [
+            36368,
+            36624
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 3,
+          "descriptor_offset": 115721,
+          "offset": 45072,
+          "end": 45328,
+          "destination": 2560,
+          "intersection": [
+            45072,
+            45328
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 7,
+          "descriptor_offset": 115733,
+          "offset": 32784,
+          "end": 36112,
+          "destination": 4864,
+          "intersection": [
+            32784,
+            36112
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 3,
+          "descriptor_offset": 115721,
+          "offset": 45072,
+          "end": 45328,
+          "destination": 2560,
+          "intersection": [
+            45072,
+            45328
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 7,
+          "descriptor_offset": 115733,
+          "offset": 32784,
+          "end": 36112,
+          "destination": 4864,
+          "intersection": [
+            32784,
+            36112
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 9,
+          "record": 8,
+          "descriptor_offset": 115761,
+          "offset": 42768,
+          "end": 44560,
+          "destination": 6400,
+          "intersection": [
+            42768,
+            44560
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 2,
+          "descriptor_offset": 116348,
+          "offset": 45072,
+          "end": 45328,
+          "destination": 3328,
+          "intersection": [
+            45072,
+            45328
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-32",
+      "offset": 45328,
+      "end": 45584,
+      "labels": [
+        "AssetData_0B110"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 18,
+          "record": 4,
+          "descriptor_offset": 116354,
+          "offset": 45328,
+          "end": 45584,
+          "destination": 3840,
+          "intersection": [
+            45328,
+            45584
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-18",
+      "offset": 45584,
+      "end": 45840,
+      "labels": [
+        "ChrTiles_0B210"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 7,
+          "record": 4,
+          "descriptor_offset": 115724,
+          "offset": 45584,
+          "end": 45840,
+          "destination": 2816,
+          "intersection": [
+            45584,
+            45840
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 8,
+          "record": 4,
+          "descriptor_offset": 115724,
+          "offset": 45584,
+          "end": 45840,
+          "destination": 2816,
+          "intersection": [
+            45584,
+            45840
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-33",
+      "offset": 45840,
+      "end": 49168,
+      "labels": [
+        "AssetData_0B310"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 2,
+          "offset": 45840,
+          "end": 49168,
+          "intersection": [
+            45840,
+            49168
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-487",
+      "offset": 51904,
+      "end": 61712,
+      "labels": [
+        "AudioStreamsAndUnresolvedBitmapData_0CAC0"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 11,
+          "record": 3,
+          "descriptor_offset": 116263,
+          "offset": 59664,
+          "end": 59920,
+          "destination": 3584,
+          "intersection": [
+            59664,
+            59920
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 20,
+          "record": 0,
+          "descriptor_offset": 116368,
+          "offset": 60944,
+          "end": 61456,
+          "destination": 2560,
+          "intersection": [
+            60944,
+            61456
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 20,
+          "record": 1,
+          "descriptor_offset": 116371,
+          "offset": 61456,
+          "end": 61712,
+          "destination": 3072,
+          "intersection": [
+            61456,
+            61712
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 20,
+          "record": 2,
+          "descriptor_offset": 116374,
+          "offset": 60688,
+          "end": 60944,
+          "destination": 3328,
+          "intersection": [
+            60688,
+            60944
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 22,
+          "record": 2,
+          "descriptor_offset": 116394,
+          "offset": 59664,
+          "end": 59920,
+          "destination": 3072,
+          "intersection": [
+            59664,
+            59920
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 24,
+          "record": 1,
+          "descriptor_offset": 116414,
+          "offset": 60688,
+          "end": 60944,
+          "destination": 3328,
+          "intersection": [
+            60688,
+            60944
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 25,
+          "record": 0,
+          "descriptor_offset": 116424,
+          "offset": 59920,
+          "end": 60688,
+          "destination": 2560,
+          "intersection": [
+            59920,
+            60688
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 25,
+          "record": 2,
+          "descriptor_offset": 116430,
+          "offset": 60688,
+          "end": 60944,
+          "destination": 3584,
+          "intersection": [
+            60688,
+            60944
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 27,
+          "record": 0,
+          "descriptor_offset": 116450,
+          "offset": 60944,
+          "end": 61456,
+          "destination": 2560,
+          "intersection": [
+            60944,
+            61456
+          ]
+        },
+        {
+          "consumer": "background",
+          "selector": 27,
+          "record": 1,
+          "descriptor_offset": 116453,
+          "offset": 61456,
+          "end": 61712,
+          "destination": 3072,
+          "intersection": [
+            61456,
+            61712
+          ]
+        }
+      ],
+      "not_in_these_consumers": [
+        [
+          51904,
+          59664
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-19",
+      "offset": 61712,
+      "end": 62224,
+      "labels": [
+        "ChrTiles_0F110"
+      ],
+      "consumers": [
+        {
+          "consumer": "chr",
+          "selector": 5,
+          "record": 4,
+          "descriptor_offset": 115659,
+          "offset": 61712,
+          "end": 61968,
+          "destination": 3072,
+          "intersection": [
+            61712,
+            61968
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 0,
+          "descriptor_offset": 115675,
+          "offset": 61968,
+          "end": 62224,
+          "destination": 2048,
+          "intersection": [
+            61968,
+            62224
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 6,
+          "record": 2,
+          "descriptor_offset": 115681,
+          "offset": 61712,
+          "end": 61968,
+          "destination": 3072,
+          "intersection": [
+            61712,
+            61968
+          ]
+        },
+        {
+          "consumer": "chr",
+          "selector": 10,
+          "record": 1,
+          "descriptor_offset": 115768,
+          "offset": 61712,
+          "end": 61968,
+          "destination": 2304,
+          "intersection": [
+            61712,
+            61968
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-488",
+      "offset": 62224,
+      "end": 65552,
+      "labels": [
+        "TerrainBlockPlanesAndProperties_0F310"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 terrain block pointer9bit*4 + tile/attribute planes",
+          "bank": 3,
+          "offset": 62224,
+          "end": 65552,
+          "intersection": [
+            62224,
+            65552
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-489",
+      "offset": 65552,
+      "end": 66808,
+      "labels": [
+        "PackedRoomPayloadFragment_10010"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            65552,
+            66808
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-453",
+      "offset": 66808,
+      "end": 66840,
+      "labels": [
+        "GenericData_104F8"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            66808,
+            66840
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-490",
+      "offset": 66840,
+      "end": 67280,
+      "labels": [
+        "PackedRoomPayloadFragment_10518"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            66840,
+            67280
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-454",
+      "offset": 67280,
+      "end": 67327,
+      "labels": [
+        "GenericData_106D0"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            67280,
+            67327
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-491",
+      "offset": 67327,
+      "end": 67352,
+      "labels": [
+        "PackedRoomPayloadFragment_106FF"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            67327,
+            67352
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-455",
+      "offset": 67352,
+      "end": 67386,
+      "labels": [
+        "GenericData_10718"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            67352,
+            67386
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-492",
+      "offset": 67386,
+      "end": 69368,
+      "labels": [
+        "PackedRoomPayloadFragment_1073A"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            67386,
+            69368
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-456",
+      "offset": 69368,
+      "end": 69400,
+      "labels": [
+        "GenericData_10EF8"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            69368,
+            69400
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-493",
+      "offset": 69400,
+      "end": 73760,
+      "labels": [
+        "PackedRoomPayloadFragment_10F18"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            69400,
+            73760
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-457",
+      "offset": 73760,
+      "end": 73802,
+      "labels": [
+        "GenericData_12020"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73760,
+            73802
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-494",
+      "offset": 73802,
+      "end": 73832,
+      "labels": [
+        "PackedRoomPayloadFragment_1204A"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73802,
+            73832
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-458",
+      "offset": 73832,
+      "end": 73880,
+      "labels": [
+        "GenericData_12068"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73832,
+            73880
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-495",
+      "offset": 73880,
+      "end": 73904,
+      "labels": [
+        "PackedRoomPayloadFragment_12098"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73880,
+            73904
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-459",
+      "offset": 73904,
+      "end": 73940,
+      "labels": [
+        "GenericData_120B0"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73904,
+            73940
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-496",
+      "offset": 73940,
+      "end": 79592,
+      "labels": [
+        "PackedRoomPayloadFragment_120D4"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            73940,
+            79592
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-460",
+      "offset": 79592,
+      "end": 79628,
+      "labels": [
+        "GenericData_136E8"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            79592,
+            79628
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-497",
+      "offset": 79628,
+      "end": 79664,
+      "labels": [
+        "PackedRoomPayloadFragment_1370C"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            79628,
+            79664
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-461",
+      "offset": 79664,
+      "end": 79704,
+      "labels": [
+        "GenericData_13730"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            79664,
+            79704
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-498",
+      "offset": 79704,
+      "end": 79944,
+      "labels": [
+        "PackedRoomPayloadFragment_13758"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            79704,
+            79944
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-462",
+      "offset": 79944,
+      "end": 79983,
+      "labels": [
+        "GenericData_13848"
+      ],
+      "consumers": [
+        {
+          "consumer": "B04 200 packed room records72 bytes each including uniform fragments",
+          "bank": 4,
+          "offset": 65552,
+          "end": 79952,
+          "intersection": [
+            79944,
+            79952
+          ]
+        }
+      ],
+      "not_in_these_consumers": [
+        [
+          79952,
+          79983
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-499",
+      "offset": 79983,
+      "end": 79984,
+      "labels": [
+        "BoundedData_1386F"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          79983,
+          79984
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-463",
+      "offset": 79984,
+      "end": 80024,
+      "labels": [
+        "GenericData_13870"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          79984,
+          80024
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-500",
+      "offset": 80024,
+      "end": 80060,
+      "labels": [
+        "DialogueTextPointers_13898"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          80024,
+          80060
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-501",
+      "offset": 80060,
+      "end": 80985,
+      "labels": [
+        "DialogueEncodedStrings_138BC"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          80060,
+          80985
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-464",
+      "offset": 80985,
+      "end": 81168,
+      "labels": [
+        "GenericData_13C59"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          80985,
+          81168
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-465",
+      "offset": 81168,
+      "end": 81296,
+      "labels": [
+        "GenericData_13D10"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          81168,
+          81296
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-503",
+      "offset": 81367,
+      "end": 81379,
+      "labels": [
+        "TerrainParticleOffsetAndTickArrays_13DD7"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          81367,
+          81379
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-466",
+      "offset": 81379,
+      "end": 81424,
+      "labels": [
+        "GenericData_13DE3"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          81379,
+          81424
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-467",
+      "offset": 81595,
+      "end": 81680,
+      "labels": [
+        "GenericData_13EBB"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          81595,
+          81680
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-505",
+      "offset": 81680,
+      "end": 81936,
+      "labels": [
+        "BoundedData_13F10"
+      ],
+      "consumers": [
+        {
+          "consumer": "background",
+          "selector": 22,
+          "record": 1,
+          "descriptor_offset": 116391,
+          "offset": 81680,
+          "end": 81936,
+          "destination": 2816,
+          "intersection": [
+            81680,
+            81936
+          ]
+        }
+      ],
+      "not_in_these_consumers": []
+    },
+    {
+      "ledger_id": "region-220",
+      "offset": 115446,
+      "end": 115560,
+      "labels": [
+        "AdvanceRandomState",
+        "UploadChrLists"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115446,
+          115560
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-3",
+      "offset": 115560,
+      "end": 115582,
+      "labels": [
+        "ChrUploadListPointers"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115560,
+          115582
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-4",
+      "offset": 115582,
+      "end": 115772,
+      "labels": [
+        "ChrUploadLists"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115582,
+          115772
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-221",
+      "offset": 115772,
+      "end": 115776,
+      "labels": [
+        "PollBackgroundUpload"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115772,
+          115776
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-222",
+      "offset": 115776,
+      "end": 115777,
+      "labels": [
+        "PollBackgroundUpload"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115776,
+          115777
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-223",
+      "offset": 115777,
+      "end": 115793,
+      "labels": [
+        "PollBackgroundUpload"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115777,
+          115793
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-224",
+      "offset": 115793,
+      "end": 115818,
+      "labels": [
+        "ChooseBackgroundListVariant"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115793,
+          115818
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-225",
+      "offset": 115818,
+      "end": 115950,
+      "labels": [
+        "BeginBackgroundUploadRecord",
+        "QueueBackgroundChunk"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115818,
+          115950
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-226",
+      "offset": 115950,
+      "end": 115953,
+      "labels": [
+        "RequestBackgroundChunkUpload"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115950,
+          115953
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-227",
+      "offset": 115953,
+      "end": 115992,
+      "labels": [
+        "CompleteBackgroundUpload"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115953,
+          115992
+        ]
+      ]
+    },
+    {
+      "ledger_id": "region-1261",
+      "offset": 115992,
+      "end": 116525,
+      "labels": [
+        "StagePaletteConfiguration"
+      ],
+      "consumers": [],
+      "not_in_these_consumers": [
+        [
+          115992,
+          116525
+        ]
+      ]
+    }
+  ]
+}

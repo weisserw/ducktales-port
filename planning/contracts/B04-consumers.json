@@ -1,0 +1,3166 @@
+{
+  "source_sha256": "c29c4aa93881aeeaf643fc3172e093d8f3bb50ea50150b574df8b6cfe08f69cc",
+  "area": "B04",
+  "trace": "port/src/world/trace.md",
+  "contracts": "port/src/world/contracts.rs",
+  "regions": [
+    {
+      "ledger_id": "region-488",
+      "offset": 62224,
+      "length": 3328,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2008"
+      ],
+      "units": [
+        {
+          "id": "region-488/unit-0",
+          "label": "TerrainBlockPlanesAndProperties_0F310",
+          "offset": 62224,
+          "length": 3328,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-489",
+      "offset": 65552,
+      "length": 1256,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2014"
+      ],
+      "units": [
+        {
+          "id": "region-489/unit-0",
+          "label": "PackedRoomPayloadFragment_10010",
+          "offset": 65552,
+          "length": 1256,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-453",
+      "offset": 66808,
+      "length": 32,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2020"
+      ],
+      "units": [
+        {
+          "id": "region-453/unit-0",
+          "label": "GenericData_104F8",
+          "offset": 66808,
+          "length": 32,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-490",
+      "offset": 66840,
+      "length": 440,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2025"
+      ],
+      "units": [
+        {
+          "id": "region-490/unit-0",
+          "label": "PackedRoomPayloadFragment_10518",
+          "offset": 66840,
+          "length": 440,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-454",
+      "offset": 67280,
+      "length": 47,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2031"
+      ],
+      "units": [
+        {
+          "id": "region-454/unit-0",
+          "label": "GenericData_106D0",
+          "offset": 67280,
+          "length": 47,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-491",
+      "offset": 67327,
+      "length": 25,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2036"
+      ],
+      "units": [
+        {
+          "id": "region-491/unit-0",
+          "label": "PackedRoomPayloadFragment_106FF",
+          "offset": 67327,
+          "length": 25,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-455",
+      "offset": 67352,
+      "length": 34,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2042"
+      ],
+      "units": [
+        {
+          "id": "region-455/unit-0",
+          "label": "GenericData_10718",
+          "offset": 67352,
+          "length": 34,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-492",
+      "offset": 67386,
+      "length": 1982,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2047"
+      ],
+      "units": [
+        {
+          "id": "region-492/unit-0",
+          "label": "PackedRoomPayloadFragment_1073A",
+          "offset": 67386,
+          "length": 1982,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-456",
+      "offset": 69368,
+      "length": 32,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2053"
+      ],
+      "units": [
+        {
+          "id": "region-456/unit-0",
+          "label": "GenericData_10EF8",
+          "offset": 69368,
+          "length": 32,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-493",
+      "offset": 69400,
+      "length": 4360,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2058"
+      ],
+      "units": [
+        {
+          "id": "region-493/unit-0",
+          "label": "PackedRoomPayloadFragment_10F18",
+          "offset": 69400,
+          "length": 4360,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-457",
+      "offset": 73760,
+      "length": 42,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2064"
+      ],
+      "units": [
+        {
+          "id": "region-457/unit-0",
+          "label": "GenericData_12020",
+          "offset": 73760,
+          "length": 42,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-494",
+      "offset": 73802,
+      "length": 30,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2069"
+      ],
+      "units": [
+        {
+          "id": "region-494/unit-0",
+          "label": "PackedRoomPayloadFragment_1204A",
+          "offset": 73802,
+          "length": 30,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-458",
+      "offset": 73832,
+      "length": 48,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2075"
+      ],
+      "units": [
+        {
+          "id": "region-458/unit-0",
+          "label": "GenericData_12068",
+          "offset": 73832,
+          "length": 48,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-495",
+      "offset": 73880,
+      "length": 24,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2080"
+      ],
+      "units": [
+        {
+          "id": "region-495/unit-0",
+          "label": "PackedRoomPayloadFragment_12098",
+          "offset": 73880,
+          "length": 24,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-459",
+      "offset": 73904,
+      "length": 36,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2086"
+      ],
+      "units": [
+        {
+          "id": "region-459/unit-0",
+          "label": "GenericData_120B0",
+          "offset": 73904,
+          "length": 36,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-496",
+      "offset": 73940,
+      "length": 5652,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2091"
+      ],
+      "units": [
+        {
+          "id": "region-496/unit-0",
+          "label": "PackedRoomPayloadFragment_120D4",
+          "offset": 73940,
+          "length": 5652,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-460",
+      "offset": 79592,
+      "length": 36,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2097"
+      ],
+      "units": [
+        {
+          "id": "region-460/unit-0",
+          "label": "GenericData_136E8",
+          "offset": 79592,
+          "length": 36,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-497",
+      "offset": 79628,
+      "length": 36,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2102"
+      ],
+      "units": [
+        {
+          "id": "region-497/unit-0",
+          "label": "PackedRoomPayloadFragment_1370C",
+          "offset": 79628,
+          "length": 36,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-461",
+      "offset": 79664,
+      "length": 40,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2108"
+      ],
+      "units": [
+        {
+          "id": "region-461/unit-0",
+          "label": "GenericData_13730",
+          "offset": 79664,
+          "length": 40,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-498",
+      "offset": 79704,
+      "length": 240,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2113"
+      ],
+      "units": [
+        {
+          "id": "region-498/unit-0",
+          "label": "PackedRoomPayloadFragment_13758",
+          "offset": 79704,
+          "length": 240,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-462",
+      "offset": 79944,
+      "length": 39,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2119"
+      ],
+      "units": [
+        {
+          "id": "region-462/unit-0",
+          "label": "GenericData_13848",
+          "offset": 79944,
+          "length": 39,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-499",
+      "offset": 79983,
+      "length": 1,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2124"
+      ],
+      "units": [
+        {
+          "id": "region-499/unit-0",
+          "label": "BoundedData_1386F",
+          "offset": 79983,
+          "length": 1,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-463",
+      "offset": 79984,
+      "length": 40,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:2130"
+      ],
+      "units": [
+        {
+          "id": "region-463/unit-0",
+          "label": "GenericData_13870",
+          "offset": 79984,
+          "length": 40,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-228",
+      "offset": 116525,
+      "length": 105,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11214"
+      ],
+      "units": [
+        {
+          "id": "region-228/unit-0",
+          "label": "BuildInitialTerrainColumns",
+          "offset": 116525,
+          "length": 105,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1262",
+      "offset": 116630,
+      "length": 9,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11279"
+      ],
+      "units": [
+        {
+          "id": "region-1262/unit-0",
+          "label": "TerrainScrollClampData",
+          "offset": 116630,
+          "length": 9,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-229",
+      "offset": 116639,
+      "length": 61,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11286"
+      ],
+      "units": [
+        {
+          "id": "region-229/unit-0",
+          "label": "BuildWholeTerrainRing",
+          "offset": 116639,
+          "length": 33,
+          "area": "B04"
+        },
+        {
+          "id": "region-229/unit-1",
+          "label": "LoadTerrainLayoutPointers",
+          "offset": 116672,
+          "length": 21,
+          "area": "B04"
+        },
+        {
+          "id": "region-229/unit-2",
+          "label": "MeasureCameraMotion",
+          "offset": 116693,
+          "length": 12,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-230",
+      "offset": 116700,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11330"
+      ],
+      "units": [
+        {
+          "id": "region-230/unit-0",
+          "label": "MeasureCameraMotion",
+          "offset": 116693,
+          "length": 12,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-231",
+      "offset": 116705,
+      "length": 22,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11339"
+      ],
+      "units": [
+        {
+          "id": "region-231/unit-0",
+          "label": "CountForwardTerrainColumns",
+          "offset": 116705,
+          "length": 22,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-232",
+      "offset": 116727,
+      "length": 16,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11360"
+      ],
+      "units": [
+        {
+          "id": "region-232/unit-0",
+          "label": "CountBackwardTerrainColumns",
+          "offset": 116727,
+          "length": 16,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-233",
+      "offset": 116743,
+      "length": 10,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11378"
+      ],
+      "units": [
+        {
+          "id": "region-233/unit-0",
+          "label": "PrepareTerrainStream",
+          "offset": 116743,
+          "length": 10,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-234",
+      "offset": 116753,
+      "length": 10,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11392"
+      ],
+      "units": [
+        {
+          "id": "region-234/unit-0",
+          "label": "ReverseTerrainStream",
+          "offset": 116753,
+          "length": 10,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-235",
+      "offset": 116763,
+      "length": 21,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11406"
+      ],
+      "units": [
+        {
+          "id": "region-235/unit-0",
+          "label": "AdvanceTerrainRing",
+          "offset": 116763,
+          "length": 37,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-236",
+      "offset": 116784,
+      "length": 16,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11426"
+      ],
+      "units": [
+        {
+          "id": "region-236/unit-0",
+          "label": "AdvanceTerrainRing",
+          "offset": 116763,
+          "length": 37,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-237",
+      "offset": 116800,
+      "length": 18,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11440"
+      ],
+      "units": [
+        {
+          "id": "region-237/unit-0",
+          "label": "ResolveTerrainColumn",
+          "offset": 116800,
+          "length": 18,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-238",
+      "offset": 116818,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11457"
+      ],
+      "units": [
+        {
+          "id": "region-238/unit-0",
+          "label": "TerminateEmptyTerrainQueue",
+          "offset": 116818,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1198",
+      "offset": 116823,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11467"
+      ],
+      "units": [
+        {
+          "id": "region-1198/unit-0",
+          "label": "SubmitTerrainRowAndWait",
+          "offset": 116823,
+          "length": 6,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-239",
+      "offset": 116829,
+      "length": 1,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11478"
+      ],
+      "units": [
+        {
+          "id": "region-239/unit-0",
+          "label": "TerrainNoWorkReturn",
+          "offset": 116829,
+          "length": 1,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1199",
+      "offset": 116830,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11487"
+      ],
+      "units": [
+        {
+          "id": "region-1199/unit-0",
+          "label": "SubmitTerrainRowAndWait",
+          "offset": 116830,
+          "length": 4,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-240",
+      "offset": 116834,
+      "length": 242,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11495"
+      ],
+      "units": [
+        {
+          "id": "region-240/unit-0",
+          "label": "BuildTerrainTileRows",
+          "offset": 116834,
+          "length": 92,
+          "area": "B04"
+        },
+        {
+          "id": "region-240/unit-1",
+          "label": "CopyExpandedTerrainTiles",
+          "offset": 116926,
+          "length": 85,
+          "area": "B04"
+        },
+        {
+          "id": "region-240/unit-2",
+          "label": "QueueTerrainAttributes",
+          "offset": 117011,
+          "length": 65,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-241",
+      "offset": 117076,
+      "length": 9,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11625"
+      ],
+      "units": [
+        {
+          "id": "region-241/unit-0",
+          "label": "ContinueTerrainQueue",
+          "offset": 117076,
+          "length": 9,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-242",
+      "offset": 117085,
+      "length": 29,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11639"
+      ],
+      "units": [
+        {
+          "id": "region-242/unit-0",
+          "label": "FinishTerrainQueue",
+          "offset": 117085,
+          "length": 16,
+          "area": "B04"
+        },
+        {
+          "id": "region-242/unit-1",
+          "label": "CheckTerrainColumnBounds",
+          "offset": 117101,
+          "length": 13,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1263",
+      "offset": 117114,
+      "length": 12,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11667"
+      ],
+      "units": [
+        {
+          "id": "region-1263/unit-0",
+          "label": "TerrainDirectionAndRowSteps",
+          "offset": 117114,
+          "length": 12,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "initial_stream_column_queues",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1200",
+      "offset": 117126,
+      "length": 133,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11674"
+      ],
+      "units": [
+        {
+          "id": "region-1200/unit-0",
+          "label": "AnimateVerticalRoomTransition",
+          "offset": 117126,
+          "length": 39,
+          "area": "B04"
+        },
+        {
+          "id": "region-1200/unit-1",
+          "label": "VerticalTransitionTick",
+          "offset": 117165,
+          "length": 69,
+          "area": "B04"
+        },
+        {
+          "id": "region-1200/unit-2",
+          "label": "DispatchVerticalTransitionPhase",
+          "offset": 117234,
+          "length": 25,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "vertical16_staging_neighbors",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1295",
+      "offset": 117259,
+      "length": 47,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11752"
+      ],
+      "units": [
+        {
+          "id": "region-1295/unit-0",
+          "label": "AfterVerticalTransitionPhase",
+          "offset": 117259,
+          "length": 47,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "vertical16_staging_neighbors",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1264",
+      "offset": 117306,
+      "length": 32,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11782"
+      ],
+      "units": [
+        {
+          "id": "region-1264/unit-0",
+          "label": "VerticalScrollPhasePointers",
+          "offset": 117306,
+          "length": 32,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "vertical16_staging_neighbors",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1296",
+      "offset": 117338,
+      "length": 571,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:11789"
+      ],
+      "units": [
+        {
+          "id": "region-1296/unit-0",
+          "label": "VerticalPhaseBuildRoomRow",
+          "offset": 117338,
+          "length": 4,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-1",
+          "label": "VerticalPhaseCopyStagedRows",
+          "offset": 117342,
+          "length": 61,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-2",
+          "label": "VerticalPhaseWrapBoundary",
+          "offset": 117403,
+          "length": 22,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-3",
+          "label": "BuildVerticalTransitionRows",
+          "offset": 117425,
+          "length": 33,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-4",
+          "label": "CopyVerticalTileGroup",
+          "offset": 117458,
+          "length": 40,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-5",
+          "label": "MergeVerticalRowAttributes",
+          "offset": 117498,
+          "length": 52,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-6",
+          "label": "SetVerticalRowUploadAddresses",
+          "offset": 117550,
+          "length": 60,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-7",
+          "label": "VerticalPhaseNextRoom",
+          "offset": 117610,
+          "length": 20,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-8",
+          "label": "VerticalPhasePreviousRoom",
+          "offset": 117630,
+          "length": 38,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-9",
+          "label": "BuildVerticalNeighborColumns",
+          "offset": 117668,
+          "length": 95,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-10",
+          "label": "SetNeighborColumnUploadAddresses",
+          "offset": 117763,
+          "length": 92,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-11",
+          "label": "TrimVerticalQueueAtRowSeven",
+          "offset": 117855,
+          "length": 25,
+          "area": "B04"
+        },
+        {
+          "id": "region-1296/unit-12",
+          "label": "TrimVerticalQueueAtRowOne",
+          "offset": 117880,
+          "length": 29,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "vertical16_staging_neighbors",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1265",
+      "offset": 117909,
+      "length": 56,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12114"
+      ],
+      "units": [
+        {
+          "id": "region-1265/unit-0",
+          "label": "VerticalScrollParameters",
+          "offset": 117909,
+          "length": 56,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "vertical16_staging_neighbors",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-243",
+      "offset": 117965,
+      "length": 27,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12121"
+      ],
+      "units": [
+        {
+          "id": "region-243/unit-0",
+          "label": "ExpandTerrainBlock",
+          "offset": 117965,
+          "length": 27,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-244",
+      "offset": 117992,
+      "length": 15,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12145"
+      ],
+      "units": [
+        {
+          "id": "region-244/unit-0",
+          "label": "PrepareTerrainExpansion",
+          "offset": 117992,
+          "length": 15,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-245",
+      "offset": 118007,
+      "length": 79,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12160"
+      ],
+      "units": [
+        {
+          "id": "region-245/unit-0",
+          "label": "DecodeTerrainQuadrant",
+          "offset": 118007,
+          "length": 79,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-246",
+      "offset": 118086,
+      "length": 26,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12214"
+      ],
+      "units": [
+        {
+          "id": "region-246/unit-0",
+          "label": "TerrainStageThreeOverride",
+          "offset": 118086,
+          "length": 26,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-247",
+      "offset": 118112,
+      "length": 4,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12236"
+      ],
+      "units": [
+        {
+          "id": "region-247/unit-0",
+          "label": "TerrainStageFourOverrideGate",
+          "offset": 118112,
+          "length": 4,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-248",
+      "offset": 118116,
+      "length": 42,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12246"
+      ],
+      "units": [
+        {
+          "id": "region-248/unit-0",
+          "label": "TerrainStageFourOverride",
+          "offset": 118116,
+          "length": 42,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-249",
+      "offset": 118158,
+      "length": 54,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12276"
+      ],
+      "units": [
+        {
+          "id": "region-249/unit-0",
+          "label": "StoreExpandedTerrain",
+          "offset": 118158,
+          "length": 49,
+          "area": "B04"
+        },
+        {
+          "id": "region-249/unit-1",
+          "label": "SelectTerrainLayoutBank",
+          "offset": 118207,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-250",
+      "offset": 118212,
+      "length": 46,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12312"
+      ],
+      "units": [
+        {
+          "id": "region-250/unit-0",
+          "label": "ResolveTerrainBlockPointer",
+          "offset": 118212,
+          "length": 46,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-251",
+      "offset": 118258,
+      "length": 12,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12347"
+      ],
+      "units": [
+        {
+          "id": "region-251/unit-0",
+          "label": "ReadTerrainCell",
+          "offset": 118258,
+          "length": 12,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-252",
+      "offset": 118270,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12364"
+      ],
+      "units": [
+        {
+          "id": "region-252/unit-0",
+          "label": "FlattenTerrainRoomRow",
+          "offset": 118270,
+          "length": 6,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-253",
+      "offset": 118276,
+      "length": 21,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12375"
+      ],
+      "units": [
+        {
+          "id": "region-253/unit-0",
+          "label": "ResolveTerrainCellCoordinates",
+          "offset": 118276,
+          "length": 21,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-254",
+      "offset": 118297,
+      "length": 18,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12395"
+      ],
+      "units": [
+        {
+          "id": "region-254/unit-0",
+          "label": "ReadTerrainCellAndRestoreBank",
+          "offset": 118297,
+          "length": 18,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-255",
+      "offset": 118315,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12412"
+      ],
+      "units": [
+        {
+          "id": "region-255/unit-0",
+          "label": "ReturnTerrainCell",
+          "offset": 118315,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-617",
+      "offset": 118320,
+      "length": 12,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12424"
+      ],
+      "units": [
+        {
+          "id": "region-617/unit-0",
+          "label": "TerrainBitmapAndQuadrantMasks_1CE30",
+          "offset": 118320,
+          "length": 12,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-256",
+      "offset": 118332,
+      "length": 43,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12430"
+      ],
+      "units": [
+        {
+          "id": "region-256/unit-0",
+          "label": "ResolveRoomPayloadPointer",
+          "offset": 118332,
+          "length": 43,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "expansion_descriptor_probe",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-618",
+      "offset": 118375,
+      "length": 316,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:12463"
+      ],
+      "units": [
+        {
+          "id": "region-618/unit-0",
+          "label": "StageRoomLayoutLists_1CE67",
+          "offset": 118375,
+          "length": 316,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "all_original_formats",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-394",
+      "offset": 126962,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19604"
+      ],
+      "units": [
+        {
+          "id": "region-394/unit-0",
+          "label": "UpdateCameraMode",
+          "offset": 126962,
+          "length": 6,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-395",
+      "offset": 126968,
+      "length": 95,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19615"
+      ],
+      "units": [
+        {
+          "id": "region-395/unit-0",
+          "label": "AutomaticCameraMotion",
+          "offset": 126968,
+          "length": 95,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-396",
+      "offset": 127063,
+      "length": 25,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19671"
+      ],
+      "units": [
+        {
+          "id": "region-396/unit-0",
+          "label": "MeasurePlayerCameraOffset",
+          "offset": 127063,
+          "length": 25,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-397",
+      "offset": 127088,
+      "length": 6,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19692"
+      ],
+      "units": [
+        {
+          "id": "region-397/unit-0",
+          "label": "CameraNegativeDirection",
+          "offset": 127088,
+          "length": 6,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-398",
+      "offset": 127094,
+      "length": 26,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19703"
+      ],
+      "units": [
+        {
+          "id": "region-398/unit-0",
+          "label": "CameraPositiveBoundary",
+          "offset": 127094,
+          "length": 26,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-399",
+      "offset": 127120,
+      "length": 20,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19726"
+      ],
+      "units": [
+        {
+          "id": "region-399/unit-0",
+          "label": "ClampCameraBoundary",
+          "offset": 127120,
+          "length": 20,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1238",
+      "offset": 127140,
+      "length": 33,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19744"
+      ],
+      "units": [
+        {
+          "id": "region-1238/unit-0",
+          "label": "ClampCameraAtMissingRoom",
+          "offset": 127140,
+          "length": 33,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-400",
+      "offset": 127173,
+      "length": 44,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19769"
+      ],
+      "units": [
+        {
+          "id": "region-400/unit-0",
+          "label": "CommitCameraPosition",
+          "offset": 127173,
+          "length": 15,
+          "area": "B04"
+        },
+        {
+          "id": "region-400/unit-1",
+          "label": "ComputeCameraPosition",
+          "offset": 127188,
+          "length": 29,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1283",
+      "offset": 127217,
+      "length": 23,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:19804"
+      ],
+      "units": [
+        {
+          "id": "region-1283/unit-0",
+          "label": "CameraEdgeAdjustmentData",
+          "offset": 127217,
+          "length": 23,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "camera_normal_automatic_bounds",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-428",
+      "offset": 128232,
+      "length": 41,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20594"
+      ],
+      "units": [
+        {
+          "id": "region-428/unit-0",
+          "label": "ReplaceTerrainForActor",
+          "offset": 128232,
+          "length": 41,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-429",
+      "offset": 128273,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20623"
+      ],
+      "units": [
+        {
+          "id": "region-429/unit-0",
+          "label": "RestoreTerrainChangeRegisters",
+          "offset": 128273,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-430",
+      "offset": 128278,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20634"
+      ],
+      "units": [
+        {
+          "id": "region-430/unit-0",
+          "label": "ReplaceTerrainActorGate",
+          "offset": 128278,
+          "length": 22,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-431",
+      "offset": 128283,
+      "length": 17,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20644"
+      ],
+      "units": [
+        {
+          "id": "region-431/unit-0",
+          "label": "ReplaceTerrainActorGate",
+          "offset": 128278,
+          "length": 22,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1247",
+      "offset": 128300,
+      "length": 53,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20660"
+      ],
+      "units": [
+        {
+          "id": "region-1247/unit-0",
+          "label": "InitializeTerrainReplacementReward",
+          "offset": 128300,
+          "length": 53,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-432",
+      "offset": 128353,
+      "length": 30,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20687"
+      ],
+      "units": [
+        {
+          "id": "region-432/unit-0",
+          "label": "ReplaceTerrainFromActorState",
+          "offset": 128353,
+          "length": 30,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-433",
+      "offset": 128383,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20710"
+      ],
+      "units": [
+        {
+          "id": "region-433/unit-0",
+          "label": "RestoreTerrainChangeCaller",
+          "offset": 128383,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-434",
+      "offset": 128388,
+      "length": 146,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20721"
+      ],
+      "units": [
+        {
+          "id": "region-434/unit-0",
+          "label": "BuildChangedTerrainRecord",
+          "offset": 128388,
+          "length": 146,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-435",
+      "offset": 128534,
+      "length": 64,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20804"
+      ],
+      "units": [
+        {
+          "id": "region-435/unit-0",
+          "label": "MergeChangedTerrainAttributes",
+          "offset": 128534,
+          "length": 64,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1248",
+      "offset": 128598,
+      "length": 2,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20846"
+      ],
+      "units": [
+        {
+          "id": "region-1248/unit-0",
+          "label": "PreserveTerrainAttributeHighNibble",
+          "offset": 128598,
+          "length": 2,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-436",
+      "offset": 128600,
+      "length": 11,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20855"
+      ],
+      "units": [
+        {
+          "id": "region-436/unit-0",
+          "label": "FinishChangedTerrainRecord",
+          "offset": 128600,
+          "length": 11,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-1286",
+      "offset": 128611,
+      "length": 68,
+      "kind": "Data",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20868"
+      ],
+      "units": [
+        {
+          "id": "region-1286/unit-0",
+          "label": "TerrainReplacementLookupData",
+          "offset": 128611,
+          "length": 68,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-437",
+      "offset": 128679,
+      "length": 5,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20875"
+      ],
+      "units": [
+        {
+          "id": "region-437/unit-0",
+          "label": "SelectChangedTerrainBank",
+          "offset": 128679,
+          "length": 5,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    },
+    {
+      "ledger_id": "region-438",
+      "offset": 128684,
+      "length": 33,
+      "kind": "Code",
+      "primary_area": "B04",
+      "related_areas": [
+        "B04"
+      ],
+      "source": [
+        "game.asm:20885"
+      ],
+      "units": [
+        {
+          "id": "region-438/unit-0",
+          "label": "CopyChangedTerrainTiles",
+          "offset": 128684,
+          "length": 33,
+          "area": "B04"
+        }
+      ],
+      "disposition": "required_source_review",
+      "implementation": "pending",
+      "contract_group": "mutation_recovery_cache_upload",
+      "stage3_disposition": "source traced; substantive executable contracts; implementation pending"
+    }
+  ],
+  "area_units": [
+    {
+      "id": "region-488/unit-0",
+      "label": "TerrainBlockPlanesAndProperties_0F310",
+      "offset": 62224,
+      "length": 3328,
+      "area": "B04"
+    },
+    {
+      "id": "region-489/unit-0",
+      "label": "PackedRoomPayloadFragment_10010",
+      "offset": 65552,
+      "length": 1256,
+      "area": "B04"
+    },
+    {
+      "id": "region-453/unit-0",
+      "label": "GenericData_104F8",
+      "offset": 66808,
+      "length": 32,
+      "area": "B04"
+    },
+    {
+      "id": "region-490/unit-0",
+      "label": "PackedRoomPayloadFragment_10518",
+      "offset": 66840,
+      "length": 440,
+      "area": "B04"
+    },
+    {
+      "id": "region-454/unit-0",
+      "label": "GenericData_106D0",
+      "offset": 67280,
+      "length": 47,
+      "area": "B04"
+    },
+    {
+      "id": "region-491/unit-0",
+      "label": "PackedRoomPayloadFragment_106FF",
+      "offset": 67327,
+      "length": 25,
+      "area": "B04"
+    },
+    {
+      "id": "region-455/unit-0",
+      "label": "GenericData_10718",
+      "offset": 67352,
+      "length": 34,
+      "area": "B04"
+    },
+    {
+      "id": "region-492/unit-0",
+      "label": "PackedRoomPayloadFragment_1073A",
+      "offset": 67386,
+      "length": 1982,
+      "area": "B04"
+    },
+    {
+      "id": "region-456/unit-0",
+      "label": "GenericData_10EF8",
+      "offset": 69368,
+      "length": 32,
+      "area": "B04"
+    },
+    {
+      "id": "region-493/unit-0",
+      "label": "PackedRoomPayloadFragment_10F18",
+      "offset": 69400,
+      "length": 4360,
+      "area": "B04"
+    },
+    {
+      "id": "region-457/unit-0",
+      "label": "GenericData_12020",
+      "offset": 73760,
+      "length": 42,
+      "area": "B04"
+    },
+    {
+      "id": "region-494/unit-0",
+      "label": "PackedRoomPayloadFragment_1204A",
+      "offset": 73802,
+      "length": 30,
+      "area": "B04"
+    },
+    {
+      "id": "region-458/unit-0",
+      "label": "GenericData_12068",
+      "offset": 73832,
+      "length": 48,
+      "area": "B04"
+    },
+    {
+      "id": "region-495/unit-0",
+      "label": "PackedRoomPayloadFragment_12098",
+      "offset": 73880,
+      "length": 24,
+      "area": "B04"
+    },
+    {
+      "id": "region-459/unit-0",
+      "label": "GenericData_120B0",
+      "offset": 73904,
+      "length": 36,
+      "area": "B04"
+    },
+    {
+      "id": "region-496/unit-0",
+      "label": "PackedRoomPayloadFragment_120D4",
+      "offset": 73940,
+      "length": 5652,
+      "area": "B04"
+    },
+    {
+      "id": "region-460/unit-0",
+      "label": "GenericData_136E8",
+      "offset": 79592,
+      "length": 36,
+      "area": "B04"
+    },
+    {
+      "id": "region-497/unit-0",
+      "label": "PackedRoomPayloadFragment_1370C",
+      "offset": 79628,
+      "length": 36,
+      "area": "B04"
+    },
+    {
+      "id": "region-461/unit-0",
+      "label": "GenericData_13730",
+      "offset": 79664,
+      "length": 40,
+      "area": "B04"
+    },
+    {
+      "id": "region-498/unit-0",
+      "label": "PackedRoomPayloadFragment_13758",
+      "offset": 79704,
+      "length": 240,
+      "area": "B04"
+    },
+    {
+      "id": "region-462/unit-0",
+      "label": "GenericData_13848",
+      "offset": 79944,
+      "length": 39,
+      "area": "B04"
+    },
+    {
+      "id": "region-499/unit-0",
+      "label": "BoundedData_1386F",
+      "offset": 79983,
+      "length": 1,
+      "area": "B04"
+    },
+    {
+      "id": "region-463/unit-0",
+      "label": "GenericData_13870",
+      "offset": 79984,
+      "length": 40,
+      "area": "B04"
+    },
+    {
+      "id": "region-228/unit-0",
+      "label": "BuildInitialTerrainColumns",
+      "offset": 116525,
+      "length": 105,
+      "area": "B04"
+    },
+    {
+      "id": "region-1262/unit-0",
+      "label": "TerrainScrollClampData",
+      "offset": 116630,
+      "length": 9,
+      "area": "B04"
+    },
+    {
+      "id": "region-229/unit-0",
+      "label": "BuildWholeTerrainRing",
+      "offset": 116639,
+      "length": 33,
+      "area": "B04"
+    },
+    {
+      "id": "region-229/unit-1",
+      "label": "LoadTerrainLayoutPointers",
+      "offset": 116672,
+      "length": 21,
+      "area": "B04"
+    },
+    {
+      "id": "region-229/unit-2",
+      "label": "MeasureCameraMotion",
+      "offset": 116693,
+      "length": 12,
+      "area": "B04"
+    },
+    {
+      "id": "region-230/unit-0",
+      "label": "MeasureCameraMotion",
+      "offset": 116693,
+      "length": 12,
+      "area": "B04"
+    },
+    {
+      "id": "region-231/unit-0",
+      "label": "CountForwardTerrainColumns",
+      "offset": 116705,
+      "length": 22,
+      "area": "B04"
+    },
+    {
+      "id": "region-232/unit-0",
+      "label": "CountBackwardTerrainColumns",
+      "offset": 116727,
+      "length": 16,
+      "area": "B04"
+    },
+    {
+      "id": "region-233/unit-0",
+      "label": "PrepareTerrainStream",
+      "offset": 116743,
+      "length": 10,
+      "area": "B04"
+    },
+    {
+      "id": "region-234/unit-0",
+      "label": "ReverseTerrainStream",
+      "offset": 116753,
+      "length": 10,
+      "area": "B04"
+    },
+    {
+      "id": "region-235/unit-0",
+      "label": "AdvanceTerrainRing",
+      "offset": 116763,
+      "length": 37,
+      "area": "B04"
+    },
+    {
+      "id": "region-236/unit-0",
+      "label": "AdvanceTerrainRing",
+      "offset": 116763,
+      "length": 37,
+      "area": "B04"
+    },
+    {
+      "id": "region-237/unit-0",
+      "label": "ResolveTerrainColumn",
+      "offset": 116800,
+      "length": 18,
+      "area": "B04"
+    },
+    {
+      "id": "region-238/unit-0",
+      "label": "TerminateEmptyTerrainQueue",
+      "offset": 116818,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-1198/unit-0",
+      "label": "SubmitTerrainRowAndWait",
+      "offset": 116823,
+      "length": 6,
+      "area": "B04"
+    },
+    {
+      "id": "region-239/unit-0",
+      "label": "TerrainNoWorkReturn",
+      "offset": 116829,
+      "length": 1,
+      "area": "B04"
+    },
+    {
+      "id": "region-1199/unit-0",
+      "label": "SubmitTerrainRowAndWait",
+      "offset": 116830,
+      "length": 4,
+      "area": "B04"
+    },
+    {
+      "id": "region-240/unit-0",
+      "label": "BuildTerrainTileRows",
+      "offset": 116834,
+      "length": 92,
+      "area": "B04"
+    },
+    {
+      "id": "region-240/unit-1",
+      "label": "CopyExpandedTerrainTiles",
+      "offset": 116926,
+      "length": 85,
+      "area": "B04"
+    },
+    {
+      "id": "region-240/unit-2",
+      "label": "QueueTerrainAttributes",
+      "offset": 117011,
+      "length": 65,
+      "area": "B04"
+    },
+    {
+      "id": "region-241/unit-0",
+      "label": "ContinueTerrainQueue",
+      "offset": 117076,
+      "length": 9,
+      "area": "B04"
+    },
+    {
+      "id": "region-242/unit-0",
+      "label": "FinishTerrainQueue",
+      "offset": 117085,
+      "length": 16,
+      "area": "B04"
+    },
+    {
+      "id": "region-242/unit-1",
+      "label": "CheckTerrainColumnBounds",
+      "offset": 117101,
+      "length": 13,
+      "area": "B04"
+    },
+    {
+      "id": "region-1263/unit-0",
+      "label": "TerrainDirectionAndRowSteps",
+      "offset": 117114,
+      "length": 12,
+      "area": "B04"
+    },
+    {
+      "id": "region-1200/unit-0",
+      "label": "AnimateVerticalRoomTransition",
+      "offset": 117126,
+      "length": 39,
+      "area": "B04"
+    },
+    {
+      "id": "region-1200/unit-1",
+      "label": "VerticalTransitionTick",
+      "offset": 117165,
+      "length": 69,
+      "area": "B04"
+    },
+    {
+      "id": "region-1200/unit-2",
+      "label": "DispatchVerticalTransitionPhase",
+      "offset": 117234,
+      "length": 25,
+      "area": "B04"
+    },
+    {
+      "id": "region-1295/unit-0",
+      "label": "AfterVerticalTransitionPhase",
+      "offset": 117259,
+      "length": 47,
+      "area": "B04"
+    },
+    {
+      "id": "region-1264/unit-0",
+      "label": "VerticalScrollPhasePointers",
+      "offset": 117306,
+      "length": 32,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-0",
+      "label": "VerticalPhaseBuildRoomRow",
+      "offset": 117338,
+      "length": 4,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-1",
+      "label": "VerticalPhaseCopyStagedRows",
+      "offset": 117342,
+      "length": 61,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-2",
+      "label": "VerticalPhaseWrapBoundary",
+      "offset": 117403,
+      "length": 22,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-3",
+      "label": "BuildVerticalTransitionRows",
+      "offset": 117425,
+      "length": 33,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-4",
+      "label": "CopyVerticalTileGroup",
+      "offset": 117458,
+      "length": 40,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-5",
+      "label": "MergeVerticalRowAttributes",
+      "offset": 117498,
+      "length": 52,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-6",
+      "label": "SetVerticalRowUploadAddresses",
+      "offset": 117550,
+      "length": 60,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-7",
+      "label": "VerticalPhaseNextRoom",
+      "offset": 117610,
+      "length": 20,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-8",
+      "label": "VerticalPhasePreviousRoom",
+      "offset": 117630,
+      "length": 38,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-9",
+      "label": "BuildVerticalNeighborColumns",
+      "offset": 117668,
+      "length": 95,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-10",
+      "label": "SetNeighborColumnUploadAddresses",
+      "offset": 117763,
+      "length": 92,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-11",
+      "label": "TrimVerticalQueueAtRowSeven",
+      "offset": 117855,
+      "length": 25,
+      "area": "B04"
+    },
+    {
+      "id": "region-1296/unit-12",
+      "label": "TrimVerticalQueueAtRowOne",
+      "offset": 117880,
+      "length": 29,
+      "area": "B04"
+    },
+    {
+      "id": "region-1265/unit-0",
+      "label": "VerticalScrollParameters",
+      "offset": 117909,
+      "length": 56,
+      "area": "B04"
+    },
+    {
+      "id": "region-243/unit-0",
+      "label": "ExpandTerrainBlock",
+      "offset": 117965,
+      "length": 27,
+      "area": "B04"
+    },
+    {
+      "id": "region-244/unit-0",
+      "label": "PrepareTerrainExpansion",
+      "offset": 117992,
+      "length": 15,
+      "area": "B04"
+    },
+    {
+      "id": "region-245/unit-0",
+      "label": "DecodeTerrainQuadrant",
+      "offset": 118007,
+      "length": 79,
+      "area": "B04"
+    },
+    {
+      "id": "region-246/unit-0",
+      "label": "TerrainStageThreeOverride",
+      "offset": 118086,
+      "length": 26,
+      "area": "B04"
+    },
+    {
+      "id": "region-247/unit-0",
+      "label": "TerrainStageFourOverrideGate",
+      "offset": 118112,
+      "length": 4,
+      "area": "B04"
+    },
+    {
+      "id": "region-248/unit-0",
+      "label": "TerrainStageFourOverride",
+      "offset": 118116,
+      "length": 42,
+      "area": "B04"
+    },
+    {
+      "id": "region-249/unit-0",
+      "label": "StoreExpandedTerrain",
+      "offset": 118158,
+      "length": 49,
+      "area": "B04"
+    },
+    {
+      "id": "region-249/unit-1",
+      "label": "SelectTerrainLayoutBank",
+      "offset": 118207,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-250/unit-0",
+      "label": "ResolveTerrainBlockPointer",
+      "offset": 118212,
+      "length": 46,
+      "area": "B04"
+    },
+    {
+      "id": "region-251/unit-0",
+      "label": "ReadTerrainCell",
+      "offset": 118258,
+      "length": 12,
+      "area": "B04"
+    },
+    {
+      "id": "region-252/unit-0",
+      "label": "FlattenTerrainRoomRow",
+      "offset": 118270,
+      "length": 6,
+      "area": "B04"
+    },
+    {
+      "id": "region-253/unit-0",
+      "label": "ResolveTerrainCellCoordinates",
+      "offset": 118276,
+      "length": 21,
+      "area": "B04"
+    },
+    {
+      "id": "region-254/unit-0",
+      "label": "ReadTerrainCellAndRestoreBank",
+      "offset": 118297,
+      "length": 18,
+      "area": "B04"
+    },
+    {
+      "id": "region-255/unit-0",
+      "label": "ReturnTerrainCell",
+      "offset": 118315,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-617/unit-0",
+      "label": "TerrainBitmapAndQuadrantMasks_1CE30",
+      "offset": 118320,
+      "length": 12,
+      "area": "B04"
+    },
+    {
+      "id": "region-256/unit-0",
+      "label": "ResolveRoomPayloadPointer",
+      "offset": 118332,
+      "length": 43,
+      "area": "B04"
+    },
+    {
+      "id": "region-618/unit-0",
+      "label": "StageRoomLayoutLists_1CE67",
+      "offset": 118375,
+      "length": 316,
+      "area": "B04"
+    },
+    {
+      "id": "region-394/unit-0",
+      "label": "UpdateCameraMode",
+      "offset": 126962,
+      "length": 6,
+      "area": "B04"
+    },
+    {
+      "id": "region-395/unit-0",
+      "label": "AutomaticCameraMotion",
+      "offset": 126968,
+      "length": 95,
+      "area": "B04"
+    },
+    {
+      "id": "region-396/unit-0",
+      "label": "MeasurePlayerCameraOffset",
+      "offset": 127063,
+      "length": 25,
+      "area": "B04"
+    },
+    {
+      "id": "region-397/unit-0",
+      "label": "CameraNegativeDirection",
+      "offset": 127088,
+      "length": 6,
+      "area": "B04"
+    },
+    {
+      "id": "region-398/unit-0",
+      "label": "CameraPositiveBoundary",
+      "offset": 127094,
+      "length": 26,
+      "area": "B04"
+    },
+    {
+      "id": "region-399/unit-0",
+      "label": "ClampCameraBoundary",
+      "offset": 127120,
+      "length": 20,
+      "area": "B04"
+    },
+    {
+      "id": "region-1238/unit-0",
+      "label": "ClampCameraAtMissingRoom",
+      "offset": 127140,
+      "length": 33,
+      "area": "B04"
+    },
+    {
+      "id": "region-400/unit-0",
+      "label": "CommitCameraPosition",
+      "offset": 127173,
+      "length": 15,
+      "area": "B04"
+    },
+    {
+      "id": "region-400/unit-1",
+      "label": "ComputeCameraPosition",
+      "offset": 127188,
+      "length": 29,
+      "area": "B04"
+    },
+    {
+      "id": "region-1283/unit-0",
+      "label": "CameraEdgeAdjustmentData",
+      "offset": 127217,
+      "length": 23,
+      "area": "B04"
+    },
+    {
+      "id": "region-428/unit-0",
+      "label": "ReplaceTerrainForActor",
+      "offset": 128232,
+      "length": 41,
+      "area": "B04"
+    },
+    {
+      "id": "region-429/unit-0",
+      "label": "RestoreTerrainChangeRegisters",
+      "offset": 128273,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-430/unit-0",
+      "label": "ReplaceTerrainActorGate",
+      "offset": 128278,
+      "length": 22,
+      "area": "B04"
+    },
+    {
+      "id": "region-431/unit-0",
+      "label": "ReplaceTerrainActorGate",
+      "offset": 128278,
+      "length": 22,
+      "area": "B04"
+    },
+    {
+      "id": "region-1247/unit-0",
+      "label": "InitializeTerrainReplacementReward",
+      "offset": 128300,
+      "length": 53,
+      "area": "B04"
+    },
+    {
+      "id": "region-432/unit-0",
+      "label": "ReplaceTerrainFromActorState",
+      "offset": 128353,
+      "length": 30,
+      "area": "B04"
+    },
+    {
+      "id": "region-433/unit-0",
+      "label": "RestoreTerrainChangeCaller",
+      "offset": 128383,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-434/unit-0",
+      "label": "BuildChangedTerrainRecord",
+      "offset": 128388,
+      "length": 146,
+      "area": "B04"
+    },
+    {
+      "id": "region-435/unit-0",
+      "label": "MergeChangedTerrainAttributes",
+      "offset": 128534,
+      "length": 64,
+      "area": "B04"
+    },
+    {
+      "id": "region-1248/unit-0",
+      "label": "PreserveTerrainAttributeHighNibble",
+      "offset": 128598,
+      "length": 2,
+      "area": "B04"
+    },
+    {
+      "id": "region-436/unit-0",
+      "label": "FinishChangedTerrainRecord",
+      "offset": 128600,
+      "length": 11,
+      "area": "B04"
+    },
+    {
+      "id": "region-1286/unit-0",
+      "label": "TerrainReplacementLookupData",
+      "offset": 128611,
+      "length": 68,
+      "area": "B04"
+    },
+    {
+      "id": "region-437/unit-0",
+      "label": "SelectChangedTerrainBank",
+      "offset": 128679,
+      "length": 5,
+      "area": "B04"
+    },
+    {
+      "id": "region-438/unit-0",
+      "label": "CopyChangedTerrainTiles",
+      "offset": 128684,
+      "length": 33,
+      "area": "B04"
+    }
+  ],
+  "suffix_notes": [
+    {
+      "range": "0x13850..0x13898",
+      "ledger_ids": [
+        "region-462",
+        "region-499",
+        "region-463"
+      ],
+      "finding": "after the consumer-bounded200x72 room span; preserve containing named raw asset records, do not invent room201. No executable consumer is asserted for this suffix. Not an implementation exclusion."
+    }
+  ],
+  "cross_area_callers": {
+    "B02": "named raw resources/catalogs/full terrain banks0..3",
+    "B03": "primary/secondary writes, upload commit, split raster",
+    "B01": "atomic interrupt-before-foreground/yield boundaries",
+    "B05": "collision cache, descriptor read preserving caller resources",
+    "B06": "vertical eligibility/room commit/player field indexing",
+    "B08": "once-per-frame terrain object gates, recovery actor behavior",
+    "B10": "highest-free pool/suppression/spawn window/particles",
+    "B13": "stage/checkpoint controls, previous camera after spawn update",
+    "B15": "dialogue reveal collision clears and burst triggers",
+    "B16": "scene resource contexts and world row building",
+    "B17": "ending selector9 context and race world construction"
+  }
+}

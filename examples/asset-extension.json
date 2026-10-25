@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "level-01",
+      "file": "levels/replacement-01.json"
+    },
+    {
+      "id": "level-16",
+      "file": "levels/new-16.json"
+    }
+  ],
+  "order": []
+}

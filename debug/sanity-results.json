@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "status": "passed",
+  "checks": [
+    {
+      "id": "fidelity-title",
+      "status": "passed",
+      "machine": "debug/artifacts/fresh-sanity-001/fidelity-title/result.json",
+      "review": "debug/artifacts/fresh-sanity-001/fidelity-title/presentation-review.json"
+    },
+    {
+      "id": "fidelity-amazon-motion",
+      "status": "passed",
+      "machine": "debug/artifacts/fresh-sanity-motion-002/fidelity-amazon-motion/result.json",
+      "review": "debug/artifacts/fresh-sanity-motion-002/fidelity-amazon-motion/presentation-review.json"
+    }
+  ],
+  "report": "debug/sanity-review.md",
+  "fresh_execution_required": true,
+  "superseded_attempts": [
+    {
+      "path": "debug/artifacts/fresh-sanity-001/fidelity-amazon-motion/result.json",
+      "reason": "New scenario used obsolete observation field camera_x; corrected to world.camera.x, reran only affected sanity case. No game change."
+    }
+  ]
+}

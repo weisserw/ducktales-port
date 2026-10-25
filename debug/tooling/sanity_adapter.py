@@ -1,0 +1,5 @@
+"""Explicitly opted-in original-fidelity suite; gameplay never imports this."""
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scenarios'))
+from sanity import run
