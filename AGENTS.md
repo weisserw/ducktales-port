@@ -5,8 +5,6 @@ selects the workflow; this file does not start or resume a goal.
 
 - Use Rust 1.90.0 and Cargo.lock. Do not launch desktop graphics on this
   headless server; compile desktop code without opening a window.
-- Never download or commit commercial ROMs or extracted assets. Keep ROMs,
-  restored source/assets, build products and generated comparisons local.
 - Preserve reference/, review/toolkit-before/, original ledger identities,
   deployment backups and unrelated existing changes. Keep QA records separate
   from implementation accounting and preserve superseded records.
