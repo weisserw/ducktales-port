@@ -292,7 +292,8 @@ impl Tasks {
             };
             let step = match work {
                 finale::EndingWork::TransferValues => {
-                    self.transfer(core, services, status::TransferLayout::Stage)
+                    // E1B7 calls FFC7 before building ending scenes: use the HUD.
+                    self.transfer(core, services, status::TransferLayout::Selection)
                 }
                 finale::EndingWork::Wait(count) => self.wait(WaitOwner::EndingDelay, count),
                 finale::EndingWork::StageAudio(command) => {

@@ -75,7 +75,9 @@ pub enum Cost {
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum TransferLayout {
+    /// D8D9: full-screen land-clear/value scene (220A/226B).
     Stage,
+    /// FFC7: gameplay HUD, used before ending scenes are loaded (206C/2043).
     Selection,
 }
 #[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]

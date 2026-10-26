@@ -320,7 +320,8 @@ impl Tasks {
             O::FadeIn => return self.fade(services, presentation::FadeDirection::In),
             O::FadeOut => return self.fade(services, presentation::FadeDirection::Out),
             O::TransferDisplayedValue => {
-                return self.transfer(core, services, status::TransferLayout::Selection);
+                // D6B1 calls D8D9: the central land-clear scene counters.
+                return self.transfer(core, services, status::TransferLayout::Stage);
             }
             O::CompletionActor => return self.completion(core, services),
             O::EnterStageRuntime => return self.initial(core, services),
@@ -1284,6 +1285,88 @@ mod tests {
         let overrides = MemoryAssets::default();
         let assets = crate::assets::Assets::load(&rom, &overrides).unwrap();
         Services::new(super::super::content::Content::load(&rom, &assets, &overrides).unwrap())
+    }
+    #[test]
+    fn land_clear_transfer_updates_scene_money_fields_without_overwriting_hud_positions() {
+        let mut services = services();
+        let mut core = Core::reset();
+        let mut tasks = Tasks::default();
+        let mut menu = Menu::title();
+        core.status.reward = [status::BLANK, status::BLANK, status::BLANK, 2, 0, 0].into();
+        core.status.total = [status::BLANK; 7].into();
+        // D6B1 calls D8D9: scene total220A/source226B, not HUD206C/2043.
+        services.video.write_direct(0x206c, 0xaa);
+        services.video.write_direct(0x2043, 0xbb);
+        for address in 0x226c..=0x2271 {
+            services.video.write_direct(address, 0x11);
+        }
+        assert_eq!(
+            tasks.selection(
+                selection::Operation::TransferDisplayedValue,
+                &mut menu,
+                &mut core,
+                &mut services
+            ),
+            OwnerStep::Complete(())
+        );
+        services
+            .video
+            .display
+            .commit_primary(presentation::Stride::Across);
+        services.video.commit_writes();
+        let tiles = |start, count| {
+            (start..start + count)
+                .map(|address| services.video.memory.read(address))
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(
+            tiles(0x226c, 6),
+            vec![status::BLANK; 6],
+            "depleted LAND MONEY digits must be cleared in the central screen"
+        );
+        assert_eq!(tiles(0x220b, 7), core.status.total.display_codes());
+        assert_eq!(
+            services.video.memory.read(0x206c),
+            0xaa,
+            "land-clear transfer must not overwrite the top border"
+        );
+        assert_eq!(services.video.memory.read(0x2043), 0xbb);
+        assert_eq!(
+            core.status.reward.display_codes(),
+            [status::BLANK, status::BLANK, status::BLANK, 2, 0, 0]
+        );
+    }
+    #[test]
+    fn ending_transfer_uses_hud_money_fields_before_loading_ending_scenes() {
+        let mut services = services();
+        let mut core = Core::reset();
+        let mut tasks = Tasks::default();
+        core.progression.ending_latch = 1;
+        core.status.reward = [status::BLANK, status::BLANK, status::BLANK, 2, 0, 0].into();
+        core.status.total = [status::BLANK; 7].into();
+        services.video.write_direct(0x220a, 0xaa);
+        services.video.write_direct(0x226b, 0xbb);
+        for address in 0x2044..=0x2049 {
+            services.video.write_direct(address, 0x11);
+        }
+        // E1B7 calls FFC7 before building ending scenes: HUD206C/2043.
+        assert_eq!(tasks.ending(&mut core, &mut services), OwnerStep::Suspended);
+        services
+            .video
+            .display
+            .commit_primary(presentation::Stride::Across);
+        services.video.commit_writes();
+        for address in 0x2044..=0x2049 {
+            assert_eq!(services.video.memory.read(address), status::BLANK);
+        }
+        assert_eq!(
+            (0x206d..=0x2073)
+                .map(|address| services.video.memory.read(address))
+                .collect::<Vec<_>>(),
+            core.status.total.display_codes()
+        );
+        assert_eq!(services.video.memory.read(0x220a), 0xaa);
+        assert_eq!(services.video.memory.read(0x226b), 0xbb);
     }
     #[test]
     fn status_stream_owner_waits_after_every_original_row_and_preserves_secondary_bytes() {

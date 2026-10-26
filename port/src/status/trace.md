@@ -315,3 +315,32 @@ both results; prior evidence remains preserved. B01 yield saves producer X and
 restores it AFTER controller sampling, so acknowledgment retries retain the fact.
 No register map, second implementation or live game logic was added. Details/
 checks and43 B12 source contracts are linked in planning/contracts/B12.md.
+
+## Land-clear money display routing (2026-10-26)
+
+The live menu caller in StageSelectCompletionPresentation (bank7 D6A9 path)
+invokes D8D9 TransferDisplayedValueToTotal, whose destinations are220A(total)
+and226B(source) in the central land-clear screen. Ending E1B7 instead invokes
+FFC7 PrepareValueTransferDestinations, which selects206C/2043 in the existing
+HUD before any ending scene is built. The game adapters had these two layouts
+reversed despite the independently correct B14 transfer arithmetic/encoders.
+A local post-clear reproduction left the central source display untouched and
+wrote transfer tiles into the upper selection-screen border. Before captures
+are retained under debug/artifacts/graphics-money-001/.
+
+Regression coverage exercises each actual caller through the committed primary
+video queue, checks cleared source digits and updated total in its intended
+screen locations, and preserves sentinel tiles at the other layout's addresses.
+This is caller routing; the source working-copy, batched transfer, persistent
+reward, saturation and acknowledgment rules remain as previously traced.
+
+The two new actual-caller regressions fail before the routing repair (central
+source tiles unchanged; ending total not written to the HUD). After repair all
+1470 locked Rust1.90 release library tests pass. Strict all-target desktop Clippy,
+formatting and whitespace checks pass; no desktop window was opened. Static
+Wasm build passes. The same synthetic post-clear fixture in the rebuilt Wasm
+clears226C..2271 to six blank24 tiles and renders the central total correctly
+with the upper map/monitor border intact. Before/after native frame captures,
+fixture states and test/lint logs remain local in
+ debug/artifacts/graphics-money-001/ (after/ contains corrected frames).
+These are focused implementation checks, not a fresh whole-game QA pass.
