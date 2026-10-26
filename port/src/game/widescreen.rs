@@ -263,6 +263,55 @@ impl TerrainView {
     }
 }
 impl Video {
+    /// Native actor pixels use their gameplay patterns on both sides of the
+    /// HUD split. Eligibility, flashing and top clipping were applied at emit.
+    fn native_sprite_line(
+        &self,
+        y: u32,
+        control: u8,
+    ) -> [Option<ppu::SpritePixel>; config::SIZE.0 as usize] {
+        let mut sprites = [None; config::SIZE.0 as usize];
+        for sprite in &self.committed_wide_sprites {
+            let height = if control & 0x20 != 0 { 16 } else { 8 };
+            let dy = y as i32 - i32::from(sprite.y) - 1;
+            if !(0..height).contains(&dy) {
+                continue;
+            }
+            let row = if sprite.attributes & 0x80 != 0 {
+                height - 1 - dy
+            } else {
+                dy
+            } as usize;
+            let (tile, table) = if height == 16 {
+                (
+                    (sprite.tile & 0xfe) + (row / 8) as u8,
+                    usize::from(sprite.tile & 1) * 4096,
+                )
+            } else {
+                (sprite.tile, if control & 8 != 0 { 4096 } else { 0 })
+            };
+            for dx in 0..8 {
+                let x = i32::from(sprite.x) + dx;
+                if !(0..config::SIZE.0 as i32).contains(&x) || sprites[x as usize].is_some() {
+                    continue;
+                }
+                let px = if sprite.attributes & 0x40 != 0 {
+                    7 - dx
+                } else {
+                    dx
+                } as usize;
+                let index = pattern(&self.memory, tile, table, px, row % 8);
+                if index != 0 {
+                    sprites[x as usize] = Some(ppu::SpritePixel {
+                        palette: 16 + (sprite.attributes & 3) * 4 + index,
+                        behind_background: sprite.attributes & 0x20 != 0,
+                        sprite_zero: false,
+                    });
+                }
+            }
+        }
+        sprites
+    }
     pub fn hide_sprites(&mut self) {
         self.composition.hide(self.gameplay_display != 0);
         self.wide_sprites.clear();
@@ -300,6 +349,27 @@ impl Video {
                         source.pixels[at..at + 4].try_into().unwrap(),
                     );
                 }
+                if wide {
+                    // HUD suppression is still owned by Composition::begin.
+                    // Eligible gameplay pieces, especially Scrooge, draw in
+                    // front of this UI band even when marked behind terrain.
+                    let control = self
+                        .raster
+                        .playfield_control
+                        .unwrap_or(self.raster.ui_control);
+                    let mask = self.raster.playfield_mask;
+                    for (x, sprite) in self.native_sprite_line(y, control).into_iter().enumerate() {
+                        let pixel = ppu::compose(0, sprite, x as u16, mask);
+                        if pixel.palette != 0 {
+                            let color = ppu::color(
+                                &config::NES_RGB,
+                                self.memory.read(0x3f00 + u16::from(pixel.palette)),
+                                mask,
+                            );
+                            frame.pixel(x as i32, y as i32, color);
+                        }
+                    }
+                }
                 continue;
             }
             let control = self
@@ -317,47 +387,7 @@ impl Video {
             } else {
                 i32::from(self.raster.playfield_scroll.unwrap().1) + y as i32
             };
-            // Sprite-zero-free native line, with no eight-sprites-per-line cap.
-            let mut sprites = vec![None; config::SIZE.0 as usize];
-            for sprite in &self.committed_wide_sprites {
-                let height = if control & 0x20 != 0 { 16 } else { 8 };
-                let dy = y as i32 - i32::from(sprite.y) - 1;
-                if !(0..height).contains(&dy) {
-                    continue;
-                }
-                let row = if sprite.attributes & 0x80 != 0 {
-                    height - 1 - dy
-                } else {
-                    dy
-                } as usize;
-                let (tile, table) = if height == 16 {
-                    (
-                        (sprite.tile & 0xfe) + (row / 8) as u8,
-                        usize::from(sprite.tile & 1) * 4096,
-                    )
-                } else {
-                    (sprite.tile, if control & 8 != 0 { 4096 } else { 0 })
-                };
-                for dx in 0..8 {
-                    let x = i32::from(sprite.x) + dx;
-                    if !(0..config::SIZE.0 as i32).contains(&x) || sprites[x as usize].is_some() {
-                        continue;
-                    }
-                    let px = if sprite.attributes & 0x40 != 0 {
-                        7 - dx
-                    } else {
-                        dx
-                    } as usize;
-                    let index = pattern(&self.memory, tile, table, px, row % 8);
-                    if index != 0 {
-                        sprites[x as usize] = Some(ppu::SpritePixel {
-                            palette: 16 + (sprite.attributes & 3) * 4 + index,
-                            behind_background: sprite.attributes & 0x20 != 0,
-                            sprite_zero: false,
-                        });
-                    }
-                }
-            }
+            let sprites = self.native_sprite_line(y, control);
             for x in 0..config::SIZE.0 {
                 let wx = self.wide_terrain.left + x as i32;
                 let bg = self.wide_terrain.pixel(
@@ -594,6 +624,99 @@ mod tests {
             );
             assert_eq!(&frame.pixels[..4], &[0, 0, 0, 255]);
         }
+    }
+    #[test]
+    fn player_crosses_the_hud_in_front_without_changing_terrain_priority() {
+        let mut video = Video::reset();
+        // HUD patterns live in a different table from gameplay sprites.
+        video.memory.chr[0x1000 + 16..0x1000 + 24].fill(255);
+        video.memory.chr[16..24].fill(255);
+        video.memory.chr[32..40].fill(0xf0); // Half-opaque player piece.
+        video.memory.chr[48..56].fill(255); // Split marker.
+        video.memory.nametables.fill(1);
+        video.memory.palette[1] = 1;
+        video.memory.palette[17] = 2;
+        video.raster.ui_control = 0x10;
+        video.raster.ui_mask = 0x1e;
+        video.raster.playfield_mask = 0x1e;
+        video.raster.playfield_scroll = Some((0, 0));
+        video.raster.playfield_control = Some(0);
+        video.committed_oam[0] = presentation::Sprite {
+            x: 8,
+            y: 44,
+            tile: 3,
+            attributes: 0x20,
+        };
+        video.committed_wide_gameplay = true;
+        video.wide_terrain.rooms = (0..2)
+            .map(|page| RoomView {
+                page,
+                row: 0,
+                tiles: vec![1; 32 * 30],
+                attributes: vec![0; 64],
+            })
+            .collect();
+        let mut background = Frame::new(config::SIZE.0, config::SIZE.1).unwrap();
+        video.render(&mut background);
+        let player = ActorVisual {
+            screen_x: 80,
+            screen_y: 42,
+            ..Default::default()
+        };
+        let fg = ppu::color(&config::NES_RGB, 2, 0x1e);
+        let width = config::SIZE.0 as usize;
+        for attributes in [0, 0x20, 0x40, 0x60] {
+            let piece = Composite {
+                pieces: vec![presentation::Piece {
+                    tile: 2,
+                    attributes,
+                    dx: 0,
+                    dy: 0,
+                }],
+            };
+            video.committed_wide_sprites.clear();
+            emit(&mut video.committed_wide_sprites, 0, &player, &piece);
+            let mut frame = background.clone();
+            video.render(&mut frame);
+            let opaque_x = if attributes & 0x40 == 0 { 80 } else { 84 };
+            let transparent_x = if attributes & 0x40 == 0 { 84 } else { 80 };
+            for y in 43..=50 {
+                let at = (y * width + opaque_x) * 4;
+                if y < 45 || attributes & 0x20 == 0 {
+                    assert_eq!(
+                        &frame.pixels[at..at + 4],
+                        &fg,
+                        "row {y}, attributes {attributes}"
+                    );
+                } else {
+                    assert_eq!(&frame.pixels[at..at + 4], &background.pixels[at..at + 4]);
+                }
+                let at = (y * width + transparent_x) * 4;
+                assert_eq!(&frame.pixels[at..at + 4], &background.pixels[at..at + 4]);
+            }
+            // A hidden sprite mask still suppresses the foreground.
+            video.raster.playfield_mask = 0x0e;
+            video.render(&mut frame);
+            let at = (43 * width + opaque_x) * 4;
+            assert_eq!(&frame.pixels[at..at + 4], &background.pixels[at..at + 4]);
+            video.raster.playfield_mask = 0x1e;
+            // Other actors retain their original top-of-screen eligibility.
+            let mut ordinary = Vec::new();
+            emit(&mut ordinary, 1, &player, &piece);
+            assert!(ordinary.is_empty());
+        }
+        video.committed_wide_gameplay = false;
+        let mut source = Frame::new(config::SOURCE_SIZE.0, config::SOURCE_SIZE.1).unwrap();
+        video.render_source(&mut source, false);
+        let mut frame = background.clone();
+        video.render(&mut frame);
+        let at = (43 * width + 80) * 4;
+        let source_at =
+            (43 * config::SOURCE_SIZE.0 as usize + 80 - config::SIDE_PIXELS as usize) * 4;
+        assert_eq!(
+            &frame.pixels[at..at + 4],
+            &source.pixels[source_at..source_at + 4]
+        );
     }
     #[test]
     fn wide_projection_keeps_signed_coordinates_and_culls_at_the_new_edges() {

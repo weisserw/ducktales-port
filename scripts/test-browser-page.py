@@ -24,7 +24,7 @@ try:
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.goto(f'http://127.0.0.1:{server.server_port}/')
         page.wait_for_function("!document.getElementById('start').disabled")
-        assert page.locator('h1 + p').inner_text() == ('This is a native recompilation of the original game in Rust, running in WebAssembly. You must click the Start button below to start the game engine and enable audio and input in the browser.')
+        assert page.locator('h1 + p').inner_text() == ('This is a native recompilation of the original game in Rust, running in WebAssembly. The game has been modified to use a widescreen aspect ratio. You must click the Start button below to start the game engine and enable audio and input in the browser.')
         assert page.locator('#pause + #reset').inner_text() == 'Reset (F3)'
         assert page.locator('#shortcuts').count() == 0
         for index, name in enumerate(['start','pause','reset','save-state','restore-state','settings'],1):
@@ -60,7 +60,7 @@ try:
         assert page.locator('#preferences').is_visible()
         assert page.locator('#width').count() == 0
         page.locator('#height').fill('360')
-        page.locator('#integer_scale').uncheck()
+        assert page.locator('#integer_scale').count() == 0
         page.locator('#volume').fill('0.3')
         page.locator('#fullscreen').check()
         page.click('button[type=submit]')

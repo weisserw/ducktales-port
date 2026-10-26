@@ -71,7 +71,7 @@ small.binding-hint{display:block;font-size:11px;line-height:1.7;color:var(--mute
 <main class="app">
 <header class="masthead">
 <h1 id="title">DuckTales</h1>
-<p>This is a native recompilation of the original game in Rust, running in WebAssembly. You must click the Start button below to start the game engine and enable audio and input in the browser.</p>
+<p>This is a native recompilation of the original game in Rust, running in WebAssembly. The game has been modified to use a widescreen aspect ratio. You must click the Start button below to start the game engine and enable audio and input in the browser.</p>
 <p class="source-link"><a href="https://github.com/weisserw/ducktales-port" target="_blank" rel="noopener noreferrer">View the source code on GitHub ↗</a></p>
 </header>
 <section aria-label="Game player">
@@ -101,7 +101,6 @@ small.binding-hint{display:block;font-size:11px;line-height:1.7;color:var(--mute
 <fieldset><legend>Display</legend><div class="settings-grid">
 <label>Height <input id="height" type="number" min="144" max="4608"></label><p class="aspect-note">16:9 display<span>Width adjusts automatically.</span></p>
 </div><div class="display-switches">
-<label><input id="integer_scale" type="checkbox">Integer scale</label>
 <label><input id="fullscreen" type="checkbox">Fullscreen</label>
 </div></fieldset>
 <fieldset id="players"><legend>Controller assignment (keyboard also controls player 1)</legend></fieldset>

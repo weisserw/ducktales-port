@@ -57,8 +57,7 @@ function draw() {
   const canvas=$('screen');canvas.width=game.width();canvas.height=game.height();
   canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(game.pixels()),canvas.width,canvas.height),0,0);
   // Height controls the presentation of the native gameplay viewport.
-  const factor=settings.height/canvas.height;
-  const height=(settings.integer_scale && factor>=1?Math.floor(factor):factor)*canvas.height;
+  const height=settings.height;
   const displayHeight=document.fullscreenElement=== $('game-panel')?Math.min(height,innerHeight):height;
   canvas.style.width=`${displayHeight*game.display_aspect()}px`;canvas.style.height='auto';
 }
@@ -117,14 +116,14 @@ function bind(binding) {
 function preferences() {
   if(!game)return;pause();draft={settings:structuredClone(settings),assignments:[...assignments]};
   for(const key of ['volume','dead_zone','height'])$(key).value=settings[key];
-  for(const key of ['integer_scale','fullscreen'])$(key).checked=settings[key];
+  $('fullscreen').checked=settings.fullscreen;
   controllerOptions();bindings();$('preferences').showModal();
 }
 $('options').onsubmit=async event=>{
   event.preventDefault();
   try{
     for(const key of ['volume','dead_zone','height'])draft.settings[key]=Number($(key).value);
-    for(const key of ['integer_scale','fullscreen'])draft.settings[key]=$(key).checked;
+    draft.settings.fullscreen=$('fullscreen').checked;
     draft.settings.width=Math.round(draft.settings.height*game.display_aspect());
     const explicit=draft.assignments.filter(id=>id!=='auto' && id!=='none');
     if(new Set(explicit).size!==explicit.length)throw new Error('Assign each controller to only one player');

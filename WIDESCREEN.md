@@ -60,3 +60,15 @@ gameplay/snapshot continuation, and headless browser layout/storage checks pass.
 A real browser capture displays 341×240 at 960×540, measuring pixel aspect
 1.25122 against the original 1.25 (whole-column rounding). Capture and logs are
 in `checks/widescreen-proportions/`. The HUD boundary correction remains active.
+
+HUD foreground follow-up: eligible native gameplay sprites now draw across the
+HUD boundary, using the same sprite patterns and viewport coordinates on both
+sides. Scrooge draws in front of the HUD; background priority below the split and
+the existing HUD-data suppression rules remain intact. Native tests cover opaque
+and transparent pixels, flipping, masking, ordinary-actor eligibility, terrain
+priority and non-gameplay framing. All 1,485 game tests and desktop-feature
+clippy pass. The rebuilt real Wasm regression reproduces the old failure and now
+shows 314 Scrooge foreground pixels above the HUD after a raised-snapshot fixture
+and four normal ticks. The headless browser capture shows him crossing the split.
+Build, test and capture records are in `checks/hud-player-foreground/`, separate
+from QA acceptance. Nothing was committed or published.

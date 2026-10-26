@@ -35,4 +35,34 @@ for(let i=0;i<90;i++) {
 }
 assert.equal(restored.snapshot_json(),game.snapshot_json());
 console.log(`PASS: real 341x240 Wasm gameplay, 16:9 display, terrain at both edges, committed sprites and 90 deterministic frame/audio continuations (${((performance.now()-begin)/180).toFixed(1)} ms/update)`);
-game.free();restored.free();
+// Reproduce Scrooge entering the HUD band using an otherwise real gameplay
+// snapshot. Let the normal compose/NMI path commit his new sprite positions.
+const raised=create();
+const high=JSON.parse(saved),highMachine=JSON.parse(high.game);
+highMachine.core.actors[0].position.screen_y=32;
+highMachine.core.actors[0].position.y_fraction=0;
+highMachine.core.actors[0].vertical_velocity=0;
+highMachine.core.player.action='Airborne';
+highMachine.core.player.protection=0;
+highMachine.core.player.special_mode=0;
+high.game=JSON.stringify(highMachine);
+raised.restore_snapshot_json(JSON.stringify(high));
+for(let i=0;i<4;i++){raised.advance(17,physical());raised.audio();}
+const raisedSave=JSON.parse(raised.snapshot_json()),raisedMachine=JSON.parse(raisedSave.game);
+assert.ok(raisedMachine.core.actors[0].position.screen_y<68);
+assert.equal(raisedMachine.services.video.committed_wide_gameplay,true);
+assert.ok(raisedMachine.services.video.committed_wide_sprites.some(sprite=>sprite.y<44));
+// Removing only native sprite drawing gives the exact HUD/background baseline.
+const hidden=create();
+raisedMachine.services.video.committed_wide_sprites=[];
+raisedSave.game=JSON.stringify(raisedMachine);
+hidden.restore_snapshot_json(JSON.stringify(raisedSave));
+const visible=raised.pixels(),background=hidden.pixels();
+let hudSpritePixels=0;
+for(let y=0;y<44;y++)for(let x=0;x<raised.width();x++) {
+ const at=(y*raised.width()+x)*4;
+ if(visible[at]!==background[at] || visible[at+1]!==background[at+1] || visible[at+2]!==background[at+2])hudSpritePixels++;
+}
+assert.ok(hudSpritePixels>0,'Scrooge must remain visible over the HUD');
+console.log(`PASS: real Wasm Scrooge sprite remains visible above the HUD split (${hudSpritePixels} foreground pixels)`);
+raised.free();hidden.free();game.free();restored.free();
