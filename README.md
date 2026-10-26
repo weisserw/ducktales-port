@@ -1,5 +1,7 @@
 # DuckTales native Rust port
 
+**[Play DuckTales in your browser](https://weisserw.github.io/ducktales-port/)**
+
 A shared native implementation of the original title, land selection, player and
 actor rules, maps, bosses, dialogue, special scenes, progression, ending and audio.
 Desktop, browser and headless/debug frontends use the same Game implementation.

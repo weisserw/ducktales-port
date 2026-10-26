@@ -47,6 +47,7 @@ try:
         assert page.locator('#game-overlay').is_visible()
         assert page.locator('#game-message').inner_text() == 'Paused — press Start to resume'
         assert page.locator('#status').is_hidden()
+        assert page.locator('.edition').count() == 0
         assert page.title() == 'DuckTales'
         assert page.locator('#title').inner_text() == 'DuckTales'
         page.keyboard.press('F1')
@@ -55,10 +56,15 @@ try:
         assert page.locator('#game-overlay').is_visible()
         page.keyboard.press('F6')
         assert page.locator('#preferences').is_visible()
+        assert page.locator('#width').count() == 0
+        page.locator('#height').fill('360')
+        page.locator('#integer_scale').uncheck()
         page.locator('#volume').fill('0.3')
         page.locator('#fullscreen').check()
         page.click('button[type=submit]')
         page.wait_for_function("document.fullscreenElement?.id==='game-panel' && document.getElementById('status').textContent==='Running'")
+        box = page.locator('#screen').bounding_box()
+        assert abs(box['height']-360)<1 and abs(box['width']-480)<1
         assert page.locator('#game-overlay').is_hidden()
         # Shortcuts remain accessible while page buttons are outside fullscreen.
         page.keyboard.press('F6')
@@ -86,6 +92,7 @@ try:
         box = page.locator('#screen').bounding_box()
         assert abs(box['x'] + box['width'] / 2 - 210) < 2
         assert box['width'] <= 420
+        assert abs(box['width']/box['height']-4/3)<.01
         assert not errors, errors
         browser.close()
         print('PASS: title casing, centered canvas, focus continuity, all toolbar shortcuts, fullscreen settings resume, Pause and Reset/restart')
