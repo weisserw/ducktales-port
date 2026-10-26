@@ -3,7 +3,7 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AssetId(pub String);
 /// Source StageIndex encoding. Exact alternate-route meanings await dispatch tracing.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct StageId(pub u8);
 /// Source ActorHandlerPointerLow/High selector; meanings remain source-label linked.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

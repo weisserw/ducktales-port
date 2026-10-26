@@ -18,13 +18,13 @@ pub const BANK_CPU_START: u16 = 0x8000;
 pub const HEADER_WORDS_PHYSICAL: usize = 0xca50;
 pub const DURATION_WORDS_PHYSICAL: usize = 0xc97b;
 pub const MIXED_PAYLOAD_PHYSICAL: std::ops::Range<usize> = 0xcac0..0xf110;
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ProducerComparison {
     BelowEmpty,
     Empty,
     AboveEmpty,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Submission {
     pub accepted: bool,
     pub comparison: ProducerComparison,
@@ -42,12 +42,14 @@ impl Submission {
         self.comparison != ProducerComparison::BelowEmpty
     }
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct CommandQueue {
+    #[serde(with = "crate::snapshot::array")]
     pub slots: [u8; QUEUE_SLOTS],
     pub producer: usize,
     pub consumer: usize,
     pub stage_command: u8,
+    #[serde(skip)]
     events: Option<crate::events::Events>,
 }
 // Equality describes source ring state, not an optional shared observer handle.
@@ -263,13 +265,13 @@ impl Catalog {
             .ok_or_else(|| anyhow::anyhow!("audio data address {address:04X} outside catalog"))
     }
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Envelope {
     pub interval: u8,
     pub counter: u8,
     pub step_level: u8,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Modulation {
     pub pitch_interval: u8,
     pub pitch_shape: u8,
@@ -282,7 +284,7 @@ pub struct Modulation {
     pub level_counter: u8,
     pub level: u8,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Primary {
     pub cursor: u16,
     pub duration: u16,
@@ -297,13 +299,13 @@ pub struct Primary {
     pub control: u8,
     pub envelope: Envelope,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Secondary {
     pub pitch_step: i8,
     pub period: u16,
     pub control: u8,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Channel {
     pub primary: Primary,
     pub secondary: Secondary,
@@ -355,7 +357,7 @@ pub struct RegisterWrite {
     pub address: u16,
     pub value: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SeedProducer {
     ResetZero,
     PrimaryCursor,
@@ -375,7 +377,7 @@ pub enum SeedProducer {
     PitchShape,
     NoiseMode,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct SeedSelector {
     pub selector: u8,
     pub producer: SeedProducer,
@@ -388,9 +390,10 @@ impl Default for SeedSelector {
         }
     }
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Driver {
     pub reset_selector: SeedSelector,
+    #[serde(with = "crate::snapshot::array")]
     pub channels: [Channel; CHANNELS],
     pub priority: u8,
     pub secondary_mask: u8,
@@ -1248,7 +1251,7 @@ impl Driver {
 }
 /// The APU is the toolkit's independent MIT mechanism. Driver calls schedule
 /// register changes; sample requests only advance sound clocks, never the driver.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Synthesizer {
     pub apu: Apu,
     pub elapsed_clocks: u64,

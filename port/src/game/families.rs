@@ -122,15 +122,12 @@ fn contact_player(
     contact::commit_player_contact(view, player);
     result
 }
-fn contact_actor(content: &Content, actors: &ActorPool, slot: usize) -> Option<usize> {
-    collision::solid_overlap(
-        slot,
-        actors,
-        &content.geometry,
-        collision::ContactAxis::Horizontal,
-    )
-    .map(|hit| hit.slot)
+fn contact_actor(content: &Content, actors: &mut ActorPool, slot: usize) -> Option<usize> {
+    // Bank06_TestActorActorOverlap marks enemies and changes the source's impact
+    // animation. The fixed-bank solid scan only handles terrain actors.
+    actors::actor_overlap(actors, slot, &content.spawns.extents)
 }
+
 fn horizontal(actors: &mut ActorPool, slot: usize, positive: bool) -> bool {
     let boundary = collision::integrate_horizontal(
         &mut actors[slot],
@@ -1134,6 +1131,89 @@ fn update_live_actor(
 mod tests {
     use super::super::simulation::Core;
     use super::*;
+    #[test]
+    fn moving_barrel_hits_transylvania_guard_and_starts_defeat_reaction() {
+        use crate::{identifiers::StageId, progression};
+        use romatlas_port::assets::{MemoryAssets, Rom};
+        let rom = Rom::from_bytes(
+            std::fs::read(concat!(env!("CARGO_MANIFEST_DIR"), "/../input/game.rom")).unwrap(),
+            crate::config::ROM_SHA256,
+        )
+        .unwrap();
+        let overrides = MemoryAssets::default();
+        let raw = crate::assets::Assets::load(&rom, &overrides).unwrap();
+        let mut content = Content::load(&rom, &raw, &overrides).unwrap();
+        // Isolate the actor impact from walls/floors. Keep original actor extents.
+        content
+            .geometry
+            .responses
+            .fill(collision::TerrainResponse::Pose);
+        let barrel = content.spawns.templates[7];
+        let guard = content.spawns.templates[36];
+        assert_eq!((barrel.animation, barrel.handler), (0x1a, 8));
+        assert_eq!((guard.animation, guard.handler), (0x38, 0x33));
+        let mut services = super::super::simulation::Services::new(content);
+        let content = std::sync::Arc::clone(&services.content);
+        let mut core = Core::reset();
+        core.progression.stage = StageId(1);
+        for (slot, template, handler) in [
+            (1, barrel, objects::MOVING_HANDLER),
+            (2, guard, guard.handler),
+        ] {
+            core.actors[slot] = actors::ActorContact {
+                control: actors::ActorControl::from_codes(0xa0, 0, 0, handler),
+                render: actors::VISIBLE,
+                handler,
+                animation: template.animation,
+                profile: template.profile,
+                position: collision::Position {
+                    world_x: 0x180,
+                    screen_y: 0x80,
+                    ..Default::default()
+                },
+                direction: 1,
+                motion_flags: 1,
+                ..Default::default()
+            };
+        }
+        core.actors[1].horizontal_magnitude = 0x200;
+        let (mut secondary_pending, mut guard_flag) = (0, 0);
+        update_actors(
+            &mut progression::Frame {
+                progression: &mut core.progression,
+                player: &mut core.player,
+                actors: &mut core.actors,
+                camera: &mut core.camera,
+                cache: &mut core.cache,
+                status: &mut core.status,
+                camera_displacement: &mut core.camera_displacement,
+                secondary_cursor: &mut core.secondary_cursor,
+                secondary_pending: &mut secondary_pending,
+                oam_guard: &mut guard_flag,
+                room_row: &mut core.row,
+                catalog: &content.progression,
+            },
+            &mut services,
+            &mut core.suppression,
+            &mut core.special_spawn,
+            core.layout,
+            core.terrain_bank,
+            &mut core.split_transition,
+            progression::FirstActorIncrement::Zero,
+        );
+        assert_eq!(
+            core.actors[1].handler, 0,
+            "barrel must break on enemy impact"
+        );
+        assert_eq!(core.actors[1].animation, actors::MARKED_CONTACT_ANIMATION);
+        assert_eq!(core.actors[2].hit_marker, 1);
+        assert_eq!(
+            core.actors[2].handler,
+            objects::LAUNCHED_HANDLER,
+            "guard must enter defeat trajectory"
+        );
+        assert_eq!(core.actors[2].profile, 0);
+    }
     #[test]
     fn player_collision_result_survives_approach_y_wrap_without_a_new_probe() {
         use romatlas_port::assets::{MemoryAssets, Rom};

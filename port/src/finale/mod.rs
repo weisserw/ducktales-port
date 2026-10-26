@@ -366,7 +366,7 @@ pub fn actor_step(
     }
     effects
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum RacePhase {
     #[default]
     Entry,
@@ -381,7 +381,7 @@ pub enum RacePhase {
     Spawn,
     Done,
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct RaceTerrain {
     pub phase: RacePhase,
 }
@@ -487,7 +487,7 @@ impl RaceTerrain {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum EndingPhase {
     #[default]
     Entry,
@@ -505,14 +505,14 @@ pub enum EndingPhase {
     Terminal,
 }
 /// Sequence-owned cursors, not duplicate scene content, progression or display.
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Ending {
     pub phase: EndingPhase,
     pub variation: u8,
     pub pauses_left: u8,
     pub split_delay: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum EndingWork {
     TransferValues,
     Wait(u16),

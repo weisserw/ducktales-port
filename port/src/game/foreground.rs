@@ -7,12 +7,12 @@ use crate::{
     progression::{self, OwnerStep, Work},
 };
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Request {
     Player,
     Owner(Work),
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Returned {
     Player(progression::PlayerReturn),
     Owner(Work),
@@ -21,7 +21,7 @@ pub enum Poll {
     Requested(Request),
     Frame(progression::FrameExit),
 }
-#[derive(Default, Clone)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Foreground {
     pending: Option<Request>,
     returned: Option<Returned>,

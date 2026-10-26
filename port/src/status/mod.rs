@@ -23,7 +23,7 @@ pub const STOP_STAGE_SOUND: u8 = 0xff;
 pub const OVERLAY_SEGMENTS: usize = 5;
 /// The paid dialogue's final leading-zero traversal, needed by the immediately
 /// following actor iteration. An existing blank is a nonzero stopping code.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum RewardPayment {
     Underfunded,
     FirstCodeNonzero,
@@ -51,7 +51,7 @@ pub enum TitleRule {
     OrdinaryDamage,
     AlternateRewards,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Status {
     pub reward: RewardMoney,
     pub total: TotalMoney,
@@ -78,7 +78,7 @@ pub enum TransferLayout {
     Stage,
     Selection,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct TransferSession {
     pub source: RewardMoney,
     pub started: bool,
@@ -94,7 +94,7 @@ pub struct TransferOutcome {
     pub wait_ticks: u16,
     pub upload: Option<Vec<u8>>,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ConversionPhase {
     Entry,
     AfterAudioWait,
@@ -332,7 +332,7 @@ pub struct StatusCatalog {
     pub payload_counts: Vec<Option<u8>>,
     pub payloads: Vec<Option<Vec<u8>>>,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct RowUpload {
     pub bytes: Vec<u8>,
     pub yield_after: bool,

@@ -61,7 +61,7 @@ pub const REWARD_HANDLER: u8 = 0x13;
 pub const SPECIAL_AUDIO: u8 = 0x0b;
 pub const GAMEPLAY_DISPLAY: u8 = 0x40;
 pub const ENDING_LAYOUT: u8 = 9;
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(u8)]
 pub enum Scene {
     OpeningFirst,
@@ -101,7 +101,7 @@ pub struct SpecialPlacement {
     pub handler: u8,
     pub profile: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SpecialRoom {
     Linked,
     RewardFlight,
@@ -288,7 +288,7 @@ pub fn initialize_special_actors(
     }
     _player.action = _definition.player_action;
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Integration {
     Gravity,
     SubtractY,
@@ -301,7 +301,7 @@ pub enum Integration {
 pub trait Motion {
     fn apply(&mut self, actor: &mut ActorContact, operation: Integration, gravity: u8) -> bool;
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum HandlerContinuation {
     #[default]
     Entry,
@@ -662,7 +662,7 @@ pub fn spawn_reward(
     };
     Some(selected)
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum CompletionPhase {
     Entry,
     Moving,
@@ -674,7 +674,7 @@ pub enum CompletionPhase {
     AwaitBlackWait,
     Done,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Completion {
     pub phase: CompletionPhase,
     pub flashes_left: u8,
@@ -795,7 +795,7 @@ pub enum OwnerResult {
     Running,
     Complete,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ContentPhase {
     Entry,
     FadeOut,
@@ -810,7 +810,7 @@ pub enum ContentPhase {
     FadeIn,
     Done,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Content {
     pub scene: Scene,
     pub phase: ContentPhase,
@@ -829,7 +829,7 @@ impl Content {
         }
     }
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ContentWork {
     FadeOut,
     ClearNonplayer,
@@ -1032,7 +1032,7 @@ pub fn resource_context(_scene: Scene) -> SceneResourceContext {
         chr: if (_scene as u8) < 4 { 9 } else { 10 },
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SpecialPhase {
     Entry,
     FadeOut,
@@ -1051,7 +1051,7 @@ pub enum SpecialPhase {
     FadeIn,
     Done,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SpecialWork {
     FadeOut,
     ClearNonplayer,
@@ -1068,7 +1068,7 @@ pub enum SpecialWork {
     Suspended,
     Complete,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct SpecialSession {
     pub room: SpecialRoom,
     pub phase: SpecialPhase,

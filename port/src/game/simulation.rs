@@ -3,7 +3,7 @@
 use super::{content::Content, video::Video};
 use crate::{actors, audio, player, presentation, progression, runtime, selection, status, world};
 
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct Core {
     pub progression: progression::Progression,
     pub player: player::Player,
@@ -24,6 +24,7 @@ pub struct Core {
     pub secondary_cursor: u8,
     pub split_transition: u8,
     pub spawn_window: actors::Window,
+    #[serde(with = "crate::snapshot::array")]
     pub suppression: [u8; actors::SUPPRESSION_BYTES],
     pub special_spawn: actors::SpecialControl,
 }
@@ -1163,5 +1164,49 @@ impl Services {
                     .finish_terrain_batch(queue_offset, &mut core.cache.attributes);
             }
         }
+    }
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub(super) struct ServicesSnapshot {
+    pub runtime: runtime::Runtime,
+    pub video: Video,
+    pub commands: audio::CommandQueue,
+    pub collision_outcome: crate::collision::CollisionOutcome,
+    pub audio: audio::Driver,
+    pub synthesizer: audio::Synthesizer,
+    pub option: selection::TitleOption,
+    pub dialogue: crate::dialogue::Dialogue,
+    pub departure_signal: u8,
+    pub scene_cursor: u8,
+}
+impl Services {
+    pub(super) fn snapshot(&self) -> ServicesSnapshot {
+        ServicesSnapshot {
+            runtime: self.runtime.clone(),
+            video: self.video.clone(),
+            commands: self.commands.clone(),
+            collision_outcome: self.collision_outcome,
+            audio: self.audio.clone(),
+            synthesizer: self.synthesizer.clone(),
+            option: self.option,
+            dialogue: self.dialogue.clone(),
+            departure_signal: self.departure_signal,
+            scene_cursor: self.scene_cursor,
+        }
+    }
+    pub(super) fn restore_snapshot(&mut self, saved: ServicesSnapshot) {
+        self.runtime = saved.runtime;
+        self.video = saved.video;
+        self.commands = saved.commands;
+        self.collision_outcome = saved.collision_outcome;
+        self.audio = saved.audio;
+        self.synthesizer = saved.synthesizer;
+        self.option = saved.option;
+        self.dialogue = saved.dialogue;
+        self.departure_signal = saved.departure_signal;
+        self.scene_cursor = saved.scene_cursor;
+        self.events = crate::events::Events::new(crate::config::SEMANTIC_EVENT_CAPACITY);
+        self.commands.observe_with(self.events.clone());
     }
 }

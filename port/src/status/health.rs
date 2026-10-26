@@ -11,7 +11,7 @@ pub struct HealthSegment {
     pub depleted: u8,
     pub x: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum Depletion {
     Filled,
     /// Noncanonical nonzero attributes remain observable in original overlays.
@@ -31,19 +31,20 @@ impl Depletion {
         matches!(self, Self::Depleted(_))
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 struct Point {
     available: bool,
     depletion: Depletion,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 struct Appearance {
     y: u8,
     tile: u8,
     x: u8,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 struct Overlay {
+    #[serde(with = "crate::snapshot::array")]
     appearance: [Appearance; OVERLAY_SEGMENTS],
     end: u8,
 }
@@ -62,8 +63,9 @@ impl Overlay {
 /// Canonical availability and health of each segment, separate from its sprite.
 /// Sparse depletion and hidden flags are retained because recovery/payment and
 /// full restoration distinguish them. There is no second health-count owner.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Health {
+    #[serde(with = "crate::snapshot::array")]
     points: [Point; OVERLAY_SEGMENTS],
     overlay: Overlay,
     pub alternating: u8,

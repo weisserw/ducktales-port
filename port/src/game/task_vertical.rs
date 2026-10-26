@@ -8,7 +8,7 @@ const ROOM_BLOCKS: u8 = 8;
 const LAST_ROOM_ROW: u8 = ROOM_BLOCKS - 1;
 const SECOND_CACHE_PAGE: usize = world::CACHE_CELLS / 2;
 const VERTICAL_DIRECTION_DOWN: u8 = 4;
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub(super) struct VerticalCall {
     transition: world::VerticalTransition,
     work: VecDeque<world::VerticalEffect>,

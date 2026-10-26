@@ -14,14 +14,14 @@ const TOTAL_SIGNIFICANT: usize = 5;
 const DEPARTURE_REWARD_QUANTUM: u32 = 1_000;
 const DEPARTURE_REWARD_DIGIT: u32 = 7;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum Value<const N: usize> {
     Amount { amount: u32, blanks: u8 },
-    NondecimalCodes([u8; N]),
+    NondecimalCodes(#[serde(with = "crate::snapshot::array")] [u8; N]),
 }
 /// Numeric amount plus lossless blank-layout metadata. A blank and a displayed
 /// zero can have the same amount but different payment/ending outcomes.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Money<const N: usize>(Value<N>);
 pub type RewardMoney = Money<6>;
 pub type TotalMoney = Money<7>;

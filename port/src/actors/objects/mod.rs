@@ -129,14 +129,14 @@ pub trait World {
     fn actor_contact(&mut self, actors: &mut ActorPool, slot: usize) -> Option<usize>;
     fn replace_terrain(&mut self, actors: &mut ActorPool, slot: usize, changed: &mut u8);
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Integration {
     FallingY,
     Gravity,
     PositiveX,
     NegativeX,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     Motion(Movement, u8, u8),
     Integrate(Integration),

@@ -15,7 +15,7 @@ mod scene_calls;
 #[path = "task_vertical.rs"]
 mod vertical_calls;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum WaitOwner {
     MenuYield,
     MenuDelay,
@@ -35,17 +35,17 @@ enum WaitOwner {
     DialogueWait,
     ForegroundYield,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct Delay {
     owner: WaitOwner,
     remaining: u16,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct StatusRows {
     rows: VecDeque<status::RowUpload>,
     waiting: bool,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct Conversion {
     phase: status::ConversionPhase,
     wait_ticks: u16,
@@ -56,13 +56,13 @@ pub enum ConversionReturn {
     ValueSound(crate::audio::Submission),
     FinishedWait,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum LifecycleReturn {
     Gameplay,
     LandSelection,
     Reset,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct Initial {
     kind: progression::Lifecycle,
     phase: progression::Phase,
@@ -70,23 +70,23 @@ struct Initial {
     saved_background: Option<(crate::identifiers::StageId, u8)>,
     exit: LifecycleReturn,
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, serde::Serialize, serde::Deserialize)]
 enum HorizontalPhase {
     Move,
     Wait,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct Horizontal {
     saved: progression::SavedHorizontalContext,
     direction: u8,
     phase: HorizontalPhase,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 struct ComposedWait {
     remaining: u16,
     waiting: bool,
 }
-#[derive(Default, Clone)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Tasks {
     delay: Option<Delay>,
     fade: Option<presentation::Fade>,

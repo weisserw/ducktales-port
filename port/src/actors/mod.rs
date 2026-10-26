@@ -35,7 +35,7 @@ pub const SOURCE_STAGE_CONFIGS: usize = 9;
 pub const SUPPRESSION_STAGE_CONFIGS: usize = 5;
 /// Canonical mutable actor used by collision/lifecycle/family owners. Presentation
 /// borrows a visual projection; neither subsystem allocates another actor array.
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct ActorContact {
     pub position: Position,
     pub horizontal_magnitude: u16,
@@ -239,7 +239,7 @@ impl SpawnCatalog {
         self.levels.iter().find(|level| level.id == *id)
     }
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SpecialControl {
     #[default]
     Ready,
@@ -277,7 +277,7 @@ pub struct SpawnContext {
     pub boss_hit_points: u8,
     pub special: SpecialControl,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Window {
     pub room_start: u8,
     pub upper: u8,

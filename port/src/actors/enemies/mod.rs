@@ -119,7 +119,7 @@ pub struct ContactFacts {
     pub bits: u8,
     pub actor: Option<usize>,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Integration {
     PositiveX,
     NegativeX,
@@ -128,7 +128,7 @@ pub enum Integration {
     FallingY,
     Gravity,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     Motion {
         movement: Movement,

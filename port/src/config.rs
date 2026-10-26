@@ -3,7 +3,11 @@ pub const ROM_SHA256: &str = "97d472f7b2c1088448d1644155b2650a546bad887b3cba571e
 pub const SIZE: (u32, u32) = (256, 240);
 pub const RATE: romatlas_port::timing::TickRate = romatlas_port::timing::TickRate::NES_NTSC;
 pub fn settings() -> romatlas_port::settings::Settings {
-    romatlas_port::nes::default_settings()
+    romatlas_port::settings::Settings {
+        width: 680,
+        height: 680,
+        ..romatlas_port::nes::default_settings()
+    }
 }
 
 /// Conventional independent 2C02 RGB display palette. These hardware color

@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+const bundle=path.resolve(process.env.DUCKTALES_WEB_DIST || 'web-dist');
+const {default:init,BrowserGame,BrowserAssets}=await import(pathToFileURL(path.join(bundle,'game.js')));
+await init({module_or_path:fs.readFileSync(path.join(bundle,'game_bg.wasm'))});
+const create=()=>new BrowserGame(new Uint8Array(fs.readFileSync(path.join(bundle,'rom'))),new BrowserAssets('{"enabled":false,"manifests":{},"files":{}}'),48000);
+const input=key=>JSON.stringify(Array.from({length:4},(_,i)=>({keys:i===0&&key?[key]:[],buttons:[],axes:{}})));
+const original=create();
+for(let i=0;i<200;i++)original.advance(i%2?16.375:17.125,input(i===70?'Return':''));
+const saved=original.snapshot_json();
+const restored=create();
+const begin=performance.now();
+restored.restore_snapshot_json(saved);
+const elapsed=performance.now()-begin;
+assert.equal(restored.snapshot_json(),saved);
+assert.deepEqual(restored.pixels(),original.pixels());
+for(let i=0;i<100;i++) {
+  const physical=input(i%4===0?'Z':'ArrowRight'),ms=i%2?13.5:21.25;
+  assert.equal(restored.advance(ms,physical),original.advance(ms,physical));
+  assert.deepEqual(restored.pixels(),original.pixels());
+  assert.deepEqual(restored.audio(),original.audio());
+}
+assert.equal(restored.snapshot_json(),original.snapshot_json());
+const before=restored.snapshot_json();
+assert.throws(()=>restored.restore_snapshot_json('{"version":999}'));
+assert.equal(restored.snapshot_json(),before);
+console.log(`PASS: real Wasm direct snapshot and 100 deterministic frame/audio continuations; ${saved.length} bytes, restore ${elapsed.toFixed(1)} ms`);
+original.free();restored.free();

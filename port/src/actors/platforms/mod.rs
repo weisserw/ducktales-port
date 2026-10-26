@@ -66,12 +66,12 @@ pub struct MotionFacts {
     pub bits: u8,
     pub continuation_remaining: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Integration {
     Horizontal(HorizontalDirection),
     Vertical(VerticalOperation),
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     Motion(Movement, u8, u8),
     Integrate(Integration),

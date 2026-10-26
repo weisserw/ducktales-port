@@ -2,12 +2,12 @@
 //! A pending operation resumes before its enclosing scene policy advances.
 use super::*;
 
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub(super) struct ContentSession {
     content: scenes::Content,
     pending: Option<scenes::ContentWork>,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub(super) struct SpecialSession {
     session: scenes::SpecialSession,
     pending: Option<scenes::SpecialWork>,

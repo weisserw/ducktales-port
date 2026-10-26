@@ -4,7 +4,7 @@ use super::simulation::{Core, Services};
 use crate::{runtime::Buttons, selection};
 use std::collections::VecDeque;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Flow {
     Title(selection::TitlePhase),
     Lands(selection::LandPhase),
@@ -19,7 +19,7 @@ pub enum Poll {
     Gameplay,
     Stalled,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct Menu {
     pub flow: Flow,
     pub operations: VecDeque<selection::Operation>,

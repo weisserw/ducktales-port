@@ -14,7 +14,7 @@ use crate::{
     progression::{self, OwnerStep, Work},
     runtime,
 };
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Route {
     Menu,
     Gameplay,
@@ -719,5 +719,60 @@ mod tests {
             &machine.services.content,
             &machine.base_content
         ));
+    }
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct MachineSnapshot {
+    active_level: Option<String>,
+    pub core: Core,
+    pub ticks: u64,
+    pub services: super::simulation::ServicesSnapshot,
+    pub menu: Menu,
+    pub route: Route,
+    pending_level: Option<String>,
+    tasks: Tasks,
+    foreground: Foreground,
+    player: PlayerCall,
+}
+impl Machine {
+    pub(super) fn snapshot_json(&self) -> anyhow::Result<String> {
+        Ok(serde_json::to_string(&MachineSnapshot {
+            active_level: self
+                .services
+                .content
+                .active_file
+                .as_ref()
+                .map(|level| level.id.0.clone()),
+            core: self.core.clone(),
+            ticks: self.ticks,
+            services: self.services.snapshot(),
+            menu: self.menu.clone(),
+            route: self.route,
+            pending_level: self.pending_level.clone(),
+            tasks: self.tasks.clone(),
+            foreground: self.foreground.clone(),
+            player: self.player.clone(),
+        })?)
+    }
+    pub(super) fn restore_snapshot_json(&mut self, json: &str) -> anyhow::Result<()> {
+        anyhow::ensure!(json.len() <= 4 * 1024 * 1024, "snapshot too large");
+        let saved: MachineSnapshot = serde_json::from_str(json)?;
+        let content = if let Some(id) = &saved.active_level {
+            std::sync::Arc::new(self.base_content.authored_view(id)?)
+        } else {
+            self.base_content.clone()
+        };
+        self.core = saved.core;
+        self.ticks = saved.ticks;
+        self.menu = saved.menu;
+        self.route = saved.route;
+        self.pending_level = saved.pending_level;
+        self.tasks = saved.tasks;
+        self.foreground = saved.foreground;
+        self.player = saved.player;
+        self.services.content = content;
+        self.services.restore_snapshot(saved.services);
+        Ok(())
     }
 }

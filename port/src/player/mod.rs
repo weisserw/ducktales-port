@@ -55,7 +55,7 @@ pub const POGO_SOUND: u8 = 0x11;
 pub const CLIMB_SOUND: u8 = 0x12;
 pub const DAMAGE_SOUND: u8 = 0x14;
 pub const BLOCKED_CYCLES: u8 = 5;
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(u8)]
 pub enum Action {
     #[default]
@@ -152,7 +152,7 @@ impl PlayerData {
         })
     }
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Player {
     pub action: Action,
     pub queued: Option<Action>,
@@ -188,7 +188,7 @@ pub enum Vertical {
     Falling,
     Rising,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     VerticalFall,
     VerticalRise,

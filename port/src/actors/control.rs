@@ -7,7 +7,7 @@ const PHASE_MASK: u8 = 0x0f;
 const FLAGS_MASK: u8 = !PHASE_MASK;
 const PHASE_CARRY: u8 = 0x10;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum AmbushPhase {
     WaitingForPlayer,
     Opening,
@@ -56,13 +56,13 @@ impl AmbushPhase {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct AmbushBehavior {
     pub phase: AmbushPhase,
     pub delay_remaining: u8,
     pub preset_step: u8,
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, serde::Serialize, serde::Deserialize)]
 pub enum ActorControl {
     /// Existing families retain their source-contract fields until converted.
     Legacy {

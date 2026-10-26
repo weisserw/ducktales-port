@@ -6,7 +6,9 @@ Desktop, browser and headless/debug frontends use the same Game implementation.
 Stage4 source contracts and integration checks are recorded in checks/implementation;
 independent whole-game QA remains a separate stage in debug/qa.json.
 
-The original cartridge has no battery; source lives, values and progress last only for the running game.
+The original cartridge has no battery. The browser page additionally offers a
+single Save State / Restore State slot in localStorage, which survives Reset and
+page reloads. Restore returns to the saved frame paused; click Start to continue.
 
 ```sh
 python3 run.py check

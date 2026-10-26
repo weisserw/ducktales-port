@@ -118,13 +118,13 @@ impl Catalog {
         })
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Integration {
     FallingY,
     PositiveX,
     NegativeX,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     Motion(Movement, u8, u8),
     Integrate(Integration),

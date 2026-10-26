@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DuckTales</title>
+<style>
+body{background:#181b23;color:#eee;font:16px system-ui;margin:2rem auto;padding:0 1rem;max-width:64rem;text-align:center}button,input,select{font:inherit;margin:.3rem}canvas{display:block;image-rendering:pixelated;background:#000;max-width:100%;margin:0 auto}fieldset{margin:1rem auto}#error{color:#ffb4ab;white-space:pre-wrap}label{display:inline-block;margin:.4rem}#bindings label{display:block}dialog{text-align:left;background:#242936;color:#eee;max-height:80vh;overflow:auto;border:1px solid #999}small{display:block}
+#game-panel{position:relative;width:fit-content;max-width:100%;margin:1rem auto}#game-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;background:#0008;padding:1rem;box-sizing:border-box}#game-overlay[hidden]{display:none}#game-overlay span{background:#181b23ed;color:#fff;padding:.8rem 1.2rem;border-radius:.4rem;max-width:28rem;line-height:1.5}#game-panel:fullscreen{width:100%;height:100%;display:grid;place-items:center;background:#000}
+</style>
+<h1 id="title">DuckTales</h1>
+<p>This is a native recompilation of the original game in Rust, running in WebAssembly. You must click the Start button below to start the game engine and enable audio and input in the browser.</p>
+<button id="start" aria-keyshortcuts="F1" title="Start (F1)" disabled>Start (F1)</button><button id="pause" aria-keyshortcuts="F2" title="Pause (F2)" disabled>Pause (F2)</button><button id="reset" aria-keyshortcuts="F3" title="Reset (F3)" disabled>Reset (F3)</button><button id="save-state" aria-keyshortcuts="F4" title="Save State (F4)" disabled>Save State (F4)</button><button id="restore-state" aria-keyshortcuts="F5" title="Restore State (F5)" disabled>Restore State (F5)</button><button id="settings" aria-keyshortcuts="F6" title="Settings (F6)" disabled>Settings (F6)</button>
+<p id="status" role="status">Loading local ROM and Wasm…</p><p id="error" role="alert"></p><div id="game-panel"><canvas id="screen" aria-label="Game display"></canvas><div id="game-overlay" role="status" hidden><span id="game-message"></span></div></div>
+<p id="state-status" role="status"></p>
+<dialog id="preferences"><h2>Settings</h2><form id="options">
+<label>Volume <input id="volume" type="range" min="0" max="1" step=".05"></label>
+<label>Stick dead zone <input id="dead_zone" type="range" min="0" max=".95" step=".05"></label>
+<label>Width <input id="width" type="number" min="160" max="8192"></label><label>Height <input id="height" type="number" min="144" max="8192"></label>
+<label>Integer scale <input id="integer_scale" type="checkbox"></label>
+<label>Fullscreen <input id="fullscreen" type="checkbox"></label>
+<fieldset id="players"><legend>Controller assignment (keyboard also controls player 1)</legend></fieldset>
+<fieldset id="bindings"><legend>Bindings shared across players</legend></fieldset>
+<small>Choose a binding, then press a key, gamepad button or stick direction. Escape cancels capture. Controls held during transitions must be released.</small>
+<button type="submit">Save and close</button><button id="cancel" type="button">Cancel</button></form></dialog>
+<script type="module" src="/shell.js"></script></html>

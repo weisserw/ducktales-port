@@ -7,18 +7,19 @@ use crate::presentation::{
 };
 use romatlas_port::{graphics::Frame, nes::ppu};
 
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum TimerLayout {
     #[default]
     Countdown,
     GameOver,
 }
-#[derive(Clone)]
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct Video {
     pub display: Display,
     pub composition: Composition,
     pub memory: VideoMemory,
     pub raster: RasterSnapshot,
+    #[serde(with = "crate::snapshot::array")]
     pub committed_oam: [Sprite; presentation::OAM_ENTRIES],
     pub gameplay_display: u8,
     pub split_y: u8,
@@ -29,8 +30,10 @@ pub struct Video {
     pub overlay_gate: u8,
     pub timer_layout: TimerLayout,
     pub oam_guard: u8,
+    #[serde(with = "crate::snapshot::array")]
     pub terrain_staging: [u8; 16],
     /// Reset clears these two unwritten bytes between preset base and staging.
+    #[serde(with = "crate::snapshot::array")]
     pub preset_padding: [u8; 2],
 }
 impl Video {

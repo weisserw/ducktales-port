@@ -23,7 +23,7 @@ pub use playback::AnimationPlayback;
 pub const NEAR_CAMERA_MARGIN: u8 = 0x40;
 pub const DIALOGUE_PLAYER_STATE: u8 = 0x0f;
 pub const BLACK: u8 = 0x0f;
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Sprite {
     pub y: u8,
     pub tile: u8,
@@ -67,10 +67,11 @@ pub struct OverlayGate {
     pub player_state: u8,
     pub player_y: u8,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Composition {
     pub clock: u8,
     pub cursor: u8,
+    #[serde(with = "crate::snapshot::array")]
     pub oam: [Sprite; OAM_ENTRIES],
 }
 impl Default for Composition {
@@ -227,14 +228,14 @@ impl Stride {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct VideoWrite {
     pub address: u16,
     pub value: u8,
 }
 /// Canonical prepared primary upload. Exact pending byte survives owner yields;
 /// interrupt commit consumes this queue. B15 borrows this same object.
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PreparedPrimary {
     pub encoded: Vec<u8>,
     pub pending: u8,
@@ -265,7 +266,7 @@ impl PreparedPrimary {
         })
     }
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Display {
     pub suspended: u8,
     pub mask: u8,
@@ -274,7 +275,9 @@ pub struct Display {
     pub secondary_pending: bool,
     pub secondary: PreparedSecondary,
     pub palette_pending: bool,
+    #[serde(with = "crate::snapshot::array")]
     pub base: [u8; PALETTE_COLORS],
+    #[serde(with = "crate::snapshot::array")]
     pub active: [u8; PALETTE_COLORS],
     pub writes: Vec<VideoWrite>,
 }
@@ -283,12 +286,12 @@ pub enum Queue {
     Primary,
     Secondary,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum FadeDirection {
     In,
     Out,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Fade {
     pub direction: FadeDirection,
     pub subtraction: u8,
@@ -676,7 +679,7 @@ pub struct RasterInputs {
     pub mask: u8,
     pub split_address: u16,
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct RasterSnapshot {
     pub split_sprite: Sprite,
     pub ui_scroll: (u8, u8),
@@ -813,10 +816,11 @@ impl Display {
 /// Cartridge vertical mirroring, CHR RAM and palette aliasing. This is logical
 /// display data, never an emulated CPU bus. Independent toolkit pixel helpers
 /// consume these snapshots; foreground prepares changes and commit publishes them.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct VideoMemory {
     pub chr: Vec<u8>,
     pub nametables: Vec<u8>,
+    #[serde(with = "crate::snapshot::array")]
     pub palette: [u8; PALETTE_COLORS],
 }
 impl VideoMemory {
@@ -848,7 +852,7 @@ impl VideoMemory {
 /// The encoded secondary queue and four runtime composite selectors share these
 /// same bytes. This is a source-format buffer, not a CPU-addressable RAM image.
 /// No independent runtime-frame copy or invented status author is permitted.
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PreparedSecondary {
     pub encoded: Vec<u8>,
 }

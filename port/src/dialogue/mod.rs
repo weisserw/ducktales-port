@@ -121,7 +121,7 @@ impl Catalog {
 /// Borrow the one B03-owned prepared queue. Dialogue owns no second pending byte,
 /// encoded buffer or retained row copy. B01 interrupt commits this same queue.
 pub use crate::presentation::PreparedPrimary as Panel;
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Phase {
     #[default]
     Entry,
@@ -140,7 +140,7 @@ pub enum Phase {
     Outcome,
     Done,
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Dialogue {
     pub message: u8,
     pub actor_slot: usize,
@@ -268,7 +268,7 @@ pub struct Context<'a> {
     pub camera: &'a Camera,
     pub suppression: &'a mut [u8; SUPPRESSION_BYTES],
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     BuildRaceTerrain,
     SelectGraphicsTwo,
@@ -291,7 +291,7 @@ pub enum Work {
 /// The final source operation of an outcome, consumed by the enclosing player
 /// call before the first actor's random addition. Reveal's tail audio submission
 /// is reported by the actual ChangedBurst owner instead.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum OutcomeReturn {
     MatchedDispatch,
     UnmatchedDispatch(u8),

@@ -12,7 +12,7 @@ use crate::{
     progression::{FirstActorIncrement, OwnerStep, PlayerReturn},
 };
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
 enum Phase {
     #[default]
     Entry,
@@ -20,7 +20,7 @@ enum Phase {
     Conversion,
     Vertical,
 }
-#[derive(Default, Clone)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PlayerCall {
     phase: Phase,
     dialogue: DialogueCall,

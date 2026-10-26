@@ -377,3 +377,148 @@ baseline/iteration records. Workspace-specific baseline instructions preserved.
 Checks: python3 scripts/test-port-modernize.py (6 tests passed) and toolkit
 git diff --check passed. Documentation/prompt edits only; no game execution,
 modernization pass or commits performed.
+
+## 2026-10-25: browser controllers without standard mappings
+
+Updated ROMAtlas's shared `scripts/port-web/shell.js` and added
+`browser-gamepads.mjs`. All connected Gamepad API devices remain selectable;
+standard button names and first-stick defaults are retained, additional controls
+use buttonN/axisN, and analog trigger aliases apply only to standard mappings.
+Settings capture polls all connected controllers regardless of saved/draft player
+assignments and ignores initially held controls until release. Keyboard input and
+independent player routing remain intact. `scripts/port_web.py` includes the new
+module in generated bundles and the development server's explicit route list.
+
+Added `scripts/test-port-gamepads.mjs` and integrated it into the browser suite;
+extended the Chromium synthetic-game test to bind/use an unmapped controller's
+extra button and axis, with all players initially unassigned and an idle -1 axis.
+Updated docs/porting.md. Pre-edit files are retained in
+review/toolkit-gamepads-before/. Shared changes remain uncommitted; no runtime
+Rust or gameplay rules changed. DuckTales's Pages builder now accepts both the
+older pinned toolkit shell and this updated shell, retaining its local adapter
+for reproducible builds against the pinned remote revision.
+
+Checks: Node controller/actual-shell regressions pass; Python compilation,
+JavaScript syntax and both repository whitespace checks pass. DuckTales static
+Wasm build and local controller regression pass with the updated toolkit.
+
+Full `tools/web-tests/bin/python scripts/test-port-web.py` passes in headless
+Chromium: delivered scaffold/Wasm builds, module serving, keyboard/settings,
+standard multiplayer input, raw button/axis capture and gameplay, audio startup,
+battery persistence/quota handling, and future-workspace server invocation.
+The first attempt timed out in the existing immediate-post-resume keyboard check;
+the rerun passes after allowing an animation frame interval before the test key
+press. No desktop window was launched. Node-only tests are part of this suite.
+
+## 2026-10-25: browser page defaults and Reset
+
+Updated shared scripts/port-web/index.html and shell.js: center the game display
+with responsive sizing, show the requested native-Rust/WebAssembly explanation
+under the title, add Reset immediately after Pause, and continue gameplay across
+browser focus/visibility changes. Those boundaries still release held inputs,
+flush battery saves, discard queued audio and reset timing. Pause and Settings
+retain their explicit pause behavior. Reset flushes saves and reloads the page,
+returning to the initial Start prompt; settings and original battery saves remain.
+Updated docs/porting.md and scripts/port-template/BUILDING.md accordingly.
+Pre-edit files retained in review/toolkit-browser-page-before/; prior controller
+edits preserved. All toolkit edits remain uncommitted.
+
+DuckTales now versions web/index.html and web/shell.js and copies them into the
+static bundle, so the CI-pinned older toolkit also produces the updated page
+without source rewriting. Its controller adapter remains the same. No Rust,
+gameplay or accepted QA records changed in this task.
+
+Checks passed: full toolkit test-port-web.py in headless Chromium (delivered
+Wasm/scaffold, centered display, exact paragraph/button order, continued updates
+with document focus/visibility false, Reset/restart, existing keyboard/controller/
+settings/audio/save/server regressions). DuckTales static build, local Node
+controller tests, and test-browser-page.py pass; the latter also checks narrow
+viewport centering and manual Pause. JavaScript syntax, Python compilation and
+both repository whitespace checks pass. No desktop graphics, commit or deployment.
+
+## 2026-10-26: persistent snapshot implementation — integration pending
+
+DuckTales's serializer now covers mutable canonical game owners, suspended tasks,
+prepared video and the audio driver/synthesizer. Immutable resources are reattached
+by the active authored-level identity. Diagnostic journals are reset and command
+observers rebound. Browser storage version2 contains state plus a checksum, not
+an input journal. Old replay slots are rejected and remain untouched until Save
+State explicitly overwrites them. No duration/call-count limit remains.
+
+The proposed opt-in shared-runtime support is retained as
+compat/romatlas-snapshots.patch (161 lines): serialization of private APU,
+clock/input state and driver capture/restore accessors. It has NOT been applied
+to /root/romatlas; the user's earlier DuckTales-only scope prompted a pending
+permission question. All shared work/tests used an isolated source copy at
+/tmp/romatlas-snapshot-runtime and port copy at /tmp/ducktales-snapshot-test.
+Normal checkout integration still requires that permission and enabling the
+runtime snapshots feature, plus applying the patch in the pinned CI checkout.
+No commit/publication or existing toolkit changes were made in this task.
+
+Validation in the isolated build: 1468 locked Rust1.90 release library tests pass,
+including persistent game-state/frame/bit-exact-audio continuation checks and
+browser fractional-frame/sample-clock/input restoration. Real Wasm snapshot:
+56717 bytes,113.5ms restore on this server;100 subsequent updates match frames,
+audio and serialized state exactly. Browser slot persistence/overwrite/corruption/
+quota and layout/shortcut/fullscreen regressions pass. Node tests verify zero
+replayed updates and no journal growth beyond300000calls. Initial full-suite
+attempt missed the isolated examples path; linking the unchanged local examples
+fixed that fixture setup and the suite passes. Checks establish implementation
+behavior, not a new whole-game fidelity pass.
+
+## 2026-10-26: persistent snapshots — authorized integration complete
+
+After explicit user approval, applied the runtime snapshot support to
+/root/romatlas. The opt-in `snapshots` feature also enables JSON float-round-trip
+support; other ports' default features and browser UI remain unchanged. Driver
+restore validates ROM/sample-rate identity and compatible clock configuration
+before mutation. Added shared regression tests for driver restore atomicity and
+bit-exact APU sample continuation. Pre-edit runtime files are preserved in
+review/toolkit-snapshots-before/; unrelated toolkit and game changes remain intact.
+All shared changes remain uncommitted.
+
+DuckTales enables the feature in port/Cargo.toml. Its Pages workflow applies the
+formatted runtime patch (including the shared tests) to the pinned ROMAtlas
+checkout, installs Node22 for verification, and checks actual Wasm snapshot
+continuation before upload. Applying the patch to an isolated copy of the pinned
+revision reproduces the local runtime sources byte-for-byte. Updated porting/build
+documentation; the earlier pending-integration record above remains historical.
+
+Normal-checkout checks pass:1468 locked Rust1.90 release library tests;72 shared
+runtime tests with desktop+snapshots and70 with desktop alone; strict desktop
+all-target Clippy for both the port and runtime; strict Wasm library Clippy;
+formatting, Python compilation and whitespace. Desktop code was compiled only,
+with no window opened. Full toolkit test-port-web.py passes in headless Chromium,
+confirming future-workspace scaffold/Wasm, controls, settings, audio, original
+battery saves, server and page behavior remain working without snapshot opt-in.
+
+The actual `python3 run.py web --host 127.0.0.1 --port 0` server passes browser
+save/restore persistence, overwrite, corruption/incompatibility and quota checks,
+including the no-Web-Crypto fallback. Normal Wasm snapshots are56717bytes;
+measured direct restore67.3ms, then30.2ms in a separate check, with100 subsequent
+updates matching frame/audio/state exactly. Layout/shortcuts/fullscreen-resume,
+Node snapshot (zero replay and no300000-call growth), SHA-256 and gamepad checks
+pass. Static Pages build passes. The temporary test server was stopped; no user
+server was stopped, and no commit, push or deployment was performed. These are
+implementation checks, not a new whole-game fidelity acceptance pass.
+
+## 2026-10-26: publish runtime snapshot support and remove CI patching
+
+At the user's explicit request, committed and pushed only the snapshot runtime
+files, focused regression tests and snapshot documentation to ROMAtlas main:
+4f89589581fc7ea0173ce2c4d17fcbac1cd788f9
+(Add opt-in serialization for persistent native snapshots). Staged only the
+snapshot documentation section; earlier browser documentation/template/controller
+changes remain uncommitted and preserved. No other existing changes were included.
+This user authorization supersedes the earlier uncommitted-only snapshot handoff.
+
+The DuckTales workflow now checks out that published revision directly. Removed
+the CI patch-application step and patch-specific cache dependency. Updated build
+documentation; retained the superseded patch in
+review/toolkit-snapshots-before/superseded-ci-snapshot.patch for history. DuckTales
+changes remain uncommitted/unpublished.
+
+Verified origin/main matches the new commit, the published runtime source exactly
+matches the already-tested local runtime, and workflow YAML selects it with no
+patch step. Whitespace checks pass. Source behavior is unchanged from the prior
+validated snapshot integration, so its Rust/Wasm/browser results still apply.

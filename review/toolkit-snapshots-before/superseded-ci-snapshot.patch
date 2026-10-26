@@ -1,0 +1,262 @@
+--- a/crates/romatlas-port/Cargo.toml
++++ b/crates/romatlas-port/Cargo.toml
+@@ -7,6 +7,7 @@
+ description = "ROM-backed assets and reusable runtime helpers for native game ports"
+ 
+ [features]
++snapshots = ["serde_json/float_roundtrip"]
+ default = []
+ desktop = ["dep:sdl2"]
+ 
+--- a/crates/romatlas-port/src/nes/apu.rs
++++ b/crates/romatlas-port/src/nes/apu.rs
+@@ -21,6 +21,7 @@
+     [1, 0, 0, 1, 1, 1, 1, 1],
+ ];
+ #[derive(Clone, Default, Debug)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ struct Envelope {
+     start: bool,
+     divider: u8,
+@@ -52,6 +53,7 @@
+     }
+ }
+ #[derive(Clone, Default, Debug)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ struct Pulse {
+     control: u8,
+     sweep: u8,
+@@ -113,6 +115,7 @@
+     }
+ }
+ #[derive(Clone, Debug)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct Apu {
+     pulse: [Pulse; 2],
+     regs: [u8; 24],
+--- a/crates/romatlas-port/src/timing.rs
++++ b/crates/romatlas-port/src/timing.rs
+@@ -57,6 +57,7 @@
+         Ok(())
+     }
+ }
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct Clock {
+     rate: TickRate,
+     remainder: u128,
+@@ -92,3 +93,13 @@
+         self.remainder = 0;
+     }
+ }
++
++#[cfg(feature = "snapshots")]
++impl Clock {
++    pub(crate) fn snapshot_compatible(&self, current: &Self) -> bool {
++        self.rate.numerator == current.rate.numerator
++            && self.rate.denominator == current.rate.denominator
++            && self.max_catch_up == current.max_catch_up
++            && self.remainder < u128::from(self.rate.denominator) * 1_000_000_000
++    }
++}
+--- a/crates/romatlas-port/src/audio.rs
++++ b/crates/romatlas-port/src/audio.rs
+@@ -3,6 +3,7 @@
+ use anyhow::{Result, ensure};
+ 
+ #[derive(Clone)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct SampleClock {
+     rate: TickRate,
+     sample_rate: u32,
+@@ -47,3 +48,13 @@
+         }
+     }
+ }
++
++#[cfg(feature = "snapshots")]
++impl SampleClock {
++    pub(crate) fn snapshot_compatible(&self, current: &Self) -> bool {
++        self.rate.numerator == current.rate.numerator
++            && self.rate.denominator == current.rate.denominator
++            && self.sample_rate == current.sample_rate
++            && self.remainder < u64::from(self.rate.numerator)
++    }
++}
+--- a/crates/romatlas-port/src/input.rs
++++ b/crates/romatlas-port/src/input.rs
+@@ -19,12 +19,14 @@
+     pub axes: BTreeMap<String, f32>,
+ }
+ #[derive(Debug, Clone, Default, PartialEq, Eq)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct InputState {
+     pub held: BTreeSet<String>,
+     pub pressed: BTreeSet<String>,
+     pub released: BTreeSet<String>,
+ }
+ #[derive(Debug, Clone, Default, PartialEq, Eq)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct PlayerInput {
+     pub held: BTreeSet<String>,
+     pub pressed: BTreeSet<String>,
+@@ -39,6 +41,7 @@
+     }
+ }
+ #[derive(Debug, Clone, Default, PartialEq, Eq)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct MultiInputState {
+     /// Player zero mirrors the legacy single-player input state.
+     pub primary: InputState,
+@@ -54,6 +57,7 @@
+     }
+ }
+ #[derive(Default)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct InputMapper {
+     previous: [BTreeSet<String>; 4],
+ }
+@@ -117,6 +121,7 @@
+ /// Prevent controls held across focus/menu/device transitions from becoming
+ /// fresh game actions. Each suppressed control rearms after returning to neutral.
+ #[derive(Default)]
++#[cfg_attr(feature = "snapshots", derive(serde::Serialize, serde::Deserialize))]
+ pub struct InputLatch {
+     suppressed: PhysicalInput,
+ }
+--- a/crates/romatlas-port/src/browser.rs
++++ b/crates/romatlas-port/src/browser.rs
+@@ -116,3 +116,43 @@
+         save.restore(&mut self.game, &self.rom_sha256)
+     }
+ }
++
++#[cfg(feature = "snapshots")]
++#[derive(serde::Deserialize)]
++struct DriverSnapshot {
++    clock: Clock,
++    sample_clock: SampleClock,
++    mapper: InputMapper,
++    latches: [InputLatch; 4],
++    sample_rate: u32,
++    rom_sha256: String,
++}
++#[cfg(feature = "snapshots")]
++impl<G: Game> Runtime<G> {
++    pub fn driver_snapshot_json(&self) -> Result<String> {
++        Ok(serde_json::to_string(&serde_json::json!({
++            "clock": self.clock, "sample_clock": self.sample_clock,
++            "mapper": self.mapper, "latches": self.latches,
++            "sample_rate": self.sample_rate, "rom_sha256": self.rom_sha256,
++        }))?)
++    }
++    pub fn restore_driver_snapshot_json(&mut self, json: &str) -> Result<()> {
++        ensure!(json.len() <= 1024 * 1024, "driver snapshot too large");
++        let saved: DriverSnapshot = serde_json::from_str(json)?;
++        ensure!(
++            saved.sample_rate == self.sample_rate && saved.rom_sha256 == self.rom_sha256,
++            "driver snapshot identity mismatch"
++        );
++        ensure!(
++            saved.clock.snapshot_compatible(&self.clock)
++                && saved.sample_clock.snapshot_compatible(&self.sample_clock),
++            "invalid snapshot clock"
++        );
++        self.clock = saved.clock;
++        self.sample_clock = saved.sample_clock;
++        self.mapper = saved.mapper;
++        self.latches = saved.latches;
++        self.samples.clear();
++        Ok(())
++    }
++}
+--- /dev/null
++++ b/crates/romatlas-port/tests/snapshots.rs
+@@ -0,0 +1,88 @@
++#![cfg(feature = "snapshots")]
++use romatlas_port::{
++    Game,
++    browser::Runtime,
++    graphics::Frame,
++    input::{InputState, PhysicalInput},
++    nes::apu::Apu,
++    settings::Settings,
++    timing::TickRate,
++};
++
++#[derive(Default)]
++struct Probe;
++impl Game for Probe {
++    fn tick(&mut self, _: &InputState) {}
++    fn render(&self, _: &mut Frame) {}
++}
++fn runtime() -> Runtime<Probe> {
++    Runtime::new(
++        Probe,
++        (1, 1),
++        TickRate::NES_NTSC,
++        Settings::default(),
++        48000,
++        "snapshot-test".into(),
++    )
++    .unwrap()
++}
++#[test]
++fn driver_snapshot_round_trip_and_invalid_input_are_atomic() {
++    let mut original = runtime();
++    original
++        .advance(21.125, std::array::from_fn(|_| PhysicalInput::default()))
++        .unwrap();
++    let saved = original.driver_snapshot_json().unwrap();
++    let mut restored = runtime();
++    restored.restore_driver_snapshot_json(&saved).unwrap();
++    for elapsed in [0.125, 13.25, 35.375, 8.5] {
++        assert_eq!(
++            original.advance(elapsed, Default::default()).unwrap(),
++            restored.advance(elapsed, Default::default()).unwrap()
++        );
++        assert_eq!(
++            original.driver_snapshot_json().unwrap(),
++            restored.driver_snapshot_json().unwrap()
++        );
++    }
++    let before = restored.driver_snapshot_json().unwrap();
++    for (field, value) in [
++        ("rom_sha256", serde_json::json!("wrong")),
++        ("sample_rate", serde_json::json!(44100)),
++        (
++            "clock",
++            serde_json::json!({"rate":{"numerator":0,"denominator":0},"remainder":0,"max_catch_up":8}),
++        ),
++    ] {
++        let mut invalid: serde_json::Value = serde_json::from_str(&saved).unwrap();
++        invalid[field] = value;
++        assert!(
++            restored
++                .restore_driver_snapshot_json(&invalid.to_string())
++                .is_err()
++        );
++        assert_eq!(before, restored.driver_snapshot_json().unwrap());
++    }
++}
++#[test]
++fn apu_snapshot_preserves_bit_exact_sample_continuation() {
++    let mut apu = Apu::default();
++    apu.write(0x4015, 0x0f).unwrap();
++    apu.write(0x4000, 0x9f).unwrap();
++    apu.write(0x4002, 0x70).unwrap();
++    apu.write(0x4003, 0x08).unwrap();
++    apu.render(713, 48000, |_| 0, &mut Vec::new()).unwrap();
++    let saved = serde_json::to_string(&apu).unwrap();
++    let mut restored: Apu = serde_json::from_str(&saved).unwrap();
++    let (mut a, mut b) = (Vec::new(), Vec::new());
++    apu.render(1024, 48000, |_| 0, &mut a).unwrap();
++    restored.render(1024, 48000, |_| 0, &mut b).unwrap();
++    assert_eq!(
++        a.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
++        b.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
++    );
++    assert_eq!(
++        serde_json::to_string(&apu).unwrap(),
++        serde_json::to_string(&restored).unwrap()
++    );
++}

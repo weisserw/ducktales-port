@@ -4,7 +4,7 @@ use crate::world::{TerrainProbe, WorldCache};
 use anyhow::{Context, Result};
 /// Latest semantic collision return shared by player and ascending actors.
 /// A movement that skips probing preserves the preceding return.
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct CollisionOutcome {
     pub bits: u8,
 }
@@ -150,7 +150,7 @@ impl Geometry {
         })
     }
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Position {
     pub world_x: u16,
     pub x_fraction: u8,
@@ -170,12 +170,12 @@ pub struct PlayerContact {
     pub motion: u8,
     pub vertical_velocity: i16,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum HorizontalDirection {
     Positive,
     Negative,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum VerticalOperation {
     AddEncodedVelocity,
     SubtractEncodedVelocity,
@@ -597,7 +597,7 @@ pub fn actor_player_contact(
     player.immediate_state = DAMAGE_STATE;
     true
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Movement {
     PositiveX,
     NegativeX,

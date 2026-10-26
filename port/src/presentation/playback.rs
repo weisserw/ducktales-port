@@ -2,17 +2,17 @@
 //! only at compatibility boundaries; advancement works with explicit modes.
 const VALUE_MASK: u8 = 0x7f;
 const MODE_BIT: u8 = 0x80;
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum Clock {
     Running(u8),
     Frozen(u8),
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum LoopOrigin {
     Beginning,
     Restart,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 struct FrameCursor {
     index: u8,
     origin: LoopOrigin,
@@ -48,7 +48,7 @@ impl FrameCursor {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct AnimationPlayback {
     clock: Clock,
     frame: FrameCursor,

@@ -5,7 +5,7 @@ use std::num::NonZeroU8;
 const PROGRESS_MASK: u8 = 0x0f;
 const FALLING_FLAG: u8 = 2;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum EntryProgress {
     Entering,
     /// Noncanonical nonzero progress is preserved for partial source writes;
@@ -29,7 +29,7 @@ impl EntryProgress {
         *self = Self::Active(NonZeroU8::MIN);
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum BounceProgress {
     Entering,
     Rising,
@@ -83,27 +83,27 @@ impl BounceProgress {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct BounceState {
     pub progress: BounceProgress,
     pub bounces_remaining: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct WalkState {
     pub progress: EntryProgress,
     pub pause_remaining: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct DelayState {
     pub progress: EntryProgress,
     pub ticks_remaining: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct MoveState {
     pub progress: EntryProgress,
     pub wait_remaining: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum SceneActorState {
     Bounce(BounceState),
     WalkIn(WalkState),

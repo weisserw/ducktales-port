@@ -47,6 +47,12 @@ impl Port {
             machine: machine::Machine::new(content),
         })
     }
+    pub fn snapshot_json(&self) -> Result<String> {
+        self.machine.snapshot_json()
+    }
+    pub fn restore_snapshot_json(&mut self, json: &str) -> Result<()> {
+        self.machine.restore_snapshot_json(json)
+    }
     pub fn mode(&self) -> Mode {
         self.machine.mode()
     }
@@ -118,6 +124,126 @@ mod tests {
     use romatlas_port::assets::Manifest;
     use serde_json::{Value, json};
     use std::collections::BTreeMap;
+
+    #[test]
+    fn browser_snapshot_preserves_fractional_frame_sample_clocks_and_input_edges() {
+        use romatlas_port::{browser::Runtime, input::PhysicalInput};
+        let rom = rom();
+        let new_runtime = || {
+            Runtime::new(
+                Port::load_assets(&rom, &MemoryAssets::default()).unwrap(),
+                config::SIZE,
+                config::RATE,
+                config::settings(),
+                48000,
+                rom.sha256.clone(),
+            )
+            .unwrap()
+        };
+        let mut original = new_runtime();
+        let mut physical: [PhysicalInput; 4] = Default::default();
+        physical[0].keys.insert("Z".into());
+        original.advance(21.125, physical.clone()).unwrap();
+        let (game, driver) = (
+            original.game.snapshot_json().unwrap(),
+            original.driver_snapshot_json().unwrap(),
+        );
+        let mut restored = new_runtime();
+        restored.game.restore_snapshot_json(&game).unwrap();
+        restored.restore_driver_snapshot_json(&driver).unwrap();
+        for elapsed in [0.125, 13.25, 35.375, 8.5, 50.125] {
+            assert_eq!(
+                original.advance(elapsed, physical.clone()).unwrap(),
+                restored.advance(elapsed, physical.clone()).unwrap()
+            );
+            assert_eq!(original.frame.pixels, restored.frame.pixels);
+            assert_eq!(
+                original
+                    .samples
+                    .iter()
+                    .map(|v| v.to_bits())
+                    .collect::<Vec<_>>(),
+                restored
+                    .samples
+                    .iter()
+                    .map(|v| v.to_bits())
+                    .collect::<Vec<_>>()
+            );
+            assert_eq!(
+                original.game.snapshot_json().unwrap(),
+                restored.game.snapshot_json().unwrap()
+            );
+            assert_eq!(
+                original.driver_snapshot_json().unwrap(),
+                restored.driver_snapshot_json().unwrap()
+            );
+            physical[0].keys.clear();
+        }
+    }
+
+    #[test]
+    fn persistent_snapshot_restores_continuations_frames_and_exact_audio_without_replay() {
+        let rom = rom();
+        let memory = MemoryAssets::default();
+        let mut source = Port::load_assets(&rom, &memory).unwrap();
+        for tick in 0..720 {
+            let buttons = match tick {
+                60..=62 | 150..=152 | 240..=242 => crate::runtime::Buttons::START,
+                480..=719 => crate::runtime::Buttons::RIGHT,
+                _ => crate::runtime::Buttons::NONE,
+            };
+            source.advance_samples([
+                crate::runtime::PortSample {
+                    standard: buttons,
+                    ..Default::default()
+                },
+                Default::default(),
+            ]);
+            source.audio(800, 48000, &mut Vec::new());
+            if [1, 60, 120, 180, 360, 600].contains(&tick) {
+                let saved = source.snapshot_json().unwrap();
+                let mut restored = Port::load_assets(&rom, &memory).unwrap();
+                restored.restore_snapshot_json(&saved).unwrap();
+                assert_eq!(restored.snapshot_json().unwrap(), saved);
+                let mut expected = source.clone();
+                for branch_tick in 0..20 {
+                    let input = [
+                        crate::runtime::PortSample {
+                            standard: if branch_tick % 3 == 0 {
+                                crate::runtime::Buttons::A
+                            } else {
+                                crate::runtime::Buttons::RIGHT
+                            },
+                            ..Default::default()
+                        },
+                        Default::default(),
+                    ];
+                    expected.advance_samples(input);
+                    restored.advance_samples(input);
+                    let (mut a, mut b) =
+                        (Frame::new(256, 240).unwrap(), Frame::new(256, 240).unwrap());
+                    expected.render(&mut a);
+                    restored.render(&mut b);
+                    assert_eq!(a.pixels, b.pixels, "frame after snapshot at tick {tick}");
+                    let (mut a, mut b) = (Vec::new(), Vec::new());
+                    expected.audio(800 + branch_tick % 2, 48000, &mut a);
+                    restored.audio(800 + branch_tick % 2, 48000, &mut b);
+                    assert_eq!(
+                        a.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                        b.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                        "audio after snapshot at tick {tick}"
+                    );
+                }
+                assert_eq!(
+                    expected.snapshot_json().unwrap(),
+                    restored.snapshot_json().unwrap()
+                );
+                let before = restored.snapshot_json().unwrap();
+                assert!(restored.restore_snapshot_json("{broken").is_err());
+                assert_eq!(before, restored.snapshot_json().unwrap());
+            }
+        }
+    }
 
     fn rom() -> Rom {
         Rom::open(

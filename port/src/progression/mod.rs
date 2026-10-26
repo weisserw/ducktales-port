@@ -32,7 +32,7 @@ pub const STATUS_TOGGLE_SOUND: u8 = 0x15;
 
 /// Source run/progression flags. Player action/protection/queue belong to B06;
 /// status values/UI dirtiness to B14; camera/cache to B04; display to B03.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Progression {
     pub stage: StageId,
     pub progress_bits: u8,
@@ -45,6 +45,7 @@ pub struct Progression {
     /// SourceA6 stage-mask choices accepted by message0F.
     pub accepted_stages: u8,
     /// SourceA8..AA message bits (selector divided by eight); not extra menu flags.
+    #[serde(with = "crate::snapshot::array")]
     pub seen_messages: [u8; 3],
     pub boss_hit_points: u8,
     pub impact_latch: u8,
@@ -102,12 +103,12 @@ impl Default for Progression {
 /// Not CPU flags: the semantic addition input required by the first boss slot.
 /// There is deliberately no Default. The selected B06 action must provide this
 /// result after its final reaching arithmetic/compare; see integration contract.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum FirstActorIncrement {
     Zero,
     One,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PlayerReturn {
     pub first_actor_increment: FirstActorIncrement,
 }
@@ -128,7 +129,7 @@ pub struct Frame<'a> {
     pub room_row: &'a mut u8,
     pub catalog: &'a Catalog,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Work {
     Ending,
     Sound(u8),
@@ -161,7 +162,7 @@ pub enum OwnerStep<T> {
     Suspended,
     Complete(T),
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum FrameContinuation {
     #[default]
     Entry,
@@ -750,14 +751,14 @@ pub fn raw_selection_entry(_rom: &[u8], _progress: u8) -> Result<RawSelectionEnt
 /// Lifecycle continuations resume only after the previously requested operation
 /// has completed. Actor/status writes are explicit operations at source points,
 /// never eager while building a plan (outgoing fades still see outgoing state).
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Lifecycle {
     Initial,
     Reload,
     GameOver,
     Selection,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Phase {
     Entry,
     BackgroundComplete,
@@ -768,7 +769,7 @@ pub enum Phase {
     FinalWaitComplete,
     Done,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Operation {
     PollBackground,
     LoadSpawnTables,
@@ -1025,7 +1026,7 @@ pub fn load_presentation(
         stage_command: _stage.0,
     })
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct SavedHorizontalContext {
     pub stage: StageId,
     pub row: u8,

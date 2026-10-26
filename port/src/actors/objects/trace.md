@@ -261,3 +261,25 @@ object entry points delegate to the same implementation. Enemy/platform/boss
 adapters need no dummy status/progression owner and no cloned mutable state.
 Fresh audio Submission provenance is consumed before secondary RNG exactly as
 before; submitted sound observations remain distinguished from unsubmitted ones.
+
+## Barrel/enemy integration repair (2026-10-25)
+
+The live game-family adapter now calls B10's `actor_overlap` with the original
+bank-six source-profile extents for B08/B09 actor-contact callbacks. It previously
+called B05's terrain-only `solid_overlap`, which filters targets to handler08 and
+never commits enemy hit markers or source impact animations. This bypassed the
+correct independently tested B10 routine: a launched animation1A barrel could
+pass through the Transylvania animation38/handler33 guard. Source bank6
+80C1..8149 marks non-exempt targets; 8735/876x motion paths then enter88E4 to
+remove the object, and the guard's hit-only enemy handler consumes that marker
+through shared defeat recovery. The live-update regression uses original
+barrel/guard templates and bank-six extents, with terrain responses neutralized
+to isolate actor impact. It failed before the adapter repair (barrel remained
+handler09); it also checks target hit/defeat and source impact/removal together.
+
+Validation: all1466 locked Rust1.90 release library tests pass, including the
+new live barrel/guard regression. Release library Clippy (-Dwarnings), formatting
+and whitespace checks pass. Static Pages/Wasm rebuild passes; the rebuilt game
+boots and advances in headless Chromium without page errors. Existing browser
+controller regressions also pass. These focused implementation checks do not
+claim a fresh whole-game QA pass or a manual playthrough of the rescue room.

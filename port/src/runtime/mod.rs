@@ -11,7 +11,7 @@ pub const HIDDEN_SPRITE_Y: u8 = 0xf8;
 pub const SPLIT_PLAYER_Y_THRESHOLD: u8 = 0x44;
 
 /// Original eight logical button encodings after eight serial samples.
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Buttons(pub u8);
 impl Buttons {
     pub const NONE: Self = Self(0);
@@ -37,21 +37,22 @@ pub struct PortSample {
     pub standard: Buttons,
     pub auxiliary: Buttons,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PortInput {
     pub pressed: Buttons,
     pub held: Buttons,
 }
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Controllers {
     /// Result of the actual slot0 resume's final input-filter comparison. None
     /// means no sampling has run since reset; this is not a processor flag.
     pub last_sample_return: Option<SampleReturn>,
+    #[serde(with = "crate::snapshot::array")]
     pub ports: [PortInput; CONTROLLER_PORTS],
 }
 /// WaitTicks preserves this named outcome through its final decrement. Only
 /// raw newly pressed port0 edges participate, before direction filtering.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct SampleReturn {
     pub primary_opposite_edges: bool,
 }
@@ -93,8 +94,9 @@ impl Controllers {
 }
 /// Four algorithm words, not an emulated memory region. Consumers in B07/B11/
 /// B12/B16/B17 also perform source-specific accumulator updates on these words.
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct RandomState {
+    #[serde(with = "crate::snapshot::array")]
     pub words: [u8; 4],
 }
 impl RandomState {
@@ -115,7 +117,7 @@ pub enum TaskSlot {
     AuxiliaryTwo,
     AuxiliaryThree,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum TaskState<T> {
     Empty,
     Entry(T),
@@ -139,8 +141,13 @@ pub struct Dispatch<T> {
 }
 /// Native continuation values are supplied by the owning scene/system, never
 /// source instruction addresses. Four slots and ascending priority are source rules.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
+#[serde(bound(
+    serialize = "T: serde::Serialize",
+    deserialize = "T: serde::Deserialize<'de>"
+))]
 pub struct Scheduler<T> {
+    #[serde(with = "crate::snapshot::array")]
     pub slots: [TaskState<T>; TASK_SLOTS],
 }
 impl<T: Copy> Scheduler<T> {
@@ -236,7 +243,7 @@ impl FrameWait {
         self.ticks_remaining == 0
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum BootTask {
     InitializeTitle,
     /// Native main-call continuation after the source's first real yield.
@@ -261,7 +268,7 @@ pub struct ResetDisplay {
     pub control: u8,
     pub effects: Vec<ResetEffect>,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Runtime {
     pub controllers: Controllers,
     pub random: RandomState,
@@ -362,7 +369,7 @@ impl Runtime {
     }
 }
 /// Switch-window catalog identities; fixed-bank code is never selected here.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(u8)]
 pub enum PrgBank {
     GraphicsZero,
@@ -390,7 +397,7 @@ impl PrgBank {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct BankContext {
     pub foreground: PrgBank,
     pub active: PrgBank,

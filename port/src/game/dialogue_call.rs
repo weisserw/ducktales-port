@@ -10,7 +10,7 @@ use crate::{
     runtime, world,
 };
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum ReturnFact {
     Outcome(dialogue::OutcomeReturn),
     RevealSound(crate::audio::Submission),
@@ -29,7 +29,7 @@ pub enum Poll {
     Requested(dialogue::Work),
     Complete(ReturnFact),
 }
-#[derive(Default, Clone)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct DialogueCall {
     pending: Option<dialogue::Work>,
     returned: Option<dialogue::Work>,

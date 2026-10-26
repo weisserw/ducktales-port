@@ -246,8 +246,10 @@ files local. Existing workspaces are not upgraded automatically.
 Browser settings support keyboard/standard gamepad rebinding, four player device
 assignments, volume, scaling, dimensions and fullscreen. Settings and versioned
 battery saves use browser localStorage keyed by ROM hash; keep the same server origin,
-browser and profile to retain them. Start resumes after focus/visibility/menu
-pauses. No touch/mobile or save-state support is provided. This port has not been runtime-tested in Chromium or Firefox. Builds are single-threaded and require no cross-origin
+browser and profile to retain them. Start resumes after Pause; closing Settings resumes an already started game automatically. Focus loss does not pause the browser
+game; browser background throttling can still limit updates. Reset reloads the
+game and returns to the Start prompt, preserving settings and original battery
+saves. No touch/mobile controls are provided. This port adds browser save states as described below. This port has not been runtime-tested in Chromium or Firefox. Builds are single-threaded and require no cross-origin
 isolation. See the toolkit's docs/porting.md for the save contract and test setup.
 
 The original cartridge has no battery; this Game uses the default no-save hooks.
@@ -296,3 +298,46 @@ waits for initially held controls to be released. Raw device layouts vary; use
 Settings to map devices whose button ordering differs from the standard layout.
 Run `node scripts/test-browser-gamepads.mjs` after building to check the adapter
 and generated shell with simulated standard/raw controllers.
+
+Both `run.py web` / `run.py web-build` and the Pages builder install the
+versioned `web/index.html`, `web/shell.js` and `web/save-state.mjs` over the
+toolkit-generated shell. They use the same local page installer, so Save State
+and Restore State are available in local development and on Pages, including
+with the older pinned toolkit revision. Restart an already running local web
+server after page changes; its routes cache file contents at startup. The shared ROMAtlas template contains the same defaults.
+After building, run the layout/focus/Reset check with Playwright installed:
+`/root/romatlas/tools/web-tests/bin/python scripts/test-browser-page.py`.
+
+## Browser save state
+
+This port enables ROMAtlas's opt-in `snapshots` feature, available in published
+revision `4f89589581fc7ea0173ce2c4d17fcbac1cd788f9`. The Pages workflow checks out that revision directly;
+it does not modify toolkit source during CI. Local ROMAtlas checkouts need that
+revision or later. The shared browser template keeps its original controls.
+
+Save State stores one checkpoint in browser localStorage; another save replaces
+that slot. Restore State reconstructs the saved game and leaves it paused at the
+saved frame. Click Start to continue. The slot survives page reloads and Reset;
+it belongs to the same site origin/browser profile, so clearing site data removes
+it. This feature is specific to DuckTales and does not alter ROMAtlas templates
+or the original cartridge's no-battery behavior.
+
+The checkpoint serializes the current Rust simulation, suspended continuations,
+pending display work, full audio/APU state, browser clocks and input mapper.
+Immutable ROM resources are reattached from the current load. Restore does not
+execute recorded inputs and does not get slower as the session grows. The slot
+is limited to 4 MiB of JSON; there is no runtime-call or play-duration limit.
+
+Snapshots include a checksum and validate the Wasm build, ROM, assets and audio
+sample rate. Incompatible or corrupted data is rejected without replacing the
+live game. Browser preferences stay current on restore. Storage errors leave the
+prior slot intact. Old replay checkpoints are not snapshot-compatible; Save State
+creates the new version-2 format in the same slot.
+
+Verification with Playwright installed:
+`/root/romatlas/tools/web-tests/bin/python scripts/test-browser-state.py`.
+
+Browser toolbar shortcuts follow the button order: F1 starts/resumes, F2 pauses,
+F3 resets, F4 saves the state slot, F5 restores it, and F6 opens/closes Settings. Shortcuts also work in
+fullscreen. Inside Settings, Enter saves the form and Escape cancels; binding
+capture takes precedence so a captured key does not trigger a toolbar action.

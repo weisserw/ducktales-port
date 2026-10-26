@@ -167,9 +167,10 @@ pub struct BackgroundContext {
     pub camera_page: u8,
     pub display_suspend_depth: u8,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct BackgroundSelection {
     pub list: usize,
+    #[serde(with = "crate::snapshot::array")]
     pub palette: [u8; 4],
 }
 pub fn select_background(rom: &[u8], context: BackgroundContext) -> Result<BackgroundSelection> {
@@ -240,7 +241,7 @@ pub enum BackgroundEffect {
 /// Progress through a validated background update plan. The final palette is
 /// deliberately its own poll; finishing the last tile update does not finish
 /// the session. Content owns the immutable plan, Tasks owns only this progress.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum BackgroundUpload {
     Updating { next: usize },
     Complete,

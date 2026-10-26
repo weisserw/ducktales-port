@@ -28,7 +28,7 @@ pub const LAND_PARAMETER_OFFSET: usize = 0x1d8b6;
 pub const LAND_PARAMETER_BYTES: usize = 51;
 
 /// Labels are proven by title script2 at PPU2225, not guessed from damage rules.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum TitleOption {
     Easy,
     Normal,
@@ -146,7 +146,7 @@ pub struct InputResult {
 }
 /// Ordered subroutine requests, executed by existing owners before continuation.
 /// Fade and acknowledgement suspend the foreground; they are not instant effects.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Operation {
     InstallControlShadow,
     Yield,
@@ -189,7 +189,7 @@ pub enum Operation {
     StageChr,
     EnterStageRuntime,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum TitlePhase {
     Entry,
     AfterEntryYield,
@@ -219,7 +219,7 @@ pub struct CompletionInput {
     pub scene_signal: u8,
     pub progress_bits: u8,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum CompletionRoute {
     AvailableLand,
     OrdinaryAcknowledgement,
@@ -343,7 +343,7 @@ pub fn title_animation(
     }
     vec![Operation::HideSprites, Operation::Compose, Operation::Yield]
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum LandPhase {
     Entry,
     AfterFadeOut,

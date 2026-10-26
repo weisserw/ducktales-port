@@ -242,7 +242,7 @@ pub enum Direction {
     Forward,
     Backward,
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct StreamCursor {
     pub ring: u8,
     pub room: u8,
@@ -408,7 +408,7 @@ pub fn column(
     });
     result
 }
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Camera {
     pub x: u16,
     pub room: u8,
@@ -549,9 +549,11 @@ pub fn read_cell(catalog: &WorldCatalog, layout: usize, bank: usize, probe: Terr
     let descriptor = usize::from(room.block_at(row, column));
     catalog.terrain[bank].blocks[descriptor][usize::from(probe.quadrant)]
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct WorldCache {
+    #[serde(with = "crate::snapshot::array")]
     pub attributes: [u8; CACHE_CELLS],
+    #[serde(with = "crate::snapshot::array")]
     pub collision: [u8; CACHE_CELLS],
     pub changed_this_frame: u8,
 }
@@ -617,12 +619,12 @@ impl WorldCache {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum VerticalDirection {
     Down,
     Up,
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum VerticalPhase {
     BuildRoom,
     CopyStaged,
@@ -658,7 +660,7 @@ pub fn vertical_phase(direction: VerticalDirection, counter: u8) -> VerticalPhas
         VerticalDirection::Up => UP,
     })[usize::from(counter & ROOM_AXIS_MASK)]
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum VerticalEffect {
     ClearNonplayerActors,
     HideSprites,
@@ -669,7 +671,7 @@ pub enum VerticalEffect {
     UpdateSpawnWindow,
     RefreshPalette,
 }
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct VerticalTransition {
     pub direction: VerticalDirection,
     pub counter: u8,

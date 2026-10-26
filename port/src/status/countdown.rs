@@ -8,7 +8,7 @@ const WARNING_TENS_CODE: u8 = 3;
 const CONVERSION_SECONDS: u16 = 10;
 const HUNDREDS_PLACE: u16 = 100;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 enum Value {
     Seconds(u16),
     Expired,
@@ -19,7 +19,7 @@ enum Value {
 
 /// Canonical countdown owner. Seconds are always in 0..=999; expiration is a
 /// distinct state because death occurs at the next eligible countdown call.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Countdown(Value);
 impl Countdown {
     pub fn from_display_codes(codes: [u8; 3]) -> Self {
