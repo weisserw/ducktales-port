@@ -33,6 +33,10 @@ pub struct Machine {
     player: PlayerCall,
 }
 impl Machine {
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn cold_reset(&mut self) {
+        *self = Self::new((*self.base_content).clone());
+    }
     pub fn mode(&self) -> crate::identifiers::Mode {
         use crate::identifiers::Mode;
         if self.route == Route::Menu {

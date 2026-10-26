@@ -30,9 +30,9 @@ CLI options are `--rom FILE`, `--assets DIR`, `--settings FILE`, `--debug-stdio`
 and `--headless FRAMES`.
 
 Default controls follow the NES settings: arrows move, Z=A/jump, X=B/cane,
-Enter=Start/pause and Backspace=Select. F1 opens desktop settings for remapping,
+Enter=Start/pause and Backspace=Select. F6 opens desktop settings for remapping,
 player/controller assignment, volume and display options. Browser settings use the
-shared settings frontend. Source controller2 remains an independent lane where the
+same F1–F6 resume/pause/reset/save-state/restore-state/settings shortcuts. Source controller2 remains an independent lane where the
 original rules consult it. There is no added content-selection menu or debug warp.
 
 Raw replacement files use source-assets.json version1 entries `{id,file}`. IDs

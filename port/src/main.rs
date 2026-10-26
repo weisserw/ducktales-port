@@ -43,7 +43,7 @@ fn run() -> Result<()> {
             }
             "--help" => {
                 println!(
-                    "Usage: ducktales --rom FILE [--assets DIR] [--settings FILE] [--debug-stdio] [--headless FRAMES]\nF1 opens desktop settings. Supply your matching local cartridge image."
+                    "Usage: ducktales --rom FILE [--assets DIR] [--settings FILE] [--debug-stdio] [--headless FRAMES]\nF1 resume, F2 pause, F3 reset, F4 save state, F5 restore state, F6 settings. Supply your matching local cartridge image."
                 );
                 return Ok(());
             }
@@ -92,14 +92,15 @@ fn run() -> Result<()> {
             None => romatlas_port::settings::default_path("ducktales")?,
         };
         let battery = path.with_file_name(format!("battery-{}.json", ROM_SHA256));
-        romatlas_port::desktop::run_with_save(
+        romatlas_port::desktop::run_with_assets(
             &mut port,
-            "DuckTales (F1 SETTINGS)",
+            "DuckTales (F6 SETTINGS)",
             config::SIZE,
             config::RATE,
             &path,
             config::settings(),
             Some((ROM_SHA256, &battery)),
+            assets.as_deref(),
         )?;
         Ok(())
     }

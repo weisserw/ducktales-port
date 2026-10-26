@@ -249,7 +249,7 @@ bindings and shell only. Original assets must stay ROM-backed. Keep generated
 files local. Existing workspaces are not upgraded automatically.
 
 Browser settings support keyboard/standard gamepad rebinding, four player device
-assignments, volume, scaling, dimensions and fullscreen. Settings and versioned
+assignments, volume, height and fullscreen. Settings and versioned
 battery saves use browser localStorage keyed by ROM hash; keep the same server origin,
 browser and profile to retain them. Start resumes after Pause; closing Settings resumes an already started game automatically. Focus loss does not pause the browser
 game; browser background throttling can still limit updates. Reset reloads the
@@ -346,3 +346,21 @@ Browser toolbar shortcuts follow the button order: F1 starts/resumes, F2 pauses,
 F3 resets, F4 saves the state slot, F5 restores it, and F6 opens/closes Settings. Shortcuts also work in
 fullscreen. Inside Settings, Enter saves the form and Escape cancels; binding
 capture takes precedence so a captured key does not trigger a toolbar action.
+
+## Desktop controls and state
+
+With the matching local ROMAtlas runtime, Linux/macOS/Windows use F1 resume,
+F2 pause, F3 reset, F4 save state, F5 restore state and F6 settings. Guide also
+opens settings. Restore pauses until F1; errors appear in the window title.
+state.json is stored beside settings.json, separately from original battery
+saves. States validate executable/ROM/override identity, checksum and audio
+sample configuration; they are not interchangeable with browser states.
+
+Display settings select height; width follows DuckTales's 16:9 config. Scaling
+is free, with no integer scaling setting. New ROMAtlas template ports default
+to 4:3; DuckTales's widescreen gameplay remains specific to this game. Each
+player can use Automatic, None or an explicit controller. Unmapped SDL devices
+are available for raw buttonN/axisN rebinding, including when unassigned.
+Use ROMAtlas revision 96eb99851c72fd838802d76281e93f368833983d or a compatible
+later revision for these desktop features. Cargo.lock does not pin the contents
+of a local path dependency.

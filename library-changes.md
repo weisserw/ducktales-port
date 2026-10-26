@@ -545,3 +545,105 @@ and clippy for romatlas-port/all targets/desktop/snapshots with warnings denied.
 The game also passes desktop-feature clippy, compiling desktop code without
 opening a window. These are implementation/runtime checks; prior QA records and
 original implementation ledgers remain unchanged.
+
+## 2026-10-26: desktop parity and future-port display defaults
+
+Backported player-facing browser capabilities into the shared SDL frontend in
+/root/romatlas for Linux/macOS/Windows: F1 resume, F2 pause, F3 reset, F4 save
+state, F5 restore state, F6 settings (Guide still opens settings). Added optional
+Game full-state/reset hooks, bounded checksummed native state files with
+executable/ROM/override/audio compatibility checks, atomic writes, and preserved
+sample-clock phase. Restore pauses and rearms live inputs/timing; it never
+replays inputs. Battery persistence retains its separate format and hooks.
+DuckTales implements the native hooks using its existing serializer and a cold
+reset built from the same immutable content. Browser serializers remain compatible
+with the published Pages runtime pin; no workflow pin or publication changed.
+
+Desktop controller settings now expose Automatic/None/device choices per player,
+reserve explicitly assigned devices before automatic routing, and preserve legacy
+primary-controller preferences. Unmapped SDL joysticks are selectable and expose
+buttonN/axisN bindings, first-stick aliases and D-pad hats. Capture polls assigned
+and unassigned devices and waits for initially held controls to return to neutral.
+
+The desktop menu and future web template have no integer scaling control or
+behavior. A legacy serialized integer_scale flag is accepted for compatibility
+but omitted from newly serialized runtime settings. Window/display height drives
+width from the game aspect; desktop uses free scaling. New templates default to
+config.rs DISPLAY_ASPECT=(4,3), while DuckTales retains its own 16:9 config and
+widescreen rules. No widescreen gameplay was copied into the templates.
+
+Future templates enable snapshot support, expose the same browser toolbar and
+F1-F6 commands, and provide Game snapshot/reset hooks plus driver validation before
+game restore. The scaffold's empty snapshot covers its stateless demo only; updated
+workflow instructions require full versioned mutable game/audio serialization
+when gameplay is implemented. Unsupported existing games retain default hooks.
+Generic browser state identity includes Wasm, ROM, overrides and sample rate;
+state files remain separate from battery saves and frontend-specific.
+
+Updated template generation, module packaging/routes, building/porting docs and
+focused regressions. Pre-edit desktop/settings sources are preserved in
+review/desktop-backport-before/. All shared-library changes remain uncommitted;
+no commit, push, publication, desktop window or other-platform execution occurred.
+Implementation verification is separate from game-fidelity QA and ledger accounting.
+
+Checks completed so far: 1485 existing DuckTales locked Rust 1.90 release library
+tests (the final-source run including the new desktop regression is recorded
+below); shared desktop/snapshot tests; generated-port preparation, archive preservation,
+locked headless/desktop/browser builds, overrides and rejection regressions;
+Chromium future-template 4:3 layout, absent width/integer controls, F1-F6 and real
+snapshot save/restore plus input/audio/settings/battery regressions; shared Node
+raw-controller and no-replay/checksum/SHA-256 fallback tests. An isolated source
+copy compiles current DuckTales Wasm against published Pages pin
+4f89589581fc7ea0173ce2c4d17fcbac1cd788f9. Final broader check results follow below.
+
+Final verification: the final source passes 1486 locked Rust 1.90 library tests
+(including game::tests::desktop_state_hooks_restore_real_game_audio_and_reset_to_startup)
+using a temporary target with test debug info disabled to fit this server; its
+79 shared runtime tests pass with desktop+snapshots, including game-restore failure
+atomicity. DuckTales's locked Linux desktop release binary builds, advertises the
+new shortcuts and executes five headless frames at 341x240. Strict all-target
+desktop Clippy passes for the game and runtime; strict all-target workspace Clippy
+and the toolkit locked release build pass. Toolkit portability passes. Formatting,
+Python/JS syntax and whitespace checks pass in the affected repositories.
+
+The generated browser test passes in Chromium, including real full-state restore,
+4:3 dimensions, absent scaling/width controls, shortcuts, raw/standard controllers,
+audio, settings and original battery/error handling. The added browser regression
+initially used an input press shorter than a simulation tick; changing the fixture
+to wait for Running and hold input until observed resolved it. No gameplay fix was
+needed. Shared Node tests cover direct snapshots without replay after 300000 calls,
+corruption/incompatibility rejection and SHA-256 fallback parity.
+
+The broad cargo test --locked --workspace attempt was interrupted during compilation
+when disk space approached exhaustion; it has no passing result. This is distinct
+from the passing focused runtime and final-source game suites. Removed only compiler
+incremental caches created by these broad checks; preserved sources, saves, existing
+reference/QA records, deployment backups and superseded evidence. No macOS/Windows
+build, SDL window or physical-controller execution was attempted on this Linux
+headless server. No commit, push or deployment was performed.
+
+## 2026-10-26: reduce local build disk usage
+
+The broad checks above left about 2.4 GiB of toolkit debug build products and
+547 MiB of game debug products. With no Cargo processes running, cleared only
+dev-profile artifacts using cargo +1.90.0 clean --profile dev in both projects.
+Release binaries, source, original/reference data, saves, QA records and logs
+were preserved. Added repository-local .cargo/config.toml in both repositories:
+dev/test debug symbols disabled and incremental caches disabled. Release profiles
+are unchanged. These defaults trade debugging detail and incremental rebuild
+speed for smaller build artifacts; they do not change game rules.
+
+Checks: locked Rust 1.90 metadata accepts both configurations; the toolkit CLI
+and game release executables remain present; whitespace checks pass. No new
+compilation, commit or publication was performed for this configuration change.
+
+## 2026-10-26: authorized commit and push
+
+At the user's explicit request, committed and pushed the desktop/template parity
+changes and low-disk Cargo configuration to ROMAtlas main as
+96eb99851c72fd838802d76281e93f368833983d. This authorization supersedes the
+uncommitted-only handoff above. DuckTales's corresponding source, documentation,
+pre-edit backups and local build configuration are included in its accompanying
+commit. The existing Pages runtime pin remains unchanged and was checked for
+Wasm compatibility. No additional build or whole-game QA pass was run for this
+commit-only step; the implementation verification results above still apply.

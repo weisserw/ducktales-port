@@ -89,6 +89,21 @@ fn sample_actions(held: &std::collections::BTreeSet<String>) -> crate::runtime::
     }
 }
 impl Game for Port {
+    // Pages retains its published runtime pin; its Wasm wrapper uses the same
+    // inherent serializers. Native frontends use the new optional Game hooks.
+    #[cfg(not(target_arch = "wasm32"))]
+    fn snapshot_json(&self) -> Result<String> {
+        Port::snapshot_json(self)
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    fn restore_snapshot_json(&mut self, json: &str) -> Result<()> {
+        Port::restore_snapshot_json(self, json)
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    fn reset(&mut self) -> Result<()> {
+        self.machine.cold_reset();
+        Ok(())
+    }
     fn tick(&mut self, input: &InputState) {
         self.advance_samples([
             sample_actions(&input.held),
@@ -129,6 +144,40 @@ mod tests {
     use romatlas_port::assets::Manifest;
     use serde_json::{Value, json};
     use std::collections::BTreeMap;
+
+    #[test]
+    fn desktop_state_hooks_restore_real_game_audio_and_reset_to_startup() {
+        use romatlas_port::{audio::SampleClock, states};
+        let rom = rom();
+        let mut game = Port::load_assets(&rom, &MemoryAssets::default()).unwrap();
+        let initial = Game::snapshot_json(&game).unwrap();
+        let mut clock = SampleClock::new(config::RATE, 48000).unwrap();
+        for _ in 0..90 {
+            game.tick(&InputState::default());
+            game.audio(clock.next_tick(), 48000, &mut Vec::new());
+        }
+        let state = states::capture(&game, &clock, "test-build-rom-assets").unwrap();
+        let mut expected = game.clone();
+        let mut expected_clock = clock.clone();
+        Game::reset(&mut game).unwrap();
+        assert_eq!(Game::snapshot_json(&game).unwrap(), initial);
+        states::restore(&mut game, &mut clock, "test-build-rom-assets", &state).unwrap();
+        for _ in 0..30 {
+            game.tick(&InputState::default());
+            expected.tick(&InputState::default());
+            let (mut a, mut b) = (Vec::new(), Vec::new());
+            game.audio(clock.next_tick(), 48000, &mut a);
+            expected.audio(expected_clock.next_tick(), 48000, &mut b);
+            assert_eq!(
+                a.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                b.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+            );
+            assert_eq!(
+                Game::snapshot_json(&game).unwrap(),
+                Game::snapshot_json(&expected).unwrap()
+            );
+        }
+    }
 
     #[test]
     fn browser_snapshot_preserves_fractional_frame_sample_clocks_and_input_edges() {
