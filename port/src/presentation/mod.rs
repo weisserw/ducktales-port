@@ -35,7 +35,7 @@ pub struct ActorVisual {
     pub state: u8,
     pub render: u8,
     pub world_x: u16,
-    pub screen_x: u8,
+    pub screen_x: i16,
     pub screen_y: u8,
     pub animation: u8,
     pub playback: AnimationPlayback,
@@ -131,7 +131,7 @@ impl Composition {
     pub fn project(&mut self, actor: &mut ActorVisual, camera: u16) -> bool {
         if actor.state & WORLD_POSITIONED != 0 {
             let relative = actor.world_x.wrapping_sub(camera);
-            actor.screen_x = relative as u8;
+            actor.screen_x = i16::from(relative as u8);
             if relative >> 8 != 0 {
                 let low_distance = (relative as u8 as i8).unsigned_abs();
                 if actor.animation != OFFPAGE_PERSISTENT_ANIMATION
@@ -151,7 +151,7 @@ impl Composition {
                 return false;
             }
         } else {
-            actor.screen_x = actor.world_x as u8;
+            actor.screen_x = i16::from(actor.world_x as u8);
             actor.render |= VISIBLE;
         }
         actor.render & FLASH == 0 || self.clock & FLASH != 0
@@ -193,7 +193,7 @@ impl Composition {
             if actor.render & PRIORITY != 0 {
                 entry.attributes |= OAM_PRIORITY_ATTRIBUTE;
             }
-            let x = i16::from(actor.screen_x) + i16::from(piece.dx);
+            let x = actor.screen_x + i16::from(piece.dx);
             entry.x = x as u8;
             if !(0..=255).contains(&x) {
                 entry.y = HIDDEN_SPRITE_Y;

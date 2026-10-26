@@ -51,11 +51,12 @@ jobs:
           fi
       - name: Build static browser bundle
         run: python3 ducktales/scripts/build-pages.py
-      - name: Verify browser controller support
+      - name: Verify browser controls, snapshots and widescreen
         run: |
           node ducktales/scripts/test-browser-gamepads.mjs
           node ducktales/scripts/test-save-state.mjs
           DUCKTALES_WEB_DIST=ducktales/web-dist node ducktales/scripts/test-wasm-snapshot.mjs
+          DUCKTALES_WEB_DIST=ducktales/web-dist node ducktales/scripts/test-widescreen.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site

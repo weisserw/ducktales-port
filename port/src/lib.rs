@@ -125,6 +125,9 @@ mod web {
         pub fn configure(&mut self, settings: &str) -> Result<(), JsValue> {
             self.runtime.configure(settings).map_err(error)
         }
+        pub fn display_aspect(&self) -> f64 {
+            f64::from(config::DISPLAY_ASPECT.0) / f64::from(config::DISPLAY_ASPECT.1)
+        }
         pub fn width(&self) -> u32 {
             self.runtime.frame.width
         }

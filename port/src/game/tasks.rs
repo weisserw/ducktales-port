@@ -363,10 +363,7 @@ impl Tasks {
                     .fill(0x20, 0x24, 0, presentation::Stride::Across);
                 services.video.commit_writes();
             }
-            O::HideSprites => services
-                .video
-                .composition
-                .hide(services.video.gameplay_display != 0),
+            O::HideSprites => services.video.hide_sprites(),
             O::ClearNonplayerActors => clear_nonplayer(core),
             O::ScreenScript(selector) => screen_script(core, services, selector),
             O::Chr(selector) => {
@@ -668,10 +665,7 @@ impl Tasks {
         if step.clear_displacement {
             core.camera_displacement = 0;
         }
-        services
-            .video
-            .composition
-            .hide(services.video.gameplay_display != 0);
+        services.video.hide_sprites();
         select_bank(services, 5);
         services.compose(core);
         self.horizontal.as_mut().unwrap().phase = HorizontalPhase::Wait;
@@ -774,10 +768,7 @@ impl Tasks {
         }
         services.video.oam_guard = services.video.oam_guard.wrapping_add(1);
         if kind != progression::Lifecycle::Selection {
-            services
-                .video
-                .composition
-                .hide(services.video.gameplay_display != 0);
+            services.video.hide_sprites();
         }
         services
             .runtime

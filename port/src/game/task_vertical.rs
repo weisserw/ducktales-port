@@ -34,6 +34,15 @@ impl Tasks {
                 } else {
                     world::VerticalDirection::Up
                 };
+            services.video.vertical_view = Some(super::super::widescreen::VerticalView {
+                from_row: if direction == world::VerticalDirection::Down {
+                    core.row.saturating_sub(1)
+                } else {
+                    core.row.saturating_add(1)
+                },
+                shift: 0,
+                left: services.video.wide_terrain.left,
+            });
             let (transition, effects) = world::VerticalTransition::begin(
                 direction,
                 core.actors[0].position.screen_y,
@@ -52,6 +61,7 @@ impl Tasks {
             if self.vertical.as_ref().unwrap().work.is_empty() {
                 if self.vertical.as_ref().unwrap().transition.counter == world::TRANSITION_TICKS {
                     self.vertical = None;
+                    services.video.vertical_view = None;
                     return OwnerStep::Complete(());
                 }
                 let call = self.vertical.as_mut().unwrap();
@@ -59,6 +69,14 @@ impl Tasks {
                 call.transition.split_address = services.video.split_address;
                 call.transition.cursor = core.stream;
                 call.work = call.transition.resume().into();
+                if let Some(view) = services.video.vertical_view.as_mut() {
+                    let distance = i16::from(call.transition.counter.div_ceil(2)) * 8;
+                    view.shift = if call.transition.direction == world::VerticalDirection::Down {
+                        distance
+                    } else {
+                        -distance
+                    };
+                }
                 core.actors[0].position.screen_y = call.transition.player_y;
                 services.video.split_address = call.transition.split_address;
             }
@@ -77,10 +95,7 @@ impl Tasks {
                     }
                 }
                 world::VerticalEffect::ClearNonplayerActors => clear_nonplayer(core),
-                world::VerticalEffect::HideSprites => services
-                    .video
-                    .composition
-                    .hide(services.video.gameplay_display != 0),
+                world::VerticalEffect::HideSprites => services.video.hide_sprites(),
                 world::VerticalEffect::ComposeActors => {
                     select_bank(services, 5);
                     services.compose(core);

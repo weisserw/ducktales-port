@@ -14,6 +14,7 @@ pub struct Terrain<'a> {
     pub content: &'a Content,
     pub attributes: &'a mut [u8; world::CACHE_CELLS],
     pub cells: &'a mut [u8; world::CACHE_CELLS],
+    pub native: &'a mut world::NativeTerrain,
     pub secondary: &'a mut presentation::PreparedSecondary,
     pub cursor: &'a mut u8,
     pub row: u8,
@@ -42,7 +43,7 @@ impl Terrain<'_> {
             slot,
             actors,
             &mut view,
-            self.cells,
+            &world::native_collision(self.cells, self.native),
             self.row,
             &self.content.geometry,
             collision::ProbeRange { start, remaining },
@@ -93,6 +94,15 @@ impl Terrain<'_> {
             local: actor.local_state_code(),
         });
         let selector = self.content.changed_terrain_selectors[usize::from(index)];
+        self.native.replace(
+            &self.content.world.terrain[usize::from(self.bank)],
+            world::Mutation {
+                world_x: actor.position.world_x,
+                spawn_y: actor.spawn_y,
+                selector,
+                marks_changed: true,
+            },
+        );
         let upload = world::replace_cache(
             self.attributes,
             self.cells,
@@ -628,6 +638,7 @@ pub fn update_family(
         content: &services.content,
         attributes: &mut frame.cache.attributes,
         cells: &mut frame.cache.collision,
+        native: &mut frame.cache.native,
         secondary: &mut display.secondary,
         cursor: frame.secondary_cursor,
         row: *frame.room_row,
@@ -847,11 +858,7 @@ impl crate::dialogue::Systems for DialogueActorWorld<'_> {
     fn distance(&mut self, actors: &ActorPool, slot: usize) -> u8 {
         let actor = actors[slot].position.world_x;
         let player = actors[0].position.world_x;
-        if actor >= player {
-            actor.wrapping_sub(player) as u8
-        } else {
-            player.wrapping_sub(actor) as u8
-        }
+        actor.abs_diff(player).min(255) as u8
     }
     // Separate borrows keep canonical owners visible across immediate callbacks.
     #[allow(clippy::too_many_arguments)]
@@ -1300,6 +1307,7 @@ mod tests {
                     content: &content,
                     attributes: &mut core.cache.attributes,
                     cells: &mut core.cache.collision,
+                    native: &mut world::NativeTerrain::default(),
                     secondary: &mut secondary,
                     cursor: &mut cursor,
                     row: 4,
@@ -1339,6 +1347,7 @@ mod tests {
                         content: &content,
                         attributes: &mut core.cache.attributes,
                         cells: &mut core.cache.collision,
+                        native: &mut world::NativeTerrain::default(),
                         secondary: &mut secondary,
                         cursor: &mut cursor,
                         row: 4,
@@ -1450,6 +1459,7 @@ mod tests {
             content: &content,
             attributes: &mut core.cache.attributes,
             cells: &mut core.cache.collision,
+            native: &mut world::NativeTerrain::default(),
             secondary: &mut secondary,
             cursor: &mut cursor,
             row: 4,
@@ -1543,6 +1553,7 @@ mod tests {
                     content: &content,
                     attributes: &mut core.cache.attributes,
                     cells: &mut core.cache.collision,
+                    native: &mut world::NativeTerrain::default(),
                     secondary: &mut secondary,
                     cursor: &mut cursor,
                     row: 0,
@@ -1594,6 +1605,7 @@ mod tests {
                         content: &content,
                         attributes: &mut core.cache.attributes,
                         cells: &mut core.cache.collision,
+                        native: &mut world::NativeTerrain::default(),
                         secondary: &mut secondary,
                         cursor: &mut cursor,
                         row: 0,

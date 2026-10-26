@@ -29,7 +29,7 @@ h1{font-size:clamp(42px,6vw,62px);font-weight:750;line-height:1.1;letter-spacing
 .screen-label{font-size:9px;letter-spacing:.17em;font-weight:650;text-transform:uppercase;color:#8f9fb3;white-space:nowrap}
 #status{margin:0;text-align:right;font-size:11px;line-height:1.4;color:#b3c0ce;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 #game-panel{position:relative;width:fit-content;max-width:100%;margin:0 auto;background:#000}
-canvas{aspect-ratio:4/3;display:block;image-rendering:pixelated;background:#000;max-width:100%;margin:0 auto}
+canvas{aspect-ratio:16/9;display:block;image-rendering:pixelated;background:#000;max-width:100%;margin:0 auto}
 .stage-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:13px;padding-top:11px;border-top:1px solid var(--stage-line);min-height:29px;font-size:10px;line-height:1.5;color:#8f9fb3}
 .device-note{white-space:nowrap}
 #state-status{margin:0;color:#dec48f;text-align:right}
@@ -99,7 +99,7 @@ small.binding-hint{display:block;font-size:11px;line-height:1.7;color:var(--mute
 <label>Stick dead zone <input id="dead_zone" type="range" min="0" max=".95" step=".05"></label>
 </div></fieldset>
 <fieldset><legend>Display</legend><div class="settings-grid">
-<label>Height <input id="height" type="number" min="144" max="6144"></label><p class="aspect-note">4:3 display<span>Width adjusts automatically.</span></p>
+<label>Height <input id="height" type="number" min="144" max="4608"></label><p class="aspect-note">16:9 display<span>Width adjusts automatically.</span></p>
 </div><div class="display-switches">
 <label><input id="integer_scale" type="checkbox">Integer scale</label>
 <label><input id="fullscreen" type="checkbox">Fullscreen</label>

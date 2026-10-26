@@ -56,11 +56,11 @@ function pause() {
 function draw() {
   const canvas=$('screen');canvas.width=game.width();canvas.height=game.height();
   canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(game.pixels()),canvas.width,canvas.height),0,0);
-  // NTSC-style display: height is the sizing control, width follows 4:3.
+  // Height controls the presentation of the native gameplay viewport.
   const factor=settings.height/canvas.height;
   const height=(settings.integer_scale && factor>=1?Math.floor(factor):factor)*canvas.height;
   const displayHeight=document.fullscreenElement=== $('game-panel')?Math.min(height,innerHeight):height;
-  canvas.style.width=`${displayHeight*4/3}px`;canvas.style.height='auto';
+  canvas.style.width=`${displayHeight*game.display_aspect()}px`;canvas.style.height='auto';
 }
 function play(samples) {
   if(!samples.length || audio.state!=='running')return;
@@ -125,7 +125,7 @@ $('options').onsubmit=async event=>{
   try{
     for(const key of ['volume','dead_zone','height'])draft.settings[key]=Number($(key).value);
     for(const key of ['integer_scale','fullscreen'])draft.settings[key]=$(key).checked;
-    draft.settings.width=Math.round(draft.settings.height*4/3);
+    draft.settings.width=Math.round(draft.settings.height*game.display_aspect());
     const explicit=draft.assignments.filter(id=>id!=='auto' && id!=='none');
     if(new Set(explicit).size!==explicit.length)throw new Error('Assign each controller to only one player');
     game.configure(JSON.stringify(draft.settings));

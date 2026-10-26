@@ -26,7 +26,7 @@ requests release borrows and complete in the same host turn until a real source
 wait. Actual waits yield task0; sprite-zero/menu busy loops run interrupts/audio
 without sampling or scheduler resume. NextFrame loops immediately within the
 resumed host turn. Reset title entry reaches its first source wait before tick1.
-Game identity,256×240 dimensions, rational NES NTSC cadence, palette and settings
+Game identity,341×240 native dimensions and 16:9 presentation aspect, rational NES NTSC cadence, palette and settings
 defaults live in config.rs. No CPU, processor flags, stack or RAM emulator exists.
 
 ## Source owners and immediate effects
@@ -107,6 +107,21 @@ original geometry, nonzero attribute bytes and the distinct FF rendering marker.
 Full restore still clears hidden segments; extension updates native availability
 and its corresponding presentation in one owner operation. See
 [status/trace.md](port/src/status/trace.md) for the contract and iteration010 evidence.
+
+Gameplay extends the source camera to a native 341×240 viewport. Connected room
+bounds clamp its origin; short rooms remain centered. World-coordinate terrain
+expansion supplies every visible tile, and a layout/row/tile mutation journal
+preserves changes beyond the source two-page ring. A full-coordinate collision
+view prevents different pages from aliasing. Ordinary and ambient activation use
+the same visible bounds. Horizontal contact/proximity checks saturate long world
+distances instead of wrapping their low byte. Actor slots and family clocks remain
+shared. Signed sprite pieces commit with OAM and draw without the eight-sprite
+scanline limit. Vertical transitions retain their source row and scroll offset.
+The native renderer samples committed patterns/palettes and widens the entire
+sprite-zero hit row. The viewport width preserves the original 4:3 display pixel
+proportions; HUD and non-gameplay scenes copy their original 256 columns without
+resampling and retain centered 4:3 presentation.
+See [widescreen behavior](WIDESCREEN.md).
 
 Video owns logical CHR, nametables, palette, committed OAM/raster and prepared
 uploads. Render is read-only. Primary owns64 prefix bytes; writes past0440 borrow

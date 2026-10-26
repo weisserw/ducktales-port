@@ -1,11 +1,23 @@
 //! Shared game identity and frontend configuration. Both backends use these values.
 pub const ROM_SHA256: &str = "97d472f7b2c1088448d1644155b2650a546bad887b3cba571e16d7986824c169";
-pub const SIZE: (u32, u32) = (256, 240);
+pub const SOURCE_SIZE: (u32, u32) = (256, 240);
+pub const SOURCE_DISPLAY_ASPECT: (u32, u32) = (4, 3);
+pub const DISPLAY_ASPECT: (u32, u32) = (16, 9);
+/// Preserve the source display's pixel proportions with the nearest whole-pixel
+/// viewport width: 256 * (16/9) / (4/3) = 341 1/3 pixels, rounded to 341.
+pub const SIZE: (u32, u32) = (
+    (SOURCE_SIZE.0 * DISPLAY_ASPECT.0 * SOURCE_DISPLAY_ASPECT.1
+        + DISPLAY_ASPECT.1 * SOURCE_DISPLAY_ASPECT.0 / 2)
+        / (DISPLAY_ASPECT.1 * SOURCE_DISPLAY_ASPECT.0),
+    SOURCE_SIZE.1,
+);
+/// Odd additional widths leave the extra pixel on the right.
+pub const SIDE_PIXELS: i16 = ((SIZE.0 - SOURCE_SIZE.0) / 2) as i16;
 pub const RATE: romatlas_port::timing::TickRate = romatlas_port::timing::TickRate::NES_NTSC;
 pub fn settings() -> romatlas_port::settings::Settings {
     romatlas_port::settings::Settings {
-        width: 680,
-        height: 680,
+        width: 960,
+        height: 540,
         ..romatlas_port::nes::default_settings()
     }
 }

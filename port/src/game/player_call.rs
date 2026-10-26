@@ -71,7 +71,7 @@ impl PlayerCall {
                     };
                     let mut world = PlayerWorld {
                         content: &content,
-                        collision: &core.cache.collision,
+                        collision: &core.cache,
                         row: core.row,
                         layout: core.layout,
                         bank: core.terrain_bank,

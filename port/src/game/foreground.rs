@@ -137,11 +137,7 @@ impl progression::Systems for Boundary<'_> {
             Work::Sound(command) => {
                 self.services.commands.submit(command);
             }
-            Work::HideSprites => self
-                .services
-                .video
-                .composition
-                .hide(self.services.video.gameplay_display != 0),
+            Work::HideSprites => self.services.video.hide_sprites(),
             Work::PresentationBank => self
                 .services
                 .runtime

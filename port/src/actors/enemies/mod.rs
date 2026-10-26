@@ -322,11 +322,7 @@ impl FamilyCall<'_, '_, '_> {
     fn distance(&self) -> u8 {
         let a = self.actors[self.slot].position.world_x;
         let p = self.actors[0].position.world_x;
-        if a >= p {
-            a.wrapping_sub(p) as u8
-        } else {
-            p.wrapping_sub(a) as u8
-        }
+        a.abs_diff(p).min(255) as u8
     }
     fn vertical_distance(&self) -> u8 {
         self.actors[self.slot]

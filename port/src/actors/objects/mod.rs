@@ -761,7 +761,7 @@ impl ObjectCall<'_, '_, '_> {
         if self.actors[s].state_code() & 15 == 0 {
             let a = self.actors[s].position.world_x;
             let p = self.actors[0].position.world_x;
-            let distance = if a >= p { (a - p) as u8 } else { (p - a) as u8 };
+            let distance = a.abs_diff(p).min(255) as u8;
             if distance >= 4 {
                 return;
             }
@@ -1110,11 +1110,7 @@ impl ObjectCall<'_, '_, '_> {
             }
             let a = self.actors[s].position.world_x;
             let p = self.actors[0].position.world_x;
-            let distance = if a >= p {
-                a.wrapping_sub(p) as u8
-            } else {
-                p.wrapping_sub(a) as u8
-            };
+            let distance = a.abs_diff(p).min(255) as u8;
             if distance
                 >= if self.actors[s].animation == 0x87 {
                     0x20

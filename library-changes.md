@@ -522,3 +522,26 @@ Verified origin/main matches the new commit, the published runtime source exactl
 matches the already-tested local runtime, and workflow YAML selects it with no
 patch step. Whitespace checks pass. Source behavior is unchanged from the prior
 validated snapshot integration, so its Rust/Wasm/browser results still apply.
+
+## 2026-10-26: native widescreen display aspect
+
+Local, uncommitted ROMAtlas changes in `crates/romatlas-port/src/lib.rs`,
+`src/desktop.rs` and `tests/runtime.rs` add optional
+`Game::display_aspect_ratio()` and `viewport_with_aspect()`. Desktop presentation
+can now fit a 720×240 game frame to 16:9 while retaining vertical integer scaling.
+Ports that return None retain the existing viewport behavior. Tests cover full
+16:9 fitting, integer height steps, small windows and existing default fitting.
+
+Read the toolkit's AGENTS.md, project.md and development guide before editing.
+The toolkit working tree was clean at the start of these edits. All modifications
+remain uncommitted; no publication, push or deployment was performed. Transfer
+this runtime source with the game for desktop builds. The game implements the
+new trait method only with its desktop feature, so the published browser runtime
+pin and existing browser workflow need no runtime patch or revision change.
+
+Passed with Rust 1.90.0 and Cargo.lock: toolkit formatting, whitespace checks,
+`cargo test --locked -p romatlas-port --features desktop,snapshots` (73 tests),
+and clippy for romatlas-port/all targets/desktop/snapshots with warnings denied.
+The game also passes desktop-feature clippy, compiling desktop code without
+opening a window. These are implementation/runtime checks; prior QA records and
+original implementation ledgers remain unchanged.

@@ -3,10 +3,12 @@
 use crate::assets::formats::UploadCommit;
 use crate::identifiers::StageId;
 mod display;
+mod native;
 use anyhow::{Context, Result, ensure};
 pub use display::{
     BlockRows, ColumnUpdate, PaletteRun, TerrainUpdate, TileOrigin, TilePage, TileRegion,
 };
+pub use native::{NativeTerrain, TerrainChange, native_collision};
 pub const ROOM_CELLS: usize = 64;
 const ROOM_AXIS_CELLS: usize = 8;
 const ROOM_AXIS_BITS: u8 = 3;
@@ -551,6 +553,8 @@ pub fn read_cell(catalog: &WorldCatalog, layout: usize, bank: usize, probe: Terr
 }
 #[derive(Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct WorldCache {
+    #[serde(default)]
+    pub native: NativeTerrain,
     #[serde(with = "crate::snapshot::array")]
     pub attributes: [u8; CACHE_CELLS],
     #[serde(with = "crate::snapshot::array")]
@@ -560,6 +564,7 @@ pub struct WorldCache {
 impl Default for WorldCache {
     fn default() -> Self {
         Self {
+            native: NativeTerrain::default(),
             attributes: [0; CACHE_CELLS],
             collision: [0; CACHE_CELLS],
             changed_this_frame: 0,
@@ -603,6 +608,7 @@ pub struct Mutation {
 impl WorldCache {
     /// Cache changes occur now, display writes are committed at B01/B03 boundary.
     pub fn replace(&mut self, set: &TerrainSet, mutation: Mutation) -> TerrainUpdate {
+        self.native.replace(set, mutation);
         replace_cache(
             &mut self.attributes,
             &mut self.collision,

@@ -56,10 +56,7 @@ impl Tasks {
                     OwnerStep::Complete(())
                 }
                 scenes::ContentWork::HideOam => {
-                    services
-                        .video
-                        .composition
-                        .hide(services.video.gameplay_display != 0);
+                    services.video.hide_sprites();
                     OwnerStep::Complete(())
                 }
                 scenes::ContentWork::Yield => self.wait(WaitOwner::SceneYield, 1),

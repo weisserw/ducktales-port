@@ -340,12 +340,13 @@ fn vertical_vertical_distance_equality_rejects_but_one_below_carries() {
     }
 }
 #[test]
-fn vertical_distance_is_low_byte_magnitude_not_true_far_page_distance() {
+fn vertical_platform_does_not_carry_player_one_world_page_away() {
     let mut f = Fixture::new(VERTICAL);
     f.ready();
     f.actors[0].position.world_x = ACTOR_X + 0x100;
+    let before = f.actors[0].position;
     f.run();
-    assert_eq!(f.actors[0].position.screen_y, 0x82);
+    assert_eq!(f.actors[0].position, before);
 }
 #[test]
 fn vertical_carry_wraps_player_y_without_reload_or_action_gate() {
@@ -373,8 +374,8 @@ fn vertical_lower_equality_reverses_after_carry_and_preserves_high_state_bits() 
     assert_eq!(f.actors[0].position.screen_y, 0xaa);
 }
 #[test]
-fn walking_wait_rejects_player_behind_and_low_byte_distance_below_sixteen() {
-    for x in [ACTOR_X - 1, ACTOR_X + 15, ACTOR_X + 0x100] {
+fn walking_wait_rejects_player_behind_and_world_distance_below_sixteen() {
+    for x in [ACTOR_X - 1, ACTOR_X + 15] {
         let mut f = Fixture::new(WALKING);
         f.actors[0].position.world_x = x;
         let old = f.actors;
@@ -1425,8 +1426,8 @@ fn carrying_movement_commits_before_position_copy_and_queue_is_retained() {
     assert_eq!(f.player.queued, Some(Action::Damage));
 }
 #[test]
-fn external_trigger_strict_four_pixel_start_and_low_byte_distance_alias() {
-    for (offset, active) in [(3, true), (4, false), (0x100, true)] {
+fn external_trigger_strict_four_pixel_start_uses_world_distance() {
+    for (offset, active) in [(3, true), (4, false), (0x100, false)] {
         let mut f = Fixture::new(EXTERNAL);
         f.actors[0].position.world_x = ACTOR_X + offset;
         f.run();

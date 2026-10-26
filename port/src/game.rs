@@ -13,6 +13,7 @@ mod player_call;
 mod simulation;
 mod tasks;
 mod video;
+mod widescreen;
 use crate::{assets::Assets, identifiers::Mode};
 use anyhow::Result;
 use romatlas_port::{
@@ -99,6 +100,10 @@ impl Game for Port {
             sample_actions(&input.primary.held),
             sample_actions(&input.players[1].held),
         ]);
+    }
+    #[cfg(feature = "desktop")]
+    fn display_aspect_ratio(&self) -> Option<(u32, u32)> {
+        Some(crate::config::DISPLAY_ASPECT)
     }
     fn render(&self, frame: &mut Frame) {
         self.machine.services.video.render(frame);
@@ -220,8 +225,10 @@ mod tests {
                     ];
                     expected.advance_samples(input);
                     restored.advance_samples(input);
-                    let (mut a, mut b) =
-                        (Frame::new(256, 240).unwrap(), Frame::new(256, 240).unwrap());
+                    let (mut a, mut b) = (
+                        Frame::new(config::SIZE.0, config::SIZE.1).unwrap(),
+                        Frame::new(config::SIZE.0, config::SIZE.1).unwrap(),
+                    );
                     expected.render(&mut a);
                     restored.render(&mut b);
                     assert_eq!(a.pixels, b.pixels, "frame after snapshot at tick {tick}");

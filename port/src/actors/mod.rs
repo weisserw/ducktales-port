@@ -54,7 +54,7 @@ pub struct ActorContact {
     /// Shared boss hit interval (source06F0); reset by ordinary spawn.
     pub boss_protection: u8,
     pub spawn_y: u8,
-    pub screen_x: u8,
+    pub screen_x: i16,
     pub direction: u8,
     pub motion_flags: u8,
 }
@@ -516,14 +516,30 @@ pub fn scan_window_with(
     context: &mut SpawnContext,
     committed: &mut dyn FnMut(&mut ActorPool, &mut SpawnContext, &SpawnReport),
 ) -> SpawnReport {
+    scan_window_extent_with(
+        actors, bits, records, templates, window, context, 255, committed,
+    )
+}
+/// Native viewport variant; cursors and candidate side effects retain the same
+/// ordering while the interval may span more than one source screen.
+#[allow(clippy::too_many_arguments)]
+pub fn scan_window_extent_with(
+    actors: &mut ActorPool,
+    bits: &[u8; SUPPRESSION_BYTES],
+    records: &[SpawnRecord],
+    templates: &[Template],
+    window: &mut Window,
+    context: &mut SpawnContext,
+    visible_interval: u16,
+    committed: &mut dyn FnMut(&mut ActorPool, &mut SpawnContext, &SpawnReport),
+) -> SpawnReport {
     const FORWARD: u8 = 1;
     const DIRECTION_MASK: u8 = 3;
-    const VISIBLE_INTERVAL: u16 = 255;
     let mut report = SpawnReport::default();
     if window.direction & DIRECTION_MASK == 0 || records.is_empty() {
         return report;
     }
-    let high = context.camera.wrapping_add(VISIBLE_INTERVAL);
+    let high = context.camera.wrapping_add(visible_interval);
     let at = |cursor: u8| {
         records
             .iter()
@@ -533,6 +549,11 @@ pub fn scan_window_with(
     if window.direction & FORWARD != 0 {
         while let Some(record) = at(window.upper) {
             if record.world_x > high {
+                break;
+            }
+            // Wider views can exhaust the original pool. Retain the cursor
+            // until a slot opens instead of permanently losing this entry.
+            if visible_interval > 255 && allocate(actors, AllocationRegister::X).is_none() {
                 break;
             }
             let candidate = candidate(actors, bits, record, templates, context);
@@ -559,6 +580,11 @@ pub fn scan_window_with(
                 break;
             };
             if record.world_x < context.camera {
+                break;
+            }
+            // Wider views can exhaust the original pool. Retain the cursor
+            // until a slot opens instead of permanently losing this entry.
+            if visible_interval > 255 && allocate(actors, AllocationRegister::X).is_none() {
                 break;
             }
             let candidate = candidate(actors, bits, record, templates, context);
@@ -588,6 +614,16 @@ pub fn special_spawn(
     templates: &[Template],
     context: &mut SpawnContext,
 ) -> SpawnReport {
+    special_spawn_edges(actors, rows, templates, context, None)
+}
+/// Optional native view bounds move ambient edge spawns with the visible world.
+pub fn special_spawn_edges(
+    actors: &mut ActorPool,
+    rows: &[Vec<SpecialRecord>],
+    templates: &[Template],
+    context: &mut SpawnContext,
+    bounds: Option<(u16, u16)>,
+) -> SpawnReport {
     const BACKWARD_BIT: u8 = 2;
     const FORWARD_EDGE: u16 = 0x00f8;
     const BACKWARD_EDGE: u16 = 0x0008;
@@ -603,13 +639,21 @@ pub fn special_spawn(
         }
         SpecialControl::Ready => (),
     }
-    let edge = context
-        .camera
-        .wrapping_add(if context.direction & BACKWARD_BIT != 0 {
-            BACKWARD_EDGE
+    let edge = if let Some((left, right)) = bounds {
+        if context.direction & BACKWARD_BIT != 0 {
+            left.saturating_add(8)
         } else {
-            FORWARD_EDGE
-        });
+            right.saturating_sub(7)
+        }
+    } else {
+        context
+            .camera
+            .wrapping_add(if context.direction & BACKWARD_BIT != 0 {
+                BACKWARD_EDGE
+            } else {
+                FORWARD_EDGE
+            })
+    };
     let Some(record) = rows
         .get(usize::from(context.room_row))
         .and_then(|row| row.iter().find(|record| record.page == (edge >> 8) as u8))
@@ -691,7 +735,8 @@ pub fn actor_overlap(
         slot != source
             && target.render & VISIBLE != 0
             && from.position.screen_y.abs_diff(target.position.screen_y) < extent.half_height
-            && (from.position.world_x.abs_diff(target.position.world_x) as u8) <= extent.half_width
+            && from.position.world_x.abs_diff(target.position.world_x)
+                <= u16::from(extent.half_width)
     })?;
     const CONTACT_EXEMPT_HANDLERS: [u8; 3] = [8, 9, 0x25];
     let exempt = CONTACT_EXEMPT_HANDLERS.contains(&actors[slot].handler);
@@ -727,7 +772,7 @@ pub fn player_distance(actors: &ActorPool, slot: usize) -> (u8, u8) {
     let player = actors[PLAYER_SLOT].position;
     let actor = actors[slot].position;
     (
-        player.world_x.abs_diff(actor.world_x) as u8,
+        player.world_x.abs_diff(actor.world_x).min(255) as u8,
         player.screen_y.abs_diff(actor.screen_y),
     )
 }

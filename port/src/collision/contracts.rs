@@ -830,8 +830,7 @@ fn solid_overlap_uses_target_profile_not_source_and_does_not_require_profile_ena
     );
 }
 #[test]
-fn world_x_contact_selects_absolute_low_byte_using_full_unsigned_borrow_without_high_distance_rejection()
- {
+fn world_x_contact_rejects_high_distance_aliases() {
     let mut all = actors();
     all[2] = actor();
     all[15] = actor();
@@ -854,10 +853,7 @@ fn world_x_contact_selects_absolute_low_byte_using_full_unsigned_borrow_without_
     all[15].position.world_x = 0x0301;
     assert_eq!(
         solid_overlap(2, &all, &geometry(), ContactAxis::Horizontal),
-        Some(Contact {
-            slot: 15,
-            penetration: TEST_WIDTH
-        })
+        None
     );
 }
 #[test]

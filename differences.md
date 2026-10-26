@@ -10,6 +10,13 @@ additional gameplay smoke route was performed during stage4.
   a raster/menu busy loop runs interrupts/audio without controller sampling or
   task0 resume. Hardware reset warm-up vblank polling is omitted before the first
   playable tick. Intentional waits/freezes/flashing remain source-driven.
+- Gameplay intentionally extends the original view to 341×240, displayed at 16:9
+  with the original 4:3 display pixel proportions. Terrain comes from every visible world room, with full-coordinate
+  mutation/collision state. Actor activation and culling follow the wider camera;
+  world distances no longer wrap at 256 pixels. This changes encounter timing and
+  difficulty. Gameplay sprites have signed positions and no eight-piece scanline
+  limit. HUD, menus and scenes retain 4:3 framing. Superseded byte-distance tests
+  are preserved in review/widescreen-before/. See WIDESCREEN.md.
 - Rendering uses committed logical CHR/nametable/palette/OAM and deterministic
   UI/playfield split evaluation. Sprite-zero hit uses the same pixel policy.
   It approximates source raster timing at scanline/pixel boundaries, without a

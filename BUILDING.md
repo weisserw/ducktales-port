@@ -14,6 +14,11 @@ For desktop builds, build on the target operating system and CPU architecture. I
 Keep port/src/, Cargo.toml, Cargo.lock, rust-toolchain.toml and any authored
 extensions. Retain the exact edited ROMAtlas source, including uncommitted
 shared-library changes; Cargo.lock does not freeze a path dependency.
+Desktop widescreen also requires the local ROMAtlas `Game::display_aspect_ratio`
+addition described in [library-changes.md](library-changes.md). Transfer that
+runtime source with the game. Browser builds retain the published runtime pin;
+the desktop-only trait implementation is excluded from Wasm builds.
+
 The generated dependency initially points to:
 
 ```text

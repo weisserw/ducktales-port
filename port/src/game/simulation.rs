@@ -143,6 +143,7 @@ impl Services {
     /// Display suspension suppresses commits, not task wake or audio sequencing.
     pub fn interrupt(&mut self, core: &mut Core) {
         use runtime::FrameEffect as E;
+        self.prepare_wide_terrain(core);
         let effects = self.runtime.interrupt(
             runtime::InterruptSource::Nmi,
             runtime::InterruptContext {
@@ -176,7 +177,13 @@ impl Services {
                 E::PrimeSplitSprite => {
                     self.video.composition.oam[0] = self.video.raster.split_sprite
                 }
-                E::CopyOam => self.video.committed_oam = self.video.composition.snapshot(),
+                E::CopyOam => {
+                    self.video.committed_oam = self.video.composition.snapshot();
+                    self.video.committed_wide_gameplay = self.video.wide_gameplay;
+                    self.video
+                        .committed_wide_sprites
+                        .clone_from(&self.video.wide_sprites);
+                }
                 E::FlushPrimary => {
                     let bytes = self.video.primary_bytes(&core.cache.attributes);
                     self.video.display.flush(
@@ -293,6 +300,27 @@ pub fn compose_owners(
         },
         [&health, &title, &timer],
     );
+    video.wide_sprites.clear();
+    let native_world = !video.wide_terrain.rooms.is_empty() && progression.ending_latch == 0;
+    let wide = native_world
+        && progression.dialogue_cursor == 0
+        && progression.status_selector == 0
+        && player.action != player::Action::Dialogue;
+    video.wide_gameplay = wide;
+    let wide_left = if native_world {
+        video.vertical_view.map_or_else(
+            || {
+                super::widescreen::viewport_left(
+                    &content.world.layouts[usize::from(video.wide_terrain.layout)],
+                    camera.x,
+                    video.wide_terrain.row,
+                )
+            },
+            |view| view.left,
+        )
+    } else {
+        0
+    };
     for slot in order {
         let actor = &mut actors[slot];
         // Apply eligibility directly to canonical actors before borrowing
@@ -322,7 +350,21 @@ pub fn compose_owners(
                 player.special_mode,
             );
         }
-        if video.composition.project(&mut visual, camera.x) {
+        let projected = if native_world {
+            super::widescreen::project(&mut visual, wide_left, video.composition.clock)
+        } else {
+            video.composition.project(&mut visual, camera.x)
+        };
+        if projected {
+            // A letterboxed dialogue panel changes drawing, not world culling.
+            let mut source_visual = visual.clone();
+            if native_world && !wide {
+                source_visual.screen_x = if visual.state & presentation::WORLD_POSITIONED != 0 {
+                    visual.world_x.wrapping_sub(camera.x) as i16
+                } else {
+                    i16::from(visual.world_x as u8)
+                };
+            }
             let sequence = &content.presentation.animations[usize::from(visual.animation)];
             if let Some(frame) =
                 presentation::Composition::advance(&mut visual, sequence, player.action as u8)
@@ -335,16 +377,29 @@ pub fn compose_owners(
                         &content.runtime_coordinates,
                         visual.render & presentation::FLIP_HORIZONTAL != 0,
                     );
-                    video.composition.emit(slot, &visual, &composite);
+                    if wide {
+                        super::widescreen::emit(&mut video.wide_sprites, slot, &visual, &composite);
+                    } else {
+                        video.composition.emit(slot, &source_visual, &composite);
+                    }
                 } else {
                     let frames = if visual.render & presentation::FLIP_HORIZONTAL != 0 {
                         &content.presentation.flipped_composites
                     } else {
                         &content.presentation.composites
                     };
-                    video
-                        .composition
-                        .emit(slot, &visual, &frames[usize::from(frame)]);
+                    if wide {
+                        super::widescreen::emit(
+                            &mut video.wide_sprites,
+                            slot,
+                            &visual,
+                            &frames[usize::from(frame)],
+                        );
+                    } else {
+                        video
+                            .composition
+                            .emit(slot, &source_visual, &frames[usize::from(frame)]);
+                    }
                 }
             }
         }
@@ -787,6 +842,8 @@ mod tests {
 
 impl Services {
     pub fn load_stage_presentation(&mut self, core: &mut Core, selector: u8) {
+        core.cache.native = world::NativeTerrain::default();
+        self.video.vertical_view = None;
         let preset = &self.content.raw_stage_presets[usize::from(selector)];
         self.commands.submit_stage(selector);
         core.terrain_bank = preset.terrain_bank;
@@ -911,6 +968,7 @@ impl Services {
     /// Special spawns run before the ordinary window. Candidate callbacks apply
     /// replacement/recovery allocation now, so subsequent candidates see them.
     pub fn spawn(&mut self, core: &mut Core) {
+        let native_view = self.refresh_native_terrain(core);
         let before = super::journal::Snapshot::core(core);
         let special_before = core.actors;
         let mut context = actors::SpawnContext {
@@ -926,11 +984,18 @@ impl Services {
             special: core.special_spawn,
         };
         if let Some(definition) = self.content.spawns.source(core.progression.stage) {
-            actors::special_spawn(
+            let bounds = (self.video.gameplay_display != 0 && core.layout < 5).then(|| {
+                (
+                    native_view.left.max(0) as u16,
+                    (native_view.left + crate::config::SIZE.0 as i32 - 1).max(0) as u16,
+                )
+            });
+            actors::special_spawn_edges(
                 &mut core.actors,
                 &definition.special_rows,
                 &self.content.spawns.templates,
                 &mut context,
+                bounds,
             );
         }
         super::journal::actor_changes(
@@ -971,13 +1036,20 @@ impl Services {
         // Observation-only prior boundary, dropped with this nonyielding call.
         // It never supplies allocation or gameplay decisions.
         let mut previous_pool = core.actors;
-        actors::scan_window_with(
+        let wide = self.video.gameplay_display != 0 && core.layout < 5;
+        let high = (native_view.left + crate::config::SIZE.0 as i32 - 1).max(0) as u16;
+        if wide {
+            context.camera = native_view.left.max(0) as u16;
+        }
+        let interval = if wide { high - context.camera } else { 255 };
+        actors::scan_window_extent_with(
             &mut core.actors,
             &core.suppression,
             &records,
             &self.content.spawns.templates,
             &mut core.spawn_window,
             &mut context,
+            interval,
             &mut |pool, context, report| {
                 super::journal::actor_changes(
                     &self.events,

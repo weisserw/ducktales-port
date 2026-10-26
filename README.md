@@ -2,6 +2,11 @@
 
 **[Play DuckTales in your browser](https://weisserw.github.io/ducktales-port/)**
 
+Gameplay renders natively at **341×240** and displays at **16:9**, preserving
+the pixel proportions of the original 4:3 display, with a
+wider camera, terrain and enemy activation. The HUD, menus and scenes retain
+centered 4:3 framing. See [widescreen behavior](WIDESCREEN.md).
+
 A shared native implementation of the original title, land selection, player and
 actor rules, maps, bosses, dialogue, special scenes, progression, ending and audio.
 Desktop, browser and headless/debug frontends use the same Game implementation.
@@ -42,7 +47,7 @@ contains only authored pattern/map/music data and source template references.
 Rules live in port/src/player, actors, world, collision, selection, progression,
 status, dialogue, scenes, finale and audio. Adjacent trace.md and contracts.rs
 record source derivations; port/src/game connects their canonical owners and
-resumable calls. Identity, dimensions256×240, NTSC cadence and defaults are in
+resumable calls. Identity, native dimensions341×240, NTSC cadence and defaults are in
 port/src/config.rs. See architecture.md and differences.md for timing/render/audio
 policies and assessed assumptions.
 

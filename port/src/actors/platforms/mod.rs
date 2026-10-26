@@ -219,7 +219,7 @@ impl PlatformCall<'_, '_, '_> {
     fn distance(&self) -> u8 {
         let a = self.actors[self.slot].position.world_x;
         let p = self.actors[0].position.world_x;
-        if a >= p { (a - p) as u8 } else { (p - a) as u8 }
+        a.abs_diff(p).min(255) as u8
     }
     fn y_distance(&self) -> u8 {
         self.actors[self.slot]
@@ -272,7 +272,7 @@ impl PlatformCall<'_, '_, '_> {
                 if self.actors[s].state_code() & 15 == 0 {
                     let a = self.actors[s].position.world_x;
                     let p = self.actors[0].position.world_x;
-                    if p < a || (p.wrapping_sub(a) as u8) < 0x10 {
+                    if p < a || (p.saturating_sub(a).min(255) as u8) < 0x10 {
                         return;
                     }
                     {

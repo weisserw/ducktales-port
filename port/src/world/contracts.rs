@@ -1032,6 +1032,7 @@ fn actor_state_replacement_uses_stage_four_entry_stride_without_animation_offset
 #[test]
 fn mutation_merges_only_selected_quadrant_and_emits_matching_two_tile_pairs_and_attribute() {
     let mut cache = WorldCache {
+        native: NativeTerrain::default(),
         attributes: [0xff; CACHE_CELLS],
         collision: [0xff; CACHE_CELLS],
         changed_this_frame: 0,
@@ -1086,6 +1087,7 @@ fn mutation_covers_all_quadrant_masks_both_room_parities_and_spawn_y_not_live_y(
         (0x130, 0x50, 81, 0x7f, 0x3f),
     ] {
         let mut cache = WorldCache {
+            native: NativeTerrain::default(),
             attributes: [0xff; CACHE_CELLS],
             collision: [0xff; CACHE_CELLS],
             changed_this_frame: 0,
@@ -1107,6 +1109,7 @@ fn mutation_covers_all_quadrant_masks_both_room_parities_and_spawn_y_not_live_y(
 #[test]
 fn top_status_attribute_mask_changes_upload_only_and_keeps_full_logical_cache() {
     let mut cache = WorldCache {
+        native: NativeTerrain::default(),
         attributes: [0xff; CACHE_CELLS],
         collision: [0xff; CACHE_CELLS],
         changed_this_frame: 0,
@@ -1133,6 +1136,7 @@ fn top_status_attribute_mask_changes_upload_only_and_keeps_full_logical_cache() 
 #[test]
 fn dialogue_reveal_clears_only_two_collision_cells_and_preserves_attributes() {
     let mut cache = WorldCache {
+        native: NativeTerrain::default(),
         attributes: [0xaa; CACHE_CELLS],
         collision: [0xff; CACHE_CELLS],
         changed_this_frame: 7,
@@ -1508,6 +1512,7 @@ fn packed_property_ignores_reserved_bits_and_replacement_counter_increments_with
     let block = expand(&set, 0, context());
     assert_eq!((block.palette, block.collision), (0xe4, 0x39));
     let mut cache = WorldCache {
+        native: NativeTerrain::default(),
         changed_this_frame: u8::MAX,
         ..WorldCache::default()
     };

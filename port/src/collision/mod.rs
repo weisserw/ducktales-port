@@ -230,10 +230,16 @@ pub fn set_velocity_preset(
 /// mutable cache state or creating another memory representation.
 pub trait CollisionCells {
     fn collision_cell(&self, index: usize) -> u8;
+    fn collision_probe(&self, index: usize, _probe: TerrainProbe) -> u8 {
+        self.collision_cell(index)
+    }
 }
 impl CollisionCells for WorldCache {
     fn collision_cell(&self, index: usize) -> u8 {
         self.collision[index]
+    }
+    fn collision_probe(&self, index: usize, probe: TerrainProbe) -> u8 {
+        self.native.probe(probe).unwrap_or(self.collision[index])
     }
 }
 impl CollisionCells for [u8; crate::world::CACHE_CELLS] {
@@ -282,7 +288,16 @@ pub fn sample(
         + usize::from((world_x as u8) >> BLOCK_PIXELS_SHIFT);
     let index = usize::from(page & 1) * CACHE_PAGE_CELLS + coordinate;
     let quadrant = ((screen_y >> 3) & 2) | ((world_x as u8 >> 4) & 1);
-    result.class = (cache.collision_cell(index) >> (quadrant * 2)) & 3;
+    result.class = (cache.collision_probe(
+        index,
+        TerrainProbe {
+            room_row,
+            world_page: page,
+            block_coordinate: coordinate as u8,
+            quadrant,
+        },
+    ) >> (quadrant * 2))
+        & 3;
     result.cache_index = Some(index);
     result.quadrant = Some(quadrant);
     result.descriptor = Some(TerrainProbe {
@@ -890,12 +905,9 @@ pub fn terrain_particles(
 mod contracts;
 
 fn horizontal_separation(first: u16, second: u16) -> u8 {
-    if first >= second {
-        first.wrapping_sub(second) as u8
-    } else {
-        second.wrapping_sub(first) as u8
-    }
+    first.abs_diff(second).min(255) as u8
 }
+
 fn contact_penetration(axis: ContactAxis, dx: u8, dy: u8, extent: Extent) -> Option<u8> {
     match axis {
         ContactAxis::Horizontal

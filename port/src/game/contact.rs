@@ -152,7 +152,7 @@ impl PlayerCallReturn {
 }
 pub struct PlayerWorld<'a> {
     pub content: &'a Content,
-    pub collision: &'a [u8; world::CACHE_CELLS],
+    pub collision: &'a dyn collision::CollisionCells,
     pub row: u8,
     pub layout: u8,
     pub bank: u8,

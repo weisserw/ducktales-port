@@ -29,8 +29,10 @@ try:
         assert page.locator('#shortcuts').count() == 0
         for index, name in enumerate(['start','pause','reset','save-state','restore-state','settings'],1):
             assert page.locator('#'+name).inner_text().endswith(f'(F{index})')
+        assert page.locator('#screen').evaluate('(canvas) => [canvas.width,canvas.height]') == [341,240]
         box = page.locator('#screen').bounding_box()
         assert abs(box['x'] + box['width'] / 2 - 640) < 2
+        assert abs((box['width']/341)/(box['height']/240)-1.25)<.002
         page.click('#start')
         page.wait_for_function("Number(document.getElementById('screen').dataset.ticks)>2")
         for event in ['blur', 'visibilitychange']:
@@ -64,7 +66,7 @@ try:
         page.click('button[type=submit]')
         page.wait_for_function("document.fullscreenElement?.id==='game-panel' && document.getElementById('status').textContent==='Running'")
         box = page.locator('#screen').bounding_box()
-        assert abs(box['height']-360)<1 and abs(box['width']-480)<1
+        assert abs(box['height']-360)<1 and abs(box['width']-640)<1
         assert page.locator('#game-overlay').is_hidden()
         # Shortcuts remain accessible while page buttons are outside fullscreen.
         page.keyboard.press('F6')
@@ -92,7 +94,7 @@ try:
         box = page.locator('#screen').bounding_box()
         assert abs(box['x'] + box['width'] / 2 - 210) < 2
         assert box['width'] <= 420
-        assert abs(box['width']/box['height']-4/3)<.01
+        assert abs(box['width']/box['height']-16/9)<.01
         assert not errors, errors
         browser.close()
         print('PASS: title casing, centered canvas, focus continuity, all toolbar shortcuts, fullscreen settings resume, Pause and Reset/restart')

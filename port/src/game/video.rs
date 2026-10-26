@@ -15,6 +15,18 @@ pub enum TimerLayout {
 }
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct Video {
+    #[serde(default)]
+    pub wide_sprites: Vec<super::widescreen::WideSprite>,
+    #[serde(default)]
+    pub wide_gameplay: bool,
+    #[serde(default)]
+    pub committed_wide_gameplay: bool,
+    #[serde(default)]
+    pub vertical_view: Option<super::widescreen::VerticalView>,
+    #[serde(default)]
+    pub committed_wide_sprites: Vec<super::widescreen::WideSprite>,
+    #[serde(default)]
+    pub wide_terrain: super::widescreen::TerrainView,
     pub display: Display,
     pub composition: Composition,
     pub memory: VideoMemory,
@@ -54,6 +66,12 @@ impl Video {
         }
         let composition = Composition::default();
         let mut video = Self {
+            wide_sprites: Vec::new(),
+            wide_gameplay: false,
+            committed_wide_gameplay: false,
+            vertical_view: None,
+            committed_wide_sprites: Vec::new(),
+            wide_terrain: super::widescreen::TerrainView::default(),
             display,
             committed_oam: composition.snapshot(),
             composition,
@@ -189,7 +207,7 @@ impl Video {
                 nametable: control & 3,
             },
         };
-        for y in 0..crate::config::SIZE.1 as u16 {
+        for y in 0..crate::config::SOURCE_SIZE.1 as u16 {
             let sprites = ppu::sprites(
                 &self.memory.chr,
                 CHR_BANKS,
@@ -199,7 +217,7 @@ impl Video {
                 if control & 8 != 0 { 0x1000 } else { 0 },
             )
             .expect("validated UI sprite view");
-            for x in 0..crate::config::SIZE.0 as u16 {
+            for x in 0..crate::config::SOURCE_SIZE.0 as u16 {
                 if ppu::compose(
                     background
                         .pixel(x, y)
@@ -216,7 +234,7 @@ impl Video {
         }
         false
     }
-    pub fn render(&self, frame: &mut Frame) {
+    pub fn render_source(&self, frame: &mut Frame, ui_only: bool) -> Option<u16> {
         const CHR_BANKS: [usize; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
         let mut oam = [0; 256];
         for (record, sprite) in oam.chunks_exact_mut(4).zip(self.committed_oam) {
@@ -224,7 +242,7 @@ impl Video {
         }
         let mut playfield = false;
         let mut split_line = 0;
-        for y in 0..crate::config::SIZE.1 as u16 {
+        for y in 0..crate::config::SOURCE_SIZE.1 as u16 {
             let ui_control = self.raster.ui_control;
             let sprite_line = ppu::sprites(
                 &self.memory.chr,
@@ -249,7 +267,7 @@ impl Video {
                 },
             )
             .expect("validated playfield sprite view");
-            for x in 0..crate::config::SIZE.0 as u16 {
+            for x in 0..crate::config::SOURCE_SIZE.0 as u16 {
                 let control = if playfield {
                     self.raster.playfield_control.unwrap_or(ui_control)
                 } else {
@@ -312,7 +330,11 @@ impl Video {
                     split_line = y;
                 }
             }
+            if playfield && ui_only {
+                break;
+            }
         }
+        playfield.then_some(split_line)
     }
     pub fn write_direct(&mut self, address: u16, value: u8) {
         self.memory.write(VideoWrite { address, value });

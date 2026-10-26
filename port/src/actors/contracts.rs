@@ -1406,8 +1406,7 @@ fn ordinary_overlap_hit_wraps_marker_and_preserved_animation_1b_keeps_clocks() {
     );
 }
 #[test]
-fn overlap_world_distance_uses_full_unsigned_borrow_to_choose_low_byte_magnitude_without_high_rejection()
- {
+fn overlap_world_distance_rejects_distant_visible_actors() {
     for (source, target) in [
         (0x0200, 0x0100),
         (0x0100, 0x0208),
@@ -1417,7 +1416,7 @@ fn overlap_world_distance_uses_full_unsigned_borrow_to_choose_low_byte_magnitude
         let mut a = contact_pool();
         a[1].position.world_x = source;
         a[LAST_ACTOR].position.world_x = target;
-        assert_eq!(actor_overlap(&mut a, 1, &extents()), Some(LAST_ACTOR));
+        assert_eq!(actor_overlap(&mut a, 1, &extents()), None);
     }
 }
 #[test]
@@ -1459,11 +1458,11 @@ fn face_player_uses_unsigned_sixteenbit_compare_with_equality_direction_two() {
     }
 }
 #[test]
-fn player_distance_preserves_source_low_byte_alias_and_unsigned_screen_y_magnitude() {
+fn player_distance_saturates_world_distance_and_keeps_unsigned_screen_y_magnitude() {
     for (player, actor, expected) in [
-        (0x0100, 0x0208, 8),
-        (0x0208, 0x0100, 8),
-        (0x0000, 0xfff8, 0xf8),
+        (0x0100, 0x0208, 255),
+        (0x0208, 0x0100, 255),
+        (0x0000, 0xfff8, 255),
     ] {
         let mut a = pool();
         a[0].position.world_x = player;
