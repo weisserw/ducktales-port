@@ -647,3 +647,21 @@ pre-edit backups and local build configuration are included in its accompanying
 commit. The existing Pages runtime pin remains unchanged and was checked for
 Wasm compatibility. No additional build or whole-game QA pass was run for this
 commit-only step; the implementation verification results above still apply.
+
+## 2026-10-27: restore incremental builds and prefer release mode
+
+After the user expanded the disk, enabled incremental compilation for dev, test
+and release profiles in both repository-local Cargo configurations, keeping debug
+symbols disabled in all three. No panic, overflow or other safety settings changed.
+Updated ROMAtlas port launchers (desktop/headless/debug) and check commands to
+select release mode explicitly; Wasm builds already selected release mode. New
+ports receive the same Cargo configuration from a dedicated template. Updated
+build guidance and repository instructions to retain the user's preference.
+These changes remain uncommitted; prior publication records remain historical.
+
+Checks: Rust 1.90 locked metadata accepts both repository configurations; parsed
+all three matching profile configurations; inspected generated launcher commands
+and exercised check-command construction with a mocked subprocess, confirming
+release mode for each build/test/Clippy command. Python compilation and whitespace
+checks pass. No game rules changed, no compilation or desktop window was started,
+and no cache deletion, commit or push was performed in this step.

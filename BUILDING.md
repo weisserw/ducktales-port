@@ -202,7 +202,7 @@ SDL2 is optional. Without the desktop feature, build and run device-free:
 ```sh
 cargo +1.90.0 build --release --locked
 ./target/release/ducktales-port --rom "/full/path/to/your/game.nes" --headless 120
-cargo +1.90.0 test --locked
+cargo +1.90.0 test --release --locked
 ```
 
 Windows uses the .exe suffix. README.md documents controls and manifests.
@@ -364,3 +364,7 @@ are available for raw buttonN/axisN rebinding, including when unassigned.
 Use ROMAtlas revision 96eb99851c72fd838802d76281e93f368833983d or a compatible
 later revision for these desktop features. Cargo.lock does not pin the contents
 of a local path dependency.
+
+Local build defaults enable incremental compilation and leave debug symbols off,
+including in the release profile. The run.py desktop/headless/debug commands and
+check command use release mode. Use --release for direct Cargo builds and tests.
